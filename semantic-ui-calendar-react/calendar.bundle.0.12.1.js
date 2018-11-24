@@ -64,7 +64,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "027e72bcf938f297b4ab";
+/******/ 	var hotCurrentHash = "2c49ecec08e3a1a664f1";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -891,8 +891,7 @@ function (_React$Component) {
         value: this.state.date,
         iconPosition: "left",
         preserveViewMode: false,
-        autoComplete: "off" // tabIndex="0"
-        ,
+        autoComplete: "off",
         onChange: this.handleChange
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_src__WEBPACK_IMPORTED_MODULE_4__["DateInput"], {
         startMode: "year",
@@ -902,8 +901,7 @@ function (_React$Component) {
         name: "dateStartYear",
         value: this.state.dateStartYear,
         iconPosition: "left",
-        autoComplete: "off" // tabIndex="1"
-        ,
+        autoComplete: "off",
         preserveViewMode: false,
         onChange: this.handleChange
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_src__WEBPACK_IMPORTED_MODULE_4__["TimeInput"], {
@@ -911,11 +909,9 @@ function (_React$Component) {
         popupPosition: "bottom right",
         className: "example-calendar-input",
         name: "time",
-        autoComplete: "off" // tabIndex="2"
-        ,
+        autoComplete: "off",
         value: this.state.time,
         iconPosition: "left",
-        disableMinute: false,
         onChange: this.handleChange
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_src__WEBPACK_IMPORTED_MODULE_4__["DateTimeInput"], {
         placeholder: "Date Time",
@@ -925,8 +921,7 @@ function (_React$Component) {
         value: this.state.dateTime,
         iconPosition: "left",
         preserveViewMode: false,
-        autoComplete: "off" // tabIndex="3"
-        ,
+        autoComplete: "off",
         onChange: this.handleChange
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_src__WEBPACK_IMPORTED_MODULE_4__["DatesRangeInput"], {
         dateFormat: "DD.MM.YY",
@@ -936,8 +931,7 @@ function (_React$Component) {
         name: "datesRange",
         value: this.state.datesRange,
         iconPosition: "left",
-        autoComplete: "off" // tabIndex="4"
-        ,
+        autoComplete: "off",
         onChange: this.handleChange
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_src__WEBPACK_IMPORTED_MODULE_4__["YearInput"], {
         placeholder: "Year",
@@ -946,8 +940,7 @@ function (_React$Component) {
         popupPosition: "bottom right",
         value: this.state.year,
         iconPosition: "left",
-        autoComplete: "off" // tabIndex="5"
-        ,
+        autoComplete: "off",
         onChange: this.handleChange
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_src__WEBPACK_IMPORTED_MODULE_4__["MonthInput"], {
         placeholder: "Month",
@@ -956,8 +949,7 @@ function (_React$Component) {
         popupPosition: "bottom right",
         value: this.state.month,
         iconPosition: "left",
-        autoComplete: "off" // tabIndex="6"
-        ,
+        autoComplete: "off",
         onChange: this.handleChange
       }));
     }
@@ -1043,7 +1035,6 @@ function (_React$Component2) {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__["Form"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_src__WEBPACK_IMPORTED_MODULE_4__["DateInput"], {
-        disable: ['17-05-2018', '21-05-2018'],
         inline: true,
         className: "example-calendar-input",
         value: this.state.date,
@@ -77953,6 +77944,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _BaseInput__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.js");
 /* harmony import */ var _parse__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./parse */ "./src/inputs/parse.js");
 /* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../lib */ "./src/lib/index.js");
+/* harmony import */ var _shared__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./shared */ "./src/inputs/shared.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -77976,6 +77968,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -78142,23 +78135,29 @@ function (_BaseInput) {
           dateParams: this.getDateParams()
         }),
         value: Object(_parse__WEBPACK_IMPORTED_MODULE_9__["parseValue"])(Object(_parse__WEBPACK_IMPORTED_MODULE_9__["chooseValue"])(value, initialDate), dateFormat),
-        disable: Object(_parse__WEBPACK_IMPORTED_MODULE_9__["parseArrayOrValue"])(disable, dateFormat),
         enable: Object(_parse__WEBPACK_IMPORTED_MODULE_9__["parseArrayOrValue"])(enable, dateFormat),
         minDate: Object(_parse__WEBPACK_IMPORTED_MODULE_9__["parseValue"])(minDate, dateFormat),
         maxDate: Object(_parse__WEBPACK_IMPORTED_MODULE_9__["parseValue"])(maxDate, dateFormat) // key: value, // seems like it works without reinstantiating picker every time value changes
 
       };
+      var disableParsed = Object(_parse__WEBPACK_IMPORTED_MODULE_9__["parseArrayOrValue"])(disable, dateFormat);
       var mode = this.state.mode;
 
       if (mode === 'year') {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pickers_YearPicker__WEBPACK_IMPORTED_MODULE_5__["default"], pickerProps);
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pickers_YearPicker__WEBPACK_IMPORTED_MODULE_5__["default"], _extends({}, pickerProps, {
+          disable: Object(_shared__WEBPACK_IMPORTED_MODULE_11__["getDisabledYears"])(disableParsed)
+        }));
       }
 
       if (mode === 'month') {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pickers_MonthPicker__WEBPACK_IMPORTED_MODULE_6__["default"], pickerProps);
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pickers_MonthPicker__WEBPACK_IMPORTED_MODULE_6__["default"], _extends({}, pickerProps, {
+          disable: Object(_shared__WEBPACK_IMPORTED_MODULE_11__["getDisabledMonths"])(disableParsed)
+        }));
       }
 
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pickers_dayPicker_DayPicker__WEBPACK_IMPORTED_MODULE_7__["default"], pickerProps);
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pickers_dayPicker_DayPicker__WEBPACK_IMPORTED_MODULE_7__["default"], _extends({}, pickerProps, {
+        disable: disableParsed
+      }));
     }
   }, {
     key: "render",
@@ -78252,6 +78251,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _BaseInput__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.js");
 /* harmony import */ var _parse__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./parse */ "./src/inputs/parse.js");
 /* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../lib */ "./src/lib/index.js");
+/* harmony import */ var _shared__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./shared */ "./src/inputs/shared.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -78275,6 +78275,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -78473,34 +78474,44 @@ function (_BaseInput) {
           dateParams: this.getDateParams()
         }),
         value: Object(_parse__WEBPACK_IMPORTED_MODULE_11__["parseValue"])(Object(_parse__WEBPACK_IMPORTED_MODULE_11__["chooseValue"])(value, initialDate), dateTimeFormat),
-        disable: Object(_parse__WEBPACK_IMPORTED_MODULE_11__["parseArrayOrValue"])(disable),
         minDate: Object(_parse__WEBPACK_IMPORTED_MODULE_11__["parseValue"])(minDate, dateFormat),
         maxDate: Object(_parse__WEBPACK_IMPORTED_MODULE_11__["parseValue"])(maxDate, dateFormat) // key: value, // seems like it works without reinstantiating picker every time value changes
 
       };
+      var disableParsed = Object(_parse__WEBPACK_IMPORTED_MODULE_11__["parseArrayOrValue"])(disable, dateFormat);
       var mode = this.state.mode;
 
       if (mode === 'year') {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pickers_YearPicker__WEBPACK_IMPORTED_MODULE_5__["default"], pickerProps);
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pickers_YearPicker__WEBPACK_IMPORTED_MODULE_5__["default"], _extends({}, pickerProps, {
+          disable: Object(_shared__WEBPACK_IMPORTED_MODULE_13__["getDisabledYears"])(disableParsed)
+        }));
       }
 
       if (mode === 'month') {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pickers_MonthPicker__WEBPACK_IMPORTED_MODULE_6__["default"], pickerProps);
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pickers_MonthPicker__WEBPACK_IMPORTED_MODULE_6__["default"], _extends({}, pickerProps, {
+          disable: Object(_shared__WEBPACK_IMPORTED_MODULE_13__["getDisabledMonths"])(disableParsed)
+        }));
       }
 
       if (mode === 'day') {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pickers_dayPicker_DayPicker__WEBPACK_IMPORTED_MODULE_7__["default"], pickerProps);
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pickers_dayPicker_DayPicker__WEBPACK_IMPORTED_MODULE_7__["default"], _extends({}, pickerProps, {
+          disable: disableParsed
+        }));
       }
 
       if (mode === 'hour') {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pickers_timePicker_HourPicker__WEBPACK_IMPORTED_MODULE_8__["default"], _extends({
           timeFormat: this.props.timeFormat
-        }, pickerProps));
+        }, pickerProps, {
+          disable: disableParsed
+        }));
       }
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pickers_timePicker_MinutePicker__WEBPACK_IMPORTED_MODULE_9__["default"], _extends({
         timeFormat: this.props.timeFormat
-      }, pickerProps));
+      }, pickerProps, {
+        disable: disableParsed
+      }));
     }
   }, {
     key: "render",
@@ -79420,7 +79431,7 @@ function parseValue(value, dateFormat) {
 }
 /** Parse string, moment, Date, string[], moment[], Date[].
  * 
- * Return array of moments or moment. Returned value contains only valid moments.
+ * Return array of moments. Returned value contains only valid moments.
  * Return undefined if none of the input values are valid.
  */
 
@@ -79435,7 +79446,8 @@ function parseArrayOrValue(data, dateFormat) {
     }
   }
 
-  return parseValue(data, dateFormat);
+  var parsedValue = parseValue(data, dateFormat);
+  return parsedValue && [parsedValue];
 }
 /** Create moment.
  * 
@@ -79474,6 +79486,145 @@ function chooseValue(value, initialDate) {
   }
 
   return value;
+}
+
+/***/ }),
+
+/***/ "./src/inputs/shared.js":
+/*!******************************!*\
+  !*** ./src/inputs/shared.js ***!
+  \******************************/
+/*! exports provided: getDisabledMonths, getDisabledYears */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDisabledMonths", function() { return getDisabledMonths; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDisabledYears", function() { return getDisabledYears; });
+/**
+ * Filter out all moments that don't have
+ * all dates in month disabled.
+ * @param {*} moments
+ * @return An array of moments; each of these moments
+ * doesn't have any selectable date in month.
+ */
+function getDisabledMonths(moments) {
+  if (!moments) {
+    return;
+  }
+
+  var disabledMonths = [];
+  var checkedMonths = [];
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    var _loop = function _loop() {
+      var m = _step.value;
+
+      if (checkedMonths.indexOf(m.month()) < 0) {
+        var momentsForMonth = moments.filter(function (_m) {
+          return _m.month() === m.month();
+        });
+        var momentsForMonthUniq = [];
+
+        for (var i = 0; i < momentsForMonth.length; i++) {
+          if (momentsForMonthUniq.indexOf(momentsForMonth[i]) < 0) {
+            momentsForMonthUniq.push(momentsForMonth[i]);
+          }
+        }
+
+        if (momentsForMonthUniq.length === m.daysInMonth()) {
+          disabledMonths.push(m);
+        }
+
+        checkedMonths.push(m);
+      }
+    };
+
+    for (var _iterator = moments[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      _loop();
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return != null) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return disabledMonths;
+}
+/**
+ * Filter out all moments that don't have
+ * all months in year disabled.
+ * @param {*} moments
+ * @return An array of moments; each of these moments
+ * doesn't have any selectable month in year.
+ */
+
+function getDisabledYears(moments) {
+  if (!moments) {
+    return;
+  }
+
+  var disabledYears = [];
+  var checkedYears = [];
+  var _iteratorNormalCompletion2 = true;
+  var _didIteratorError2 = false;
+  var _iteratorError2 = undefined;
+
+  try {
+    var _loop2 = function _loop2() {
+      var y = _step2.value;
+
+      if (checkedYears.indexOf(y.year()) < 0) {
+        var momentsForYear = getDisabledMonths(moments.filter(function (_y) {
+          return _y.year() === y.year();
+        }));
+        var momentsForYearUniq = [];
+
+        for (var i = 0; i < momentsForYear.length; i++) {
+          if (momentsForYearUniq.indexOf(momentsForYear[i]) < 0) {
+            momentsForYearUniq.push(momentsForYear[i]);
+          }
+        }
+
+        if (momentsForYearUniq.length === 12) {
+          disabledYears.push(y);
+        }
+
+        checkedYears.push(y);
+      }
+    };
+
+    for (var _iterator2 = moments[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      _loop2();
+    }
+  } catch (err) {
+    _didIteratorError2 = true;
+    _iteratorError2 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+        _iterator2.return();
+      }
+    } finally {
+      if (_didIteratorError2) {
+        throw _iteratorError2;
+      }
+    }
+  }
+
+  return disabledYears;
 }
 
 /***/ }),
@@ -79679,13 +79830,16 @@ function (_React$Component) {
 
       var selectableCells = _this.getSelectableCellPositions();
 
+      var nextSelectableCellPositionLeft = selectableCells.slice(0, selectableCells.indexOf(_this.state.hoveredCellPosition)).pop();
+      var nextSelectableCellPositionRight = selectableCells.slice(selectableCells.indexOf(_this.state.hoveredCellPosition) + 1)[0];
+
       switch (key) {
         case 'ArrowLeft':
           event.preventDefault();
 
-          if (lodash__WEBPACK_IMPORTED_MODULE_2___default.a.includes(selectableCells, _this.state.hoveredCellPosition - 1)) {
+          if (nextSelectableCellPositionLeft) {
             _this.onHoveredCellPositionChange(null, {
-              itemPosition: _this.state.hoveredCellPosition - 1
+              itemPosition: nextSelectableCellPositionLeft
             });
           } else {
             _this.isPrevPageAvailable() && _this.switchToPrevPage(null, null, function () {
@@ -79702,9 +79856,9 @@ function (_React$Component) {
         case 'ArrowRight':
           event.preventDefault();
 
-          if (lodash__WEBPACK_IMPORTED_MODULE_2___default.a.includes(selectableCells, _this.state.hoveredCellPosition + 1)) {
+          if (nextSelectableCellPositionRight) {
             _this.onHoveredCellPositionChange(null, {
-              itemPosition: _this.state.hoveredCellPosition + 1
+              itemPosition: nextSelectableCellPositionRight
             });
           } else {
             _this.isNextPageAvailable() && _this.switchToNextPage(null, null, function () {
@@ -81859,6 +82013,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 
+/** Base class for picker view components. */
 
 var BaseView =
 /*#__PURE__*/
@@ -83061,6 +83216,25 @@ function (_React$Component2) {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.props.onMount && this.props.onMount(this.inputNode);
+      this.initialInputNode = this.inputNode;
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      // TODO: find actual root of the problem.
+      // Sometimes input node reference passed
+      // to this.props.onMount stales.
+      // this.inputNode referes to 
+      // different DOM object than it was after first
+      // component render.
+      // InputView component doesn't unmount it just
+      // gets different underlying input node.
+      // In order to keep input node reference fresh
+      // we make this check.
+      if (this.inputNode !== this.initialInputNode) {
+        this.initialInputNode = this.inputNode;
+        this.props.onMount(this.inputNode);
+      }
     }
   }, {
     key: "render",
