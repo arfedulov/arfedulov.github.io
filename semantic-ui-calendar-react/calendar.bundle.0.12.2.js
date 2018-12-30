@@ -11,12 +11,11 @@
 /******/
 /******/ 	// eslint-disable-next-line no-unused-vars
 /******/ 	function hotDownloadUpdateChunk(chunkId) {
-/******/ 		var head = document.getElementsByTagName("head")[0];
 /******/ 		var script = document.createElement("script");
 /******/ 		script.charset = "utf-8";
 /******/ 		script.src = __webpack_require__.p + "" + chunkId + "." + hotCurrentHash + ".hot-update.js";
 /******/ 		if (null) script.crossOrigin = null;
-/******/ 		head.appendChild(script);
+/******/ 		document.head.appendChild(script);
 /******/ 	}
 /******/
 /******/ 	// eslint-disable-next-line no-unused-vars
@@ -64,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "fe290480a7649e25112d";
+/******/ 	var hotCurrentHash = "89f1b96dd3bfd85ff53d";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -821,15 +820,35 @@ var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js"
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var ReactDOM = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
-var inputs_1 = __webpack_require__(/*! ../src/inputs */ "./src/inputs/index.js");
+var inputs_1 = __webpack_require__(/*! ../src/inputs */ "./src/inputs/index.ts");
 moment.locale('en');
-function App() {
-    return (React.createElement("div", { className: 'example-calendar-container' },
-        React.createElement("h2", null, "As text fields"),
-        React.createElement(DateTimeForm, null),
-        React.createElement("h2", null, "Inline"),
-        React.createElement(DateTimeFormInline, null)));
-}
+var App = /** @class */ (function (_super) {
+    __extends(App, _super);
+    function App(props) {
+        var _this = _super.call(this, props) || this;
+        _this.state = {
+            clearable: false,
+        };
+        return _this;
+    }
+    App.prototype.render = function () {
+        return (React.createElement("div", { className: 'example-calendar-container' },
+            React.createElement(semantic_ui_react_1.Header, { as: 'h2', dividing: true },
+                "As text fields",
+                React.createElement(semantic_ui_react_1.Header.Subheader, null,
+                    React.createElement(semantic_ui_react_1.Checkbox, { label: 'Make data inputs clearable', checked: this.state.clearable, onChange: this.handleCheckboxChange.bind(this) }))),
+            React.createElement(DateTimeForm, { clearable: this.state.clearable }),
+            React.createElement("h2", null, "Inline"),
+            React.createElement(DateTimeFormInline, null)));
+    };
+    App.prototype.handleCheckboxChange = function () {
+        var _this = this;
+        this.setState(function () { return ({
+            clearable: !_this.state.clearable,
+        }); });
+    };
+    return App;
+}(React.Component));
 var DateTimeForm = /** @class */ (function (_super) {
     __extends(DateTimeForm, _super);
     function DateTimeForm(props) {
@@ -853,20 +872,21 @@ var DateTimeForm = /** @class */ (function (_super) {
         return _this;
     }
     DateTimeForm.prototype.render = function () {
+        var clearable = this.props.clearable;
         return (React.createElement(semantic_ui_react_1.Form, null,
-            React.createElement(inputs_1.DateInput, { placeholder: 'Date', popupPosition: 'bottom right', className: 'example-calendar-input', name: 'date', value: this.state.date, iconPosition: 'left', preserveViewMode: false, autoComplete: 'off', onChange: this.handleChange }),
+            React.createElement(inputs_1.DateInput, { placeholder: 'Date', popupPosition: 'bottom right', className: 'example-calendar-input', name: 'date', clearIcon: (React.createElement(semantic_ui_react_1.Icon, { name: 'remove', color: 'red' })), clearable: clearable, value: this.state.date, iconPosition: 'left', preserveViewMode: false, autoComplete: 'off', onChange: this.handleChange }),
             React.createElement("br", null),
-            React.createElement(inputs_1.DateInput, { startMode: 'year', popupPosition: 'bottom right', placeholder: 'Date startMode year', className: 'example-calendar-input', name: 'dateStartYear', value: this.state.dateStartYear, iconPosition: 'left', autoComplete: 'off', preserveViewMode: false, onChange: this.handleChange }),
+            React.createElement(inputs_1.DateInput, { startMode: 'year', popupPosition: 'bottom right', placeholder: 'Date startMode year', className: 'example-calendar-input', name: 'dateStartYear', clearable: clearable, value: this.state.dateStartYear, iconPosition: 'left', autoComplete: 'off', preserveViewMode: false, onChange: this.handleChange }),
             React.createElement("br", null),
-            React.createElement(inputs_1.TimeInput, { placeholder: 'Time', popupPosition: 'bottom right', className: 'example-calendar-input', name: 'time', autoComplete: 'off', value: this.state.time, iconPosition: 'left', onChange: this.handleChange }),
+            React.createElement(inputs_1.TimeInput, { placeholder: 'Time', popupPosition: 'bottom right', className: 'example-calendar-input', name: 'time', autoComplete: 'off', clearable: clearable, value: this.state.time, iconPosition: 'left', onChange: this.handleChange }),
             React.createElement("br", null),
-            React.createElement(inputs_1.DateTimeInput, { placeholder: 'Date Time', className: 'example-calendar-input', popupPosition: 'bottom right', name: 'dateTime', value: this.state.dateTime, iconPosition: 'left', preserveViewMode: false, autoComplete: 'off', onChange: this.handleChange }),
+            React.createElement(inputs_1.DateTimeInput, { placeholder: 'Date Time', className: 'example-calendar-input', popupPosition: 'bottom right', name: 'dateTime', clearable: clearable, value: this.state.dateTime, iconPosition: 'left', preserveViewMode: false, autoComplete: 'off', onChange: this.handleChange }),
             React.createElement("br", null),
-            React.createElement(inputs_1.DatesRangeInput, { dateFormat: 'DD.MM.YY', placeholder: 'From - To', popupPosition: 'bottom right', className: 'example-calendar-input', name: 'datesRange', value: this.state.datesRange, iconPosition: 'left', autoComplete: 'off', onChange: this.handleChange }),
+            React.createElement(inputs_1.DatesRangeInput, { dateFormat: 'DD.MM.YY', placeholder: 'From - To', popupPosition: 'bottom right', className: 'example-calendar-input', name: 'datesRange', clearable: clearable, value: this.state.datesRange, iconPosition: 'left', autoComplete: 'off', onChange: this.handleChange }),
             React.createElement("br", null),
-            React.createElement(inputs_1.YearInput, { placeholder: 'Year', className: 'example-calendar-input', name: 'year', popupPosition: 'bottom right', value: this.state.year, iconPosition: 'left', autoComplete: 'off', onChange: this.handleChange }),
+            React.createElement(inputs_1.YearInput, { placeholder: 'Year', className: 'example-calendar-input', name: 'year', popupPosition: 'bottom right', clearable: clearable, value: this.state.year, iconPosition: 'left', autoComplete: 'off', onChange: this.handleChange }),
             React.createElement("br", null),
-            React.createElement(inputs_1.MonthInput, { placeholder: 'Month', className: 'example-calendar-input', name: 'month', popupPosition: 'bottom right', value: this.state.month, iconPosition: 'left', autoComplete: 'off', onChange: this.handleChange })));
+            React.createElement(inputs_1.MonthInput, { placeholder: 'Month', className: 'example-calendar-input', name: 'month', popupPosition: 'bottom right', clearable: clearable, value: this.state.month, iconPosition: 'left', autoComplete: 'off', onChange: this.handleChange })));
     };
     return DateTimeForm;
 }(React.Component));
@@ -27120,6 +27140,8 @@ var map = {
 	"./kn.js": "./node_modules/moment/locale/kn.js",
 	"./ko": "./node_modules/moment/locale/ko.js",
 	"./ko.js": "./node_modules/moment/locale/ko.js",
+	"./ku": "./node_modules/moment/locale/ku.js",
+	"./ku.js": "./node_modules/moment/locale/ku.js",
 	"./ky": "./node_modules/moment/locale/ky.js",
 	"./ky.js": "./node_modules/moment/locale/ky.js",
 	"./lb": "./node_modules/moment/locale/lb.js",
@@ -27400,7 +27422,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 0,
       // Sunday is the first day of the week.
-      doy: 4 // The week that contains Jan 1st is the first week of the year.
+      doy: 4 // The week that contains Jan 4th is the first week of the year.
 
     }
   });
@@ -27466,7 +27488,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 0,
       // Sunday is the first day of the week.
-      doy: 12 // The week that contains Jan 1st is the first week of the year.
+      doy: 12 // The week that contains Jan 12th is the first week of the year.
 
     }
   });
@@ -27588,7 +27610,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 6,
       // Saturday is the first day of the week.
-      doy: 12 // The week that contains Jan 1st is the first week of the year.
+      doy: 12 // The week that contains Jan 12th is the first week of the year.
 
     }
   });
@@ -27654,7 +27676,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 6,
       // Saturday is the first day of the week.
-      doy: 12 // The week that contains Jan 1st is the first week of the year.
+      doy: 12 // The week that contains Jan 12th is the first week of the year.
 
     }
   });
@@ -27765,7 +27787,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 0,
       // Sunday is the first day of the week.
-      doy: 6 // The week that contains Jan 1st is the first week of the year.
+      doy: 6 // The week that contains Jan 6th is the first week of the year.
 
     }
   });
@@ -27967,7 +27989,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 6,
       // Saturday is the first day of the week.
-      doy: 12 // The week that contains Jan 1st is the first week of the year.
+      doy: 12 // The week that contains Jan 12th is the first week of the year.
 
     }
   });
@@ -28080,7 +28102,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -28222,7 +28244,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -28321,7 +28343,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -28510,7 +28532,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 0,
       // Sunday is the first day of the week.
-      doy: 6 // The week that contains Jan 1st is the first week of the year.
+      doy: 6 // The week that contains Jan 6th is the first week of the year.
 
     }
   });
@@ -28634,7 +28656,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 0,
       // Sunday is the first day of the week.
-      doy: 6 // The week that contains Jan 1st is the first week of the year.
+      doy: 6 // The week that contains Jan 6th is the first week of the year.
 
     }
   });
@@ -28935,7 +28957,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -29335,7 +29357,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -29823,7 +29845,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 7,
       // Sunday is the first day of the week.
-      doy: 12 // The week that contains Jan 1st is the first week of the year.
+      doy: 12 // The week that contains Jan 12th is the first week of the year.
 
     }
   });
@@ -30426,7 +30448,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -30612,7 +30634,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 0,
       // Sunday is the first day of the week.
-      doy: 6 // The week that contains Jan 1st is the first week of the year.
+      doy: 6 // The week that contains Jan 6th is the first week of the year.
 
     }
   });
@@ -30871,7 +30893,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -30984,7 +31006,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 6,
       // Saturday is the first day of the week.
-      doy: 12 // The week that contains Jan 1st is the first week of the year.
+      doy: 12 // The week that contains Jan 12th is the first week of the year.
 
     }
   });
@@ -31938,7 +31960,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 0,
       // Sunday is the first day of the week.
-      doy: 6 // The week that contains Jan 1st is the first week of the year.
+      doy: 6 // The week that contains Jan 6th is the first week of the year.
 
     }
   });
@@ -32175,7 +32197,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 0,
       // Sunday is the first day of the week.
-      doy: 6 // The week that contains Jan 1st is the first week of the year.
+      doy: 6 // The week that contains Jan 6th is the first week of the year.
 
     }
   });
@@ -32355,7 +32377,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -32591,7 +32613,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -32681,7 +32703,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -33108,7 +33130,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -33297,7 +33319,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -33543,7 +33565,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 0,
       // Sunday is the first day of the week.
-      doy: 6 // The week that contains Jan 1st is the first week of the year.
+      doy: 6 // The week that contains Jan 6th is the first week of the year.
 
     }
   });
@@ -33641,6 +33663,118 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 /***/ }),
 
+/***/ "./node_modules/moment/locale/ku.js":
+/*!******************************************!*\
+  !*** ./node_modules/moment/locale/ku.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+//! moment.js locale configuration
+;
+
+(function (global, factory) {
+   true ? factory(__webpack_require__(/*! ../moment */ "./node_modules/moment/moment.js")) : undefined;
+})(this, function (moment) {
+  'use strict';
+
+  var symbolMap = {
+    '1': '١',
+    '2': '٢',
+    '3': '٣',
+    '4': '٤',
+    '5': '٥',
+    '6': '٦',
+    '7': '٧',
+    '8': '٨',
+    '9': '٩',
+    '0': '٠'
+  },
+      numberMap = {
+    '١': '1',
+    '٢': '2',
+    '٣': '3',
+    '٤': '4',
+    '٥': '5',
+    '٦': '6',
+    '٧': '7',
+    '٨': '8',
+    '٩': '9',
+    '٠': '0'
+  },
+      months = ['کانونی دووەم', 'شوبات', 'ئازار', 'نیسان', 'ئایار', 'حوزەیران', 'تەمموز', 'ئاب', 'ئەیلوول', 'تشرینی یەكەم', 'تشرینی دووەم', 'كانونی یەکەم'];
+  var ku = moment.defineLocale('ku', {
+    months: months,
+    monthsShort: months,
+    weekdays: 'یه‌كشه‌ممه‌_دووشه‌ممه‌_سێشه‌ممه‌_چوارشه‌ممه‌_پێنجشه‌ممه‌_هه‌ینی_شه‌ممه‌'.split('_'),
+    weekdaysShort: 'یه‌كشه‌م_دووشه‌م_سێشه‌م_چوارشه‌م_پێنجشه‌م_هه‌ینی_شه‌ممه‌'.split('_'),
+    weekdaysMin: 'ی_د_س_چ_پ_ه_ش'.split('_'),
+    weekdaysParseExact: true,
+    longDateFormat: {
+      LT: 'HH:mm',
+      LTS: 'HH:mm:ss',
+      L: 'DD/MM/YYYY',
+      LL: 'D MMMM YYYY',
+      LLL: 'D MMMM YYYY HH:mm',
+      LLLL: 'dddd, D MMMM YYYY HH:mm'
+    },
+    meridiemParse: /ئێواره‌|به‌یانی/,
+    isPM: function (input) {
+      return /ئێواره‌/.test(input);
+    },
+    meridiem: function (hour, minute, isLower) {
+      if (hour < 12) {
+        return 'به‌یانی';
+      } else {
+        return 'ئێواره‌';
+      }
+    },
+    calendar: {
+      sameDay: '[ئه‌مرۆ كاتژمێر] LT',
+      nextDay: '[به‌یانی كاتژمێر] LT',
+      nextWeek: 'dddd [كاتژمێر] LT',
+      lastDay: '[دوێنێ كاتژمێر] LT',
+      lastWeek: 'dddd [كاتژمێر] LT',
+      sameElse: 'L'
+    },
+    relativeTime: {
+      future: 'له‌ %s',
+      past: '%s',
+      s: 'چه‌ند چركه‌یه‌ك',
+      ss: 'چركه‌ %d',
+      m: 'یه‌ك خوله‌ك',
+      mm: '%d خوله‌ك',
+      h: 'یه‌ك كاتژمێر',
+      hh: '%d كاتژمێر',
+      d: 'یه‌ك ڕۆژ',
+      dd: '%d ڕۆژ',
+      M: 'یه‌ك مانگ',
+      MM: '%d مانگ',
+      y: 'یه‌ك ساڵ',
+      yy: '%d ساڵ'
+    },
+    preparse: function (string) {
+      return string.replace(/[١٢٣٤٥٦٧٨٩٠]/g, function (match) {
+        return numberMap[match];
+      }).replace(/،/g, ',');
+    },
+    postformat: function (string) {
+      return string.replace(/\d/g, function (match) {
+        return symbolMap[match];
+      }).replace(/,/g, '،');
+    },
+    week: {
+      dow: 6,
+      // Saturday is the first day of the week.
+      doy: 12 // The week that contains Jan 12th is the first week of the year.
+
+    }
+  });
+  return ku;
+});
+
+/***/ }),
+
 /***/ "./node_modules/moment/locale/ky.js":
 /*!******************************************!*\
   !*** ./node_modules/moment/locale/ky.js ***!
@@ -33696,8 +33830,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
       sameDay: '[Бүгүн саат] LT',
       nextDay: '[Эртең саат] LT',
       nextWeek: 'dddd [саат] LT',
-      lastDay: '[Кече саат] LT',
-      lastWeek: '[Өткен аптанын] dddd [күнү] [саат] LT',
+      lastDay: '[Кечээ саат] LT',
+      lastWeek: '[Өткөн аптанын] dddd [күнү] [саат] LT',
       sameElse: 'L'
     },
     relativeTime: {
@@ -33725,7 +33859,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -34313,7 +34447,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -34483,7 +34617,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -34923,7 +35057,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 0,
       // Sunday is the first day of the week.
-      doy: 6 // The week that contains Jan 1st is the first week of the year.
+      doy: 6 // The week that contains Jan 6th is the first week of the year.
 
     }
   });
@@ -35013,7 +35147,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -35103,7 +35237,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -35269,7 +35403,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 4 // The week that contains Jan 1st is the first week of the year.
+      doy: 4 // The week that contains Jan 4th is the first week of the year.
 
     }
   });
@@ -35468,7 +35602,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 0,
       // Sunday is the first day of the week.
-      doy: 6 // The week that contains Jan 1st is the first week of the year.
+      doy: 6 // The week that contains Jan 6th is the first week of the year.
 
     }
   });
@@ -35495,7 +35629,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   var monthsShortWithDots = 'jan._feb._mrt._apr._mei_jun._jul._aug._sep._okt._nov._dec.'.split('_'),
       monthsShortWithoutDots = 'jan_feb_mrt_apr_mei_jun_jul_aug_sep_okt_nov_dec'.split('_');
   var monthsParse = [/^jan/i, /^feb/i, /^maart|mrt.?$/i, /^apr/i, /^mei$/i, /^jun[i.]?$/i, /^jul[i.]?$/i, /^aug/i, /^sep/i, /^okt/i, /^nov/i, /^dec/i];
-  var monthsRegex = /^(januari|februari|maart|april|mei|april|ju[nl]i|augustus|september|oktober|november|december|jan\.?|feb\.?|mrt\.?|apr\.?|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i;
+  var monthsRegex = /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december|jan\.?|feb\.?|mrt\.?|apr\.?|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i;
   var nlBe = moment.defineLocale('nl-be', {
     months: 'januari_februari_maart_april_mei_juni_juli_augustus_september_oktober_november_december'.split('_'),
     monthsShort: function (m, format) {
@@ -35509,7 +35643,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     },
     monthsRegex: monthsRegex,
     monthsShortRegex: monthsRegex,
-    monthsStrictRegex: /^(januari|februari|maart|mei|ju[nl]i|april|augustus|september|oktober|november|december)/i,
+    monthsStrictRegex: /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december)/i,
     monthsShortStrictRegex: /^(jan\.?|feb\.?|mrt\.?|apr\.?|mei|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i,
     monthsParse: monthsParse,
     longMonthsParse: monthsParse,
@@ -35584,7 +35718,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   var monthsShortWithDots = 'jan._feb._mrt._apr._mei_jun._jul._aug._sep._okt._nov._dec.'.split('_'),
       monthsShortWithoutDots = 'jan_feb_mrt_apr_mei_jun_jul_aug_sep_okt_nov_dec'.split('_');
   var monthsParse = [/^jan/i, /^feb/i, /^maart|mrt.?$/i, /^apr/i, /^mei$/i, /^jun[i.]?$/i, /^jul[i.]?$/i, /^aug/i, /^sep/i, /^okt/i, /^nov/i, /^dec/i];
-  var monthsRegex = /^(januari|februari|maart|april|mei|april|ju[nl]i|augustus|september|oktober|november|december|jan\.?|feb\.?|mrt\.?|apr\.?|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i;
+  var monthsRegex = /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december|jan\.?|feb\.?|mrt\.?|apr\.?|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i;
   var nl = moment.defineLocale('nl', {
     months: 'januari_februari_maart_april_mei_juni_juli_augustus_september_oktober_november_december'.split('_'),
     monthsShort: function (m, format) {
@@ -35598,7 +35732,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     },
     monthsRegex: monthsRegex,
     monthsShortRegex: monthsRegex,
-    monthsStrictRegex: /^(januari|februari|maart|mei|ju[nl]i|april|augustus|september|oktober|november|december)/i,
+    monthsStrictRegex: /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december)/i,
     monthsShortStrictRegex: /^(jan\.?|feb\.?|mrt\.?|apr\.?|mei|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i,
     monthsParse: monthsParse,
     longMonthsParse: monthsParse,
@@ -35762,7 +35896,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     '੦': '0'
   };
   var paIn = moment.defineLocale('pa-in', {
-    // There are months name as per Nanakshahi Calender but they are not used as rigidly in modern Punjabi.
+    // There are months name as per Nanakshahi Calendar but they are not used as rigidly in modern Punjabi.
     months: 'ਜਨਵਰੀ_ਫ਼ਰਵਰੀ_ਮਾਰਚ_ਅਪ੍ਰੈਲ_ਮਈ_ਜੂਨ_ਜੁਲਾਈ_ਅਗਸਤ_ਸਤੰਬਰ_ਅਕਤੂਬਰ_ਨਵੰਬਰ_ਦਸੰਬਰ'.split('_'),
     monthsShort: 'ਜਨਵਰੀ_ਫ਼ਰਵਰੀ_ਮਾਰਚ_ਅਪ੍ਰੈਲ_ਮਈ_ਜੂਨ_ਜੁਲਾਈ_ਅਗਸਤ_ਸਤੰਬਰ_ਅਕਤੂਬਰ_ਨਵੰਬਰ_ਦਸੰਬਰ'.split('_'),
     weekdays: 'ਐਤਵਾਰ_ਸੋਮਵਾਰ_ਮੰਗਲਵਾਰ_ਬੁਧਵਾਰ_ਵੀਰਵਾਰ_ਸ਼ੁੱਕਰਵਾਰ_ਸ਼ਨੀਚਰਵਾਰ'.split('_'),
@@ -35844,7 +35978,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 0,
       // Sunday is the first day of the week.
-      doy: 6 // The week that contains Jan 1st is the first week of the year.
+      doy: 6 // The week that contains Jan 6th is the first week of the year.
 
     }
   });
@@ -36209,7 +36343,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -36872,7 +37006,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         } else if (number < 5) {
           result += withoutSuffix || isFuture ? 'sekunde' : 'sekundah';
         } else {
-          result += withoutSuffix || isFuture ? 'sekund' : 'sekund';
+          result += 'sekund';
         }
 
         return result;
@@ -37036,7 +37170,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -37225,7 +37359,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -37339,7 +37473,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -37575,7 +37709,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -37712,7 +37846,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 0,
       // Sunday is the first day of the week.
-      doy: 6 // The week that contains Jan 1st is the first week of the year.
+      doy: 6 // The week that contains Jan 6th is the first week of the year.
 
     }
   });
@@ -37809,7 +37943,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 0,
       // Sunday is the first day of the week.
-      doy: 6 // The week that contains Jan 1st is the first week of the year.
+      doy: 6 // The week that contains Jan 6th is the first week of the year.
 
     }
   });
@@ -38376,7 +38510,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -38539,7 +38673,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 6,
       // Saturday is the first day of the week.
-      doy: 12 // The week that contains Jan 1st is the first week of the year.
+      doy: 12 // The week that contains Jan 12th is the first week of the year.
 
     }
   });
@@ -38604,7 +38738,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 6,
       // Saturday is the first day of the week.
-      doy: 12 // The week that contains Jan 1st is the first week of the year.
+      doy: 12 // The week that contains Jan 12th is the first week of the year.
 
     }
   });
@@ -38882,7 +39016,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -39031,7 +39165,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     week: {
       dow: 1,
       // Monday is the first day of the week.
-      doy: 7 // The week that contains Jan 1st is the first week of the year.
+      doy: 7 // The week that contains Jan 7th is the first week of the year.
 
     }
   });
@@ -40980,7 +41114,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   var defaultLocaleWeek = {
     dow: 0,
     // Sunday is the first day of the week.
-    doy: 6 // The week that contains Jan 1st is the first week of the year.
+    doy: 6 // The week that contains Jan 6th is the first week of the year.
 
   };
 
@@ -41867,14 +42001,14 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
           weekdayOverflow = true;
         }
       } else if (w.e != null) {
-        // local weekday -- counting starts from begining of week
+        // local weekday -- counting starts from beginning of week
         weekday = w.e + dow;
 
         if (w.e < 0 || w.e > 6) {
           weekdayOverflow = true;
         }
       } else {
-        // default to begining of week
+        // default to beginning of week
         weekday = dow;
       }
     }
@@ -42450,7 +42584,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         years = normalizedInput.year || 0,
         quarters = normalizedInput.quarter || 0,
         months = normalizedInput.month || 0,
-        weeks = normalizedInput.week || 0,
+        weeks = normalizedInput.week || normalizedInput.isoWeek || 0,
         days = normalizedInput.day || 0,
         hours = normalizedInput.hour || 0,
         minutes = normalizedInput.minute || 0,
@@ -42746,7 +42880,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
       };
     } else if (!!(match = isoRegex.exec(input))) {
-      sign = match[1] === '-' ? -1 : match[1] === '+' ? 1 : 1;
+      sign = match[1] === '-' ? -1 : 1;
       duration = {
         y: parseIso(match[2], sign),
         M: parseIso(match[3], sign),
@@ -42902,7 +43036,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
       return false;
     }
 
-    units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+    units = normalizeUnits(units) || 'millisecond';
 
     if (units === 'millisecond') {
       return this.valueOf() > localInput.valueOf();
@@ -42918,7 +43052,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
       return false;
     }
 
-    units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+    units = normalizeUnits(units) || 'millisecond';
 
     if (units === 'millisecond') {
       return this.valueOf() < localInput.valueOf();
@@ -42928,8 +43062,15 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   }
 
   function isBetween(from, to, units, inclusivity) {
+    var localFrom = isMoment(from) ? from : createLocal(from),
+        localTo = isMoment(to) ? to : createLocal(to);
+
+    if (!(this.isValid() && localFrom.isValid() && localTo.isValid())) {
+      return false;
+    }
+
     inclusivity = inclusivity || '()';
-    return (inclusivity[0] === '(' ? this.isAfter(from, units) : !this.isBefore(from, units)) && (inclusivity[1] === ')' ? this.isBefore(to, units) : !this.isAfter(to, units));
+    return (inclusivity[0] === '(' ? this.isAfter(localFrom, units) : !this.isBefore(localFrom, units)) && (inclusivity[1] === ')' ? this.isBefore(localTo, units) : !this.isAfter(localTo, units));
   }
 
   function isSame(input, units) {
@@ -42940,7 +43081,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
       return false;
     }
 
-    units = normalizeUnits(units || 'millisecond');
+    units = normalizeUnits(units) || 'millisecond';
 
     if (units === 'millisecond') {
       return this.valueOf() === localInput.valueOf();
@@ -44107,7 +44248,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     config._d = new Date(toInt(input));
   }); // Side effect imports
 
-  hooks.version = '2.22.2';
+  hooks.version = '2.23.0';
   setHookCallback(createLocal);
   hooks.fn = proto;
   hooks.min = min;
@@ -44152,7 +44293,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     // <input type="time" step="1" />
     TIME_MS: 'HH:mm:ss.SSS',
     // <input type="time" step="0.001" />
-    WEEK: 'YYYY-[W]WW',
+    WEEK: 'GGGG-[W]WW',
     // <input type="week" />
     MONTH: 'YYYY-MM' // <input type="month" />
 
@@ -45032,7 +45173,7 @@ module.exports = ReactPropTypesSecret;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v16.6.0
+/** @license React v16.7.0
  * react-dom.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -45209,21 +45350,20 @@ eventPluginOrder=Array.prototype.slice.call(injectedEventPluginOrder);recomputeP
  * paths. Removing the logging code for production environments will keep the
  * same logic and follow the same code paths.
  */var warningWithoutStack=function(){};{warningWithoutStack=function(condition,format){for(var _len=arguments.length,args=Array(_len>2?_len-2:0),_key=2;_key<_len;_key++){args[_key-2]=arguments[_key];}if(format===undefined){throw new Error('`warningWithoutStack(condition, format, ...args)` requires a warning '+'message argument');}if(args.length>8){// Check before the condition to catch violations early.
-throw new Error('warningWithoutStack() currently supports at most 8 arguments.');}if(condition){return;}if(typeof console!=='undefined'){var _args$map=args.map(function(item){return''+item;}),a=_args$map[0],b=_args$map[1],c=_args$map[2],d=_args$map[3],e=_args$map[4],f=_args$map[5],g=_args$map[6],h=_args$map[7];var message='Warning: '+format;// We intentionally don't use spread (or .apply) because it breaks IE9:
-// https://github.com/facebook/react/issues/13610
-switch(args.length){case 0:console.error(message);break;case 1:console.error(message,a);break;case 2:console.error(message,a,b);break;case 3:console.error(message,a,b,c);break;case 4:console.error(message,a,b,c,d);break;case 5:console.error(message,a,b,c,d,e);break;case 6:console.error(message,a,b,c,d,e,f);break;case 7:console.error(message,a,b,c,d,e,f,g);break;case 8:console.error(message,a,b,c,d,e,f,g,h);break;default:throw new Error('warningWithoutStack() currently supports at most 8 arguments.');}}try{// --- Welcome to debugging React ---
+throw new Error('warningWithoutStack() currently supports at most 8 arguments.');}if(condition){return;}if(typeof console!=='undefined'){var argsWithFormat=args.map(function(item){return''+item;});argsWithFormat.unshift('Warning: '+format);// We intentionally don't use spread (or .apply) directly because it
+// breaks IE9: https://github.com/facebook/react/issues/13610
+Function.prototype.apply.call(console.error,console,argsWithFormat);}try{// --- Welcome to debugging React ---
 // This error was thrown as a convenience so that you can use this stack
 // to find the callsite that caused this warning to fire.
-var argIndex=0;var _message='Warning: '+format.replace(/%s/g,function(){return args[argIndex++];});throw new Error(_message);}catch(x){}};}var warningWithoutStack$1=warningWithoutStack;var getFiberCurrentPropsFromNode=null;var getInstanceFromNode=null;var getNodeFromInstance=null;function setComponentTree(getFiberCurrentPropsFromNodeImpl,getInstanceFromNodeImpl,getNodeFromInstanceImpl){getFiberCurrentPropsFromNode=getFiberCurrentPropsFromNodeImpl;getInstanceFromNode=getInstanceFromNodeImpl;getNodeFromInstance=getNodeFromInstanceImpl;{!(getNodeFromInstance&&getInstanceFromNode)?warningWithoutStack$1(false,'EventPluginUtils.setComponentTree(...): Injected '+'module is missing getNodeFromInstance or getInstanceFromNode.'):void 0;}}var validateEventDispatches=void 0;{validateEventDispatches=function(event){var dispatchListeners=event._dispatchListeners;var dispatchInstances=event._dispatchInstances;var listenersIsArr=Array.isArray(dispatchListeners);var listenersLen=listenersIsArr?dispatchListeners.length:dispatchListeners?1:0;var instancesIsArr=Array.isArray(dispatchInstances);var instancesLen=instancesIsArr?dispatchInstances.length:dispatchInstances?1:0;!(instancesIsArr===listenersIsArr&&instancesLen===listenersLen)?warningWithoutStack$1(false,'EventPluginUtils: Invalid `event`.'):void 0;};}/**
+var argIndex=0;var message='Warning: '+format.replace(/%s/g,function(){return args[argIndex++];});throw new Error(message);}catch(x){}};}var warningWithoutStack$1=warningWithoutStack;var getFiberCurrentPropsFromNode=null;var getInstanceFromNode=null;var getNodeFromInstance=null;function setComponentTree(getFiberCurrentPropsFromNodeImpl,getInstanceFromNodeImpl,getNodeFromInstanceImpl){getFiberCurrentPropsFromNode=getFiberCurrentPropsFromNodeImpl;getInstanceFromNode=getInstanceFromNodeImpl;getNodeFromInstance=getNodeFromInstanceImpl;{!(getNodeFromInstance&&getInstanceFromNode)?warningWithoutStack$1(false,'EventPluginUtils.setComponentTree(...): Injected '+'module is missing getNodeFromInstance or getInstanceFromNode.'):void 0;}}var validateEventDispatches=void 0;{validateEventDispatches=function(event){var dispatchListeners=event._dispatchListeners;var dispatchInstances=event._dispatchInstances;var listenersIsArr=Array.isArray(dispatchListeners);var listenersLen=listenersIsArr?dispatchListeners.length:dispatchListeners?1:0;var instancesIsArr=Array.isArray(dispatchInstances);var instancesLen=instancesIsArr?dispatchInstances.length:dispatchInstances?1:0;!(instancesIsArr===listenersIsArr&&instancesLen===listenersLen)?warningWithoutStack$1(false,'EventPluginUtils: Invalid `event`.'):void 0;};}/**
  * Dispatch the event to the listener.
  * @param {SyntheticEvent} event SyntheticEvent to handle
- * @param {boolean} simulated If the event is simulated (changes exn behavior)
  * @param {function} listener Application-level callback
  * @param {*} inst Internal component instance
- */function executeDispatch(event,simulated,listener,inst){var type=event.type||'unknown-event';event.currentTarget=getNodeFromInstance(inst);invokeGuardedCallbackAndCatchFirstError(type,listener,undefined,event);event.currentTarget=null;}/**
+ */function executeDispatch(event,listener,inst){var type=event.type||'unknown-event';event.currentTarget=getNodeFromInstance(inst);invokeGuardedCallbackAndCatchFirstError(type,listener,undefined,event);event.currentTarget=null;}/**
  * Standard/simple iteration through an event's collected dispatches.
- */function executeDispatchesInOrder(event,simulated){var dispatchListeners=event._dispatchListeners;var dispatchInstances=event._dispatchInstances;{validateEventDispatches(event);}if(Array.isArray(dispatchListeners)){for(var i=0;i<dispatchListeners.length;i++){if(event.isPropagationStopped()){break;}// Listeners and Instances are two parallel arrays that are always in sync.
-executeDispatch(event,simulated,dispatchListeners[i],dispatchInstances[i]);}}else if(dispatchListeners){executeDispatch(event,simulated,dispatchListeners,dispatchInstances);}event._dispatchListeners=null;event._dispatchInstances=null;}/**
+ */function executeDispatchesInOrder(event){var dispatchListeners=event._dispatchListeners;var dispatchInstances=event._dispatchInstances;{validateEventDispatches(event);}if(Array.isArray(dispatchListeners)){for(var i=0;i<dispatchListeners.length;i++){if(event.isPropagationStopped()){break;}// Listeners and Instances are two parallel arrays that are always in sync.
+executeDispatch(event,dispatchListeners[i],dispatchInstances[i]);}}else if(dispatchListeners){executeDispatch(event,dispatchListeners,dispatchInstances);}event._dispatchListeners=null;event._dispatchInstances=null;}/**
  * @see executeDispatchesInOrderStopAtTrueImpl
  */ /**
  * Execution of a "direct" dispatch - there must be at most one dispatch
@@ -45265,9 +45405,8 @@ return[current].concat(next);}return[current,next];}/**
  * Dispatches an event and releases it back into the pool, unless persistent.
  *
  * @param {?object} event Synthetic event to be dispatched.
- * @param {boolean} simulated If the event is simulated (changes exn behavior)
  * @private
- */var executeDispatchesAndRelease=function(event,simulated){if(event){executeDispatchesInOrder(event,simulated);if(!event.isPersistent()){event.constructor.release(event);}}};var executeDispatchesAndReleaseSimulated=function(e){return executeDispatchesAndRelease(e,true);};var executeDispatchesAndReleaseTopLevel=function(e){return executeDispatchesAndRelease(e,false);};function isInteractive(tag){return tag==='button'||tag==='input'||tag==='select'||tag==='textarea';}function shouldPreventMouseEvent(name,type,props){switch(name){case'onClick':case'onClickCapture':case'onDoubleClick':case'onDoubleClickCapture':case'onMouseDown':case'onMouseDownCapture':case'onMouseMove':case'onMouseMoveCapture':case'onMouseUp':case'onMouseUpCapture':return!!(props.disabled&&isInteractive(type));default:return false;}}/**
+ */var executeDispatchesAndRelease=function(event){if(event){executeDispatchesInOrder(event);if(!event.isPersistent()){event.constructor.release(event);}}};var executeDispatchesAndReleaseTopLevel=function(e){return executeDispatchesAndRelease(e);};function isInteractive(tag){return tag==='button'||tag==='input'||tag==='select'||tag==='textarea';}function shouldPreventMouseEvent(name,type,props){switch(name){case'onClick':case'onClickCapture':case'onDoubleClick':case'onDoubleClickCapture':case'onMouseDown':case'onMouseDownCapture':case'onMouseMove':case'onMouseMoveCapture':case'onMouseUp':case'onMouseUpCapture':return!!(props.disabled&&isInteractive(type));default:return false;}}/**
  * This is a unified interface for event plugins to be installed and configured.
  *
  * Event plugins can implement the following properties:
@@ -45310,10 +45449,10 @@ return null;}listener=props[registrationName];if(shouldPreventMouseEvent(registr
  * @return {*} An accumulation of synthetic events.
  * @internal
  */function extractEvents(topLevelType,targetInst,nativeEvent,nativeEventTarget){var events=null;for(var i=0;i<plugins.length;i++){// Not every plugin in the ordering may be loaded at runtime.
-var possiblePlugin=plugins[i];if(possiblePlugin){var extractedEvents=possiblePlugin.extractEvents(topLevelType,targetInst,nativeEvent,nativeEventTarget);if(extractedEvents){events=accumulateInto(events,extractedEvents);}}}return events;}function runEventsInBatch(events,simulated){if(events!==null){eventQueue=accumulateInto(eventQueue,events);}// Set `eventQueue` to null before processing it so that we can tell if more
+var possiblePlugin=plugins[i];if(possiblePlugin){var extractedEvents=possiblePlugin.extractEvents(topLevelType,targetInst,nativeEvent,nativeEventTarget);if(extractedEvents){events=accumulateInto(events,extractedEvents);}}}return events;}function runEventsInBatch(events){if(events!==null){eventQueue=accumulateInto(eventQueue,events);}// Set `eventQueue` to null before processing it so that we can tell if more
 // events get enqueued while processing.
-var processingEventQueue=eventQueue;eventQueue=null;if(!processingEventQueue){return;}if(simulated){forEachAccumulated(processingEventQueue,executeDispatchesAndReleaseSimulated);}else{forEachAccumulated(processingEventQueue,executeDispatchesAndReleaseTopLevel);}!!eventQueue?invariant(false,'processEventQueue(): Additional events were enqueued while processing an event queue. Support for this has not yet been implemented.'):void 0;// This would be a good time to rethrow if any of the event handlers threw.
-rethrowCaughtError();}function runExtractedEventsInBatch(topLevelType,targetInst,nativeEvent,nativeEventTarget){var events=extractEvents(topLevelType,targetInst,nativeEvent,nativeEventTarget);runEventsInBatch(events,false);}var FunctionComponent=0;var ClassComponent=1;var IndeterminateComponent=2;// Before we know whether it is function or class
+var processingEventQueue=eventQueue;eventQueue=null;if(!processingEventQueue){return;}forEachAccumulated(processingEventQueue,executeDispatchesAndReleaseTopLevel);!!eventQueue?invariant(false,'processEventQueue(): Additional events were enqueued while processing an event queue. Support for this has not yet been implemented.'):void 0;// This would be a good time to rethrow if any of the event handlers threw.
+rethrowCaughtError();}function runExtractedEventsInBatch(topLevelType,targetInst,nativeEvent,nativeEventTarget){var events=extractEvents(topLevelType,targetInst,nativeEvent,nativeEventTarget);runEventsInBatch(events);}var FunctionComponent=0;var ClassComponent=1;var IndeterminateComponent=2;// Before we know whether it is function or class
 var HostRoot=3;// Root of a host tree. Could be nested inside another node.
 var HostPortal=4;// A subtree. Could be an entry point to a different renderer.
 var HostComponent=5;var HostText=6;var Fragment=7;var Mode=8;var ContextConsumer=9;var ContextProvider=10;var ForwardRef=11;var Profiler=12;var SuspenseComponent=13;var MemoComponent=14;var SimpleMemoComponent=15;var LazyComponent=16;var IncompleteClassComponent=17;var randomKey=Math.random().toString(36).slice(2);var internalInstanceKey='__reactInternalInstance$'+randomKey;var internalEventHandlersKey='__reactEventHandlers$'+randomKey;function precacheFiberNode(hostInst,node){node[internalInstanceKey]=hostInst;}/**
@@ -45686,7 +45825,7 @@ if(!tracker){return true;}var lastValue=tracker.getValue();var nextValue=getValu
 if(/^index\./.test(fileName)){var match=path.match(BEFORE_SLASH_RE);if(match){var pathBeforeSlash=match[1];if(pathBeforeSlash){var folderName=pathBeforeSlash.replace(BEFORE_SLASH_RE,'');fileName=folderName+'/'+fileName;}}}}sourceInfo=' (at '+fileName+':'+source.lineNumber+')';}else if(ownerName){sourceInfo=' (created by '+ownerName+')';}return'\n    in '+(name||'Unknown')+sourceInfo;};// The Symbol used to tag the ReactElement-like types. If there is no native Symbol
 // nor polyfill, then a plain number is used for performance.
 var hasSymbol=typeof Symbol==='function'&&Symbol.for;var REACT_ELEMENT_TYPE=hasSymbol?Symbol.for('react.element'):0xeac7;var REACT_PORTAL_TYPE=hasSymbol?Symbol.for('react.portal'):0xeaca;var REACT_FRAGMENT_TYPE=hasSymbol?Symbol.for('react.fragment'):0xeacb;var REACT_STRICT_MODE_TYPE=hasSymbol?Symbol.for('react.strict_mode'):0xeacc;var REACT_PROFILER_TYPE=hasSymbol?Symbol.for('react.profiler'):0xead2;var REACT_PROVIDER_TYPE=hasSymbol?Symbol.for('react.provider'):0xeacd;var REACT_CONTEXT_TYPE=hasSymbol?Symbol.for('react.context'):0xeace;var REACT_CONCURRENT_MODE_TYPE=hasSymbol?Symbol.for('react.concurrent_mode'):0xeacf;var REACT_FORWARD_REF_TYPE=hasSymbol?Symbol.for('react.forward_ref'):0xead0;var REACT_SUSPENSE_TYPE=hasSymbol?Symbol.for('react.suspense'):0xead1;var REACT_MEMO_TYPE=hasSymbol?Symbol.for('react.memo'):0xead3;var REACT_LAZY_TYPE=hasSymbol?Symbol.for('react.lazy'):0xead4;var MAYBE_ITERATOR_SYMBOL=typeof Symbol==='function'&&Symbol.iterator;var FAUX_ITERATOR_SYMBOL='@@iterator';function getIteratorFn(maybeIterable){if(maybeIterable===null||typeof maybeIterable!=='object'){return null;}var maybeIterator=MAYBE_ITERATOR_SYMBOL&&maybeIterable[MAYBE_ITERATOR_SYMBOL]||maybeIterable[FAUX_ITERATOR_SYMBOL];if(typeof maybeIterator==='function'){return maybeIterator;}return null;}var Pending=0;var Resolved=1;var Rejected=2;function refineResolvedLazyComponent(lazyComponent){return lazyComponent._status===Resolved?lazyComponent._result:null;}function getWrappedName(outerType,innerType,wrapperName){var functionName=innerType.displayName||innerType.name||'';return outerType.displayName||(functionName!==''?wrapperName+'('+functionName+')':wrapperName);}function getComponentName(type){if(type==null){// Host root, text node or just invalid type.
-return null;}{if(typeof type.tag==='number'){warningWithoutStack$1(false,'Received an unexpected object in getComponentName(). '+'This is likely a bug in React. Please file an issue.');}}if(typeof type==='function'){return type.displayName||type.name||null;}if(typeof type==='string'){return type;}switch(type){case REACT_CONCURRENT_MODE_TYPE:return'ConcurrentMode';case REACT_FRAGMENT_TYPE:return'Fragment';case REACT_PORTAL_TYPE:return'Portal';case REACT_PROFILER_TYPE:return'Profiler';case REACT_STRICT_MODE_TYPE:return'StrictMode';case REACT_SUSPENSE_TYPE:return'Suspense';}if(typeof type==='object'){switch(type.$$typeof){case REACT_CONTEXT_TYPE:return'Context.Consumer';case REACT_PROVIDER_TYPE:return'Context.Provider';case REACT_FORWARD_REF_TYPE:return getWrappedName(type,type.render,'ForwardRef');case REACT_MEMO_TYPE:return getComponentName(type.type);case REACT_LAZY_TYPE:{var thenable=type;var resolvedThenable=refineResolvedLazyComponent(thenable);if(resolvedThenable){return getComponentName(resolvedThenable);}}}}return null;}var ReactDebugCurrentFrame=ReactSharedInternals.ReactDebugCurrentFrame;function describeFiber(fiber){switch(fiber.tag){case IndeterminateComponent:case LazyComponent:case FunctionComponent:case ClassComponent:case HostComponent:case Mode:var owner=fiber._debugOwner;var source=fiber._debugSource;var name=getComponentName(fiber.type);var ownerName=null;if(owner){ownerName=getComponentName(owner.type);}return describeComponentFrame(name,source,ownerName);default:return'';}}function getStackByFiberInDevAndProd(workInProgress){var info='';var node=workInProgress;do{info+=describeFiber(node);node=node.return;}while(node);return info;}var current=null;var phase=null;function getCurrentFiberOwnerNameInDevOrNull(){{if(current===null){return null;}var owner=current._debugOwner;if(owner!==null&&typeof owner!=='undefined'){return getComponentName(owner.type);}}return null;}function getCurrentFiberStackInDev(){{if(current===null){return'';}// Safe because if current fiber exists, we are reconciling,
+return null;}{if(typeof type.tag==='number'){warningWithoutStack$1(false,'Received an unexpected object in getComponentName(). '+'This is likely a bug in React. Please file an issue.');}}if(typeof type==='function'){return type.displayName||type.name||null;}if(typeof type==='string'){return type;}switch(type){case REACT_CONCURRENT_MODE_TYPE:return'ConcurrentMode';case REACT_FRAGMENT_TYPE:return'Fragment';case REACT_PORTAL_TYPE:return'Portal';case REACT_PROFILER_TYPE:return'Profiler';case REACT_STRICT_MODE_TYPE:return'StrictMode';case REACT_SUSPENSE_TYPE:return'Suspense';}if(typeof type==='object'){switch(type.$$typeof){case REACT_CONTEXT_TYPE:return'Context.Consumer';case REACT_PROVIDER_TYPE:return'Context.Provider';case REACT_FORWARD_REF_TYPE:return getWrappedName(type,type.render,'ForwardRef');case REACT_MEMO_TYPE:return getComponentName(type.type);case REACT_LAZY_TYPE:{var thenable=type;var resolvedThenable=refineResolvedLazyComponent(thenable);if(resolvedThenable){return getComponentName(resolvedThenable);}}}}return null;}var ReactDebugCurrentFrame=ReactSharedInternals.ReactDebugCurrentFrame;function describeFiber(fiber){switch(fiber.tag){case HostRoot:case HostPortal:case HostText:case Fragment:case ContextProvider:case ContextConsumer:return'';default:var owner=fiber._debugOwner;var source=fiber._debugSource;var name=getComponentName(fiber.type);var ownerName=null;if(owner){ownerName=getComponentName(owner.type);}return describeComponentFrame(name,source,ownerName);}}function getStackByFiberInDevAndProd(workInProgress){var info='';var node=workInProgress;do{info+=describeFiber(node);node=node.return;}while(node);return info;}var current=null;var phase=null;function getCurrentFiberOwnerNameInDevOrNull(){{if(current===null){return null;}var owner=current._debugOwner;if(owner!==null&&typeof owner!=='undefined'){return getComponentName(owner.type);}}return null;}function getCurrentFiberStackInDev(){{if(current===null){return'';}// Safe because if current fiber exists, we are reconciling,
 // and it is guaranteed to be the work-in-progress version.
 return getStackByFiberInDevAndProd(current);}return'';}function resetCurrentFiber(){{ReactDebugCurrentFrame.getCurrentStack=null;current=null;phase=null;}}function setCurrentFiber(fiber){{ReactDebugCurrentFrame.getCurrentStack=getCurrentFiberStackInDev;current=fiber;phase=null;}}function setCurrentPhase(lifeCyclePhase){{phase=lifeCyclePhase;}}/**
  * Similar to invariant but only logs a warning if the condition is not met.
@@ -45821,7 +45960,7 @@ function toString(value){return''+value;}function getToStringValue(value){switch
 return'';}}var ReactDebugCurrentFrame$1=null;var ReactControlledValuePropTypes={checkPropTypes:null};{ReactDebugCurrentFrame$1=ReactSharedInternals.ReactDebugCurrentFrame;var hasReadOnlyValue={button:true,checkbox:true,image:true,hidden:true,radio:true,reset:true,submit:true};var propTypes={value:function(props,propName,componentName){if(hasReadOnlyValue[props.type]||props.onChange||props.readOnly||props.disabled||props[propName]==null){return null;}return new Error('You provided a `value` prop to a form field without an '+'`onChange` handler. This will render a read-only field. If '+'the field should be mutable use `defaultValue`. Otherwise, '+'set either `onChange` or `readOnly`.');},checked:function(props,propName,componentName){if(props.onChange||props.readOnly||props.disabled||props[propName]==null){return null;}return new Error('You provided a `checked` prop to a form field without an '+'`onChange` handler. This will render a read-only field. If '+'the field should be mutable use `defaultChecked`. Otherwise, '+'set either `onChange` or `readOnly`.');}};/**
    * Provide a linked `value` attribute for controlled forms. You should not use
    * this outside of the ReactDOM controlled form components.
-   */ReactControlledValuePropTypes.checkPropTypes=function(tagName,props){checkPropTypes(propTypes,props,'prop',tagName,ReactDebugCurrentFrame$1.getStackAddendum);};}var enableUserTimingAPI=true;// Helps identify side effects in begin-phase lifecycle hooks and setState reducers:
+   */ReactControlledValuePropTypes.checkPropTypes=function(tagName,props){checkPropTypes(propTypes,props,'prop',tagName,ReactDebugCurrentFrame$1.getStackAddendum);};}var enableUserTimingAPI=true;var enableHooks=false;// Helps identify side effects in begin-phase lifecycle hooks and setState reducers:
 var debugRenderPhaseSideEffects=false;// In some cases, StrictMode should also double-render lifecycles.
 // This can be confusing for tests though,
 // And it can be bad for performance in production.
@@ -45832,10 +45971,14 @@ var replayFailedUnitOfWorkWithInvokeGuardedCallback=true;// Warn about deprecate
 var warnAboutDeprecatedLifecycles=false;// Gather advanced timing metrics for Profiler subtrees.
 var enableProfilerTimer=true;// Trace which interactions trigger each commit.
 var enableSchedulerTracing=true;// Only used in www builds.
+// TODO: true? Here it might just be false.
+// Only used in www builds.
 // Only used in www builds.
 // React Fire: prevent the value and checked attributes from syncing
 // with their related DOM properties
-var disableInputAttributeSyncing=false;// TODO: direct imports like some-package/src/* are bad. Fix me.
+var disableInputAttributeSyncing=false;// These APIs will no longer be "unstable" in the upcoming 16.7 release,
+// Control this behavior with a flag to support 16.6 minor releases in the meanwhile.
+var enableStableConcurrentModeAPIs=false;var warnAboutShorthandPropertyCollision=false;// TODO: direct imports like some-package/src/* are bad. Fix me.
 var didWarnValueDefaultValue=false;var didWarnCheckedDefaultChecked=false;var didWarnControlledToUncontrolled=false;var didWarnUncontrolledToControlled=false;function isControlled(props){var usesChecked=props.type==='checkbox'||props.type==='radio';return usesChecked?props.checked!=null:props.value!=null;}/**
  * Implements an <input> host component that allows setting these optional
  * props: `checked`, `value`, `defaultChecked`, and `defaultValue`.
@@ -45954,7 +46097,7 @@ enqueueStateRestore(target);accumulateTwoPhaseDispatches(event);return event;}/*
 // components don't work properly in conjunction with event bubbling because
 // the component is rerendered and the value reverted before all the event
 // handlers can run. See https://github.com/facebook/react/issues/708.
-batchedUpdates(runEventInBatch,event);}function runEventInBatch(event){runEventsInBatch(event,false);}function getInstIfValueChanged(targetInst){var targetNode=getNodeFromInstance$1(targetInst);if(updateValueIfChanged(targetNode)){return targetInst;}}function getTargetInstForChangeEvent(topLevelType,targetInst){if(topLevelType===TOP_CHANGE){return targetInst;}}/**
+batchedUpdates(runEventInBatch,event);}function runEventInBatch(event){runEventsInBatch(event);}function getInstIfValueChanged(targetInst){var targetNode=getNodeFromInstance$1(targetInst);if(updateValueIfChanged(targetNode)){return targetInst;}}function getTargetInstForChangeEvent(topLevelType,targetInst){if(topLevelType===TOP_CHANGE){return targetInst;}}/**
  * SECTION: handle `input` event
  */var isInputEventSupported=false;if(canUseDOM){// IE9 claims to support the input event but fails to trigger it when
 // deleting text, so we ignore its input events.
@@ -46013,9 +46156,9 @@ if(topLevelType===TOP_BLUR){handleControlledInputBlur(targetNode);}}};/**
  * that ordering would be influenced by the packaging order.
  * `ResponderEventPlugin` must occur before `SimpleEventPlugin` so that
  * preventing default on events is convenient in `SimpleEventPlugin` handlers.
- */var DOMEventPluginOrder=['ResponderEventPlugin','SimpleEventPlugin','EnterLeaveEventPlugin','ChangeEventPlugin','SelectEventPlugin','BeforeInputEventPlugin'];var SyntheticUIEvent=SyntheticEvent.extend({view:null,detail:null});var modifierKeyToProp={Alt:'altKey',Control:'ctrlKey',Meta:'metaKey',Shift:'shiftKey'};// IE8 does not implement getModifierState so we simply map it to the only
-// modifier keys exposed by the event itself, does not support Lock-keys.
-// Currently, all major browsers except Chrome seems to support Lock-keys.
+ */var DOMEventPluginOrder=['ResponderEventPlugin','SimpleEventPlugin','EnterLeaveEventPlugin','ChangeEventPlugin','SelectEventPlugin','BeforeInputEventPlugin'];var SyntheticUIEvent=SyntheticEvent.extend({view:null,detail:null});var modifierKeyToProp={Alt:'altKey',Control:'ctrlKey',Meta:'metaKey',Shift:'shiftKey'};// Older browsers (Safari <= 10, iOS Safari <= 10.2) do not support
+// getModifierState. If getModifierState is not supported, we map it to a set of
+// modifier keys exposed by the event. In this case, Lock-keys are not supported.
 /**
  * Translation from modifier key to the associated property in the event.
  * @see http://www.w3.org/TR/DOM-Level-3-Events/#keys-Modifiers
@@ -46064,9 +46207,9 @@ for(var i=0;i<keysA.length;i++){if(!hasOwnProperty$1.call(objB,keysA[i])||!is(ob
  * supported we can rename it.
  */function get(key){return key._reactInternalFiber;}function has(key){return key._reactInternalFiber!==undefined;}function set(key,value){key._reactInternalFiber=value;}// Don't change these two values. They're used by React Dev Tools.
 var NoEffect=/*              */0;var PerformedWork=/*         */1;// You can change the rest (and add more).
-var Placement=/*             */2;var Update=/*                */4;var PlacementAndUpdate=/*    */6;var Deletion=/*              */8;var ContentReset=/*          */16;var Callback=/*              */32;var DidCapture=/*            */64;var Ref=/*                   */128;var Snapshot=/*              */256;// Update & Callback & Ref & Snapshot
-var LifecycleEffectMask=/*   */420;// Union of all host effects
-var HostEffectMask=/*        */511;var Incomplete=/*            */512;var ShouldCapture=/*         */1024;var ReactCurrentOwner$1=ReactSharedInternals.ReactCurrentOwner;var MOUNTING=1;var MOUNTED=2;var UNMOUNTED=3;function isFiberMountedImpl(fiber){var node=fiber;if(!fiber.alternate){// If there is no alternate, this might be a new tree that isn't inserted
+var Placement=/*             */2;var Update=/*                */4;var PlacementAndUpdate=/*    */6;var Deletion=/*              */8;var ContentReset=/*          */16;var Callback=/*              */32;var DidCapture=/*            */64;var Ref=/*                   */128;var Snapshot=/*              */256;var Passive=/*               */512;// Passive & Update & Callback & Ref & Snapshot
+var LifecycleEffectMask=/*   */932;// Union of all host effects
+var HostEffectMask=/*        */1023;var Incomplete=/*            */1024;var ShouldCapture=/*         */2048;var ReactCurrentOwner$1=ReactSharedInternals.ReactCurrentOwner;var MOUNTING=1;var MOUNTED=2;var UNMOUNTED=3;function isFiberMountedImpl(fiber){var node=fiber;if(!fiber.alternate){// If there is no alternate, this might be a new tree that isn't inserted
 // yet. If it is, then it will have a pending insertion effect on it.
 if((node.effectTag&Placement)!==NoEffect){return MOUNTING;}while(node.return){node=node.return;if((node.effectTag&Placement)!==NoEffect){return MOUNTING;}}}else{while(node.return){node=node.return;}}if(node.tag===HostRoot){// TODO: Check if this was a nested HostRoot when used with
 // renderContainerIntoSubtree.
@@ -46386,7 +46529,10 @@ return null;}return{start:start,end:end};}/**
  *
  * @param {DOMElement|DOMTextNode} node
  * @param {object} offsets
- */function setOffsets(node,offsets){var doc=node.ownerDocument||document;var win=doc&&doc.defaultView||window;var selection=win.getSelection();var length=node.textContent.length;var start=Math.min(offsets.start,length);var end=offsets.end===undefined?start:Math.min(offsets.end,length);// IE 11 uses modern selection, but doesn't support the extend method.
+ */function setOffsets(node,offsets){var doc=node.ownerDocument||document;var win=doc&&doc.defaultView||window;// Edge fails with "Object expected" in some scenarios.
+// (For instance: TinyMCE editor used in a list component that supports pasting to add more,
+// fails when pasting 100+ items)
+if(!win.getSelection){return;}var selection=win.getSelection();var length=node.textContent.length;var start=Math.min(offsets.start,length);var end=offsets.end===undefined?start:Math.min(offsets.end,length);// IE 11 uses modern selection, but doesn't support the extend method.
 // Flip backward selections, so we can set with a single range.
 if(!selection.extend&&start>end){var temp=end;end=start;start=temp;}var startMarker=getNodeForCharacterOffset(node,start);var endMarker=getNodeForCharacterOffset(node,end);if(startMarker&&endMarker){if(selection.rangeCount===1&&selection.anchorNode===startMarker.node&&selection.anchorOffset===startMarker.offset&&selection.focusNode===endMarker.node&&selection.focusOffset===endMarker.offset){return;}var range=doc.createRange();range.setStart(startMarker.node,startMarker.offset);selection.removeAllRanges();if(start>end){selection.addRange(range);selection.extend(endMarker.node,endMarker.offset);}else{range.setEnd(endMarker.node,endMarker.offset);selection.addRange(range);}}}function isTextNode(node){return node&&node.nodeType===TEXT_NODE;}function containsNode(outerNode,innerNode){if(!outerNode||!innerNode){return false;}else if(outerNode===innerNode){return true;}else if(isTextNode(outerNode)){return false;}else if(isTextNode(innerNode)){return containsNode(outerNode,innerNode.parentNode);}else if('contains'in outerNode){return outerNode.contains(innerNode);}else if(outerNode.compareDocumentPosition){return!!(outerNode.compareDocumentPosition(innerNode)&16);}else{return false;}}function isInDocument(node){return node&&node.ownerDocument&&containsNode(node.ownerDocument.documentElement,node);}function getActiveElementDeep(){var win=window;var element=getActiveElement();while(element instanceof win.HTMLIFrameElement){// Accessing the contentDocument of a HTMLIframeElement can cause the browser
 // to throw, e.g. if it has a cross-origin src attribute
@@ -46567,7 +46713,9 @@ if(node.namespaceURI===Namespaces.svg&&!('innerHTML'in node)){reusableSVGContain
  * @param {DOMElement} node
  * @param {string} text
  * @internal
- */var setTextContent=function(node,text){if(text){var firstChild=node.firstChild;if(firstChild&&firstChild===node.lastChild&&firstChild.nodeType===TEXT_NODE){firstChild.nodeValue=text;return;}}node.textContent=text;};/**
+ */var setTextContent=function(node,text){if(text){var firstChild=node.firstChild;if(firstChild&&firstChild===node.lastChild&&firstChild.nodeType===TEXT_NODE){firstChild.nodeValue=text;return;}}node.textContent=text;};// List derived from Gecko source code:
+// https://github.com/mozilla/gecko-dev/blob/4e638efc71/layout/style/test/property_database.js
+var shorthandToLonghand={animation:['animationDelay','animationDirection','animationDuration','animationFillMode','animationIterationCount','animationName','animationPlayState','animationTimingFunction'],background:['backgroundAttachment','backgroundClip','backgroundColor','backgroundImage','backgroundOrigin','backgroundPositionX','backgroundPositionY','backgroundRepeat','backgroundSize'],backgroundPosition:['backgroundPositionX','backgroundPositionY'],border:['borderBottomColor','borderBottomStyle','borderBottomWidth','borderImageOutset','borderImageRepeat','borderImageSlice','borderImageSource','borderImageWidth','borderLeftColor','borderLeftStyle','borderLeftWidth','borderRightColor','borderRightStyle','borderRightWidth','borderTopColor','borderTopStyle','borderTopWidth'],borderBlockEnd:['borderBlockEndColor','borderBlockEndStyle','borderBlockEndWidth'],borderBlockStart:['borderBlockStartColor','borderBlockStartStyle','borderBlockStartWidth'],borderBottom:['borderBottomColor','borderBottomStyle','borderBottomWidth'],borderColor:['borderBottomColor','borderLeftColor','borderRightColor','borderTopColor'],borderImage:['borderImageOutset','borderImageRepeat','borderImageSlice','borderImageSource','borderImageWidth'],borderInlineEnd:['borderInlineEndColor','borderInlineEndStyle','borderInlineEndWidth'],borderInlineStart:['borderInlineStartColor','borderInlineStartStyle','borderInlineStartWidth'],borderLeft:['borderLeftColor','borderLeftStyle','borderLeftWidth'],borderRadius:['borderBottomLeftRadius','borderBottomRightRadius','borderTopLeftRadius','borderTopRightRadius'],borderRight:['borderRightColor','borderRightStyle','borderRightWidth'],borderStyle:['borderBottomStyle','borderLeftStyle','borderRightStyle','borderTopStyle'],borderTop:['borderTopColor','borderTopStyle','borderTopWidth'],borderWidth:['borderBottomWidth','borderLeftWidth','borderRightWidth','borderTopWidth'],columnRule:['columnRuleColor','columnRuleStyle','columnRuleWidth'],columns:['columnCount','columnWidth'],flex:['flexBasis','flexGrow','flexShrink'],flexFlow:['flexDirection','flexWrap'],font:['fontFamily','fontFeatureSettings','fontKerning','fontLanguageOverride','fontSize','fontSizeAdjust','fontStretch','fontStyle','fontVariant','fontVariantAlternates','fontVariantCaps','fontVariantEastAsian','fontVariantLigatures','fontVariantNumeric','fontVariantPosition','fontWeight','lineHeight'],fontVariant:['fontVariantAlternates','fontVariantCaps','fontVariantEastAsian','fontVariantLigatures','fontVariantNumeric','fontVariantPosition'],gap:['columnGap','rowGap'],grid:['gridAutoColumns','gridAutoFlow','gridAutoRows','gridTemplateAreas','gridTemplateColumns','gridTemplateRows'],gridArea:['gridColumnEnd','gridColumnStart','gridRowEnd','gridRowStart'],gridColumn:['gridColumnEnd','gridColumnStart'],gridColumnGap:['columnGap'],gridGap:['columnGap','rowGap'],gridRow:['gridRowEnd','gridRowStart'],gridRowGap:['rowGap'],gridTemplate:['gridTemplateAreas','gridTemplateColumns','gridTemplateRows'],listStyle:['listStyleImage','listStylePosition','listStyleType'],margin:['marginBottom','marginLeft','marginRight','marginTop'],marker:['markerEnd','markerMid','markerStart'],mask:['maskClip','maskComposite','maskImage','maskMode','maskOrigin','maskPositionX','maskPositionY','maskRepeat','maskSize'],maskPosition:['maskPositionX','maskPositionY'],outline:['outlineColor','outlineStyle','outlineWidth'],overflow:['overflowX','overflowY'],padding:['paddingBottom','paddingLeft','paddingRight','paddingTop'],placeContent:['alignContent','justifyContent'],placeItems:['alignItems','justifyItems'],placeSelf:['alignSelf','justifySelf'],textDecoration:['textDecorationColor','textDecorationLine','textDecorationStyle'],textEmphasis:['textEmphasisColor','textEmphasisStyle'],transition:['transitionDelay','transitionDuration','transitionProperty','transitionTimingFunction'],wordWrap:['overflowWrap']};/**
  * CSS properties which accept numbers but are not in units of "px".
  */var isUnitlessNumber={animationIterationCount:true,borderImageOutset:true,borderImageSlice:true,borderImageWidth:true,boxFlex:true,boxFlexGroup:true,boxOrdinalGroup:true,columnCount:true,columns:true,flex:true,flexGrow:true,flexPositive:true,flexShrink:true,flexNegative:true,flexOrder:true,gridArea:true,gridRow:true,gridRowEnd:true,gridRowSpan:true,gridRowStart:true,gridColumn:true,gridColumnEnd:true,gridColumnSpan:true,gridColumnStart:true,fontWeight:true,lineClamp:true,lineHeight:true,opacity:true,order:true,orphans:true,tabSize:true,widows:true,zIndex:true,zoom:true,// SVG-related properties
 fillOpacity:true,floodOpacity:true,stopOpacity:true,strokeDasharray:true,strokeDashoffset:true,strokeMiterlimit:true,strokeOpacity:true,strokeWidth:true};/**
@@ -46628,7 +46776,27 @@ camelize(name.replace(msPattern$1,'ms-')));};var warnBadVendoredStyleName=functi
  *
  * @param {DOMElement} node
  * @param {object} styles
- */function setValueForStyles(node,styles){var style=node.style;for(var styleName in styles){if(!styles.hasOwnProperty(styleName)){continue;}var isCustomProperty=styleName.indexOf('--')===0;{if(!isCustomProperty){warnValidStyle$1(styleName,styles[styleName]);}}var styleValue=dangerousStyleValue(styleName,styles[styleName],isCustomProperty);if(styleName==='float'){styleName='cssFloat';}if(isCustomProperty){style.setProperty(styleName,styleValue);}else{style[styleName]=styleValue;}}}// For HTML, certain tags should omit their close tag. We keep a whitelist for
+ */function setValueForStyles(node,styles){var style=node.style;for(var styleName in styles){if(!styles.hasOwnProperty(styleName)){continue;}var isCustomProperty=styleName.indexOf('--')===0;{if(!isCustomProperty){warnValidStyle$1(styleName,styles[styleName]);}}var styleValue=dangerousStyleValue(styleName,styles[styleName],isCustomProperty);if(styleName==='float'){styleName='cssFloat';}if(isCustomProperty){style.setProperty(styleName,styleValue);}else{style[styleName]=styleValue;}}}function isValueEmpty(value){return value==null||typeof value==='boolean'||value==='';}/**
+ * Given {color: 'red', overflow: 'hidden'} returns {
+ *   color: 'color',
+ *   overflowX: 'overflow',
+ *   overflowY: 'overflow',
+ * }. This can be read as "the overflowY property was set by the overflow
+ * shorthand". That is, the values are the property that each was derived from.
+ */function expandShorthandMap(styles){var expanded={};for(var key in styles){var longhands=shorthandToLonghand[key]||[key];for(var i=0;i<longhands.length;i++){expanded[longhands[i]]=key;}}return expanded;}/**
+ * When mixing shorthand and longhand property names, we warn during updates if
+ * we expect an incorrect result to occur. In particular, we warn for:
+ *
+ * Updating a shorthand property (longhand gets overwritten):
+ *   {font: 'foo', fontVariant: 'bar'} -> {font: 'baz', fontVariant: 'bar'}
+ *   becomes .style.font = 'baz'
+ * Removing a shorthand property (longhand gets lost too):
+ *   {font: 'foo', fontVariant: 'bar'} -> {fontVariant: 'bar'}
+ *   becomes .style.font = ''
+ * Removing a longhand property (should revert to shorthand; doesn't):
+ *   {font: 'foo', fontVariant: 'bar'} -> {font: 'foo'}
+ *   becomes .style.fontVariant = ''
+ */function validateShorthandPropertyCollisionInDev(styleUpdates,nextStyles){if(!warnAboutShorthandPropertyCollision){return;}if(!nextStyles){return;}var expandedUpdates=expandShorthandMap(styleUpdates);var expandedStyles=expandShorthandMap(nextStyles);var warnedAbout={};for(var key in expandedUpdates){var originalKey=expandedUpdates[key];var correctOriginalKey=expandedStyles[key];if(correctOriginalKey&&originalKey!==correctOriginalKey){var warningKey=originalKey+','+correctOriginalKey;if(warnedAbout[warningKey]){continue;}warnedAbout[warningKey]=true;warning$1(false,'%s a style property during rerender (%s) when a '+'conflicting property is set (%s) can lead to styling bugs. To '+"avoid this, don't mix shorthand and non-shorthand properties "+'for the same value; instead, replace the shorthand with '+'separate values.',isValueEmpty(styleUpdates[originalKey])?'Removing':'Updating',originalKey,correctOriginalKey);}}}// For HTML, certain tags should omit their close tag. We keep a whitelist for
 // those special-case tags.
 var omittedCloseTags={area:true,base:true,br:true,col:true,embed:true,hr:true,img:true,input:true,keygen:true,link:true,meta:true,param:true,source:true,track:true,wbr:true// NOTE: menuitem's close tag should be omitted, but that causes problems.
 };// For HTML, certain tags cannot have children. This has the same purpose as
@@ -46777,7 +46945,7 @@ if( true&&typeof nextProp!=='function'){warnForInvalidEventListener(propKey,next
 // to update this element.
 updatePayload=[];}}else{// For any other property we always add it to the queue and then we
 // filter it out using the whitelist during the commit.
-(updatePayload=updatePayload||[]).push(propKey,nextProp);}}if(styleUpdates){(updatePayload=updatePayload||[]).push(STYLE$1,styleUpdates);}return updatePayload;}// Apply the diff.
+(updatePayload=updatePayload||[]).push(propKey,nextProp);}}if(styleUpdates){{validateShorthandPropertyCollisionInDev(styleUpdates,nextProps[STYLE$1]);}(updatePayload=updatePayload||[]).push(STYLE$1,styleUpdates);}return updatePayload;}// Apply the diff.
 function updateProperties(domElement,updatePayload,tag,lastRawProps,nextRawProps){// Update checked *before* name.
 // In the middle of an update, it is possible to have multiple checked.
 // When a checked radio tries to change name, browser makes another radio's checked false.
@@ -46895,7 +47063,10 @@ return ancestorInfo.aTagInScope;case'nobr':return ancestorInfo.nobrTagInScope;}r
 // can re-export everything from this module.
 function shim(){invariant(false,'The current renderer does not support persistence. This error is likely caused by a bug in React. Please file an issue.');}// Persistence (when unsupported)
 var supportsPersistence=false;var cloneInstance=shim;var createContainerChildSet=shim;var appendChildToContainerChildSet=shim;var finalizeContainerChildren=shim;var replaceContainerChildren=shim;var cloneHiddenInstance=shim;var cloneUnhiddenInstance=shim;var createHiddenTextInstance=shim;var SUPPRESS_HYDRATION_WARNING=void 0;{SUPPRESS_HYDRATION_WARNING='suppressHydrationWarning';}var STYLE='style';var eventsEnabled=null;var selectionInformation=null;function shouldAutoFocusHostComponent(type,props){switch(type){case'button':case'input':case'select':case'textarea':return!!props.autoFocus;}return false;}function getRootHostContext(rootContainerInstance){var type=void 0;var namespace=void 0;var nodeType=rootContainerInstance.nodeType;switch(nodeType){case DOCUMENT_NODE:case DOCUMENT_FRAGMENT_NODE:{type=nodeType===DOCUMENT_NODE?'#document':'#fragment';var root=rootContainerInstance.documentElement;namespace=root?root.namespaceURI:getChildNamespace(null,'');break;}default:{var container=nodeType===COMMENT_NODE?rootContainerInstance.parentNode:rootContainerInstance;var ownNamespace=container.namespaceURI||null;type=container.tagName;namespace=getChildNamespace(ownNamespace,type);break;}}{var validatedTag=type.toLowerCase();var _ancestorInfo=updatedAncestorInfo(null,validatedTag);return{namespace:namespace,ancestorInfo:_ancestorInfo};}return namespace;}function getChildHostContext(parentHostContext,type,rootContainerInstance){{var parentHostContextDev=parentHostContext;var _namespace=getChildNamespace(parentHostContextDev.namespace,type);var _ancestorInfo2=updatedAncestorInfo(parentHostContextDev.ancestorInfo,type);return{namespace:_namespace,ancestorInfo:_ancestorInfo2};}var parentNamespace=parentHostContext;return getChildNamespace(parentNamespace,type);}function getPublicInstance(instance){return instance;}function prepareForCommit(containerInfo){eventsEnabled=isEnabled();selectionInformation=getSelectionInformation();setEnabled(false);}function resetAfterCommit(containerInfo){restoreSelection(selectionInformation);selectionInformation=null;setEnabled(eventsEnabled);eventsEnabled=null;}function createInstance(type,props,rootContainerInstance,hostContext,internalInstanceHandle){var parentNamespace=void 0;{// TODO: take namespace into account when validating.
-var hostContextDev=hostContext;validateDOMNesting(type,null,hostContextDev.ancestorInfo);if(typeof props.children==='string'||typeof props.children==='number'){var string=''+props.children;var ownAncestorInfo=updatedAncestorInfo(hostContextDev.ancestorInfo,type);validateDOMNesting(null,string,ownAncestorInfo);}parentNamespace=hostContextDev.namespace;}var domElement=createElement(type,props,rootContainerInstance,parentNamespace);precacheFiberNode(internalInstanceHandle,domElement);updateFiberProps(domElement,props);return domElement;}function appendInitialChild(parentInstance,child){parentInstance.appendChild(child);}function finalizeInitialChildren(domElement,type,props,rootContainerInstance,hostContext){setInitialProperties(domElement,type,props,rootContainerInstance);return shouldAutoFocusHostComponent(type,props);}function prepareUpdate(domElement,type,oldProps,newProps,rootContainerInstance,hostContext){{var hostContextDev=hostContext;if(typeof newProps.children!==typeof oldProps.children&&(typeof newProps.children==='string'||typeof newProps.children==='number')){var string=''+newProps.children;var ownAncestorInfo=updatedAncestorInfo(hostContextDev.ancestorInfo,type);validateDOMNesting(null,string,ownAncestorInfo);}}return diffProperties(domElement,type,oldProps,newProps,rootContainerInstance);}function shouldSetTextContent(type,props){return type==='textarea'||type==='option'||type==='noscript'||typeof props.children==='string'||typeof props.children==='number'||typeof props.dangerouslySetInnerHTML==='object'&&props.dangerouslySetInnerHTML!==null&&props.dangerouslySetInnerHTML.__html!=null;}function shouldDeprioritizeSubtree(type,props){return!!props.hidden;}function createTextInstance(text,rootContainerInstance,hostContext,internalInstanceHandle){{var hostContextDev=hostContext;validateDOMNesting(null,text,hostContextDev.ancestorInfo);}var textNode=createTextNode(text,rootContainerInstance);precacheFiberNode(internalInstanceHandle,textNode);return textNode;}var isPrimaryRenderer=true;var scheduleTimeout=setTimeout;var cancelTimeout=clearTimeout;var noTimeout=-1;// -------------------
+var hostContextDev=hostContext;validateDOMNesting(type,null,hostContextDev.ancestorInfo);if(typeof props.children==='string'||typeof props.children==='number'){var string=''+props.children;var ownAncestorInfo=updatedAncestorInfo(hostContextDev.ancestorInfo,type);validateDOMNesting(null,string,ownAncestorInfo);}parentNamespace=hostContextDev.namespace;}var domElement=createElement(type,props,rootContainerInstance,parentNamespace);precacheFiberNode(internalInstanceHandle,domElement);updateFiberProps(domElement,props);return domElement;}function appendInitialChild(parentInstance,child){parentInstance.appendChild(child);}function finalizeInitialChildren(domElement,type,props,rootContainerInstance,hostContext){setInitialProperties(domElement,type,props,rootContainerInstance);return shouldAutoFocusHostComponent(type,props);}function prepareUpdate(domElement,type,oldProps,newProps,rootContainerInstance,hostContext){{var hostContextDev=hostContext;if(typeof newProps.children!==typeof oldProps.children&&(typeof newProps.children==='string'||typeof newProps.children==='number')){var string=''+newProps.children;var ownAncestorInfo=updatedAncestorInfo(hostContextDev.ancestorInfo,type);validateDOMNesting(null,string,ownAncestorInfo);}}return diffProperties(domElement,type,oldProps,newProps,rootContainerInstance);}function shouldSetTextContent(type,props){return type==='textarea'||type==='option'||type==='noscript'||typeof props.children==='string'||typeof props.children==='number'||typeof props.dangerouslySetInnerHTML==='object'&&props.dangerouslySetInnerHTML!==null&&props.dangerouslySetInnerHTML.__html!=null;}function shouldDeprioritizeSubtree(type,props){return!!props.hidden;}function createTextInstance(text,rootContainerInstance,hostContext,internalInstanceHandle){{var hostContextDev=hostContext;validateDOMNesting(null,text,hostContextDev.ancestorInfo);}var textNode=createTextNode(text,rootContainerInstance);precacheFiberNode(internalInstanceHandle,textNode);return textNode;}var isPrimaryRenderer=true;// This initialization code may run even on server environments
+// if a component just imports ReactDOM (e.g. for findDOMNode).
+// Some environments might not have setTimeout or clearTimeout.
+var scheduleTimeout=typeof setTimeout==='function'?setTimeout:undefined;var cancelTimeout=typeof clearTimeout==='function'?clearTimeout:undefined;var noTimeout=-1;// -------------------
 //     Mutation
 // -------------------
 var supportsMutation=true;function commitMount(domElement,type,newProps,internalInstanceHandle){// Despite the naming that might imply otherwise, this method only
@@ -46918,8 +47089,7 @@ updateProperties(domElement,updatePayload,type,oldProps,newProps);}function rese
 var reactRootContainer=container._reactRootContainer;if((reactRootContainer===null||reactRootContainer===undefined)&&parentNode.onclick===null){// TODO: This cast may not be sound for SVG, MathML or custom elements.
 trapClickOnNonInteractiveElement(parentNode);}}function insertBefore(parentInstance,child,beforeChild){parentInstance.insertBefore(child,beforeChild);}function insertInContainerBefore(container,child,beforeChild){if(container.nodeType===COMMENT_NODE){container.parentNode.insertBefore(child,beforeChild);}else{container.insertBefore(child,beforeChild);}}function removeChild(parentInstance,child){parentInstance.removeChild(child);}function removeChildFromContainer(container,child){if(container.nodeType===COMMENT_NODE){container.parentNode.removeChild(child);}else{container.removeChild(child);}}function hideInstance(instance){// TODO: Does this work for all element types? What about MathML? Should we
 // pass host context to this method?
-instance=instance;instance.style.display='none';}function hideTextInstance(textInstance){textInstance.nodeValue='';}function unhideInstance(instance,props){instance=instance;var styleProp=props[STYLE];var display=styleProp!==undefined&&styleProp!==null&&styleProp.hasOwnProperty('display')?styleProp.display:null;// $FlowFixMe Setting a style property to null is the valid way to reset it.
-instance.style.display=display;}function unhideTextInstance(textInstance,text){textInstance.nodeValue=text;}// -------------------
+instance=instance;instance.style.display='none';}function hideTextInstance(textInstance){textInstance.nodeValue='';}function unhideInstance(instance,props){instance=instance;var styleProp=props[STYLE];var display=styleProp!==undefined&&styleProp!==null&&styleProp.hasOwnProperty('display')?styleProp.display:null;instance.style.display=dangerousStyleValue('display',display);}function unhideTextInstance(textInstance,text){textInstance.nodeValue=text;}// -------------------
 //     Hydration
 // -------------------
 var supportsHydration=true;function canHydrateInstance(instance,type,props){if(instance.nodeType!==ELEMENT_NODE||type.toLowerCase()!==instance.nodeName.toLowerCase()){return null;}// This has now been refined to an element node.
@@ -47010,9 +47180,9 @@ onCommitFiberRoot=catchErrors(function(root){return hook.onCommitFiberRoot(rende
 return true;}function onCommitRoot(root){if(typeof onCommitFiberRoot==='function'){onCommitFiberRoot(root);}}function onCommitUnmount(fiber){if(typeof onCommitFiberUnmount==='function'){onCommitFiberUnmount(fiber);}}// Max 31 bit integer. The max integer size in V8 for 32-bit systems.
 // Math.pow(2, 30) - 1
 // 0b111111111111111111111111111111
-var maxSigned31BitInt=1073741823;var NoWork=0;var Sync=1;var Never=maxSigned31BitInt;var UNIT_SIZE=10;var MAGIC_NUMBER_OFFSET=2;// 1 unit of expiration time represents 10ms.
+var maxSigned31BitInt=1073741823;var NoWork=0;var Never=1;var Sync=maxSigned31BitInt;var UNIT_SIZE=10;var MAGIC_NUMBER_OFFSET=maxSigned31BitInt-1;// 1 unit of expiration time represents 10ms.
 function msToExpirationTime(ms){// Always add an offset so that we don't clash with the magic number for NoWork.
-return(ms/UNIT_SIZE|0)+MAGIC_NUMBER_OFFSET;}function expirationTimeToMs(expirationTime){return(expirationTime-MAGIC_NUMBER_OFFSET)*UNIT_SIZE;}function ceiling(num,precision){return((num/precision|0)+1)*precision;}function computeExpirationBucket(currentTime,expirationInMs,bucketSizeMs){return MAGIC_NUMBER_OFFSET+ceiling(currentTime-MAGIC_NUMBER_OFFSET+expirationInMs/UNIT_SIZE,bucketSizeMs/UNIT_SIZE);}var LOW_PRIORITY_EXPIRATION=5000;var LOW_PRIORITY_BATCH_SIZE=250;function computeAsyncExpiration(currentTime){return computeExpirationBucket(currentTime,LOW_PRIORITY_EXPIRATION,LOW_PRIORITY_BATCH_SIZE);}// We intentionally set a higher expiration time for interactive updates in
+return MAGIC_NUMBER_OFFSET-(ms/UNIT_SIZE|0);}function expirationTimeToMs(expirationTime){return(MAGIC_NUMBER_OFFSET-expirationTime)*UNIT_SIZE;}function ceiling(num,precision){return((num/precision|0)+1)*precision;}function computeExpirationBucket(currentTime,expirationInMs,bucketSizeMs){return MAGIC_NUMBER_OFFSET-ceiling(MAGIC_NUMBER_OFFSET-currentTime+expirationInMs/UNIT_SIZE,bucketSizeMs/UNIT_SIZE);}var LOW_PRIORITY_EXPIRATION=5000;var LOW_PRIORITY_BATCH_SIZE=250;function computeAsyncExpiration(currentTime){return computeExpirationBucket(currentTime,LOW_PRIORITY_EXPIRATION,LOW_PRIORITY_BATCH_SIZE);}// We intentionally set a higher expiration time for interactive updates in
 // dev than in production.
 //
 // If the main thread is being blocked so long that you hit the expiration,
@@ -47032,7 +47202,22 @@ hasBadMapPolyfill=true;}}// A Fiber is work on a Component that needs to be done
 var debugCounter=void 0;{debugCounter=1;}function FiberNode(tag,pendingProps,key,mode){// Instance
 this.tag=tag;this.key=key;this.elementType=null;this.type=null;this.stateNode=null;// Fiber
 this.return=null;this.child=null;this.sibling=null;this.index=0;this.ref=null;this.pendingProps=pendingProps;this.memoizedProps=null;this.updateQueue=null;this.memoizedState=null;this.firstContextDependency=null;this.mode=mode;// Effects
-this.effectTag=NoEffect;this.nextEffect=null;this.firstEffect=null;this.lastEffect=null;this.expirationTime=NoWork;this.childExpirationTime=NoWork;this.alternate=null;if(enableProfilerTimer){this.actualDuration=0;this.actualStartTime=-1;this.selfBaseDuration=0;this.treeBaseDuration=0;}{this._debugID=debugCounter++;this._debugSource=null;this._debugOwner=null;this._debugIsCurrentlyTiming=false;if(!hasBadMapPolyfill&&typeof Object.preventExtensions==='function'){Object.preventExtensions(this);}}}// This is a constructor function, rather than a POJO constructor, still
+this.effectTag=NoEffect;this.nextEffect=null;this.firstEffect=null;this.lastEffect=null;this.expirationTime=NoWork;this.childExpirationTime=NoWork;this.alternate=null;if(enableProfilerTimer){// Note: The following is done to avoid a v8 performance cliff.
+//
+// Initializing the fields below to smis and later updating them with
+// double values will cause Fibers to end up having separate shapes.
+// This behavior/bug has something to do with Object.preventExtension().
+// Fortunately this only impacts DEV builds.
+// Unfortunately it makes React unusably slow for some applications.
+// To work around this, initialize the fields below with doubles.
+//
+// Learn more about this here:
+// https://github.com/facebook/react/issues/14365
+// https://bugs.chromium.org/p/v8/issues/detail?id=8538
+this.actualDuration=Number.NaN;this.actualStartTime=Number.NaN;this.selfBaseDuration=Number.NaN;this.treeBaseDuration=Number.NaN;// It's okay to replace the initial doubles with smis after initialization.
+// This won't trigger the performance cliff mentioned above,
+// and it simplifies other profiler code (including DevTools).
+this.actualDuration=0;this.actualStartTime=-1;this.selfBaseDuration=0;this.treeBaseDuration=0;}{this._debugID=debugCounter++;this._debugSource=null;this._debugOwner=null;this._debugIsCurrentlyTiming=false;if(!hasBadMapPolyfill&&typeof Object.preventExtensions==='function'){Object.preventExtensions(this);}}}// This is a constructor function, rather than a POJO constructor, still
 // please ensure we do the following:
 // 1) Nobody should add any instance methods on this. Instance methods can be
 //    more difficult to predict when they get optimized and they are almost
@@ -47092,7 +47277,7 @@ target.tag=source.tag;target.key=source.key;target.elementType=source.elementTyp
 // (We don't have to use an inline :any cast when enableSchedulerTracing is disabled.)
 function createFiberRoot(containerInfo,isConcurrent,hydrate){// Cyclic construction. This cheats the type system right now because
 // stateNode is any.
-var uninitializedFiber=createHostRootFiber(isConcurrent);var root=void 0;if(enableSchedulerTracing){root={current:uninitializedFiber,containerInfo:containerInfo,pendingChildren:null,earliestPendingTime:NoWork,latestPendingTime:NoWork,earliestSuspendedTime:NoWork,latestSuspendedTime:NoWork,latestPingedTime:NoWork,didError:false,pendingCommitExpirationTime:NoWork,finishedWork:null,timeoutHandle:noTimeout,context:null,pendingContext:null,hydrate:hydrate,nextExpirationTimeToWorkOn:NoWork,expirationTime:NoWork,firstBatch:null,nextScheduledRoot:null,interactionThreadID:tracing.unstable_getThreadID(),memoizedInteractions:new Set(),pendingInteractionMap:new Map()};}else{root={current:uninitializedFiber,containerInfo:containerInfo,pendingChildren:null,earliestPendingTime:NoWork,latestPendingTime:NoWork,earliestSuspendedTime:NoWork,latestSuspendedTime:NoWork,latestPingedTime:NoWork,didError:false,pendingCommitExpirationTime:NoWork,finishedWork:null,timeoutHandle:noTimeout,context:null,pendingContext:null,hydrate:hydrate,nextExpirationTimeToWorkOn:NoWork,expirationTime:NoWork,firstBatch:null,nextScheduledRoot:null};}uninitializedFiber.stateNode=root;// The reason for the way the Flow types are structured in this file,
+var uninitializedFiber=createHostRootFiber(isConcurrent);var root=void 0;if(enableSchedulerTracing){root={current:uninitializedFiber,containerInfo:containerInfo,pendingChildren:null,earliestPendingTime:NoWork,latestPendingTime:NoWork,earliestSuspendedTime:NoWork,latestSuspendedTime:NoWork,latestPingedTime:NoWork,pingCache:null,didError:false,pendingCommitExpirationTime:NoWork,finishedWork:null,timeoutHandle:noTimeout,context:null,pendingContext:null,hydrate:hydrate,nextExpirationTimeToWorkOn:NoWork,expirationTime:NoWork,firstBatch:null,nextScheduledRoot:null,interactionThreadID:tracing.unstable_getThreadID(),memoizedInteractions:new Set(),pendingInteractionMap:new Map()};}else{root={current:uninitializedFiber,containerInfo:containerInfo,pendingChildren:null,pingCache:null,earliestPendingTime:NoWork,latestPendingTime:NoWork,earliestSuspendedTime:NoWork,latestSuspendedTime:NoWork,latestPingedTime:NoWork,didError:false,pendingCommitExpirationTime:NoWork,finishedWork:null,timeoutHandle:noTimeout,context:null,pendingContext:null,hydrate:hydrate,nextExpirationTimeToWorkOn:NoWork,expirationTime:NoWork,firstBatch:null,nextScheduledRoot:null};}uninitializedFiber.stateNode=root;// The reason for the way the Flow types are structured in this file,
 // Is to avoid needing :any casts everywhere interaction tracing fields are used.
 // Unfortunately that requires an :any cast for non-interaction tracing capable builds.
 // $FlowFixMe Remove this :any cast and replace it with something better.
@@ -47132,27 +47317,27 @@ function markPendingPriorityLevel(root,expirationTime){// If there's a gap betwe
 // is sufficient to fix the error.
 root.didError=false;// Update the latest and earliest pending times
 var earliestPendingTime=root.earliestPendingTime;if(earliestPendingTime===NoWork){// No other pending updates.
-root.earliestPendingTime=root.latestPendingTime=expirationTime;}else{if(earliestPendingTime>expirationTime){// This is the earliest pending update.
-root.earliestPendingTime=expirationTime;}else{var latestPendingTime=root.latestPendingTime;if(latestPendingTime<expirationTime){// This is the latest pending update
+root.earliestPendingTime=root.latestPendingTime=expirationTime;}else{if(earliestPendingTime<expirationTime){// This is the earliest pending update.
+root.earliestPendingTime=expirationTime;}else{var latestPendingTime=root.latestPendingTime;if(latestPendingTime>expirationTime){// This is the latest pending update
 root.latestPendingTime=expirationTime;}}}findNextExpirationTimeToWorkOn(expirationTime,root);}function markCommittedPriorityLevels(root,earliestRemainingTime){root.didError=false;if(earliestRemainingTime===NoWork){// Fast path. There's no remaining work. Clear everything.
-root.earliestPendingTime=NoWork;root.latestPendingTime=NoWork;root.earliestSuspendedTime=NoWork;root.latestSuspendedTime=NoWork;root.latestPingedTime=NoWork;findNextExpirationTimeToWorkOn(NoWork,root);return;}// Let's see if the previous latest known pending level was just flushed.
-var latestPendingTime=root.latestPendingTime;if(latestPendingTime!==NoWork){if(latestPendingTime<earliestRemainingTime){// We've flushed all the known pending levels.
-root.earliestPendingTime=root.latestPendingTime=NoWork;}else{var earliestPendingTime=root.earliestPendingTime;if(earliestPendingTime<earliestRemainingTime){// We've flushed the earliest known pending level. Set this to the
+root.earliestPendingTime=NoWork;root.latestPendingTime=NoWork;root.earliestSuspendedTime=NoWork;root.latestSuspendedTime=NoWork;root.latestPingedTime=NoWork;findNextExpirationTimeToWorkOn(NoWork,root);return;}if(earliestRemainingTime<root.latestPingedTime){root.latestPingedTime=NoWork;}// Let's see if the previous latest known pending level was just flushed.
+var latestPendingTime=root.latestPendingTime;if(latestPendingTime!==NoWork){if(latestPendingTime>earliestRemainingTime){// We've flushed all the known pending levels.
+root.earliestPendingTime=root.latestPendingTime=NoWork;}else{var earliestPendingTime=root.earliestPendingTime;if(earliestPendingTime>earliestRemainingTime){// We've flushed the earliest known pending level. Set this to the
 // latest pending time.
 root.earliestPendingTime=root.latestPendingTime;}}}// Now let's handle the earliest remaining level in the whole tree. We need to
 // decide whether to treat it as a pending level or as suspended. Check
 // it falls within the range of known suspended levels.
 var earliestSuspendedTime=root.earliestSuspendedTime;if(earliestSuspendedTime===NoWork){// There's no suspended work. Treat the earliest remaining level as a
 // pending level.
-markPendingPriorityLevel(root,earliestRemainingTime);findNextExpirationTimeToWorkOn(NoWork,root);return;}var latestSuspendedTime=root.latestSuspendedTime;if(earliestRemainingTime>latestSuspendedTime){// The earliest remaining level is later than all the suspended work. That
+markPendingPriorityLevel(root,earliestRemainingTime);findNextExpirationTimeToWorkOn(NoWork,root);return;}var latestSuspendedTime=root.latestSuspendedTime;if(earliestRemainingTime<latestSuspendedTime){// The earliest remaining level is later than all the suspended work. That
 // means we've flushed all the suspended work.
 root.earliestSuspendedTime=NoWork;root.latestSuspendedTime=NoWork;root.latestPingedTime=NoWork;// There's no suspended work. Treat the earliest remaining level as a
 // pending level.
-markPendingPriorityLevel(root,earliestRemainingTime);findNextExpirationTimeToWorkOn(NoWork,root);return;}if(earliestRemainingTime<earliestSuspendedTime){// The earliest remaining time is earlier than all the suspended work.
+markPendingPriorityLevel(root,earliestRemainingTime);findNextExpirationTimeToWorkOn(NoWork,root);return;}if(earliestRemainingTime>earliestSuspendedTime){// The earliest remaining time is earlier than all the suspended work.
 // Treat it as a pending update.
 markPendingPriorityLevel(root,earliestRemainingTime);findNextExpirationTimeToWorkOn(NoWork,root);return;}// The earliest remaining time falls within the range of known suspended
 // levels. We should treat this as suspended work.
-findNextExpirationTimeToWorkOn(NoWork,root);}function hasLowerPriorityWork(root,erroredExpirationTime){var latestPendingTime=root.latestPendingTime;var latestSuspendedTime=root.latestSuspendedTime;var latestPingedTime=root.latestPingedTime;return latestPendingTime!==NoWork&&latestPendingTime>erroredExpirationTime||latestSuspendedTime!==NoWork&&latestSuspendedTime>erroredExpirationTime||latestPingedTime!==NoWork&&latestPingedTime>erroredExpirationTime;}function isPriorityLevelSuspended(root,expirationTime){var earliestSuspendedTime=root.earliestSuspendedTime;var latestSuspendedTime=root.latestSuspendedTime;return earliestSuspendedTime!==NoWork&&expirationTime>=earliestSuspendedTime&&expirationTime<=latestSuspendedTime;}function markSuspendedPriorityLevel(root,suspendedTime){root.didError=false;clearPing(root,suspendedTime);// First, check the known pending levels and update them if needed.
+findNextExpirationTimeToWorkOn(NoWork,root);}function hasLowerPriorityWork(root,erroredExpirationTime){var latestPendingTime=root.latestPendingTime;var latestSuspendedTime=root.latestSuspendedTime;var latestPingedTime=root.latestPingedTime;return latestPendingTime!==NoWork&&latestPendingTime<erroredExpirationTime||latestSuspendedTime!==NoWork&&latestSuspendedTime<erroredExpirationTime||latestPingedTime!==NoWork&&latestPingedTime<erroredExpirationTime;}function isPriorityLevelSuspended(root,expirationTime){var earliestSuspendedTime=root.earliestSuspendedTime;var latestSuspendedTime=root.latestSuspendedTime;return earliestSuspendedTime!==NoWork&&expirationTime<=earliestSuspendedTime&&expirationTime>=latestSuspendedTime;}function markSuspendedPriorityLevel(root,suspendedTime){root.didError=false;clearPing(root,suspendedTime);// First, check the known pending levels and update them if needed.
 var earliestPendingTime=root.earliestPendingTime;var latestPendingTime=root.latestPendingTime;if(earliestPendingTime===suspendedTime){if(latestPendingTime===suspendedTime){// Both known pending levels were suspended. Clear them.
 root.earliestPendingTime=root.latestPendingTime=NoWork;}else{// The earliest pending level was suspended. Clear by setting it to the
 // latest pending level.
@@ -47160,22 +47345,20 @@ root.earliestPendingTime=latestPendingTime;}}else if(latestPendingTime===suspend
 // latest pending level.
 root.latestPendingTime=earliestPendingTime;}// Finally, update the known suspended levels.
 var earliestSuspendedTime=root.earliestSuspendedTime;var latestSuspendedTime=root.latestSuspendedTime;if(earliestSuspendedTime===NoWork){// No other suspended levels.
-root.earliestSuspendedTime=root.latestSuspendedTime=suspendedTime;}else{if(earliestSuspendedTime>suspendedTime){// This is the earliest suspended level.
-root.earliestSuspendedTime=suspendedTime;}else if(latestSuspendedTime<suspendedTime){// This is the latest suspended level
+root.earliestSuspendedTime=root.latestSuspendedTime=suspendedTime;}else{if(earliestSuspendedTime<suspendedTime){// This is the earliest suspended level.
+root.earliestSuspendedTime=suspendedTime;}else if(latestSuspendedTime>suspendedTime){// This is the latest suspended level
 root.latestSuspendedTime=suspendedTime;}}findNextExpirationTimeToWorkOn(suspendedTime,root);}function markPingedPriorityLevel(root,pingedTime){root.didError=false;// TODO: When we add back resuming, we need to ensure the progressed work
 // is thrown out and not reused during the restarted render. One way to
 // invalidate the progressed work is to restart at expirationTime + 1.
-var latestPingedTime=root.latestPingedTime;if(latestPingedTime===NoWork||latestPingedTime<pingedTime){root.latestPingedTime=pingedTime;}findNextExpirationTimeToWorkOn(pingedTime,root);}function clearPing(root,completedTime){// TODO: Track whether the root was pinged during the render phase. If so,
-// we need to make sure we don't lose track of it.
-var latestPingedTime=root.latestPingedTime;if(latestPingedTime!==NoWork&&latestPingedTime<=completedTime){root.latestPingedTime=NoWork;}}function findEarliestOutstandingPriorityLevel(root,renderExpirationTime){var earliestExpirationTime=renderExpirationTime;var earliestPendingTime=root.earliestPendingTime;var earliestSuspendedTime=root.earliestSuspendedTime;if(earliestExpirationTime===NoWork||earliestPendingTime!==NoWork&&earliestPendingTime<earliestExpirationTime){earliestExpirationTime=earliestPendingTime;}if(earliestExpirationTime===NoWork||earliestSuspendedTime!==NoWork&&earliestSuspendedTime<earliestExpirationTime){earliestExpirationTime=earliestSuspendedTime;}return earliestExpirationTime;}function didExpireAtExpirationTime(root,currentTime){var expirationTime=root.expirationTime;if(expirationTime!==NoWork&&currentTime>=expirationTime){// The root has expired. Flush all work up to the current time.
+var latestPingedTime=root.latestPingedTime;if(latestPingedTime===NoWork||latestPingedTime>pingedTime){root.latestPingedTime=pingedTime;}findNextExpirationTimeToWorkOn(pingedTime,root);}function clearPing(root,completedTime){var latestPingedTime=root.latestPingedTime;if(latestPingedTime>=completedTime){root.latestPingedTime=NoWork;}}function findEarliestOutstandingPriorityLevel(root,renderExpirationTime){var earliestExpirationTime=renderExpirationTime;var earliestPendingTime=root.earliestPendingTime;var earliestSuspendedTime=root.earliestSuspendedTime;if(earliestPendingTime>earliestExpirationTime){earliestExpirationTime=earliestPendingTime;}if(earliestSuspendedTime>earliestExpirationTime){earliestExpirationTime=earliestSuspendedTime;}return earliestExpirationTime;}function didExpireAtExpirationTime(root,currentTime){var expirationTime=root.expirationTime;if(expirationTime!==NoWork&&currentTime<=expirationTime){// The root has expired. Flush all work up to the current time.
 root.nextExpirationTimeToWorkOn=currentTime;}}function findNextExpirationTimeToWorkOn(completedExpirationTime,root){var earliestSuspendedTime=root.earliestSuspendedTime;var latestSuspendedTime=root.latestSuspendedTime;var earliestPendingTime=root.earliestPendingTime;var latestPingedTime=root.latestPingedTime;// Work on the earliest pending time. Failing that, work on the latest
 // pinged time.
 var nextExpirationTimeToWorkOn=earliestPendingTime!==NoWork?earliestPendingTime:latestPingedTime;// If there is no pending or pinged work, check if there's suspended work
 // that's lower priority than what we just completed.
-if(nextExpirationTimeToWorkOn===NoWork&&(completedExpirationTime===NoWork||latestSuspendedTime>completedExpirationTime)){// The lowest priority suspended work is the work most likely to be
+if(nextExpirationTimeToWorkOn===NoWork&&(completedExpirationTime===NoWork||latestSuspendedTime<completedExpirationTime)){// The lowest priority suspended work is the work most likely to be
 // committed next. Let's start rendering it again, so that if it times out,
 // it's ready to commit.
-nextExpirationTimeToWorkOn=latestSuspendedTime;}var expirationTime=nextExpirationTimeToWorkOn;if(expirationTime!==NoWork&&earliestSuspendedTime!==NoWork&&earliestSuspendedTime<expirationTime){// Expire using the earliest known expiration time.
+nextExpirationTimeToWorkOn=latestSuspendedTime;}var expirationTime=nextExpirationTimeToWorkOn;if(expirationTime!==NoWork&&earliestSuspendedTime>expirationTime){// Expire using the earliest known expiration time.
 expirationTime=earliestSuspendedTime;}root.nextExpirationTimeToWorkOn=nextExpirationTimeToWorkOn;root.expirationTime=expirationTime;}// UpdateQueue is a linked list of prioritized updates.
 //
 // Like fibers, update queues come in pairs: a current queue, which represents
@@ -47292,26 +47475,26 @@ partialState=_payload2;}if(partialState===null||partialState===undefined){// Nul
 return prevState;}// Merge the partial state and the previous state.
 return _assign({},prevState,partialState);}case ForceUpdate:{hasForceUpdate=true;return prevState;}}return prevState;}function processUpdateQueue(workInProgress,queue,props,instance,renderExpirationTime){hasForceUpdate=false;queue=ensureWorkInProgressQueueIsAClone(workInProgress,queue);{currentlyProcessingQueue=queue;}// These values may change as we process the queue.
 var newBaseState=queue.baseState;var newFirstUpdate=null;var newExpirationTime=NoWork;// Iterate through the list of updates to compute the result.
-var update=queue.firstUpdate;var resultState=newBaseState;while(update!==null){var updateExpirationTime=update.expirationTime;if(updateExpirationTime>renderExpirationTime){// This update does not have sufficient priority. Skip it.
+var update=queue.firstUpdate;var resultState=newBaseState;while(update!==null){var updateExpirationTime=update.expirationTime;if(updateExpirationTime<renderExpirationTime){// This update does not have sufficient priority. Skip it.
 if(newFirstUpdate===null){// This is the first skipped update. It will be the first update in
 // the new list.
 newFirstUpdate=update;// Since this is the first update that was skipped, the current result
 // is the new base state.
 newBaseState=resultState;}// Since this update will remain in the list, update the remaining
 // expiration time.
-if(newExpirationTime===NoWork||newExpirationTime>updateExpirationTime){newExpirationTime=updateExpirationTime;}}else{// This update does have sufficient priority. Process it and compute
+if(newExpirationTime<updateExpirationTime){newExpirationTime=updateExpirationTime;}}else{// This update does have sufficient priority. Process it and compute
 // a new result.
 resultState=getStateFromUpdate(workInProgress,queue,update,resultState,props,instance);var _callback=update.callback;if(_callback!==null){workInProgress.effectTag|=Callback;// Set this to null, in case it was mutated during an aborted render.
 update.nextEffect=null;if(queue.lastEffect===null){queue.firstEffect=queue.lastEffect=update;}else{queue.lastEffect.nextEffect=update;queue.lastEffect=update;}}}// Continue to the next update.
 update=update.next;}// Separately, iterate though the list of captured updates.
-var newFirstCapturedUpdate=null;update=queue.firstCapturedUpdate;while(update!==null){var _updateExpirationTime=update.expirationTime;if(_updateExpirationTime>renderExpirationTime){// This update does not have sufficient priority. Skip it.
+var newFirstCapturedUpdate=null;update=queue.firstCapturedUpdate;while(update!==null){var _updateExpirationTime=update.expirationTime;if(_updateExpirationTime<renderExpirationTime){// This update does not have sufficient priority. Skip it.
 if(newFirstCapturedUpdate===null){// This is the first skipped captured update. It will be the first
 // update in the new list.
 newFirstCapturedUpdate=update;// If this is the first update that was skipped, the current result is
 // the new base state.
 if(newFirstUpdate===null){newBaseState=resultState;}}// Since this update will remain in the list, update the remaining
 // expiration time.
-if(newExpirationTime===NoWork||newExpirationTime>_updateExpirationTime){newExpirationTime=_updateExpirationTime;}}else{// This update does have sufficient priority. Process it and compute
+if(newExpirationTime<_updateExpirationTime){newExpirationTime=_updateExpirationTime;}}else{// This update does have sufficient priority. Process it and compute
 // a new result.
 resultState=getStateFromUpdate(workInProgress,queue,update,resultState,props,instance);var _callback2=update.callback;if(_callback2!==null){workInProgress.effectTag|=Callback;// Set this to null, in case it was mutated during an aborted render.
 update.nextEffect=null;if(queue.lastCapturedEffect===null){queue.firstCapturedEffect=queue.lastCapturedEffect=update;}else{queue.lastCapturedEffect.nextEffect=update;queue.lastCapturedEffect=update;}}}update=update.next;}if(newFirstUpdate===null){queue.lastUpdate=null;}if(newFirstCapturedUpdate===null){queue.lastCapturedUpdate=null;}else{workInProgress.effectTag|=Callback;}if(newFirstUpdate===null&&newFirstCapturedUpdate===null){// We processed every update, without skipping. That means the new base
@@ -47349,9 +47532,9 @@ var update=createUpdate(renderExpirationTime);update.tag=ForceUpdate;// TODO: Be
 // update to the current fiber, too, which means it will persist even if
 // this render is thrown away. Since it's a race condition, not sure it's
 // worth fixing.
-enqueueUpdate(fiber,update);}if(fiber.expirationTime===NoWork||fiber.expirationTime>renderExpirationTime){fiber.expirationTime=renderExpirationTime;}var alternate=fiber.alternate;if(alternate!==null&&(alternate.expirationTime===NoWork||alternate.expirationTime>renderExpirationTime)){alternate.expirationTime=renderExpirationTime;}// Update the child expiration time of all the ancestors, including
+enqueueUpdate(fiber,update);}if(fiber.expirationTime<renderExpirationTime){fiber.expirationTime=renderExpirationTime;}var alternate=fiber.alternate;if(alternate!==null&&alternate.expirationTime<renderExpirationTime){alternate.expirationTime=renderExpirationTime;}// Update the child expiration time of all the ancestors, including
 // the alternates.
-var node=fiber.return;while(node!==null){alternate=node.alternate;if(node.childExpirationTime===NoWork||node.childExpirationTime>renderExpirationTime){node.childExpirationTime=renderExpirationTime;if(alternate!==null&&(alternate.childExpirationTime===NoWork||alternate.childExpirationTime>renderExpirationTime)){alternate.childExpirationTime=renderExpirationTime;}}else if(alternate!==null&&(alternate.childExpirationTime===NoWork||alternate.childExpirationTime>renderExpirationTime)){alternate.childExpirationTime=renderExpirationTime;}else{// Neither alternate was updated, which means the rest of the
+var node=fiber.return;while(node!==null){alternate=node.alternate;if(node.childExpirationTime<renderExpirationTime){node.childExpirationTime=renderExpirationTime;if(alternate!==null&&alternate.childExpirationTime<renderExpirationTime){alternate.childExpirationTime=renderExpirationTime;}}else if(alternate!==null&&alternate.childExpirationTime<renderExpirationTime){alternate.childExpirationTime=renderExpirationTime;}else{// Neither alternate was updated, which means the rest of the
 // ancestor path already has sufficient priority.
 break;}node=node.return;}}nextFiber=fiber.child;dependency=dependency.next;}while(dependency!==null);}else if(fiber.tag===ContextProvider){// Don't scan deeper if this is a matching provider
 nextFiber=fiber.type===workInProgress.type?null:fiber.child;}else{// Traverse down.
@@ -47367,7 +47550,104 @@ workInProgress.firstContextDependency=null;}function readContext(context,observe
 if(typeof observedBits!=='number'||observedBits===maxSigned31BitInt){// Observe all updates.
 lastContextWithAllBitsObserved=context;resolvedObservedBits=maxSigned31BitInt;}else{resolvedObservedBits=observedBits;}var contextItem={context:context,observedBits:resolvedObservedBits,next:null};if(lastContextDependency===null){!(currentlyRenderingFiber!==null)?invariant(false,'Context can only be read while React is rendering, e.g. inside the render method or getDerivedStateFromProps.'):void 0;// This is the first dependency in the list
 currentlyRenderingFiber.firstContextDependency=lastContextDependency=contextItem;}else{// Append a new context item.
-lastContextDependency=lastContextDependency.next=contextItem;}}return isPrimaryRenderer?context._currentValue:context._currentValue2;}var NO_CONTEXT={};var contextStackCursor$1=createCursor(NO_CONTEXT);var contextFiberStackCursor=createCursor(NO_CONTEXT);var rootInstanceStackCursor=createCursor(NO_CONTEXT);function requiredContext(c){!(c!==NO_CONTEXT)?invariant(false,'Expected host context to exist. This error is likely caused by a bug in React. Please file an issue.'):void 0;return c;}function getRootHostContainer(){var rootInstance=requiredContext(rootInstanceStackCursor.current);return rootInstance;}function pushHostContainer(fiber,nextRootInstance){// Push current root instance onto the stack;
+lastContextDependency=lastContextDependency.next=contextItem;}}return isPrimaryRenderer?context._currentValue:context._currentValue2;}var NoEffect$1=/*             */0;var UnmountSnapshot=/*      */2;var UnmountMutation=/*      */4;var MountMutation=/*        */8;var UnmountLayout=/*        */16;var MountLayout=/*          */32;var MountPassive=/*         */64;var UnmountPassive=/*       */128;function areHookInputsEqual(arr1,arr2){// Don't bother comparing lengths in prod because these arrays should be
+// passed inline.
+{!(arr1.length===arr2.length)?warning$1(false,'Detected a variable number of hook dependencies. The length of the '+'dependencies array should be constant between renders.\n\n'+'Previous: %s\n'+'Incoming: %s',arr1.join(', '),arr2.join(', ')):void 0;}for(var i=0;i<arr1.length;i++){// Inlined Object.is polyfill.
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+var val1=arr1[i];var val2=arr2[i];if(val1===val2&&(val1!==0||1/val1===1/val2)||val1!==val1&&val2!==val2// eslint-disable-line no-self-compare
+){continue;}return false;}return true;}// These are set right before calling the component.
+var renderExpirationTime=NoWork;// The work-in-progress fiber. I've named it differently to distinguish it from
+// the work-in-progress hook.
+var currentlyRenderingFiber$1=null;// Hooks are stored as a linked list on the fiber's memoizedState field. The
+// current hook list is the list that belongs to the current fiber. The
+// work-in-progress hook list is a new list that will be added to the
+// work-in-progress fiber.
+var firstCurrentHook=null;var currentHook=null;var firstWorkInProgressHook=null;var workInProgressHook=null;var remainingExpirationTime=NoWork;var componentUpdateQueue=null;// Updates scheduled during render will trigger an immediate re-render at the
+// end of the current pass. We can't store these updates on the normal queue,
+// because if the work is aborted, they should be discarded. Because this is
+// a relatively rare case, we also don't want to add an additional field to
+// either the hook or queue object types. So we store them in a lazily create
+// map of queue -> render-phase updates, which are discarded once the component
+// completes without re-rendering.
+// Whether the work-in-progress hook is a re-rendered hook
+var isReRender=false;// Whether an update was scheduled during the currently executing render pass.
+var didScheduleRenderPhaseUpdate=false;// Lazily created map of render-phase updates
+var renderPhaseUpdates=null;// Counter to prevent infinite loops.
+var numberOfReRenders=0;var RE_RENDER_LIMIT=25;function resolveCurrentlyRenderingFiber(){!(currentlyRenderingFiber$1!==null)?invariant(false,'Hooks can only be called inside the body of a function component.'):void 0;return currentlyRenderingFiber$1;}function prepareToUseHooks(current,workInProgress,nextRenderExpirationTime){if(!enableHooks){return;}renderExpirationTime=nextRenderExpirationTime;currentlyRenderingFiber$1=workInProgress;firstCurrentHook=current!==null?current.memoizedState:null;// The following should have already been reset
+// currentHook = null;
+// workInProgressHook = null;
+// remainingExpirationTime = NoWork;
+// componentUpdateQueue = null;
+// isReRender = false;
+// didScheduleRenderPhaseUpdate = false;
+// renderPhaseUpdates = null;
+// numberOfReRenders = 0;
+}function finishHooks(Component,props,children,refOrContext){if(!enableHooks){return children;}// This must be called after every function component to prevent hooks from
+// being used in classes.
+while(didScheduleRenderPhaseUpdate){// Updates were scheduled during the render phase. They are stored in
+// the `renderPhaseUpdates` map. Call the component again, reusing the
+// work-in-progress hooks and applying the additional updates on top. Keep
+// restarting until no more updates are scheduled.
+didScheduleRenderPhaseUpdate=false;numberOfReRenders+=1;// Start over from the beginning of the list
+currentHook=null;workInProgressHook=null;componentUpdateQueue=null;children=Component(props,refOrContext);}renderPhaseUpdates=null;numberOfReRenders=0;var renderedWork=currentlyRenderingFiber$1;renderedWork.memoizedState=firstWorkInProgressHook;renderedWork.expirationTime=remainingExpirationTime;renderedWork.updateQueue=componentUpdateQueue;var didRenderTooFewHooks=currentHook!==null&&currentHook.next!==null;renderExpirationTime=NoWork;currentlyRenderingFiber$1=null;firstCurrentHook=null;currentHook=null;firstWorkInProgressHook=null;workInProgressHook=null;remainingExpirationTime=NoWork;componentUpdateQueue=null;// Always set during createWorkInProgress
+// isReRender = false;
+// These were reset above
+// didScheduleRenderPhaseUpdate = false;
+// renderPhaseUpdates = null;
+// numberOfReRenders = 0;
+!!didRenderTooFewHooks?invariant(false,'Rendered fewer hooks than expected. This may be caused by an accidental early return statement.'):void 0;return children;}function resetHooks(){if(!enableHooks){return;}// This is called instead of `finishHooks` if the component throws. It's also
+// called inside mountIndeterminateComponent if we determine the component
+// is a module-style component.
+renderExpirationTime=NoWork;currentlyRenderingFiber$1=null;firstCurrentHook=null;currentHook=null;firstWorkInProgressHook=null;workInProgressHook=null;remainingExpirationTime=NoWork;componentUpdateQueue=null;// Always set during createWorkInProgress
+// isReRender = false;
+didScheduleRenderPhaseUpdate=false;renderPhaseUpdates=null;numberOfReRenders=0;}function createHook(){return{memoizedState:null,baseState:null,queue:null,baseUpdate:null,next:null};}function cloneHook(hook){return{memoizedState:hook.memoizedState,baseState:hook.baseState,queue:hook.queue,baseUpdate:hook.baseUpdate,next:null};}function createWorkInProgressHook(){if(workInProgressHook===null){// This is the first hook in the list
+if(firstWorkInProgressHook===null){isReRender=false;currentHook=firstCurrentHook;if(currentHook===null){// This is a newly mounted hook
+workInProgressHook=createHook();}else{// Clone the current hook.
+workInProgressHook=cloneHook(currentHook);}firstWorkInProgressHook=workInProgressHook;}else{// There's already a work-in-progress. Reuse it.
+isReRender=true;currentHook=firstCurrentHook;workInProgressHook=firstWorkInProgressHook;}}else{if(workInProgressHook.next===null){isReRender=false;var hook=void 0;if(currentHook===null){// This is a newly mounted hook
+hook=createHook();}else{currentHook=currentHook.next;if(currentHook===null){// This is a newly mounted hook
+hook=createHook();}else{// Clone the current hook.
+hook=cloneHook(currentHook);}}// Append to the end of the list
+workInProgressHook=workInProgressHook.next=hook;}else{// There's already a work-in-progress. Reuse it.
+isReRender=true;workInProgressHook=workInProgressHook.next;currentHook=currentHook!==null?currentHook.next:null;}}return workInProgressHook;}function createFunctionComponentUpdateQueue(){return{lastEffect:null};}function basicStateReducer(state,action){return typeof action==='function'?action(state):action;}function useContext(context,observedBits){// Ensure we're in a function component (class components support only the
+// .unstable_read() form)
+resolveCurrentlyRenderingFiber();return readContext(context,observedBits);}function useState(initialState){return useReducer(basicStateReducer,// useReducer has a special case to support lazy useState initializers
+initialState);}function useReducer(reducer,initialState,initialAction){currentlyRenderingFiber$1=resolveCurrentlyRenderingFiber();workInProgressHook=createWorkInProgressHook();var queue=workInProgressHook.queue;if(queue!==null){// Already have a queue, so this is an update.
+if(isReRender){// This is a re-render. Apply the new render phase updates to the previous
+var _dispatch2=queue.dispatch;if(renderPhaseUpdates!==null){// Render phase updates are stored in a map of queue -> linked list
+var firstRenderPhaseUpdate=renderPhaseUpdates.get(queue);if(firstRenderPhaseUpdate!==undefined){renderPhaseUpdates.delete(queue);var newState=workInProgressHook.memoizedState;var update=firstRenderPhaseUpdate;do{// Process this render phase update. We don't have to check the
+// priority because it will always be the same as the current
+// render's.
+var _action=update.action;newState=reducer(newState,_action);update=update.next;}while(update!==null);workInProgressHook.memoizedState=newState;// Don't persist the state accumlated from the render phase updates to
+// the base state unless the queue is empty.
+// TODO: Not sure if this is the desired semantics, but it's what we
+// do for gDSFP. I can't remember why.
+if(workInProgressHook.baseUpdate===queue.last){workInProgressHook.baseState=newState;}return[newState,_dispatch2];}}return[workInProgressHook.memoizedState,_dispatch2];}// The last update in the entire queue
+var _last=queue.last;// The last update that is part of the base state.
+var _baseUpdate=workInProgressHook.baseUpdate;// Find the first unprocessed update.
+var first=void 0;if(_baseUpdate!==null){if(_last!==null){// For the first update, the queue is a circular linked list where
+// `queue.last.next = queue.first`. Once the first update commits, and
+// the `baseUpdate` is no longer empty, we can unravel the list.
+_last.next=null;}first=_baseUpdate.next;}else{first=_last!==null?_last.next:null;}if(first!==null){var _newState=workInProgressHook.baseState;var newBaseState=null;var newBaseUpdate=null;var prevUpdate=_baseUpdate;var _update=first;var didSkip=false;do{var updateExpirationTime=_update.expirationTime;if(updateExpirationTime<renderExpirationTime){// Priority is insufficient. Skip this update. If this is the first
+// skipped update, the previous update/state is the new base
+// update/state.
+if(!didSkip){didSkip=true;newBaseUpdate=prevUpdate;newBaseState=_newState;}// Update the remaining priority in the queue.
+if(updateExpirationTime>remainingExpirationTime){remainingExpirationTime=updateExpirationTime;}}else{// Process this update.
+var _action2=_update.action;_newState=reducer(_newState,_action2);}prevUpdate=_update;_update=_update.next;}while(_update!==null&&_update!==first);if(!didSkip){newBaseUpdate=prevUpdate;newBaseState=_newState;}workInProgressHook.memoizedState=_newState;workInProgressHook.baseUpdate=newBaseUpdate;workInProgressHook.baseState=newBaseState;}var _dispatch=queue.dispatch;return[workInProgressHook.memoizedState,_dispatch];}// There's no existing queue, so this is the initial render.
+if(reducer===basicStateReducer){// Special case for `useState`.
+if(typeof initialState==='function'){initialState=initialState();}}else if(initialAction!==undefined&&initialAction!==null){initialState=reducer(initialState,initialAction);}workInProgressHook.memoizedState=workInProgressHook.baseState=initialState;queue=workInProgressHook.queue={last:null,dispatch:null};var dispatch=queue.dispatch=dispatchAction.bind(null,currentlyRenderingFiber$1,queue);return[workInProgressHook.memoizedState,dispatch];}function pushEffect(tag,create,destroy,inputs){var effect={tag:tag,create:create,destroy:destroy,inputs:inputs,// Circular
+next:null};if(componentUpdateQueue===null){componentUpdateQueue=createFunctionComponentUpdateQueue();componentUpdateQueue.lastEffect=effect.next=effect;}else{var _lastEffect=componentUpdateQueue.lastEffect;if(_lastEffect===null){componentUpdateQueue.lastEffect=effect.next=effect;}else{var firstEffect=_lastEffect.next;_lastEffect.next=effect;effect.next=firstEffect;componentUpdateQueue.lastEffect=effect;}}return effect;}function useRef(initialValue){currentlyRenderingFiber$1=resolveCurrentlyRenderingFiber();workInProgressHook=createWorkInProgressHook();var ref=void 0;if(workInProgressHook.memoizedState===null){ref={current:initialValue};{Object.seal(ref);}workInProgressHook.memoizedState=ref;}else{ref=workInProgressHook.memoizedState;}return ref;}function useLayoutEffect(create,inputs){useEffectImpl(Update,UnmountMutation|MountLayout,create,inputs);}function useEffect(create,inputs){useEffectImpl(Update|Passive,UnmountPassive|MountPassive,create,inputs);}function useEffectImpl(fiberEffectTag,hookEffectTag,create,inputs){currentlyRenderingFiber$1=resolveCurrentlyRenderingFiber();workInProgressHook=createWorkInProgressHook();var nextInputs=inputs!==undefined&&inputs!==null?inputs:[create];var destroy=null;if(currentHook!==null){var prevEffect=currentHook.memoizedState;destroy=prevEffect.destroy;if(areHookInputsEqual(nextInputs,prevEffect.inputs)){pushEffect(NoEffect$1,create,destroy,nextInputs);return;}}currentlyRenderingFiber$1.effectTag|=fiberEffectTag;workInProgressHook.memoizedState=pushEffect(hookEffectTag,create,destroy,nextInputs);}function useImperativeMethods(ref,create,inputs){// TODO: If inputs are provided, should we skip comparing the ref itself?
+var nextInputs=inputs!==null&&inputs!==undefined?inputs.concat([ref]):[ref,create];// TODO: I've implemented this on top of useEffect because it's almost the
+// same thing, and it would require an equal amount of code. It doesn't seem
+// like a common enough use case to justify the additional size.
+useLayoutEffect(function(){if(typeof ref==='function'){var refCallback=ref;var _inst=create();refCallback(_inst);return function(){return refCallback(null);};}else if(ref!==null&&ref!==undefined){var refObject=ref;var _inst2=create();refObject.current=_inst2;return function(){refObject.current=null;};}},nextInputs);}function useCallback(callback,inputs){currentlyRenderingFiber$1=resolveCurrentlyRenderingFiber();workInProgressHook=createWorkInProgressHook();var nextInputs=inputs!==undefined&&inputs!==null?inputs:[callback];var prevState=workInProgressHook.memoizedState;if(prevState!==null){var prevInputs=prevState[1];if(areHookInputsEqual(nextInputs,prevInputs)){return prevState[0];}}workInProgressHook.memoizedState=[callback,nextInputs];return callback;}function useMemo(nextCreate,inputs){currentlyRenderingFiber$1=resolveCurrentlyRenderingFiber();workInProgressHook=createWorkInProgressHook();var nextInputs=inputs!==undefined&&inputs!==null?inputs:[nextCreate];var prevState=workInProgressHook.memoizedState;if(prevState!==null){var prevInputs=prevState[1];if(areHookInputsEqual(nextInputs,prevInputs)){return prevState[0];}}var nextValue=nextCreate();workInProgressHook.memoizedState=[nextValue,nextInputs];return nextValue;}function dispatchAction(fiber,queue,action){!(numberOfReRenders<RE_RENDER_LIMIT)?invariant(false,'Too many re-renders. React limits the number of renders to prevent an infinite loop.'):void 0;var alternate=fiber.alternate;if(fiber===currentlyRenderingFiber$1||alternate!==null&&alternate===currentlyRenderingFiber$1){// This is a render phase update. Stash it in a lazily-created map of
+// queue -> linked list of updates. After this render pass, we'll restart
+// and apply the stashed updates on top of the work-in-progress hook.
+didScheduleRenderPhaseUpdate=true;var update={expirationTime:renderExpirationTime,action:action,next:null};if(renderPhaseUpdates===null){renderPhaseUpdates=new Map();}var firstRenderPhaseUpdate=renderPhaseUpdates.get(queue);if(firstRenderPhaseUpdate===undefined){renderPhaseUpdates.set(queue,update);}else{// Append the update to the end of the list.
+var lastRenderPhaseUpdate=firstRenderPhaseUpdate;while(lastRenderPhaseUpdate.next!==null){lastRenderPhaseUpdate=lastRenderPhaseUpdate.next;}lastRenderPhaseUpdate.next=update;}}else{var currentTime=requestCurrentTime();var _expirationTime=computeExpirationForFiber(currentTime,fiber);var _update2={expirationTime:_expirationTime,action:action,next:null};flushPassiveEffects();// Append the update to the end of the list.
+var _last2=queue.last;if(_last2===null){// This is the first update. Create a circular list.
+_update2.next=_update2;}else{var first=_last2.next;if(first!==null){// Still circular.
+_update2.next=first;}_last2.next=_update2;}queue.last=_update2;scheduleWork(fiber,_expirationTime);}}var NO_CONTEXT={};var contextStackCursor$1=createCursor(NO_CONTEXT);var contextFiberStackCursor=createCursor(NO_CONTEXT);var rootInstanceStackCursor=createCursor(NO_CONTEXT);function requiredContext(c){!(c!==NO_CONTEXT)?invariant(false,'Expected host context to exist. This error is likely caused by a bug in React. Please file an issue.'):void 0;return c;}function getRootHostContainer(){var rootInstance=requiredContext(rootInstanceStackCursor.current);return rootInstance;}function pushHostContainer(fiber,nextRootInstance){// Push current root instance onto the stack;
 // This allows us to reset root when portals are popped.
 push(rootInstanceStackCursor,nextRootInstance,fiber);// Track the context and the Fiber that provided it.
 // This enables us to pop only Fibers that provide unique contexts.
@@ -47382,7 +47662,8 @@ if(context===nextContext){return;}// Track the context and the Fiber that provid
 // This enables us to pop only Fibers that provide unique contexts.
 push(contextFiberStackCursor,fiber,fiber);push(contextStackCursor$1,nextContext,fiber);}function popHostContext(fiber){// Do not pop unless this Fiber provided the current context.
 // pushHostContext() only pushes Fibers that provide unique contexts.
-if(contextFiberStackCursor.current!==fiber){return;}pop(contextStackCursor$1,fiber);pop(contextFiberStackCursor,fiber);}var commitTime=0;var profilerStartTime=-1;function getCommitTime(){return commitTime;}function recordCommitTime(){if(!enableProfilerTimer){return;}commitTime=scheduler.unstable_now();}function startProfilerTimer(fiber){if(!enableProfilerTimer){return;}profilerStartTime=scheduler.unstable_now();if(fiber.actualStartTime<0){fiber.actualStartTime=scheduler.unstable_now();}}function stopProfilerTimerIfRunning(fiber){if(!enableProfilerTimer){return;}profilerStartTime=-1;}function stopProfilerTimerIfRunningAndRecordDelta(fiber,overrideBaseTime){if(!enableProfilerTimer){return;}if(profilerStartTime>=0){var elapsedTime=scheduler.unstable_now()-profilerStartTime;fiber.actualDuration+=elapsedTime;if(overrideBaseTime){fiber.selfBaseDuration=elapsedTime;}profilerStartTime=-1;}}var ReactCurrentOwner$4=ReactSharedInternals.ReactCurrentOwner;function readContext$1(contextType){var dispatcher=ReactCurrentOwner$4.currentDispatcher;return dispatcher.readContext(contextType);}var fakeInternalInstance={};var isArray$1=Array.isArray;// React.Component uses a shared frozen object by default.
+if(contextFiberStackCursor.current!==fiber){return;}pop(contextStackCursor$1,fiber);pop(contextFiberStackCursor,fiber);}var commitTime=0;var profilerStartTime=-1;function getCommitTime(){return commitTime;}function recordCommitTime(){if(!enableProfilerTimer){return;}commitTime=scheduler.unstable_now();}function startProfilerTimer(fiber){if(!enableProfilerTimer){return;}profilerStartTime=scheduler.unstable_now();if(fiber.actualStartTime<0){fiber.actualStartTime=scheduler.unstable_now();}}function stopProfilerTimerIfRunning(fiber){if(!enableProfilerTimer){return;}profilerStartTime=-1;}function stopProfilerTimerIfRunningAndRecordDelta(fiber,overrideBaseTime){if(!enableProfilerTimer){return;}if(profilerStartTime>=0){var elapsedTime=scheduler.unstable_now()-profilerStartTime;fiber.actualDuration+=elapsedTime;if(overrideBaseTime){fiber.selfBaseDuration=elapsedTime;}profilerStartTime=-1;}}function resolveDefaultProps(Component,baseProps){if(Component&&Component.defaultProps){// Resolve default props. Taken from ReactElement
+var props=_assign({},baseProps);var defaultProps=Component.defaultProps;for(var propName in defaultProps){if(props[propName]===undefined){props[propName]=defaultProps[propName];}}return props;}return baseProps;}function readLazyComponentType(lazyComponent){var status=lazyComponent._status;var result=lazyComponent._result;switch(status){case Resolved:{var Component=result;return Component;}case Rejected:{var error=result;throw error;}case Pending:{var thenable=result;throw thenable;}default:{lazyComponent._status=Pending;var ctor=lazyComponent._ctor;var _thenable=ctor();_thenable.then(function(moduleObject){if(lazyComponent._status===Pending){var defaultExport=moduleObject.default;{if(defaultExport===undefined){warning$1(false,'lazy: Expected the result of a dynamic import() call. '+'Instead received: %s\n\nYour code should look like: \n  '+"const MyComponent = lazy(() => import('./MyComponent'))",moduleObject);}}lazyComponent._status=Resolved;lazyComponent._result=defaultExport;}},function(error){if(lazyComponent._status===Pending){lazyComponent._status=Rejected;lazyComponent._result=error;}});lazyComponent._result=_thenable;throw _thenable;}}}var ReactCurrentOwner$4=ReactSharedInternals.ReactCurrentOwner;function readContext$1(contextType){var dispatcher=ReactCurrentOwner$4.currentDispatcher;return dispatcher.readContext(contextType);}var fakeInternalInstance={};var isArray$1=Array.isArray;// React.Component uses a shared frozen object by default.
 // We'll use it to determine whether we need to initialize legacy refs.
 var emptyRefsObject=new React.Component().refs;var didWarnAboutStateAssignmentForComponent=void 0;var didWarnAboutUninitializedState=void 0;var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate=void 0;var didWarnAboutLegacyLifecyclesAndDerivedState=void 0;var didWarnAboutUndefinedDerivedState=void 0;var warnOnUndefinedDerivedState=void 0;var warnOnInvalidCallback$1=void 0;var didWarnAboutDirectlyAssigningPropsToState=void 0;var didWarnAboutContextTypeAndContextTypes=void 0;var didWarnAboutInvalidateContextType=void 0;{didWarnAboutStateAssignmentForComponent=new Set();didWarnAboutUninitializedState=new Set();didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate=new Set();didWarnAboutLegacyLifecyclesAndDerivedState=new Set();didWarnAboutDirectlyAssigningPropsToState=new Set();didWarnAboutUndefinedDerivedState=new Set();didWarnAboutContextTypeAndContextTypes=new Set();didWarnAboutInvalidateContextType=new Set();var didWarnOnInvalidCallback=new Set();warnOnInvalidCallback$1=function(callback,callerName){if(callback===null||typeof callback==='function'){return;}var key=callerName+'_'+callback;if(!didWarnOnInvalidCallback.has(key)){didWarnOnInvalidCallback.add(key);warningWithoutStack$1(false,'%s(...): Expected the last optional `callback` argument to be a '+'function. Instead received: %s.',callerName,callback);}};warnOnUndefinedDerivedState=function(type,partialState){if(partialState===undefined){var componentName=getComponentName(type)||'Component';if(!didWarnAboutUndefinedDerivedState.has(componentName)){didWarnAboutUndefinedDerivedState.add(componentName);warningWithoutStack$1(false,'%s.getDerivedStateFromProps(): A valid state object (or null) must be returned. '+'You have returned undefined.',componentName);}}};// This is so gross but it's at least non-critical and can be removed if
 // it causes problems. This is meant to give a nicer error message for
@@ -47393,7 +47674,7 @@ Object.defineProperty(fakeInternalInstance,'_processChildContext',{enumerable:fa
 getDerivedStateFromProps(nextProps,prevState);}}var partialState=getDerivedStateFromProps(nextProps,prevState);{warnOnUndefinedDerivedState(ctor,partialState);}// Merge the partial state and the previous state.
 var memoizedState=partialState===null||partialState===undefined?prevState:_assign({},prevState,partialState);workInProgress.memoizedState=memoizedState;// Once the update queue is empty, persist the derived state onto the
 // base state.
-var updateQueue=workInProgress.updateQueue;if(updateQueue!==null&&workInProgress.expirationTime===NoWork){updateQueue.baseState=memoizedState;}}var classComponentUpdater={isMounted:isMounted,enqueueSetState:function(inst,payload,callback){var fiber=get(inst);var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,fiber);var update=createUpdate(expirationTime);update.payload=payload;if(callback!==undefined&&callback!==null){{warnOnInvalidCallback$1(callback,'setState');}update.callback=callback;}enqueueUpdate(fiber,update);scheduleWork(fiber,expirationTime);},enqueueReplaceState:function(inst,payload,callback){var fiber=get(inst);var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,fiber);var update=createUpdate(expirationTime);update.tag=ReplaceState;update.payload=payload;if(callback!==undefined&&callback!==null){{warnOnInvalidCallback$1(callback,'replaceState');}update.callback=callback;}enqueueUpdate(fiber,update);scheduleWork(fiber,expirationTime);},enqueueForceUpdate:function(inst,callback){var fiber=get(inst);var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,fiber);var update=createUpdate(expirationTime);update.tag=ForceUpdate;if(callback!==undefined&&callback!==null){{warnOnInvalidCallback$1(callback,'forceUpdate');}update.callback=callback;}enqueueUpdate(fiber,update);scheduleWork(fiber,expirationTime);}};function checkShouldComponentUpdate(workInProgress,ctor,oldProps,newProps,oldState,newState,nextContext){var instance=workInProgress.stateNode;if(typeof instance.shouldComponentUpdate==='function'){startPhaseTimer(workInProgress,'shouldComponentUpdate');var shouldUpdate=instance.shouldComponentUpdate(newProps,newState,nextContext);stopPhaseTimer();{!(shouldUpdate!==undefined)?warningWithoutStack$1(false,'%s.shouldComponentUpdate(): Returned undefined instead of a '+'boolean value. Make sure to return true or false.',getComponentName(ctor)||'Component'):void 0;}return shouldUpdate;}if(ctor.prototype&&ctor.prototype.isPureReactComponent){return!shallowEqual(oldProps,newProps)||!shallowEqual(oldState,newState);}return true;}function checkClassInstance(workInProgress,ctor,newProps){var instance=workInProgress.stateNode;{var name=getComponentName(ctor)||'Component';var renderPresent=instance.render;if(!renderPresent){if(ctor.prototype&&typeof ctor.prototype.render==='function'){warningWithoutStack$1(false,'%s(...): No `render` method found on the returned component '+'instance: did you accidentally return an object from the constructor?',name);}else{warningWithoutStack$1(false,'%s(...): No `render` method found on the returned component '+'instance: you may have forgotten to define `render`.',name);}}var noGetInitialStateOnES6=!instance.getInitialState||instance.getInitialState.isReactClassApproved||instance.state;!noGetInitialStateOnES6?warningWithoutStack$1(false,'getInitialState was defined on %s, a plain JavaScript class. '+'This is only supported for classes created using React.createClass. '+'Did you mean to define a state property instead?',name):void 0;var noGetDefaultPropsOnES6=!instance.getDefaultProps||instance.getDefaultProps.isReactClassApproved;!noGetDefaultPropsOnES6?warningWithoutStack$1(false,'getDefaultProps was defined on %s, a plain JavaScript class. '+'This is only supported for classes created using React.createClass. '+'Use a static property to define defaultProps instead.',name):void 0;var noInstancePropTypes=!instance.propTypes;!noInstancePropTypes?warningWithoutStack$1(false,'propTypes was defined as an instance property on %s. Use a static '+'property to define propTypes instead.',name):void 0;var noInstanceContextType=!instance.contextType;!noInstanceContextType?warningWithoutStack$1(false,'contextType was defined as an instance property on %s. Use a static '+'property to define contextType instead.',name):void 0;var noInstanceContextTypes=!instance.contextTypes;!noInstanceContextTypes?warningWithoutStack$1(false,'contextTypes was defined as an instance property on %s. Use a static '+'property to define contextTypes instead.',name):void 0;if(ctor.contextType&&ctor.contextTypes&&!didWarnAboutContextTypeAndContextTypes.has(ctor)){didWarnAboutContextTypeAndContextTypes.add(ctor);warningWithoutStack$1(false,'%s declares both contextTypes and contextType static properties. '+'The legacy contextTypes property will be ignored.',name);}var noComponentShouldUpdate=typeof instance.componentShouldUpdate!=='function';!noComponentShouldUpdate?warningWithoutStack$1(false,'%s has a method called '+'componentShouldUpdate(). Did you mean shouldComponentUpdate()? '+'The name is phrased as a question because the function is '+'expected to return a value.',name):void 0;if(ctor.prototype&&ctor.prototype.isPureReactComponent&&typeof instance.shouldComponentUpdate!=='undefined'){warningWithoutStack$1(false,'%s has a method called shouldComponentUpdate(). '+'shouldComponentUpdate should not be used when extending React.PureComponent. '+'Please extend React.Component if shouldComponentUpdate is used.',getComponentName(ctor)||'A pure component');}var noComponentDidUnmount=typeof instance.componentDidUnmount!=='function';!noComponentDidUnmount?warningWithoutStack$1(false,'%s has a method called '+'componentDidUnmount(). But there is no such lifecycle method. '+'Did you mean componentWillUnmount()?',name):void 0;var noComponentDidReceiveProps=typeof instance.componentDidReceiveProps!=='function';!noComponentDidReceiveProps?warningWithoutStack$1(false,'%s has a method called '+'componentDidReceiveProps(). But there is no such lifecycle method. '+'If you meant to update the state in response to changing props, '+'use componentWillReceiveProps(). If you meant to fetch data or '+'run side-effects or mutations after React has updated the UI, use componentDidUpdate().',name):void 0;var noComponentWillRecieveProps=typeof instance.componentWillRecieveProps!=='function';!noComponentWillRecieveProps?warningWithoutStack$1(false,'%s has a method called '+'componentWillRecieveProps(). Did you mean componentWillReceiveProps()?',name):void 0;var noUnsafeComponentWillRecieveProps=typeof instance.UNSAFE_componentWillRecieveProps!=='function';!noUnsafeComponentWillRecieveProps?warningWithoutStack$1(false,'%s has a method called '+'UNSAFE_componentWillRecieveProps(). Did you mean UNSAFE_componentWillReceiveProps()?',name):void 0;var hasMutatedProps=instance.props!==newProps;!(instance.props===undefined||!hasMutatedProps)?warningWithoutStack$1(false,'%s(...): When calling super() in `%s`, make sure to pass '+"up the same props that your component's constructor was passed.",name,name):void 0;var noInstanceDefaultProps=!instance.defaultProps;!noInstanceDefaultProps?warningWithoutStack$1(false,'Setting defaultProps as an instance property on %s is not supported and will be ignored.'+' Instead, define defaultProps as a static property on %s.',name,name):void 0;if(typeof instance.getSnapshotBeforeUpdate==='function'&&typeof instance.componentDidUpdate!=='function'&&!didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate.has(ctor)){didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate.add(ctor);warningWithoutStack$1(false,'%s: getSnapshotBeforeUpdate() should be used with componentDidUpdate(). '+'This component defines getSnapshotBeforeUpdate() only.',getComponentName(ctor));}var noInstanceGetDerivedStateFromProps=typeof instance.getDerivedStateFromProps!=='function';!noInstanceGetDerivedStateFromProps?warningWithoutStack$1(false,'%s: getDerivedStateFromProps() is defined as an instance method '+'and will be ignored. Instead, declare it as a static method.',name):void 0;var noInstanceGetDerivedStateFromCatch=typeof instance.getDerivedStateFromError!=='function';!noInstanceGetDerivedStateFromCatch?warningWithoutStack$1(false,'%s: getDerivedStateFromError() is defined as an instance method '+'and will be ignored. Instead, declare it as a static method.',name):void 0;var noStaticGetSnapshotBeforeUpdate=typeof ctor.getSnapshotBeforeUpdate!=='function';!noStaticGetSnapshotBeforeUpdate?warningWithoutStack$1(false,'%s: getSnapshotBeforeUpdate() is defined as a static method '+'and will be ignored. Instead, declare it as an instance method.',name):void 0;var _state=instance.state;if(_state&&(typeof _state!=='object'||isArray$1(_state))){warningWithoutStack$1(false,'%s.state: must be set to an object or null',name);}if(typeof instance.getChildContext==='function'){!(typeof ctor.childContextTypes==='object')?warningWithoutStack$1(false,'%s.getChildContext(): childContextTypes must be defined in order to '+'use getChildContext().',name):void 0;}}}function adoptClassInstance(workInProgress,instance){instance.updater=classComponentUpdater;workInProgress.stateNode=instance;// The instance needs access to the fiber so that it can schedule updates
+var updateQueue=workInProgress.updateQueue;if(updateQueue!==null&&workInProgress.expirationTime===NoWork){updateQueue.baseState=memoizedState;}}var classComponentUpdater={isMounted:isMounted,enqueueSetState:function(inst,payload,callback){var fiber=get(inst);var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,fiber);var update=createUpdate(expirationTime);update.payload=payload;if(callback!==undefined&&callback!==null){{warnOnInvalidCallback$1(callback,'setState');}update.callback=callback;}flushPassiveEffects();enqueueUpdate(fiber,update);scheduleWork(fiber,expirationTime);},enqueueReplaceState:function(inst,payload,callback){var fiber=get(inst);var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,fiber);var update=createUpdate(expirationTime);update.tag=ReplaceState;update.payload=payload;if(callback!==undefined&&callback!==null){{warnOnInvalidCallback$1(callback,'replaceState');}update.callback=callback;}flushPassiveEffects();enqueueUpdate(fiber,update);scheduleWork(fiber,expirationTime);},enqueueForceUpdate:function(inst,callback){var fiber=get(inst);var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,fiber);var update=createUpdate(expirationTime);update.tag=ForceUpdate;if(callback!==undefined&&callback!==null){{warnOnInvalidCallback$1(callback,'forceUpdate');}update.callback=callback;}flushPassiveEffects();enqueueUpdate(fiber,update);scheduleWork(fiber,expirationTime);}};function checkShouldComponentUpdate(workInProgress,ctor,oldProps,newProps,oldState,newState,nextContext){var instance=workInProgress.stateNode;if(typeof instance.shouldComponentUpdate==='function'){startPhaseTimer(workInProgress,'shouldComponentUpdate');var shouldUpdate=instance.shouldComponentUpdate(newProps,newState,nextContext);stopPhaseTimer();{!(shouldUpdate!==undefined)?warningWithoutStack$1(false,'%s.shouldComponentUpdate(): Returned undefined instead of a '+'boolean value. Make sure to return true or false.',getComponentName(ctor)||'Component'):void 0;}return shouldUpdate;}if(ctor.prototype&&ctor.prototype.isPureReactComponent){return!shallowEqual(oldProps,newProps)||!shallowEqual(oldState,newState);}return true;}function checkClassInstance(workInProgress,ctor,newProps){var instance=workInProgress.stateNode;{var name=getComponentName(ctor)||'Component';var renderPresent=instance.render;if(!renderPresent){if(ctor.prototype&&typeof ctor.prototype.render==='function'){warningWithoutStack$1(false,'%s(...): No `render` method found on the returned component '+'instance: did you accidentally return an object from the constructor?',name);}else{warningWithoutStack$1(false,'%s(...): No `render` method found on the returned component '+'instance: you may have forgotten to define `render`.',name);}}var noGetInitialStateOnES6=!instance.getInitialState||instance.getInitialState.isReactClassApproved||instance.state;!noGetInitialStateOnES6?warningWithoutStack$1(false,'getInitialState was defined on %s, a plain JavaScript class. '+'This is only supported for classes created using React.createClass. '+'Did you mean to define a state property instead?',name):void 0;var noGetDefaultPropsOnES6=!instance.getDefaultProps||instance.getDefaultProps.isReactClassApproved;!noGetDefaultPropsOnES6?warningWithoutStack$1(false,'getDefaultProps was defined on %s, a plain JavaScript class. '+'This is only supported for classes created using React.createClass. '+'Use a static property to define defaultProps instead.',name):void 0;var noInstancePropTypes=!instance.propTypes;!noInstancePropTypes?warningWithoutStack$1(false,'propTypes was defined as an instance property on %s. Use a static '+'property to define propTypes instead.',name):void 0;var noInstanceContextType=!instance.contextType;!noInstanceContextType?warningWithoutStack$1(false,'contextType was defined as an instance property on %s. Use a static '+'property to define contextType instead.',name):void 0;var noInstanceContextTypes=!instance.contextTypes;!noInstanceContextTypes?warningWithoutStack$1(false,'contextTypes was defined as an instance property on %s. Use a static '+'property to define contextTypes instead.',name):void 0;if(ctor.contextType&&ctor.contextTypes&&!didWarnAboutContextTypeAndContextTypes.has(ctor)){didWarnAboutContextTypeAndContextTypes.add(ctor);warningWithoutStack$1(false,'%s declares both contextTypes and contextType static properties. '+'The legacy contextTypes property will be ignored.',name);}var noComponentShouldUpdate=typeof instance.componentShouldUpdate!=='function';!noComponentShouldUpdate?warningWithoutStack$1(false,'%s has a method called '+'componentShouldUpdate(). Did you mean shouldComponentUpdate()? '+'The name is phrased as a question because the function is '+'expected to return a value.',name):void 0;if(ctor.prototype&&ctor.prototype.isPureReactComponent&&typeof instance.shouldComponentUpdate!=='undefined'){warningWithoutStack$1(false,'%s has a method called shouldComponentUpdate(). '+'shouldComponentUpdate should not be used when extending React.PureComponent. '+'Please extend React.Component if shouldComponentUpdate is used.',getComponentName(ctor)||'A pure component');}var noComponentDidUnmount=typeof instance.componentDidUnmount!=='function';!noComponentDidUnmount?warningWithoutStack$1(false,'%s has a method called '+'componentDidUnmount(). But there is no such lifecycle method. '+'Did you mean componentWillUnmount()?',name):void 0;var noComponentDidReceiveProps=typeof instance.componentDidReceiveProps!=='function';!noComponentDidReceiveProps?warningWithoutStack$1(false,'%s has a method called '+'componentDidReceiveProps(). But there is no such lifecycle method. '+'If you meant to update the state in response to changing props, '+'use componentWillReceiveProps(). If you meant to fetch data or '+'run side-effects or mutations after React has updated the UI, use componentDidUpdate().',name):void 0;var noComponentWillRecieveProps=typeof instance.componentWillRecieveProps!=='function';!noComponentWillRecieveProps?warningWithoutStack$1(false,'%s has a method called '+'componentWillRecieveProps(). Did you mean componentWillReceiveProps()?',name):void 0;var noUnsafeComponentWillRecieveProps=typeof instance.UNSAFE_componentWillRecieveProps!=='function';!noUnsafeComponentWillRecieveProps?warningWithoutStack$1(false,'%s has a method called '+'UNSAFE_componentWillRecieveProps(). Did you mean UNSAFE_componentWillReceiveProps()?',name):void 0;var hasMutatedProps=instance.props!==newProps;!(instance.props===undefined||!hasMutatedProps)?warningWithoutStack$1(false,'%s(...): When calling super() in `%s`, make sure to pass '+"up the same props that your component's constructor was passed.",name,name):void 0;var noInstanceDefaultProps=!instance.defaultProps;!noInstanceDefaultProps?warningWithoutStack$1(false,'Setting defaultProps as an instance property on %s is not supported and will be ignored.'+' Instead, define defaultProps as a static property on %s.',name,name):void 0;if(typeof instance.getSnapshotBeforeUpdate==='function'&&typeof instance.componentDidUpdate!=='function'&&!didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate.has(ctor)){didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate.add(ctor);warningWithoutStack$1(false,'%s: getSnapshotBeforeUpdate() should be used with componentDidUpdate(). '+'This component defines getSnapshotBeforeUpdate() only.',getComponentName(ctor));}var noInstanceGetDerivedStateFromProps=typeof instance.getDerivedStateFromProps!=='function';!noInstanceGetDerivedStateFromProps?warningWithoutStack$1(false,'%s: getDerivedStateFromProps() is defined as an instance method '+'and will be ignored. Instead, declare it as a static method.',name):void 0;var noInstanceGetDerivedStateFromCatch=typeof instance.getDerivedStateFromError!=='function';!noInstanceGetDerivedStateFromCatch?warningWithoutStack$1(false,'%s: getDerivedStateFromError() is defined as an instance method '+'and will be ignored. Instead, declare it as a static method.',name):void 0;var noStaticGetSnapshotBeforeUpdate=typeof ctor.getSnapshotBeforeUpdate!=='function';!noStaticGetSnapshotBeforeUpdate?warningWithoutStack$1(false,'%s: getSnapshotBeforeUpdate() is defined as a static method '+'and will be ignored. Instead, declare it as an instance method.',name):void 0;var _state=instance.state;if(_state&&(typeof _state!=='object'||isArray$1(_state))){warningWithoutStack$1(false,'%s.state: must be set to an object or null',name);}if(typeof instance.getChildContext==='function'){!(typeof ctor.childContextTypes==='object')?warningWithoutStack$1(false,'%s.getChildContext(): childContextTypes must be defined in order to '+'use getChildContext().',name):void 0;}}}function adoptClassInstance(workInProgress,instance){instance.updater=classComponentUpdater;workInProgress.stateNode=instance;// The instance needs access to the fiber so that it can schedule updates
 set(instance,workInProgress);{instance._reactInternalInstance=fakeInternalInstance;}}function constructClassInstance(workInProgress,ctor,props,renderExpirationTime){var isLegacyContextConsumer=false;var unmaskedContext=emptyContextObject;var context=null;var contextType=ctor.contextType;if(typeof contextType==='object'&&contextType!==null){{if(contextType.$$typeof!==REACT_CONTEXT_TYPE&&!didWarnAboutInvalidateContextType.has(ctor)){didWarnAboutInvalidateContextType.add(ctor);warningWithoutStack$1(false,'%s defines an invalid contextType. '+'contextType should point to the Context object returned by React.createContext(). '+'Did you accidentally pass the Context.Provider instead?',getComponentName(ctor)||'Component');}}context=readContext$1(contextType);}else{unmaskedContext=getUnmaskedContext(workInProgress,ctor,true);var contextTypes=ctor.contextTypes;isLegacyContextConsumer=contextTypes!==null&&contextTypes!==undefined;context=isLegacyContextConsumer?getMaskedContext(workInProgress,unmaskedContext):emptyContextObject;}// Instantiate twice to help detect side-effects.
 {if(debugRenderPhaseSideEffects||debugRenderPhaseSideEffectsForStrictMode&&workInProgress.mode&StrictMode){new ctor(props,context);// eslint-disable-line no-new
 }}var instance=new ctor(props,context);var state=workInProgress.memoizedState=instance.state!==null&&instance.state!==undefined?instance.state:null;adoptClassInstance(workInProgress,instance);{if(typeof ctor.getDerivedStateFromProps==='function'&&state===null){var componentName=getComponentName(ctor)||'Component';if(!didWarnAboutUninitializedState.has(componentName)){didWarnAboutUninitializedState.add(componentName);warningWithoutStack$1(false,'`%s` uses `getDerivedStateFromProps` but its initial state is '+'%s. This is not recommended. Instead, define the initial state by '+'assigning an object to `this.state` in the constructor of `%s`. '+'This ensures that `getDerivedStateFromProps` arguments have a consistent shape.',componentName,instance.state===null?'null':'undefined',componentName);}}// If new component APIs are defined, "unsafe" lifecycles won't be called.
@@ -47422,7 +47703,7 @@ if(typeof instance.componentDidMount==='function'){workInProgress.effectTag|=Upd
 workInProgress.memoizedProps=newProps;workInProgress.memoizedState=newState;}// Update the existing instance's state, props, and context pointers even
 // if shouldComponentUpdate returns false.
 instance.props=newProps;instance.state=newState;instance.context=nextContext;return shouldUpdate;}// Invokes the update life-cycles and returns false if it shouldn't rerender.
-function updateClassInstance(current,workInProgress,ctor,newProps,renderExpirationTime){var instance=workInProgress.stateNode;var oldProps=workInProgress.memoizedProps;instance.props=oldProps;var oldContext=instance.context;var contextType=ctor.contextType;var nextContext=void 0;if(typeof contextType==='object'&&contextType!==null){nextContext=readContext$1(contextType);}else{var nextUnmaskedContext=getUnmaskedContext(workInProgress,ctor,true);nextContext=getMaskedContext(workInProgress,nextUnmaskedContext);}var getDerivedStateFromProps=ctor.getDerivedStateFromProps;var hasNewLifecycles=typeof getDerivedStateFromProps==='function'||typeof instance.getSnapshotBeforeUpdate==='function';// Note: During these life-cycles, instance.props/instance.state are what
+function updateClassInstance(current,workInProgress,ctor,newProps,renderExpirationTime){var instance=workInProgress.stateNode;var oldProps=workInProgress.memoizedProps;instance.props=workInProgress.type===workInProgress.elementType?oldProps:resolveDefaultProps(workInProgress.type,oldProps);var oldContext=instance.context;var contextType=ctor.contextType;var nextContext=void 0;if(typeof contextType==='object'&&contextType!==null){nextContext=readContext$1(contextType);}else{var nextUnmaskedContext=getUnmaskedContext(workInProgress,ctor,true);nextContext=getMaskedContext(workInProgress,nextUnmaskedContext);}var getDerivedStateFromProps=ctor.getDerivedStateFromProps;var hasNewLifecycles=typeof getDerivedStateFromProps==='function'||typeof instance.getSnapshotBeforeUpdate==='function';// Note: During these life-cycles, instance.props/instance.state are what
 // ever the previously attempted to render - not the "current". However,
 // during componentDidUpdate we pass the "current" props.
 // In order to support react-lifecycles-compat polyfilled components,
@@ -47615,7 +47896,7 @@ popToNextHostParent(fiber);isHydrating=true;return false;}var type=fiber.type;//
 // other nodes in them. We also ignore components with pure text content in
 // side of them.
 // TODO: Better heuristic.
-if(fiber.tag!==HostComponent||type!=='head'&&type!=='body'&&!shouldSetTextContent(type,fiber.memoizedProps)){var nextInstance=nextHydratableInstance;while(nextInstance){deleteHydratableInstance(fiber,nextInstance);nextInstance=getNextHydratableSibling(nextInstance);}}popToNextHostParent(fiber);nextHydratableInstance=hydrationParentFiber?getNextHydratableSibling(fiber.stateNode):null;return true;}function resetHydrationState(){if(!supportsHydration){return;}hydrationParentFiber=null;nextHydratableInstance=null;isHydrating=false;}function readLazyComponentType(lazyComponent){var status=lazyComponent._status;var result=lazyComponent._result;switch(status){case Resolved:{var Component=result;return Component;}case Rejected:{var error=result;throw error;}case Pending:{var thenable=result;throw thenable;}default:{lazyComponent._status=Pending;var ctor=lazyComponent._ctor;var _thenable=ctor();_thenable.then(function(moduleObject){if(lazyComponent._status===Pending){var defaultExport=moduleObject.default;{if(defaultExport===undefined){warning$1(false,'lazy: Expected the result of a dynamic import() call. '+'Instead received: %s\n\nYour code should look like: \n  '+"const MyComponent = lazy(() => import('./MyComponent'))",moduleObject);}}lazyComponent._status=Resolved;lazyComponent._result=defaultExport;}},function(error){if(lazyComponent._status===Pending){lazyComponent._status=Rejected;lazyComponent._result=error;}});lazyComponent._result=_thenable;throw _thenable;}}}var ReactCurrentOwner$3=ReactSharedInternals.ReactCurrentOwner;var didWarnAboutBadClass=void 0;var didWarnAboutContextTypeOnFunctionComponent=void 0;var didWarnAboutGetDerivedStateOnFunctionComponent=void 0;var didWarnAboutFunctionRefs=void 0;{didWarnAboutBadClass={};didWarnAboutContextTypeOnFunctionComponent={};didWarnAboutGetDerivedStateOnFunctionComponent={};didWarnAboutFunctionRefs={};}function reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime){if(current$$1===null){// If this is a fresh new component that hasn't been rendered yet, we
+if(fiber.tag!==HostComponent||type!=='head'&&type!=='body'&&!shouldSetTextContent(type,fiber.memoizedProps)){var nextInstance=nextHydratableInstance;while(nextInstance){deleteHydratableInstance(fiber,nextInstance);nextInstance=getNextHydratableSibling(nextInstance);}}popToNextHostParent(fiber);nextHydratableInstance=hydrationParentFiber?getNextHydratableSibling(fiber.stateNode):null;return true;}function resetHydrationState(){if(!supportsHydration){return;}hydrationParentFiber=null;nextHydratableInstance=null;isHydrating=false;}var ReactCurrentOwner$3=ReactSharedInternals.ReactCurrentOwner;var didWarnAboutBadClass=void 0;var didWarnAboutContextTypeOnFunctionComponent=void 0;var didWarnAboutGetDerivedStateOnFunctionComponent=void 0;var didWarnAboutFunctionRefs=void 0;var didWarnAboutReassigningProps=void 0;{didWarnAboutBadClass={};didWarnAboutContextTypeOnFunctionComponent={};didWarnAboutGetDerivedStateOnFunctionComponent={};didWarnAboutFunctionRefs={};didWarnAboutReassigningProps=false;}function reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime){if(current$$1===null){// If this is a fresh new component that hasn't been rendered yet, we
 // won't update its child set by applying minimal side-effects. Instead,
 // we will add them all to the child before it gets rendered. That means
 // we can optimize this reconciliation pass by not tracking side-effects.
@@ -47636,18 +47917,42 @@ workInProgress.child=reconcileChildFibers(workInProgress,current$$1.child,null,r
 // pass null in place of where we usually pass the current child set. This has
 // the effect of remounting all children regardless of whether their their
 // identity matches.
-workInProgress.child=reconcileChildFibers(workInProgress,null,nextChildren,renderExpirationTime);}function updateForwardRef(current$$1,workInProgress,type,nextProps,renderExpirationTime){var render=type.render;var ref=workInProgress.ref;if(hasContextChanged()){// Normally we can bail out on props equality but if context has changed
-// we don't do the bailout and we have to reuse existing props instead.
-}else if(workInProgress.memoizedProps===nextProps){var currentRef=current$$1!==null?current$$1.ref:null;if(ref===currentRef){return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}}var nextChildren=void 0;{ReactCurrentOwner$3.current=workInProgress;setCurrentPhase('render');nextChildren=render(nextProps,ref);setCurrentPhase(null);}reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateMemoComponent(current$$1,workInProgress,Component,nextProps,updateExpirationTime,renderExpirationTime){if(current$$1===null){var type=Component.type;if(isSimpleFunctionComponent(type)&&Component.compare===null){// If this is a plain function component without default props,
+workInProgress.child=reconcileChildFibers(workInProgress,null,nextChildren,renderExpirationTime);}function updateForwardRef(current$$1,workInProgress,Component,nextProps,renderExpirationTime){{if(workInProgress.type!==workInProgress.elementType){// Lazy component props can't be validated in createElement
+// because they're only guaranteed to be resolved here.
+var innerPropTypes=Component.propTypes;if(innerPropTypes){checkPropTypes(innerPropTypes,nextProps,// Resolved props
+'prop',getComponentName(Component),getCurrentFiberStackInDev);}}}var render=Component.render;var ref=workInProgress.ref;// The rest is a fork of updateFunctionComponent
+var nextChildren=void 0;prepareToReadContext(workInProgress,renderExpirationTime);prepareToUseHooks(current$$1,workInProgress,renderExpirationTime);{ReactCurrentOwner$3.current=workInProgress;setCurrentPhase('render');nextChildren=render(nextProps,ref);setCurrentPhase(null);}nextChildren=finishHooks(render,nextProps,nextChildren,ref);// React DevTools reads this flag.
+workInProgress.effectTag|=PerformedWork;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateMemoComponent(current$$1,workInProgress,Component,nextProps,updateExpirationTime,renderExpirationTime){if(current$$1===null){var type=Component.type;if(isSimpleFunctionComponent(type)&&Component.compare===null&&// SimpleMemoComponent codepath doesn't resolve outer props either.
+Component.defaultProps===undefined){// If this is a plain function component without default props,
 // and with only the default shallow comparison, we upgrade it
 // to a SimpleMemoComponent to allow fast path updates.
-workInProgress.tag=SimpleMemoComponent;workInProgress.type=type;return updateSimpleMemoComponent(current$$1,workInProgress,type,nextProps,updateExpirationTime,renderExpirationTime);}var child=createFiberFromTypeAndProps(Component.type,null,nextProps,null,workInProgress.mode,renderExpirationTime);child.ref=workInProgress.ref;child.return=workInProgress;workInProgress.child=child;return child;}var currentChild=current$$1.child;// This is always exactly one child
-if(updateExpirationTime===NoWork||updateExpirationTime>renderExpirationTime){// This will be the props with resolved defaultProps,
+workInProgress.tag=SimpleMemoComponent;workInProgress.type=type;{validateFunctionComponentInDev(workInProgress,type);}return updateSimpleMemoComponent(current$$1,workInProgress,type,nextProps,updateExpirationTime,renderExpirationTime);}{var innerPropTypes=type.propTypes;if(innerPropTypes){// Inner memo component props aren't currently validated in createElement.
+// We could move it there, but we'd still need this for lazy code path.
+checkPropTypes(innerPropTypes,nextProps,// Resolved props
+'prop',getComponentName(type),getCurrentFiberStackInDev);}}var child=createFiberFromTypeAndProps(Component.type,null,nextProps,null,workInProgress.mode,renderExpirationTime);child.ref=workInProgress.ref;child.return=workInProgress;workInProgress.child=child;return child;}{var _type=Component.type;var _innerPropTypes=_type.propTypes;if(_innerPropTypes){// Inner memo component props aren't currently validated in createElement.
+// We could move it there, but we'd still need this for lazy code path.
+checkPropTypes(_innerPropTypes,nextProps,// Resolved props
+'prop',getComponentName(_type),getCurrentFiberStackInDev);}}var currentChild=current$$1.child;// This is always exactly one child
+if(updateExpirationTime<renderExpirationTime){// This will be the props with resolved defaultProps,
 // unlike current.memoizedProps which will be the unresolved ones.
 var prevProps=currentChild.memoizedProps;// Default to shallow comparison
-var compare=Component.compare;compare=compare!==null?compare:shallowEqual;if(compare(prevProps,nextProps)&&current$$1.ref===workInProgress.ref){return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}}var newChild=createWorkInProgress(currentChild,nextProps,renderExpirationTime);newChild.ref=workInProgress.ref;newChild.return=workInProgress;workInProgress.child=newChild;return newChild;}function updateSimpleMemoComponent(current$$1,workInProgress,Component,nextProps,updateExpirationTime,renderExpirationTime){if(current$$1!==null&&(updateExpirationTime===NoWork||updateExpirationTime>renderExpirationTime)){var prevProps=current$$1.memoizedProps;if(shallowEqual(prevProps,nextProps)&&current$$1.ref===workInProgress.ref){return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}}return updateFunctionComponent(current$$1,workInProgress,Component,nextProps,renderExpirationTime);}function updateFragment(current$$1,workInProgress,renderExpirationTime){var nextChildren=workInProgress.pendingProps;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateMode(current$$1,workInProgress,renderExpirationTime){var nextChildren=workInProgress.pendingProps.children;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateProfiler(current$$1,workInProgress,renderExpirationTime){if(enableProfilerTimer){workInProgress.effectTag|=Update;}var nextProps=workInProgress.pendingProps;var nextChildren=nextProps.children;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function markRef(current$$1,workInProgress){var ref=workInProgress.ref;if(current$$1===null&&ref!==null||current$$1!==null&&current$$1.ref!==ref){// Schedule a Ref effect
-workInProgress.effectTag|=Ref;}}function updateFunctionComponent(current$$1,workInProgress,Component,nextProps,renderExpirationTime){var unmaskedContext=getUnmaskedContext(workInProgress,Component,true);var context=getMaskedContext(workInProgress,unmaskedContext);var nextChildren=void 0;prepareToReadContext(workInProgress,renderExpirationTime);{ReactCurrentOwner$3.current=workInProgress;setCurrentPhase('render');nextChildren=Component(nextProps,context);setCurrentPhase(null);}// React DevTools reads this flag.
-workInProgress.effectTag|=PerformedWork;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateClassComponent(current$$1,workInProgress,Component,nextProps,renderExpirationTime){// Push context providers early to prevent context stack mismatches.
+var compare=Component.compare;compare=compare!==null?compare:shallowEqual;if(compare(prevProps,nextProps)&&current$$1.ref===workInProgress.ref){return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}}// React DevTools reads this flag.
+workInProgress.effectTag|=PerformedWork;var newChild=createWorkInProgress(currentChild,nextProps,renderExpirationTime);newChild.ref=workInProgress.ref;newChild.return=workInProgress;workInProgress.child=newChild;return newChild;}function updateSimpleMemoComponent(current$$1,workInProgress,Component,nextProps,updateExpirationTime,renderExpirationTime){{if(workInProgress.type!==workInProgress.elementType){// Lazy component props can't be validated in createElement
+// because they're only guaranteed to be resolved here.
+var outerMemoType=workInProgress.elementType;if(outerMemoType.$$typeof===REACT_LAZY_TYPE){// We warn when you define propTypes on lazy()
+// so let's just skip over it to find memo() outer wrapper.
+// Inner props for memo are validated later.
+outerMemoType=refineResolvedLazyComponent(outerMemoType);}var outerPropTypes=outerMemoType&&outerMemoType.propTypes;if(outerPropTypes){checkPropTypes(outerPropTypes,nextProps,// Resolved (SimpleMemoComponent has no defaultProps)
+'prop',getComponentName(outerMemoType),getCurrentFiberStackInDev);}// Inner propTypes will be validated in the function component path.
+}}if(current$$1!==null&&updateExpirationTime<renderExpirationTime){var prevProps=current$$1.memoizedProps;if(shallowEqual(prevProps,nextProps)&&current$$1.ref===workInProgress.ref){return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}}return updateFunctionComponent(current$$1,workInProgress,Component,nextProps,renderExpirationTime);}function updateFragment(current$$1,workInProgress,renderExpirationTime){var nextChildren=workInProgress.pendingProps;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateMode(current$$1,workInProgress,renderExpirationTime){var nextChildren=workInProgress.pendingProps.children;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateProfiler(current$$1,workInProgress,renderExpirationTime){if(enableProfilerTimer){workInProgress.effectTag|=Update;}var nextProps=workInProgress.pendingProps;var nextChildren=nextProps.children;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function markRef(current$$1,workInProgress){var ref=workInProgress.ref;if(current$$1===null&&ref!==null||current$$1!==null&&current$$1.ref!==ref){// Schedule a Ref effect
+workInProgress.effectTag|=Ref;}}function updateFunctionComponent(current$$1,workInProgress,Component,nextProps,renderExpirationTime){{if(workInProgress.type!==workInProgress.elementType){// Lazy component props can't be validated in createElement
+// because they're only guaranteed to be resolved here.
+var innerPropTypes=Component.propTypes;if(innerPropTypes){checkPropTypes(innerPropTypes,nextProps,// Resolved props
+'prop',getComponentName(Component),getCurrentFiberStackInDev);}}}var unmaskedContext=getUnmaskedContext(workInProgress,Component,true);var context=getMaskedContext(workInProgress,unmaskedContext);var nextChildren=void 0;prepareToReadContext(workInProgress,renderExpirationTime);prepareToUseHooks(current$$1,workInProgress,renderExpirationTime);{ReactCurrentOwner$3.current=workInProgress;setCurrentPhase('render');nextChildren=Component(nextProps,context);setCurrentPhase(null);}nextChildren=finishHooks(Component,nextProps,nextChildren,context);// React DevTools reads this flag.
+workInProgress.effectTag|=PerformedWork;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateClassComponent(current$$1,workInProgress,Component,nextProps,renderExpirationTime){{if(workInProgress.type!==workInProgress.elementType){// Lazy component props can't be validated in createElement
+// because they're only guaranteed to be resolved here.
+var innerPropTypes=Component.propTypes;if(innerPropTypes){checkPropTypes(innerPropTypes,nextProps,// Resolved props
+'prop',getComponentName(Component),getCurrentFiberStackInDev);}}}// Push context providers early to prevent context stack mismatches.
 // During mounting we don't know the child context yet as the instance doesn't exist.
 // We will invalidate the child context in finishClassComponent() right after rendering.
 var hasContext=void 0;if(isContextProvider(Component)){hasContext=true;pushContextProvider(workInProgress);}else{hasContext=false;}prepareToReadContext(workInProgress,renderExpirationTime);var instance=workInProgress.stateNode;var shouldUpdate=void 0;if(instance===null){if(current$$1!==null){// An class component without an instance only mounts if it suspended
@@ -47657,7 +47962,7 @@ var hasContext=void 0;if(isContextProvider(Component)){hasContext=true;pushConte
 current$$1.alternate=null;workInProgress.alternate=null;// Since this is conceptually a new fiber, schedule a Placement effect
 workInProgress.effectTag|=Placement;}// In the initial pass we might need to construct the instance.
 constructClassInstance(workInProgress,Component,nextProps,renderExpirationTime);mountClassInstance(workInProgress,Component,nextProps,renderExpirationTime);shouldUpdate=true;}else if(current$$1===null){// In a resume, we'll already have an instance we can reuse.
-shouldUpdate=resumeMountClassInstance(workInProgress,Component,nextProps,renderExpirationTime);}else{shouldUpdate=updateClassInstance(current$$1,workInProgress,Component,nextProps,renderExpirationTime);}return finishClassComponent(current$$1,workInProgress,Component,shouldUpdate,hasContext,renderExpirationTime);}function finishClassComponent(current$$1,workInProgress,Component,shouldUpdate,hasContext,renderExpirationTime){// Refs should update even if shouldComponentUpdate returns false
+shouldUpdate=resumeMountClassInstance(workInProgress,Component,nextProps,renderExpirationTime);}else{shouldUpdate=updateClassInstance(current$$1,workInProgress,Component,nextProps,renderExpirationTime);}var nextUnitOfWork=finishClassComponent(current$$1,workInProgress,Component,shouldUpdate,hasContext,renderExpirationTime);{var inst=workInProgress.stateNode;if(inst.props!==nextProps){!didWarnAboutReassigningProps?warning$1(false,'It looks like %s is reassigning its own `this.props` while rendering. '+'This is not supported and can lead to confusing bugs.',getComponentName(workInProgress.type)||'a component'):void 0;didWarnAboutReassigningProps=true;}}return nextUnitOfWork;}function finishClassComponent(current$$1,workInProgress,Component,shouldUpdate,hasContext,renderExpirationTime){// Refs should update even if shouldComponentUpdate returns false
 markRef(current$$1,workInProgress);var didCaptureError=(workInProgress.effectTag&DidCapture)!==NoEffect;if(!shouldUpdate&&!didCaptureError){// Context providers should defer to sCU for rendering
 if(hasContext){invalidateContextProvider(workInProgress,Component,false);}return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}var instance=workInProgress.stateNode;// Rerender
 ReactCurrentOwner$3.current=workInProgress;var nextChildren=void 0;if(didCaptureError&&typeof Component.getDerivedStateFromError!=='function'){// If we captured an error, but getDerivedStateFrom catch is not defined,
@@ -47701,21 +48006,21 @@ workInProgress.effectTag|=ContentReset;}markRef(current$$1,workInProgress);// Ch
 if(renderExpirationTime!==Never&&workInProgress.mode&ConcurrentMode&&shouldDeprioritizeSubtree(type,nextProps)){// Schedule this fiber to re-render at offscreen priority. Then bailout.
 workInProgress.expirationTime=Never;return null;}reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateHostText(current$$1,workInProgress){if(current$$1===null){tryToClaimNextHydratableInstance(workInProgress);}// Nothing to do here. This is terminal. We'll do the completion step
 // immediately after.
-return null;}function resolveDefaultProps(Component,baseProps){if(Component&&Component.defaultProps){// Resolve default props. Taken from ReactElement
-var props=_assign({},baseProps);var defaultProps=Component.defaultProps;for(var propName in defaultProps){if(props[propName]===undefined){props[propName]=defaultProps[propName];}}return props;}return baseProps;}function mountLazyComponent(_current,workInProgress,elementType,updateExpirationTime,renderExpirationTime){if(_current!==null){// An lazy component only mounts if it suspended inside a non-
-// concurrent tree, in an inconsistent state. We want to tree it like
+return null;}function mountLazyComponent(_current,workInProgress,elementType,updateExpirationTime,renderExpirationTime){if(_current!==null){// An lazy component only mounts if it suspended inside a non-
+// concurrent tree, in an inconsistent state. We want to treat it like
 // a new mount, even though an empty version of it already committed.
 // Disconnect the alternate pointers.
 _current.alternate=null;workInProgress.alternate=null;// Since this is conceptually a new fiber, schedule a Placement effect
 workInProgress.effectTag|=Placement;}var props=workInProgress.pendingProps;// We can't start a User Timing measurement with correct label yet.
 // Cancel and resume right after we know the tag.
 cancelWorkTimer(workInProgress);var Component=readLazyComponentType(elementType);// Store the unwrapped component in the type.
-workInProgress.type=Component;var resolvedTag=workInProgress.tag=resolveLazyComponentTag(Component);startWorkTimer(workInProgress);var resolvedProps=resolveDefaultProps(Component,props);var child=void 0;switch(resolvedTag){case FunctionComponent:{child=updateFunctionComponent(null,workInProgress,Component,resolvedProps,renderExpirationTime);break;}case ClassComponent:{child=updateClassComponent(null,workInProgress,Component,resolvedProps,renderExpirationTime);break;}case ForwardRef:{child=updateForwardRef(null,workInProgress,Component,resolvedProps,renderExpirationTime);break;}case MemoComponent:{child=updateMemoComponent(null,workInProgress,Component,resolveDefaultProps(Component.type,resolvedProps),// The inner type can have defaults too
-updateExpirationTime,renderExpirationTime);break;}default:{// This message intentionally doesn't metion ForwardRef or MemoComponent
+workInProgress.type=Component;var resolvedTag=workInProgress.tag=resolveLazyComponentTag(Component);startWorkTimer(workInProgress);var resolvedProps=resolveDefaultProps(Component,props);var child=void 0;switch(resolvedTag){case FunctionComponent:{child=updateFunctionComponent(null,workInProgress,Component,resolvedProps,renderExpirationTime);break;}case ClassComponent:{child=updateClassComponent(null,workInProgress,Component,resolvedProps,renderExpirationTime);break;}case ForwardRef:{child=updateForwardRef(null,workInProgress,Component,resolvedProps,renderExpirationTime);break;}case MemoComponent:{{if(workInProgress.type!==workInProgress.elementType){var outerPropTypes=Component.propTypes;if(outerPropTypes){checkPropTypes(outerPropTypes,resolvedProps,// Resolved for outer only
+'prop',getComponentName(Component),getCurrentFiberStackInDev);}}}child=updateMemoComponent(null,workInProgress,Component,resolveDefaultProps(Component.type,resolvedProps),// The inner type can have defaults too
+updateExpirationTime,renderExpirationTime);break;}default:{var hint='';{if(Component!==null&&typeof Component==='object'&&Component.$$typeof===REACT_LAZY_TYPE){hint=' Did you wrap a component in React.lazy() more than once?';}}// This message intentionally doesn't mention ForwardRef or MemoComponent
 // because the fact that it's a separate type of work is an
 // implementation detail.
-invariant(false,'Element type is invalid. Received a promise that resolves to: %s. Promise elements must resolve to a class or function.',Component);}}return child;}function mountIncompleteClassComponent(_current,workInProgress,Component,nextProps,renderExpirationTime){if(_current!==null){// An incomplete component only mounts if it suspended inside a non-
-// concurrent tree, in an inconsistent state. We want to tree it like
+invariant(false,'Element type is invalid. Received a promise that resolves to: %s. Lazy element type must resolve to a class or function.%s',Component,hint);}}return child;}function mountIncompleteClassComponent(_current,workInProgress,Component,nextProps,renderExpirationTime){if(_current!==null){// An incomplete component only mounts if it suspended inside a non-
+// concurrent tree, in an inconsistent state. We want to treat it like
 // a new mount, even though an empty version of it already committed.
 // Disconnect the alternate pointers.
 _current.alternate=null;workInProgress.alternate=null;// Since this is conceptually a new fiber, schedule a Placement effect
@@ -47725,26 +48030,23 @@ workInProgress.tag=ClassComponent;// The rest of this function is a fork of `upd
 // During mounting we don't know the child context yet as the instance doesn't exist.
 // We will invalidate the child context in finishClassComponent() right after rendering.
 var hasContext=void 0;if(isContextProvider(Component)){hasContext=true;pushContextProvider(workInProgress);}else{hasContext=false;}prepareToReadContext(workInProgress,renderExpirationTime);constructClassInstance(workInProgress,Component,nextProps,renderExpirationTime);mountClassInstance(workInProgress,Component,nextProps,renderExpirationTime);return finishClassComponent(null,workInProgress,Component,true,hasContext,renderExpirationTime);}function mountIndeterminateComponent(_current,workInProgress,Component,renderExpirationTime){if(_current!==null){// An indeterminate component only mounts if it suspended inside a non-
-// concurrent tree, in an inconsistent state. We want to tree it like
+// concurrent tree, in an inconsistent state. We want to treat it like
 // a new mount, even though an empty version of it already committed.
 // Disconnect the alternate pointers.
 _current.alternate=null;workInProgress.alternate=null;// Since this is conceptually a new fiber, schedule a Placement effect
-workInProgress.effectTag|=Placement;}var props=workInProgress.pendingProps;var unmaskedContext=getUnmaskedContext(workInProgress,Component,false);var context=getMaskedContext(workInProgress,unmaskedContext);prepareToReadContext(workInProgress,renderExpirationTime);var value=void 0;{if(Component.prototype&&typeof Component.prototype.render==='function'){var componentName=getComponentName(Component)||'Unknown';if(!didWarnAboutBadClass[componentName]){warningWithoutStack$1(false,"The <%s /> component appears to have a render method, but doesn't extend React.Component. "+'This is likely to cause errors. Change %s to extend React.Component instead.',componentName,componentName);didWarnAboutBadClass[componentName]=true;}}if(workInProgress.mode&StrictMode){ReactStrictModeWarnings.recordLegacyContextWarning(workInProgress,null);}ReactCurrentOwner$3.current=workInProgress;value=Component(props,context);}// React DevTools reads this flag.
+workInProgress.effectTag|=Placement;}var props=workInProgress.pendingProps;var unmaskedContext=getUnmaskedContext(workInProgress,Component,false);var context=getMaskedContext(workInProgress,unmaskedContext);prepareToReadContext(workInProgress,renderExpirationTime);prepareToUseHooks(null,workInProgress,renderExpirationTime);var value=void 0;{if(Component.prototype&&typeof Component.prototype.render==='function'){var componentName=getComponentName(Component)||'Unknown';if(!didWarnAboutBadClass[componentName]){warningWithoutStack$1(false,"The <%s /> component appears to have a render method, but doesn't extend React.Component. "+'This is likely to cause errors. Change %s to extend React.Component instead.',componentName,componentName);didWarnAboutBadClass[componentName]=true;}}if(workInProgress.mode&StrictMode){ReactStrictModeWarnings.recordLegacyContextWarning(workInProgress,null);}ReactCurrentOwner$3.current=workInProgress;value=Component(props,context);}// React DevTools reads this flag.
 workInProgress.effectTag|=PerformedWork;if(typeof value==='object'&&value!==null&&typeof value.render==='function'&&value.$$typeof===undefined){// Proceed under the assumption that this is a class instance
-workInProgress.tag=ClassComponent;// Push context providers early to prevent context stack mismatches.
+workInProgress.tag=ClassComponent;// Throw out any hooks that were used.
+resetHooks();// Push context providers early to prevent context stack mismatches.
 // During mounting we don't know the child context yet as the instance doesn't exist.
 // We will invalidate the child context in finishClassComponent() right after rendering.
 var hasContext=false;if(isContextProvider(Component)){hasContext=true;pushContextProvider(workInProgress);}else{hasContext=false;}workInProgress.memoizedState=value.state!==null&&value.state!==undefined?value.state:null;var getDerivedStateFromProps=Component.getDerivedStateFromProps;if(typeof getDerivedStateFromProps==='function'){applyDerivedStateFromProps(workInProgress,Component,getDerivedStateFromProps,props);}adoptClassInstance(workInProgress,value);mountClassInstance(workInProgress,Component,props,renderExpirationTime);return finishClassComponent(null,workInProgress,Component,true,hasContext,renderExpirationTime);}else{// Proceed under the assumption that this is a function component
-workInProgress.tag=FunctionComponent;{if(Component){!!Component.childContextTypes?warningWithoutStack$1(false,'%s(...): childContextTypes cannot be defined on a function component.',Component.displayName||Component.name||'Component'):void 0;}if(workInProgress.ref!==null){var info='';var ownerName=getCurrentFiberOwnerNameInDevOrNull();if(ownerName){info+='\n\nCheck the render method of `'+ownerName+'`.';}var warningKey=ownerName||workInProgress._debugID||'';var debugSource=workInProgress._debugSource;if(debugSource){warningKey=debugSource.fileName+':'+debugSource.lineNumber;}if(!didWarnAboutFunctionRefs[warningKey]){didWarnAboutFunctionRefs[warningKey]=true;warning$1(false,'Function components cannot be given refs. '+'Attempts to access this ref will fail.%s',info);}}if(typeof Component.getDerivedStateFromProps==='function'){var _componentName=getComponentName(Component)||'Unknown';if(!didWarnAboutGetDerivedStateOnFunctionComponent[_componentName]){warningWithoutStack$1(false,'%s: Function components do not support getDerivedStateFromProps.',_componentName);didWarnAboutGetDerivedStateOnFunctionComponent[_componentName]=true;}}if(typeof Component.contextType==='object'&&Component.contextType!==null){var _componentName2=getComponentName(Component)||'Unknown';if(!didWarnAboutContextTypeOnFunctionComponent[_componentName2]){warningWithoutStack$1(false,'%s: Function components do not support contextType.',_componentName2);didWarnAboutContextTypeOnFunctionComponent[_componentName2]=true;}}}reconcileChildren(null,workInProgress,value,renderExpirationTime);return workInProgress.child;}}function updateSuspenseComponent(current$$1,workInProgress,renderExpirationTime){var mode=workInProgress.mode;var nextProps=workInProgress.pendingProps;// We should attempt to render the primary children unless this boundary
+workInProgress.tag=FunctionComponent;value=finishHooks(Component,props,value,context);reconcileChildren(null,workInProgress,value,renderExpirationTime);{validateFunctionComponentInDev(workInProgress,Component);}return workInProgress.child;}}function validateFunctionComponentInDev(workInProgress,Component){if(Component){!!Component.childContextTypes?warningWithoutStack$1(false,'%s(...): childContextTypes cannot be defined on a function component.',Component.displayName||Component.name||'Component'):void 0;}if(workInProgress.ref!==null){var info='';var ownerName=getCurrentFiberOwnerNameInDevOrNull();if(ownerName){info+='\n\nCheck the render method of `'+ownerName+'`.';}var warningKey=ownerName||workInProgress._debugID||'';var debugSource=workInProgress._debugSource;if(debugSource){warningKey=debugSource.fileName+':'+debugSource.lineNumber;}if(!didWarnAboutFunctionRefs[warningKey]){didWarnAboutFunctionRefs[warningKey]=true;warning$1(false,'Function components cannot be given refs. '+'Attempts to access this ref will fail.%s',info);}}if(typeof Component.getDerivedStateFromProps==='function'){var componentName=getComponentName(Component)||'Unknown';if(!didWarnAboutGetDerivedStateOnFunctionComponent[componentName]){warningWithoutStack$1(false,'%s: Function components do not support getDerivedStateFromProps.',componentName);didWarnAboutGetDerivedStateOnFunctionComponent[componentName]=true;}}if(typeof Component.contextType==='object'&&Component.contextType!==null){var _componentName=getComponentName(Component)||'Unknown';if(!didWarnAboutContextTypeOnFunctionComponent[_componentName]){warningWithoutStack$1(false,'%s: Function components do not support contextType.',_componentName);didWarnAboutContextTypeOnFunctionComponent[_componentName]=true;}}}function updateSuspenseComponent(current$$1,workInProgress,renderExpirationTime){var mode=workInProgress.mode;var nextProps=workInProgress.pendingProps;// We should attempt to render the primary children unless this boundary
 // already suspended during this render (`alreadyCaptured` is true).
-var nextState=workInProgress.memoizedState;if(nextState===null){// An empty suspense state means this boundary has not yet timed out.
-}else{if(!nextState.alreadyCaptured){// Since we haven't already suspended during this commit, clear the
-// existing suspense state. We'll try rendering again.
-nextState=null;}else{// Something in this boundary's subtree already suspended. Switch to
-// rendering the fallback children. Set `alreadyCaptured` to true.
-if(current$$1!==null&&nextState===current$$1.memoizedState){// Create a new suspense state to avoid mutating the current tree's.
-nextState={alreadyCaptured:true,didTimeout:true,timedOutAt:nextState.timedOutAt};}else{// Already have a clone, so it's safe to mutate.
-nextState.alreadyCaptured=true;nextState.didTimeout=true;}}}var nextDidTimeout=nextState!==null&&nextState.didTimeout;// This next part is a bit confusing. If the children timeout, we switch to
+var nextState=workInProgress.memoizedState;var nextDidTimeout=void 0;if((workInProgress.effectTag&DidCapture)===NoEffect){// This is the first attempt.
+nextState=null;nextDidTimeout=false;}else{// Something in this boundary's subtree already suspended. Switch to
+// rendering the fallback children.
+nextState={timedOutAt:nextState!==null?nextState.timedOutAt:NoWork};nextDidTimeout=true;workInProgress.effectTag&=~DidCapture;}// This next part is a bit confusing. If the children timeout, we switch to
 // showing the fallback children in place of the "primary" children.
 // However, we don't want to delete the primary children because then their
 // state will be lost (both the React state and the host state, e.g.
@@ -47775,33 +48077,51 @@ var child=void 0;// `next` points to the next fiber React should render. In the 
 var next=void 0;if(current$$1===null){// This is the initial mount. This branch is pretty simple because there's
 // no previous state that needs to be preserved.
 if(nextDidTimeout){// Mount separate fragments for primary and fallback children.
-var nextFallbackChildren=nextProps.fallback;var primaryChildFragment=createFiberFromFragment(null,mode,NoWork,null);var fallbackChildFragment=createFiberFromFragment(nextFallbackChildren,mode,renderExpirationTime,null);primaryChildFragment.sibling=fallbackChildFragment;child=primaryChildFragment;// Skip the primary children, and continue working on the
+var nextFallbackChildren=nextProps.fallback;var primaryChildFragment=createFiberFromFragment(null,mode,NoWork,null);if((workInProgress.mode&ConcurrentMode)===NoContext){// Outside of concurrent mode, we commit the effects from the
+var progressedState=workInProgress.memoizedState;var progressedPrimaryChild=progressedState!==null?workInProgress.child.child:workInProgress.child;primaryChildFragment.child=progressedPrimaryChild;}var fallbackChildFragment=createFiberFromFragment(nextFallbackChildren,mode,renderExpirationTime,null);primaryChildFragment.sibling=fallbackChildFragment;child=primaryChildFragment;// Skip the primary children, and continue working on the
 // fallback children.
 next=fallbackChildFragment;child.return=next.return=workInProgress;}else{// Mount the primary children without an intermediate fragment fiber.
 var nextPrimaryChildren=nextProps.children;child=next=mountChildFibers(workInProgress,null,nextPrimaryChildren,renderExpirationTime);}}else{// This is an update. This branch is more complicated because we need to
 // ensure the state of the primary children is preserved.
-var prevState=current$$1.memoizedState;var prevDidTimeout=prevState!==null&&prevState.didTimeout;if(prevDidTimeout){// The current tree already timed out. That means each child set is
+var prevState=current$$1.memoizedState;var prevDidTimeout=prevState!==null;if(prevDidTimeout){// The current tree already timed out. That means each child set is
 var currentPrimaryChildFragment=current$$1.child;var currentFallbackChildFragment=currentPrimaryChildFragment.sibling;if(nextDidTimeout){// Still timed out. Reuse the current primary children by cloning
 // its fragment. We're going to skip over these entirely.
-var _nextFallbackChildren=nextProps.fallback;var _primaryChildFragment=createWorkInProgress(currentPrimaryChildFragment,currentPrimaryChildFragment.pendingProps,NoWork);_primaryChildFragment.effectTag|=Placement;// Clone the fallback child fragment, too. These we'll continue
+var _nextFallbackChildren=nextProps.fallback;var _primaryChildFragment=createWorkInProgress(currentPrimaryChildFragment,currentPrimaryChildFragment.pendingProps,NoWork);if((workInProgress.mode&ConcurrentMode)===NoContext){// Outside of concurrent mode, we commit the effects from the
+var _progressedState=workInProgress.memoizedState;var _progressedPrimaryChild=_progressedState!==null?workInProgress.child.child:workInProgress.child;if(_progressedPrimaryChild!==currentPrimaryChildFragment.child){_primaryChildFragment.child=_progressedPrimaryChild;}}// Because primaryChildFragment is a new fiber that we're inserting as the
+// parent of a new tree, we need to set its treeBaseDuration.
+if(enableProfilerTimer&&workInProgress.mode&ProfileMode){// treeBaseDuration is the sum of all the child tree base durations.
+var treeBaseDuration=0;var hiddenChild=_primaryChildFragment.child;while(hiddenChild!==null){treeBaseDuration+=hiddenChild.treeBaseDuration;hiddenChild=hiddenChild.sibling;}_primaryChildFragment.treeBaseDuration=treeBaseDuration;}// Clone the fallback child fragment, too. These we'll continue
 // working on.
-var _fallbackChildFragment=_primaryChildFragment.sibling=createWorkInProgress(currentFallbackChildFragment,_nextFallbackChildren,currentFallbackChildFragment.expirationTime);_fallbackChildFragment.effectTag|=Placement;child=_primaryChildFragment;_primaryChildFragment.childExpirationTime=NoWork;// Skip the primary children, and continue working on the
+var _fallbackChildFragment=_primaryChildFragment.sibling=createWorkInProgress(currentFallbackChildFragment,_nextFallbackChildren,currentFallbackChildFragment.expirationTime);child=_primaryChildFragment;_primaryChildFragment.childExpirationTime=NoWork;// Skip the primary children, and continue working on the
 // fallback children.
 next=_fallbackChildFragment;child.return=next.return=workInProgress;}else{// No longer suspended. Switch back to showing the primary children,
 // and remove the intermediate fragment fiber.
-var _nextPrimaryChildren=nextProps.children;var currentPrimaryChild=currentPrimaryChildFragment.child;var currentFallbackChild=currentFallbackChildFragment.child;var primaryChild=reconcileChildFibers(workInProgress,currentPrimaryChild,_nextPrimaryChildren,renderExpirationTime);// Delete the fallback children.
-reconcileChildFibers(workInProgress,currentFallbackChild,null,renderExpirationTime);// Continue rendering the children, like we normally do.
+var _nextPrimaryChildren=nextProps.children;var currentPrimaryChild=currentPrimaryChildFragment.child;var primaryChild=reconcileChildFibers(workInProgress,currentPrimaryChild,_nextPrimaryChildren,renderExpirationTime);// If this render doesn't suspend, we need to delete the fallback
+// children. Wait until the complete phase, after we've confirmed the
+// fallback is no longer needed.
+// TODO: Would it be better to store the fallback fragment on
+// the stateNode?
+// Continue rendering the children, like we normally do.
 child=next=primaryChild;}}else{// The current tree has not already timed out. That means the primary
+// children are not wrapped in a fragment fiber.
 var _currentPrimaryChild=current$$1.child;if(nextDidTimeout){// Timed out. Wrap the children in a fragment fiber to keep them
 // separate from the fallback children.
 var _nextFallbackChildren2=nextProps.fallback;var _primaryChildFragment2=createFiberFromFragment(// It shouldn't matter what the pending props are because we aren't
 // going to render this fragment.
-null,mode,NoWork,null);_primaryChildFragment2.effectTag|=Placement;_primaryChildFragment2.child=_currentPrimaryChild;_currentPrimaryChild.return=_primaryChildFragment2;// Create a fragment from the fallback children, too.
+null,mode,NoWork,null);_primaryChildFragment2.child=_currentPrimaryChild;// Even though we're creating a new fiber, there are no new children,
+// because we're reusing an already mounted tree. So we don't need to
+// schedule a placement.
+// primaryChildFragment.effectTag |= Placement;
+if((workInProgress.mode&ConcurrentMode)===NoContext){// Outside of concurrent mode, we commit the effects from the
+var _progressedState2=workInProgress.memoizedState;var _progressedPrimaryChild2=_progressedState2!==null?workInProgress.child.child:workInProgress.child;_primaryChildFragment2.child=_progressedPrimaryChild2;}// Because primaryChildFragment is a new fiber that we're inserting as the
+// parent of a new tree, we need to set its treeBaseDuration.
+if(enableProfilerTimer&&workInProgress.mode&ProfileMode){// treeBaseDuration is the sum of all the child tree base durations.
+var _treeBaseDuration=0;var _hiddenChild=_primaryChildFragment2.child;while(_hiddenChild!==null){_treeBaseDuration+=_hiddenChild.treeBaseDuration;_hiddenChild=_hiddenChild.sibling;}_primaryChildFragment2.treeBaseDuration=_treeBaseDuration;}// Create a fragment from the fallback children, too.
 var _fallbackChildFragment2=_primaryChildFragment2.sibling=createFiberFromFragment(_nextFallbackChildren2,mode,renderExpirationTime,null);_fallbackChildFragment2.effectTag|=Placement;child=_primaryChildFragment2;_primaryChildFragment2.childExpirationTime=NoWork;// Skip the primary children, and continue working on the
 // fallback children.
 next=_fallbackChildFragment2;child.return=next.return=workInProgress;}else{// Still haven't timed out.  Continue rendering the children, like we
 // normally do.
-var _nextPrimaryChildren2=nextProps.children;next=child=reconcileChildFibers(workInProgress,_currentPrimaryChild,_nextPrimaryChildren2,renderExpirationTime);}}}workInProgress.memoizedState=nextState;workInProgress.child=child;return next;}function updatePortalComponent(current$$1,workInProgress,renderExpirationTime){pushHostContainer(workInProgress,workInProgress.stateNode.containerInfo);var nextChildren=workInProgress.pendingProps;if(current$$1===null){// Portals are special because we don't append the children during mount
+var _nextPrimaryChildren2=nextProps.children;next=child=reconcileChildFibers(workInProgress,_currentPrimaryChild,_nextPrimaryChildren2,renderExpirationTime);}}workInProgress.stateNode=current$$1.stateNode;}workInProgress.memoizedState=nextState;workInProgress.child=child;return next;}function updatePortalComponent(current$$1,workInProgress,renderExpirationTime){pushHostContainer(workInProgress,workInProgress.stateNode.containerInfo);var nextChildren=workInProgress.pendingProps;if(current$$1===null){// Portals are special because we don't append the children during mount
 // but at commit. Therefore we need to track insertions which the normal
 // flow doesn't do during mount. This doesn't happen at the root because
 // the root always starts with a "current" with a null child.
@@ -47820,45 +48140,30 @@ propagateContextChange(workInProgress,context,changedBits,renderExpirationTime);
 // Or it may be because it's older React where they're the same thing.
 // We only want to warn if we're sure it's a new React.
 if(context!==context.Consumer){if(!hasWarnedAboutUsingContextAsConsumer){hasWarnedAboutUsingContextAsConsumer=true;warning$1(false,'Rendering <Context> directly is not supported and will be removed in '+'a future major release. Did you mean to render <Context.Consumer> instead?');}}}else{context=context._context;}}var newProps=workInProgress.pendingProps;var render=newProps.children;{!(typeof render==='function')?warningWithoutStack$1(false,'A context consumer was rendered with multiple children, or a child '+"that isn't a function. A context consumer expects a single child "+'that is a function. If you did pass a function, make sure there '+'is no trailing or leading whitespace around it.'):void 0;}prepareToReadContext(workInProgress,renderExpirationTime);var newValue=readContext(context,newProps.unstable_observedBits);var newChildren=void 0;{ReactCurrentOwner$3.current=workInProgress;setCurrentPhase('render');newChildren=render(newValue);setCurrentPhase(null);}// React DevTools reads this flag.
-workInProgress.effectTag|=PerformedWork;reconcileChildren(current$$1,workInProgress,newChildren,renderExpirationTime);return workInProgress.child;}/*
-  function reuseChildrenEffects(returnFiber : Fiber, firstChild : Fiber) {
-    let child = firstChild;
-    do {
-      // Ensure that the first and last effect of the parent corresponds
-      // to the children's first and last effect.
-      if (!returnFiber.firstEffect) {
-        returnFiber.firstEffect = child.firstEffect;
-      }
-      if (child.lastEffect) {
-        if (returnFiber.lastEffect) {
-          returnFiber.lastEffect.nextEffect = child.firstEffect;
-        }
-        returnFiber.lastEffect = child.lastEffect;
-      }
-    } while (child = child.sibling);
-  }
-  */function bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime){cancelWorkTimer(workInProgress);if(current$$1!==null){// Reuse previous context list
+workInProgress.effectTag|=PerformedWork;reconcileChildren(current$$1,workInProgress,newChildren,renderExpirationTime);return workInProgress.child;}function bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime){cancelWorkTimer(workInProgress);if(current$$1!==null){// Reuse previous context list
 workInProgress.firstContextDependency=current$$1.firstContextDependency;}if(enableProfilerTimer){// Don't update "base" render times for bailouts.
 stopProfilerTimerIfRunning(workInProgress);}// Check if the children have any pending work.
-var childExpirationTime=workInProgress.childExpirationTime;if(childExpirationTime===NoWork||childExpirationTime>renderExpirationTime){// The children don't have any work either. We can skip them.
+var childExpirationTime=workInProgress.childExpirationTime;if(childExpirationTime<renderExpirationTime){// The children don't have any work either. We can skip them.
 // TODO: Once we add back resuming, we should check if the children are
 // a work-in-progress set. If so, we need to transfer their effects.
 return null;}else{// This fiber doesn't have work, but its subtree does. Clone the child
 // fibers and continue.
-cloneChildFibers(current$$1,workInProgress);return workInProgress.child;}}function beginWork(current$$1,workInProgress,renderExpirationTime){var updateExpirationTime=workInProgress.expirationTime;if(current$$1!==null){var oldProps=current$$1.memoizedProps;var newProps=workInProgress.pendingProps;if(oldProps===newProps&&!hasContextChanged()&&(updateExpirationTime===NoWork||updateExpirationTime>renderExpirationTime)){// This fiber does not have any pending work. Bailout without entering
+cloneChildFibers(current$$1,workInProgress);return workInProgress.child;}}function beginWork(current$$1,workInProgress,renderExpirationTime){var updateExpirationTime=workInProgress.expirationTime;if(current$$1!==null){var oldProps=current$$1.memoizedProps;var newProps=workInProgress.pendingProps;if(oldProps===newProps&&!hasContextChanged()&&updateExpirationTime<renderExpirationTime){// This fiber does not have any pending work. Bailout without entering
 // the begin phase. There's still some bookkeeping we that needs to be done
 // in this optimized path, mostly pushing stuff onto the stack.
-switch(workInProgress.tag){case HostRoot:pushHostRootContext(workInProgress);resetHydrationState();break;case HostComponent:pushHostContext(workInProgress);break;case ClassComponent:{var Component=workInProgress.type;if(isContextProvider(Component)){pushContextProvider(workInProgress);}break;}case HostPortal:pushHostContainer(workInProgress,workInProgress.stateNode.containerInfo);break;case ContextProvider:{var newValue=workInProgress.memoizedProps.value;pushProvider(workInProgress,newValue);break;}case Profiler:if(enableProfilerTimer){workInProgress.effectTag|=Update;}break;case SuspenseComponent:{var state=workInProgress.memoizedState;var didTimeout=state!==null&&state.didTimeout;if(didTimeout){// If this boundary is currently timed out, we need to decide
+switch(workInProgress.tag){case HostRoot:pushHostRootContext(workInProgress);resetHydrationState();break;case HostComponent:pushHostContext(workInProgress);break;case ClassComponent:{var Component=workInProgress.type;if(isContextProvider(Component)){pushContextProvider(workInProgress);}break;}case HostPortal:pushHostContainer(workInProgress,workInProgress.stateNode.containerInfo);break;case ContextProvider:{var newValue=workInProgress.memoizedProps.value;pushProvider(workInProgress,newValue);break;}case Profiler:if(enableProfilerTimer){workInProgress.effectTag|=Update;}break;case SuspenseComponent:{var state=workInProgress.memoizedState;var didTimeout=state!==null;if(didTimeout){// If this boundary is currently timed out, we need to decide
 // whether to retry the primary children, or to skip over it and
 // go straight to the fallback. Check the priority of the primary
-var primaryChildFragment=workInProgress.child;var primaryChildExpirationTime=primaryChildFragment.childExpirationTime;if(primaryChildExpirationTime!==NoWork&&primaryChildExpirationTime<=renderExpirationTime){// The primary children have pending work. Use the normal path
+var primaryChildFragment=workInProgress.child;var primaryChildExpirationTime=primaryChildFragment.childExpirationTime;if(primaryChildExpirationTime!==NoWork&&primaryChildExpirationTime>=renderExpirationTime){// The primary children have pending work. Use the normal path
 // to attempt to render the primary children again.
 return updateSuspenseComponent(current$$1,workInProgress,renderExpirationTime);}else{// The primary children do not have pending work with sufficient
 // priority. Bailout.
 var child=bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);if(child!==null){// The fallback children have pending work. Skip over the
 // primary children and work on the fallback.
 return child.sibling;}else{return null;}}}break;}}return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}}// Before entering the begin phase, clear the expiration time.
-workInProgress.expirationTime=NoWork;switch(workInProgress.tag){case IndeterminateComponent:{var elementType=workInProgress.elementType;return mountIndeterminateComponent(current$$1,workInProgress,elementType,renderExpirationTime);}case LazyComponent:{var _elementType=workInProgress.elementType;return mountLazyComponent(current$$1,workInProgress,_elementType,updateExpirationTime,renderExpirationTime);}case FunctionComponent:{var _Component=workInProgress.type;var unresolvedProps=workInProgress.pendingProps;var resolvedProps=workInProgress.elementType===_Component?unresolvedProps:resolveDefaultProps(_Component,unresolvedProps);return updateFunctionComponent(current$$1,workInProgress,_Component,resolvedProps,renderExpirationTime);}case ClassComponent:{var _Component2=workInProgress.type;var _unresolvedProps=workInProgress.pendingProps;var _resolvedProps=workInProgress.elementType===_Component2?_unresolvedProps:resolveDefaultProps(_Component2,_unresolvedProps);return updateClassComponent(current$$1,workInProgress,_Component2,_resolvedProps,renderExpirationTime);}case HostRoot:return updateHostRoot(current$$1,workInProgress,renderExpirationTime);case HostComponent:return updateHostComponent(current$$1,workInProgress,renderExpirationTime);case HostText:return updateHostText(current$$1,workInProgress);case SuspenseComponent:return updateSuspenseComponent(current$$1,workInProgress,renderExpirationTime);case HostPortal:return updatePortalComponent(current$$1,workInProgress,renderExpirationTime);case ForwardRef:{var type=workInProgress.type;var _unresolvedProps2=workInProgress.pendingProps;var _resolvedProps2=workInProgress.elementType===type?_unresolvedProps2:resolveDefaultProps(type,_unresolvedProps2);return updateForwardRef(current$$1,workInProgress,type,_resolvedProps2,renderExpirationTime);}case Fragment:return updateFragment(current$$1,workInProgress,renderExpirationTime);case Mode:return updateMode(current$$1,workInProgress,renderExpirationTime);case Profiler:return updateProfiler(current$$1,workInProgress,renderExpirationTime);case ContextProvider:return updateContextProvider(current$$1,workInProgress,renderExpirationTime);case ContextConsumer:return updateContextConsumer(current$$1,workInProgress,renderExpirationTime);case MemoComponent:{var _type=workInProgress.type;var _unresolvedProps3=workInProgress.pendingProps;var _resolvedProps3=resolveDefaultProps(_type.type,_unresolvedProps3);return updateMemoComponent(current$$1,workInProgress,_type,_resolvedProps3,updateExpirationTime,renderExpirationTime);}case SimpleMemoComponent:{return updateSimpleMemoComponent(current$$1,workInProgress,workInProgress.type,workInProgress.pendingProps,updateExpirationTime,renderExpirationTime);}case IncompleteClassComponent:{var _Component3=workInProgress.type;var _unresolvedProps4=workInProgress.pendingProps;var _resolvedProps4=workInProgress.elementType===_Component3?_unresolvedProps4:resolveDefaultProps(_Component3,_unresolvedProps4);return mountIncompleteClassComponent(current$$1,workInProgress,_Component3,_resolvedProps4,renderExpirationTime);}default:invariant(false,'Unknown unit of work tag. This error is likely caused by a bug in React. Please file an issue.');}}function markUpdate(workInProgress){// Tag the fiber with an update effect. This turns a Placement into
+workInProgress.expirationTime=NoWork;switch(workInProgress.tag){case IndeterminateComponent:{var elementType=workInProgress.elementType;return mountIndeterminateComponent(current$$1,workInProgress,elementType,renderExpirationTime);}case LazyComponent:{var _elementType=workInProgress.elementType;return mountLazyComponent(current$$1,workInProgress,_elementType,updateExpirationTime,renderExpirationTime);}case FunctionComponent:{var _Component=workInProgress.type;var unresolvedProps=workInProgress.pendingProps;var resolvedProps=workInProgress.elementType===_Component?unresolvedProps:resolveDefaultProps(_Component,unresolvedProps);return updateFunctionComponent(current$$1,workInProgress,_Component,resolvedProps,renderExpirationTime);}case ClassComponent:{var _Component2=workInProgress.type;var _unresolvedProps=workInProgress.pendingProps;var _resolvedProps=workInProgress.elementType===_Component2?_unresolvedProps:resolveDefaultProps(_Component2,_unresolvedProps);return updateClassComponent(current$$1,workInProgress,_Component2,_resolvedProps,renderExpirationTime);}case HostRoot:return updateHostRoot(current$$1,workInProgress,renderExpirationTime);case HostComponent:return updateHostComponent(current$$1,workInProgress,renderExpirationTime);case HostText:return updateHostText(current$$1,workInProgress);case SuspenseComponent:return updateSuspenseComponent(current$$1,workInProgress,renderExpirationTime);case HostPortal:return updatePortalComponent(current$$1,workInProgress,renderExpirationTime);case ForwardRef:{var type=workInProgress.type;var _unresolvedProps2=workInProgress.pendingProps;var _resolvedProps2=workInProgress.elementType===type?_unresolvedProps2:resolveDefaultProps(type,_unresolvedProps2);return updateForwardRef(current$$1,workInProgress,type,_resolvedProps2,renderExpirationTime);}case Fragment:return updateFragment(current$$1,workInProgress,renderExpirationTime);case Mode:return updateMode(current$$1,workInProgress,renderExpirationTime);case Profiler:return updateProfiler(current$$1,workInProgress,renderExpirationTime);case ContextProvider:return updateContextProvider(current$$1,workInProgress,renderExpirationTime);case ContextConsumer:return updateContextConsumer(current$$1,workInProgress,renderExpirationTime);case MemoComponent:{var _type2=workInProgress.type;var _unresolvedProps3=workInProgress.pendingProps;// Resolve outer props first, then resolve inner props.
+var _resolvedProps3=resolveDefaultProps(_type2,_unresolvedProps3);{if(workInProgress.type!==workInProgress.elementType){var outerPropTypes=_type2.propTypes;if(outerPropTypes){checkPropTypes(outerPropTypes,_resolvedProps3,// Resolved for outer only
+'prop',getComponentName(_type2),getCurrentFiberStackInDev);}}}_resolvedProps3=resolveDefaultProps(_type2.type,_resolvedProps3);return updateMemoComponent(current$$1,workInProgress,_type2,_resolvedProps3,updateExpirationTime,renderExpirationTime);}case SimpleMemoComponent:{return updateSimpleMemoComponent(current$$1,workInProgress,workInProgress.type,workInProgress.pendingProps,updateExpirationTime,renderExpirationTime);}case IncompleteClassComponent:{var _Component3=workInProgress.type;var _unresolvedProps4=workInProgress.pendingProps;var _resolvedProps4=workInProgress.elementType===_Component3?_unresolvedProps4:resolveDefaultProps(_Component3,_unresolvedProps4);return mountIncompleteClassComponent(current$$1,workInProgress,_Component3,_resolvedProps4,renderExpirationTime);}default:invariant(false,'Unknown unit of work tag. This error is likely caused by a bug in React. Please file an issue.');}}function markUpdate(workInProgress){// Tag the fiber with an update effect. This turns a Placement into
 // a PlacementAndUpdate.
 workInProgress.effectTag|=Update;}function markRef$1(workInProgress){workInProgress.effectTag|=Ref;}var appendAllChildren=void 0;var updateHostContainer=void 0;var updateHostComponent$1=void 0;var updateHostText$1=void 0;if(supportsMutation){// Mutation mode
 appendAllChildren=function(parent,workInProgress,needsVisibilityToggle,isHidden){// We only have the top Fiber that was created but we need recurse down its
@@ -47893,7 +48198,7 @@ instance=cloneHiddenInstance(instance,type,props,node);}else{// This child was p
 instance=cloneUnhiddenInstance(instance,type,props,node);}node.stateNode=instance;}appendInitialChild(parent,instance);}else if(node.tag===HostText){var _instance=node.stateNode;if(needsVisibilityToggle){var text=node.memoizedProps;var rootContainerInstance=getRootHostContainer();var currentHostContext=getHostContext();if(isHidden){_instance=createHiddenTextInstance(text,rootContainerInstance,currentHostContext,workInProgress);}else{_instance=createTextInstance(text,rootContainerInstance,currentHostContext,workInProgress);}node.stateNode=_instance;}appendInitialChild(parent,_instance);}else if(node.tag===HostPortal){// If we have a portal child, then we don't want to traverse
 // down its children. Instead, we'll get insertions from each child in
 // the portal directly.
-}else if(node.tag===SuspenseComponent){var current=node.alternate;if(current!==null){var oldState=current.memoizedState;var newState=node.memoizedState;var oldIsHidden=oldState!==null&&oldState.didTimeout;var newIsHidden=newState!==null&&newState.didTimeout;if(oldIsHidden!==newIsHidden){// The placeholder either just timed out or switched back to the normal
+}else if(node.tag===SuspenseComponent){var current=node.alternate;if(current!==null){var oldState=current.memoizedState;var newState=node.memoizedState;var oldIsHidden=oldState!==null;var newIsHidden=newState!==null;if(oldIsHidden!==newIsHidden){// The placeholder either just timed out or switched back to the normal
 // children after having previously timed out. Toggle the visibility of
 // the direct host children.
 var primaryChildParent=newIsHidden?node.child:node;if(primaryChildParent!==null){appendAllChildren(parent,primaryChildParent,true,newIsHidden);}// eslint-disable-next-line no-labels
@@ -47910,7 +48215,7 @@ instance=cloneHiddenInstance(instance,type,props,node);}else{// This child was p
 instance=cloneUnhiddenInstance(instance,type,props,node);}node.stateNode=instance;}appendChildToContainerChildSet(containerChildSet,instance);}else if(node.tag===HostText){var _instance2=node.stateNode;if(needsVisibilityToggle){var text=node.memoizedProps;var rootContainerInstance=getRootHostContainer();var currentHostContext=getHostContext();if(isHidden){_instance2=createHiddenTextInstance(text,rootContainerInstance,currentHostContext,workInProgress);}else{_instance2=createTextInstance(text,rootContainerInstance,currentHostContext,workInProgress);}node.stateNode=_instance2;}appendChildToContainerChildSet(containerChildSet,_instance2);}else if(node.tag===HostPortal){// If we have a portal child, then we don't want to traverse
 // down its children. Instead, we'll get insertions from each child in
 // the portal directly.
-}else if(node.tag===SuspenseComponent){var current=node.alternate;if(current!==null){var oldState=current.memoizedState;var newState=node.memoizedState;var oldIsHidden=oldState!==null&&oldState.didTimeout;var newIsHidden=newState!==null&&newState.didTimeout;if(oldIsHidden!==newIsHidden){// The placeholder either just timed out or switched back to the normal
+}else if(node.tag===SuspenseComponent){var current=node.alternate;if(current!==null){var oldState=current.memoizedState;var newState=node.memoizedState;var oldIsHidden=oldState!==null;var newIsHidden=newState!==null;if(oldIsHidden!==newIsHidden){// The placeholder either just timed out or switched back to the normal
 // children after having previously timed out. Toggle the visibility of
 // the direct host children.
 var primaryChildParent=newIsHidden?node.child:node;if(primaryChildParent!==null){appendAllChildrenToContainer(containerChildSet,primaryChildParent,true,newIsHidden);}// eslint-disable-next-line no-labels
@@ -47956,15 +48261,26 @@ if(finalizeInitialChildren(instance,type,newProps,rootContainerInstance,currentH
 markRef$1(workInProgress);}}break;}case HostText:{var newText=newProps;if(current&&workInProgress.stateNode!=null){var oldText=current.memoizedProps;// If we have an alternate, that means this is an update and we need
 // to schedule a side-effect to do the updates.
 updateHostText$1(current,workInProgress,oldText,newText);}else{if(typeof newText!=='string'){!(workInProgress.stateNode!==null)?invariant(false,'We must have new props for new mounts. This error is likely caused by a bug in React. Please file an issue.'):void 0;// This can happen when we abort work.
-}var _rootContainerInstance=getRootHostContainer();var _currentHostContext=getHostContext();var _wasHydrated=popHydrationState(workInProgress);if(_wasHydrated){if(prepareToHydrateHostTextInstance(workInProgress)){markUpdate(workInProgress);}}else{workInProgress.stateNode=createTextInstance(newText,_rootContainerInstance,_currentHostContext,workInProgress);}}break;}case ForwardRef:break;case SuspenseComponent:{var nextState=workInProgress.memoizedState;var prevState=current!==null?current.memoizedState:null;var nextDidTimeout=nextState!==null&&nextState.didTimeout;var prevDidTimeout=prevState!==null&&prevState.didTimeout;if(nextDidTimeout!==prevDidTimeout){// If this render commits, and it switches between the normal state
-// and the timed-out state, schedule an effect.
-workInProgress.effectTag|=Update;}break;}case Fragment:break;case Mode:break;case Profiler:break;case HostPortal:popHostContainer(workInProgress);updateHostContainer(workInProgress);break;case ContextProvider:// Pop provider fiber
+}var _rootContainerInstance=getRootHostContainer();var _currentHostContext=getHostContext();var _wasHydrated=popHydrationState(workInProgress);if(_wasHydrated){if(prepareToHydrateHostTextInstance(workInProgress)){markUpdate(workInProgress);}}else{workInProgress.stateNode=createTextInstance(newText,_rootContainerInstance,_currentHostContext,workInProgress);}}break;}case ForwardRef:break;case SuspenseComponent:{var nextState=workInProgress.memoizedState;if((workInProgress.effectTag&DidCapture)!==NoEffect){// Something suspended. Re-render with the fallback children.
+workInProgress.expirationTime=renderExpirationTime;// Do not reset the effect list.
+return workInProgress;}var nextDidTimeout=nextState!==null;var prevDidTimeout=current!==null&&current.memoizedState!==null;if(current!==null&&!nextDidTimeout&&prevDidTimeout){// We just switched from the fallback to the normal children. Delete
+// the fallback.
+// TODO: Would it be better to store the fallback fragment on
+var currentFallbackChild=current.child.sibling;if(currentFallbackChild!==null){// Deletions go at the beginning of the return fiber's effect list
+var first=workInProgress.firstEffect;if(first!==null){workInProgress.firstEffect=currentFallbackChild;currentFallbackChild.nextEffect=first;}else{workInProgress.firstEffect=workInProgress.lastEffect=currentFallbackChild;currentFallbackChild.nextEffect=null;}currentFallbackChild.effectTag=Deletion;}}// The children either timed out after previously being visible, or
+// were restored after previously being hidden. Schedule an effect
+// to update their visiblity.
+if(//
+nextDidTimeout!==prevDidTimeout||// Outside concurrent mode, the primary children commit in an
+// inconsistent state, even if they are hidden. So if they are hidden,
+// we need to schedule an effect to re-hide them, just in case.
+(workInProgress.effectTag&ConcurrentMode)===NoContext&&nextDidTimeout){workInProgress.effectTag|=Update;}break;}case Fragment:break;case Mode:break;case Profiler:break;case HostPortal:popHostContainer(workInProgress);updateHostContainer(workInProgress);break;case ContextProvider:// Pop provider fiber
 popProvider(workInProgress);break;case ContextConsumer:break;case MemoComponent:break;case IncompleteClassComponent:{// Same as class component case. I put it down here so that the tags are
 // sequential to ensure this switch is compiled to a jump table.
-var _Component=workInProgress.type;if(isContextProvider(_Component)){popContext(workInProgress);}break;}default:invariant(false,'Unknown unit of work tag. This error is likely caused by a bug in React. Please file an issue.');}return null;}function shouldCaptureSuspense(current,workInProgress){// In order to capture, the Suspense component must have a fallback prop.
+var _Component=workInProgress.type;if(isContextProvider(_Component)){popContext(workInProgress);}break;}default:invariant(false,'Unknown unit of work tag. This error is likely caused by a bug in React. Please file an issue.');}return null;}function shouldCaptureSuspense(workInProgress){// In order to capture, the Suspense component must have a fallback prop.
 if(workInProgress.memoizedProps.fallback===undefined){return false;}// If it was the primary children that just suspended, capture and render the
 // fallback. Otherwise, don't capture and bubble to the next boundary.
-var nextState=workInProgress.memoizedState;return nextState===null||!nextState.didTimeout;}// This module is forked in different environments.
+var nextState=workInProgress.memoizedState;return nextState===null;}// This module is forked in different environments.
 // By default, return `true` to log errors to the console.
 // Forks can return `false` if this isn't desirable.
 function showErrorDialog(capturedError){return true;}function logCapturedError(capturedError){var logError=showErrorDialog(capturedError);// Allow injected showErrorDialog() to prevent default console.error logging.
@@ -47986,29 +48302,38 @@ if(errorBoundaryFound&&errorBoundaryName){if(willRetry){errorBoundaryMessage='Re
 // We don't include the original error message and JS stack because the browser
 // has already printed it. Even if the application swallows the error, it is still
 // displayed by the browser thanks to the DEV-only fake event trick in ReactErrorUtils.
-console.error(combinedMessage);}}var didWarnAboutUndefinedSnapshotBeforeUpdate=null;{didWarnAboutUndefinedSnapshotBeforeUpdate=new Set();}function logError(boundary,errorInfo){var source=errorInfo.source;var stack=errorInfo.stack;if(stack===null&&source!==null){stack=getStackByFiberInDevAndProd(source);}var capturedError={componentName:source!==null?getComponentName(source.type):null,componentStack:stack!==null?stack:'',error:errorInfo.value,errorBoundary:null,errorBoundaryName:null,errorBoundaryFound:false,willRetry:false};if(boundary!==null&&boundary.tag===ClassComponent){capturedError.errorBoundary=boundary.stateNode;capturedError.errorBoundaryName=getComponentName(boundary.type);capturedError.errorBoundaryFound=true;capturedError.willRetry=true;}try{logCapturedError(capturedError);}catch(e){// This method must not throw, or React internal state will get messed up.
+console.error(combinedMessage);}}var didWarnAboutUndefinedSnapshotBeforeUpdate=null;{didWarnAboutUndefinedSnapshotBeforeUpdate=new Set();}var PossiblyWeakSet=typeof WeakSet==='function'?WeakSet:Set;function logError(boundary,errorInfo){var source=errorInfo.source;var stack=errorInfo.stack;if(stack===null&&source!==null){stack=getStackByFiberInDevAndProd(source);}var capturedError={componentName:source!==null?getComponentName(source.type):null,componentStack:stack!==null?stack:'',error:errorInfo.value,errorBoundary:null,errorBoundaryName:null,errorBoundaryFound:false,willRetry:false};if(boundary!==null&&boundary.tag===ClassComponent){capturedError.errorBoundary=boundary.stateNode;capturedError.errorBoundaryName=getComponentName(boundary.type);capturedError.errorBoundaryFound=true;capturedError.willRetry=true;}try{logCapturedError(capturedError);}catch(e){// This method must not throw, or React internal state will get messed up.
 // If console.error is overridden, or logCapturedError() shows a dialog that throws,
 // we want to report this error outside of the normal stack as a last resort.
 // https://github.com/facebook/react/issues/13188
 setTimeout(function(){throw e;});}}var callComponentWillUnmountWithTimer=function(current$$1,instance){startPhaseTimer(current$$1,'componentWillUnmount');instance.props=current$$1.memoizedProps;instance.state=current$$1.memoizedState;instance.componentWillUnmount();stopPhaseTimer();};// Capture errors so they don't interrupt unmounting.
-function safelyCallComponentWillUnmount(current$$1,instance){{invokeGuardedCallback(null,callComponentWillUnmountWithTimer,null,current$$1,instance);if(hasCaughtError()){var unmountError=clearCaughtError();captureCommitPhaseError(current$$1,unmountError);}}}function safelyDetachRef(current$$1){var ref=current$$1.ref;if(ref!==null){if(typeof ref==='function'){{invokeGuardedCallback(null,ref,null,null);if(hasCaughtError()){var refError=clearCaughtError();captureCommitPhaseError(current$$1,refError);}}}else{ref.current=null;}}}function commitBeforeMutationLifeCycles(current$$1,finishedWork){switch(finishedWork.tag){case ClassComponent:{if(finishedWork.effectTag&Snapshot){if(current$$1!==null){var prevProps=current$$1.memoizedProps;var prevState=current$$1.memoizedState;startPhaseTimer(finishedWork,'getSnapshotBeforeUpdate');var instance=finishedWork.stateNode;instance.props=finishedWork.memoizedProps;instance.state=finishedWork.memoizedState;var snapshot=instance.getSnapshotBeforeUpdate(prevProps,prevState);{var didWarnSet=didWarnAboutUndefinedSnapshotBeforeUpdate;if(snapshot===undefined&&!didWarnSet.has(finishedWork.type)){didWarnSet.add(finishedWork.type);warningWithoutStack$1(false,'%s.getSnapshotBeforeUpdate(): A snapshot value (or null) '+'must be returned. You have returned undefined.',getComponentName(finishedWork.type));}}instance.__reactInternalSnapshotBeforeUpdate=snapshot;stopPhaseTimer();}}return;}case HostRoot:case HostComponent:case HostText:case HostPortal:case IncompleteClassComponent:// Nothing to do for these component types
-return;default:{invariant(false,'This unit of work tag should not have side-effects. This error is likely caused by a bug in React. Please file an issue.');}}}function commitLifeCycles(finishedRoot,current$$1,finishedWork,committedExpirationTime){switch(finishedWork.tag){case ClassComponent:{var instance=finishedWork.stateNode;if(finishedWork.effectTag&Update){if(current$$1===null){startPhaseTimer(finishedWork,'componentDidMount');instance.props=finishedWork.memoizedProps;instance.state=finishedWork.memoizedState;instance.componentDidMount();stopPhaseTimer();}else{var prevProps=current$$1.memoizedProps;var prevState=current$$1.memoizedState;startPhaseTimer(finishedWork,'componentDidUpdate');instance.props=finishedWork.memoizedProps;instance.state=finishedWork.memoizedState;instance.componentDidUpdate(prevProps,prevState,instance.__reactInternalSnapshotBeforeUpdate);stopPhaseTimer();}}var updateQueue=finishedWork.updateQueue;if(updateQueue!==null){instance.props=finishedWork.memoizedProps;instance.state=finishedWork.memoizedState;commitUpdateQueue(finishedWork,updateQueue,instance,committedExpirationTime);}return;}case HostRoot:{var _updateQueue=finishedWork.updateQueue;if(_updateQueue!==null){var _instance=null;if(finishedWork.child!==null){switch(finishedWork.child.tag){case HostComponent:_instance=getPublicInstance(finishedWork.child.stateNode);break;case ClassComponent:_instance=finishedWork.child.stateNode;break;}}commitUpdateQueue(finishedWork,_updateQueue,_instance,committedExpirationTime);}return;}case HostComponent:{var _instance2=finishedWork.stateNode;// Renderers may schedule work to be done after host components are mounted
+function safelyCallComponentWillUnmount(current$$1,instance){{invokeGuardedCallback(null,callComponentWillUnmountWithTimer,null,current$$1,instance);if(hasCaughtError()){var unmountError=clearCaughtError();captureCommitPhaseError(current$$1,unmountError);}}}function safelyDetachRef(current$$1){var ref=current$$1.ref;if(ref!==null){if(typeof ref==='function'){{invokeGuardedCallback(null,ref,null,null);if(hasCaughtError()){var refError=clearCaughtError();captureCommitPhaseError(current$$1,refError);}}}else{ref.current=null;}}}function safelyCallDestroy(current$$1,destroy){{invokeGuardedCallback(null,destroy,null);if(hasCaughtError()){var error=clearCaughtError();captureCommitPhaseError(current$$1,error);}}}function commitBeforeMutationLifeCycles(current$$1,finishedWork){switch(finishedWork.tag){case FunctionComponent:case ForwardRef:case SimpleMemoComponent:{commitHookEffectList(UnmountSnapshot,NoEffect$1,finishedWork);return;}case ClassComponent:{if(finishedWork.effectTag&Snapshot){if(current$$1!==null){var prevProps=current$$1.memoizedProps;var prevState=current$$1.memoizedState;startPhaseTimer(finishedWork,'getSnapshotBeforeUpdate');var instance=finishedWork.stateNode;// We could update instance props and state here,
+// but instead we rely on them being set during last render.
+// TODO: revisit this when we implement resuming.
+{if(finishedWork.type===finishedWork.elementType&&!didWarnAboutReassigningProps){!(instance.props===finishedWork.memoizedProps)?warning$1(false,'Expected %s props to match memoized props before '+'getSnapshotBeforeUpdate. '+'This might either be because of a bug in React, or because '+'a component reassigns its own `this.props`. '+'Please file an issue.',getComponentName(finishedWork.type)||'instance'):void 0;!(instance.state===finishedWork.memoizedState)?warning$1(false,'Expected %s state to match memoized state before '+'getSnapshotBeforeUpdate. '+'This might either be because of a bug in React, or because '+'a component reassigns its own `this.props`. '+'Please file an issue.',getComponentName(finishedWork.type)||'instance'):void 0;}}var snapshot=instance.getSnapshotBeforeUpdate(finishedWork.elementType===finishedWork.type?prevProps:resolveDefaultProps(finishedWork.type,prevProps),prevState);{var didWarnSet=didWarnAboutUndefinedSnapshotBeforeUpdate;if(snapshot===undefined&&!didWarnSet.has(finishedWork.type)){didWarnSet.add(finishedWork.type);warningWithoutStack$1(false,'%s.getSnapshotBeforeUpdate(): A snapshot value (or null) '+'must be returned. You have returned undefined.',getComponentName(finishedWork.type));}}instance.__reactInternalSnapshotBeforeUpdate=snapshot;stopPhaseTimer();}}return;}case HostRoot:case HostComponent:case HostText:case HostPortal:case IncompleteClassComponent:// Nothing to do for these component types
+return;default:{invariant(false,'This unit of work tag should not have side-effects. This error is likely caused by a bug in React. Please file an issue.');}}}function commitHookEffectList(unmountTag,mountTag,finishedWork){if(!enableHooks){return;}var updateQueue=finishedWork.updateQueue;var lastEffect=updateQueue!==null?updateQueue.lastEffect:null;if(lastEffect!==null){var firstEffect=lastEffect.next;var effect=firstEffect;do{if((effect.tag&unmountTag)!==NoEffect$1){// Unmount
+var destroy=effect.destroy;effect.destroy=null;if(destroy!==null){destroy();}}if((effect.tag&mountTag)!==NoEffect$1){// Mount
+var create=effect.create;var _destroy=create();if(typeof _destroy!=='function'){{if(_destroy!==null&&_destroy!==undefined){warningWithoutStack$1(false,'useEffect function must return a cleanup function or '+'nothing.%s%s',typeof _destroy.then==='function'?'\n\nIt looks like you wrote useEffect(async () => ...) or returned a Promise. '+'Instead, you may write an async function separately '+'and then call it from inside the effect:\n\n'+'async function fetchComment(commentId) {\n'+'  // You can await here\n'+'}\n\n'+'useEffect(() => {\n'+'  fetchComment(commentId);\n'+'}, [commentId]);\n\n'+'In the future, React will provide a more idiomatic solution for data fetching '+"that doesn't involve writing effects manually.":'',getStackByFiberInDevAndProd(finishedWork));}}_destroy=null;}effect.destroy=_destroy;}effect=effect.next;}while(effect!==firstEffect);}}function commitPassiveHookEffects(finishedWork){commitHookEffectList(UnmountPassive,NoEffect$1,finishedWork);commitHookEffectList(NoEffect$1,MountPassive,finishedWork);}function commitLifeCycles(finishedRoot,current$$1,finishedWork,committedExpirationTime){switch(finishedWork.tag){case FunctionComponent:case ForwardRef:case SimpleMemoComponent:{commitHookEffectList(UnmountLayout,MountLayout,finishedWork);break;}case ClassComponent:{var instance=finishedWork.stateNode;if(finishedWork.effectTag&Update){if(current$$1===null){startPhaseTimer(finishedWork,'componentDidMount');// We could update instance props and state here,
+// but instead we rely on them being set during last render.
+// TODO: revisit this when we implement resuming.
+{if(finishedWork.type===finishedWork.elementType&&!didWarnAboutReassigningProps){!(instance.props===finishedWork.memoizedProps)?warning$1(false,'Expected %s props to match memoized props before '+'componentDidMount. '+'This might either be because of a bug in React, or because '+'a component reassigns its own `this.props`. '+'Please file an issue.',getComponentName(finishedWork.type)||'instance'):void 0;!(instance.state===finishedWork.memoizedState)?warning$1(false,'Expected %s state to match memoized state before '+'componentDidMount. '+'This might either be because of a bug in React, or because '+'a component reassigns its own `this.props`. '+'Please file an issue.',getComponentName(finishedWork.type)||'instance'):void 0;}}instance.componentDidMount();stopPhaseTimer();}else{var prevProps=finishedWork.elementType===finishedWork.type?current$$1.memoizedProps:resolveDefaultProps(finishedWork.type,current$$1.memoizedProps);var prevState=current$$1.memoizedState;startPhaseTimer(finishedWork,'componentDidUpdate');// We could update instance props and state here,
+// but instead we rely on them being set during last render.
+// TODO: revisit this when we implement resuming.
+{if(finishedWork.type===finishedWork.elementType&&!didWarnAboutReassigningProps){!(instance.props===finishedWork.memoizedProps)?warning$1(false,'Expected %s props to match memoized props before '+'componentDidUpdate. '+'This might either be because of a bug in React, or because '+'a component reassigns its own `this.props`. '+'Please file an issue.',getComponentName(finishedWork.type)||'instance'):void 0;!(instance.state===finishedWork.memoizedState)?warning$1(false,'Expected %s state to match memoized state before '+'componentDidUpdate. '+'This might either be because of a bug in React, or because '+'a component reassigns its own `this.props`. '+'Please file an issue.',getComponentName(finishedWork.type)||'instance'):void 0;}}instance.componentDidUpdate(prevProps,prevState,instance.__reactInternalSnapshotBeforeUpdate);stopPhaseTimer();}}var updateQueue=finishedWork.updateQueue;if(updateQueue!==null){{if(finishedWork.type===finishedWork.elementType&&!didWarnAboutReassigningProps){!(instance.props===finishedWork.memoizedProps)?warning$1(false,'Expected %s props to match memoized props before '+'processing the update queue. '+'This might either be because of a bug in React, or because '+'a component reassigns its own `this.props`. '+'Please file an issue.',getComponentName(finishedWork.type)||'instance'):void 0;!(instance.state===finishedWork.memoizedState)?warning$1(false,'Expected %s state to match memoized state before '+'processing the update queue. '+'This might either be because of a bug in React, or because '+'a component reassigns its own `this.props`. '+'Please file an issue.',getComponentName(finishedWork.type)||'instance'):void 0;}}// We could update instance props and state here,
+// but instead we rely on them being set during last render.
+// TODO: revisit this when we implement resuming.
+commitUpdateQueue(finishedWork,updateQueue,instance,committedExpirationTime);}return;}case HostRoot:{var _updateQueue=finishedWork.updateQueue;if(_updateQueue!==null){var _instance=null;if(finishedWork.child!==null){switch(finishedWork.child.tag){case HostComponent:_instance=getPublicInstance(finishedWork.child.stateNode);break;case ClassComponent:_instance=finishedWork.child.stateNode;break;}}commitUpdateQueue(finishedWork,_updateQueue,_instance,committedExpirationTime);}return;}case HostComponent:{var _instance2=finishedWork.stateNode;// Renderers may schedule work to be done after host components are mounted
 // (eg DOM renderer may schedule auto-focus for inputs and form controls).
 // These effects should only be committed when components are first mounted,
 // aka when there is no current/alternate.
 if(current$$1===null&&finishedWork.effectTag&Update){var type=finishedWork.type;var props=finishedWork.memoizedProps;commitMount(_instance2,type,props,finishedWork);}return;}case HostText:{// We have no life-cycles associated with text.
 return;}case HostPortal:{// We have no life-cycles associated with portals.
-return;}case Profiler:{if(enableProfilerTimer){var onRender=finishedWork.memoizedProps.onRender;if(enableSchedulerTracing){onRender(finishedWork.memoizedProps.id,current$$1===null?'mount':'update',finishedWork.actualDuration,finishedWork.treeBaseDuration,finishedWork.actualStartTime,getCommitTime(),finishedRoot.memoizedInteractions);}else{onRender(finishedWork.memoizedProps.id,current$$1===null?'mount':'update',finishedWork.actualDuration,finishedWork.treeBaseDuration,finishedWork.actualStartTime,getCommitTime());}}return;}case SuspenseComponent:{if(finishedWork.effectTag&Callback){// In non-strict mode, a suspense boundary times out by commiting
-// twice: first, by committing the children in an inconsistent state,
-// then hiding them and showing the fallback children in a subsequent
-var _newState={alreadyCaptured:true,didTimeout:false,timedOutAt:NoWork};finishedWork.memoizedState=_newState;scheduleWork(finishedWork,Sync);return;}var oldState=current$$1!==null?current$$1.memoizedState:null;var newState=finishedWork.memoizedState;var oldDidTimeout=oldState!==null?oldState.didTimeout:false;var newDidTimeout=void 0;var primaryChildParent=finishedWork;if(newState===null){newDidTimeout=false;}else{newDidTimeout=newState.didTimeout;if(newDidTimeout){primaryChildParent=finishedWork.child;newState.alreadyCaptured=false;if(newState.timedOutAt===NoWork){// If the children had not already timed out, record the time.
-// This is used to compute the elapsed time during subsequent
-// attempts to render the children.
-newState.timedOutAt=requestCurrentTime();}}}if(newDidTimeout!==oldDidTimeout&&primaryChildParent!==null){hideOrUnhideAllChildren(primaryChildParent,newDidTimeout);}return;}case IncompleteClassComponent:break;default:{invariant(false,'This unit of work tag should not have side-effects. This error is likely caused by a bug in React. Please file an issue.');}}}function hideOrUnhideAllChildren(finishedWork,isHidden){if(supportsMutation){// We only have the top Fiber that was inserted but we need recurse down its
-var node=finishedWork;while(true){if(node.tag===HostComponent){var instance=node.stateNode;if(isHidden){hideInstance(instance);}else{unhideInstance(node.stateNode,node.memoizedProps);}}else if(node.tag===HostText){var _instance3=node.stateNode;if(isHidden){hideTextInstance(_instance3);}else{unhideTextInstance(_instance3,node.memoizedProps);}}else if(node.child!==null){node.child.return=node;node=node.child;continue;}if(node===finishedWork){return;}while(node.sibling===null){if(node.return===null||node.return===finishedWork){return;}node=node.return;}node.sibling.return=node.return;node=node.sibling;}}}function commitAttachRef(finishedWork){var ref=finishedWork.ref;if(ref!==null){var instance=finishedWork.stateNode;var instanceToUse=void 0;switch(finishedWork.tag){case HostComponent:instanceToUse=getPublicInstance(instance);break;default:instanceToUse=instance;}if(typeof ref==='function'){ref(instanceToUse);}else{{if(!ref.hasOwnProperty('current')){warningWithoutStack$1(false,'Unexpected ref object provided for %s. '+'Use either a ref-setter function or React.createRef().%s',getComponentName(finishedWork.type),getStackByFiberInDevAndProd(finishedWork));}}ref.current=instanceToUse;}}}function commitDetachRef(current$$1){var currentRef=current$$1.ref;if(currentRef!==null){if(typeof currentRef==='function'){currentRef(null);}else{currentRef.current=null;}}}// User-originating errors (lifecycles and refs) should not interrupt
+return;}case Profiler:{if(enableProfilerTimer){var onRender=finishedWork.memoizedProps.onRender;if(enableSchedulerTracing){onRender(finishedWork.memoizedProps.id,current$$1===null?'mount':'update',finishedWork.actualDuration,finishedWork.treeBaseDuration,finishedWork.actualStartTime,getCommitTime(),finishedRoot.memoizedInteractions);}else{onRender(finishedWork.memoizedProps.id,current$$1===null?'mount':'update',finishedWork.actualDuration,finishedWork.treeBaseDuration,finishedWork.actualStartTime,getCommitTime());}}return;}case SuspenseComponent:break;case IncompleteClassComponent:break;default:{invariant(false,'This unit of work tag should not have side-effects. This error is likely caused by a bug in React. Please file an issue.');}}}function hideOrUnhideAllChildren(finishedWork,isHidden){if(supportsMutation){// We only have the top Fiber that was inserted but we need recurse down its
+var node=finishedWork;while(true){if(node.tag===HostComponent){var instance=node.stateNode;if(isHidden){hideInstance(instance);}else{unhideInstance(node.stateNode,node.memoizedProps);}}else if(node.tag===HostText){var _instance3=node.stateNode;if(isHidden){hideTextInstance(_instance3);}else{unhideTextInstance(_instance3,node.memoizedProps);}}else if(node.tag===SuspenseComponent&&node.memoizedState!==null){// Found a nested Suspense component that timed out. Skip over the
+var fallbackChildFragment=node.child.sibling;fallbackChildFragment.return=node;node=fallbackChildFragment;continue;}else if(node.child!==null){node.child.return=node;node=node.child;continue;}if(node===finishedWork){return;}while(node.sibling===null){if(node.return===null||node.return===finishedWork){return;}node=node.return;}node.sibling.return=node.return;node=node.sibling;}}}function commitAttachRef(finishedWork){var ref=finishedWork.ref;if(ref!==null){var instance=finishedWork.stateNode;var instanceToUse=void 0;switch(finishedWork.tag){case HostComponent:instanceToUse=getPublicInstance(instance);break;default:instanceToUse=instance;}if(typeof ref==='function'){ref(instanceToUse);}else{{if(!ref.hasOwnProperty('current')){warningWithoutStack$1(false,'Unexpected ref object provided for %s. '+'Use either a ref-setter function or React.createRef().%s',getComponentName(finishedWork.type),getStackByFiberInDevAndProd(finishedWork));}}ref.current=instanceToUse;}}}function commitDetachRef(current$$1){var currentRef=current$$1.ref;if(currentRef!==null){if(typeof currentRef==='function'){currentRef(null);}else{currentRef.current=null;}}}// User-originating errors (lifecycles and refs) should not interrupt
 // deletion, so don't let them throw. Host-originating errors should
 // interrupt deletion, so it's okay
-function commitUnmount(current$$1){onCommitUnmount(current$$1);switch(current$$1.tag){case ClassComponent:{safelyDetachRef(current$$1);var instance=current$$1.stateNode;if(typeof instance.componentWillUnmount==='function'){safelyCallComponentWillUnmount(current$$1,instance);}return;}case HostComponent:{safelyDetachRef(current$$1);return;}case HostPortal:{// TODO: this is recursive.
+function commitUnmount(current$$1){onCommitUnmount(current$$1);switch(current$$1.tag){case FunctionComponent:case ForwardRef:case MemoComponent:case SimpleMemoComponent:{var updateQueue=current$$1.updateQueue;if(updateQueue!==null){var lastEffect=updateQueue.lastEffect;if(lastEffect!==null){var firstEffect=lastEffect.next;var effect=firstEffect;do{var destroy=effect.destroy;if(destroy!==null){safelyCallDestroy(current$$1,destroy);}effect=effect.next;}while(effect!==firstEffect);}}break;}case ClassComponent:{safelyDetachRef(current$$1);var instance=current$$1.stateNode;if(typeof instance.componentWillUnmount==='function'){safelyCallComponentWillUnmount(current$$1,instance);}return;}case HostComponent:{safelyDetachRef(current$$1);return;}case HostPortal:{// TODO: this is recursive.
 // We are also not using this parent because
 // the portal will get pushed immediately.
 if(supportsMutation){unmountHostComponents(current$$1);}else if(supportsPersistence){emptyPortalContainer(current$$1);}return;}}}function commitNestedUnmounts(root){// While we're inside a removed host node we don't want to call
@@ -48024,7 +48349,7 @@ if(node.child!==null&&(// If we use mutation we drill down into portals using co
 // get GC:ed but we don't know which for sure which parent is the current
 // one so we'll settle for GC:ing the subtree of this child. This child
 // itself will be GC:ed when the parent updates the next time.
-current$$1.return=null;current$$1.child=null;if(current$$1.alternate){current$$1.alternate.child=null;current$$1.alternate.return=null;}}function emptyPortalContainer(current$$1){if(!supportsPersistence){return;}var portal=current$$1.stateNode;var containerInfo=portal.containerInfo;var emptyChildSet=createContainerChildSet(containerInfo);replaceContainerChildren(containerInfo,emptyChildSet);}function commitContainer(finishedWork){if(!supportsPersistence){return;}switch(finishedWork.tag){case ClassComponent:{return;}case HostComponent:{return;}case HostText:{return;}case HostRoot:case HostPortal:{var portalOrRoot=finishedWork.stateNode;var containerInfo=portalOrRoot.containerInfo,_pendingChildren=portalOrRoot.pendingChildren;replaceContainerChildren(containerInfo,_pendingChildren);return;}default:{invariant(false,'This unit of work tag should not have side-effects. This error is likely caused by a bug in React. Please file an issue.');}}}function getHostParentFiber(fiber){var parent=fiber.return;while(parent!==null){if(isHostParent(parent)){return parent;}parent=parent.return;}invariant(false,'Expected to find a host parent. This error is likely caused by a bug in React. Please file an issue.');}function isHostParent(fiber){return fiber.tag===HostComponent||fiber.tag===HostRoot||fiber.tag===HostPortal;}function getHostSibling(fiber){// We're going to search forward into the tree until we find a sibling host
+current$$1.return=null;current$$1.child=null;current$$1.memoizedState=null;current$$1.updateQueue=null;var alternate=current$$1.alternate;if(alternate!==null){alternate.return=null;alternate.child=null;alternate.memoizedState=null;alternate.updateQueue=null;}}function emptyPortalContainer(current$$1){if(!supportsPersistence){return;}var portal=current$$1.stateNode;var containerInfo=portal.containerInfo;var emptyChildSet=createContainerChildSet(containerInfo);replaceContainerChildren(containerInfo,emptyChildSet);}function commitContainer(finishedWork){if(!supportsPersistence){return;}switch(finishedWork.tag){case ClassComponent:{return;}case HostComponent:{return;}case HostText:{return;}case HostRoot:case HostPortal:{var portalOrRoot=finishedWork.stateNode;var containerInfo=portalOrRoot.containerInfo,_pendingChildren=portalOrRoot.pendingChildren;replaceContainerChildren(containerInfo,_pendingChildren);return;}default:{invariant(false,'This unit of work tag should not have side-effects. This error is likely caused by a bug in React. Please file an issue.');}}}function getHostParentFiber(fiber){var parent=fiber.return;while(parent!==null){if(isHostParent(parent)){return parent;}parent=parent.return;}invariant(false,'Expected to find a host parent. This error is likely caused by a bug in React. Please file an issue.');}function isHostParent(fiber){return fiber.tag===HostComponent||fiber.tag===HostRoot||fiber.tag===HostPortal;}function getHostSibling(fiber){// We're going to search forward into the tree until we find a sibling host
 // node. Unfortunately, if multiple insertions are done in a row we have to
 // search past them. This leads to exponential search for the next sibling.
 var node=fiber;siblings:while(true){// If we didn't find anything, let's try the next sibling.
@@ -48062,7 +48387,11 @@ if(node.child!==null){node.child.return=node;node=node.child;continue;}}if(node=
 currentParentIsValid=false;}}node.sibling.return=node.return;node=node.sibling;}}function commitDeletion(current$$1){if(supportsMutation){// Recursively delete all host nodes from the parent.
 // Detach refs and call componentWillUnmount() on the whole subtree.
 unmountHostComponents(current$$1);}else{// Detach refs and call componentWillUnmount() on the whole subtree.
-commitNestedUnmounts(current$$1);}detachFiber(current$$1);}function commitWork(current$$1,finishedWork){if(!supportsMutation){commitContainer(finishedWork);return;}switch(finishedWork.tag){case ClassComponent:{return;}case HostComponent:{var instance=finishedWork.stateNode;if(instance!=null){// Commit the work prepared earlier.
+commitNestedUnmounts(current$$1);}detachFiber(current$$1);}function commitWork(current$$1,finishedWork){if(!supportsMutation){switch(finishedWork.tag){case FunctionComponent:case ForwardRef:case MemoComponent:case SimpleMemoComponent:{// Note: We currently never use MountMutation, but useLayout uses
+// UnmountMutation.
+commitHookEffectList(UnmountMutation,MountMutation,finishedWork);return;}}commitContainer(finishedWork);return;}switch(finishedWork.tag){case FunctionComponent:case ForwardRef:case MemoComponent:case SimpleMemoComponent:{// Note: We currently never use MountMutation, but useLayout uses
+// UnmountMutation.
+commitHookEffectList(UnmountMutation,MountMutation,finishedWork);return;}case ClassComponent:{return;}case HostComponent:{var instance=finishedWork.stateNode;if(instance!=null){// Commit the work prepared earlier.
 var newProps=finishedWork.memoizedProps;// For hydration we reuse the update path but we treat the oldProps
 // as the newProps. The updatePayload will contain the real change in
 // this case.
@@ -48070,7 +48399,14 @@ var oldProps=current$$1!==null?current$$1.memoizedProps:newProps;var type=finish
 var updatePayload=finishedWork.updateQueue;finishedWork.updateQueue=null;if(updatePayload!==null){commitUpdate(instance,updatePayload,type,oldProps,newProps,finishedWork);}}return;}case HostText:{!(finishedWork.stateNode!==null)?invariant(false,'This should have a text node initialized. This error is likely caused by a bug in React. Please file an issue.'):void 0;var textInstance=finishedWork.stateNode;var newText=finishedWork.memoizedProps;// For hydration we reuse the update path but we treat the oldProps
 // as the newProps. The updatePayload will contain the real change in
 // this case.
-var oldText=current$$1!==null?current$$1.memoizedProps:newText;commitTextUpdate(textInstance,oldText,newText);return;}case HostRoot:{return;}case Profiler:{return;}case SuspenseComponent:{return;}case IncompleteClassComponent:{return;}default:{invariant(false,'This unit of work tag should not have side-effects. This error is likely caused by a bug in React. Please file an issue.');}}}function commitResetTextContent(current$$1){if(!supportsMutation){return;}resetTextContent(current$$1.stateNode);}function createRootErrorUpdate(fiber,errorInfo,expirationTime){var update=createUpdate(expirationTime);// Unmount the root by rendering null.
+var oldText=current$$1!==null?current$$1.memoizedProps:newText;commitTextUpdate(textInstance,oldText,newText);return;}case HostRoot:{return;}case Profiler:{return;}case SuspenseComponent:{var newState=finishedWork.memoizedState;var newDidTimeout=void 0;var primaryChildParent=finishedWork;if(newState===null){newDidTimeout=false;}else{newDidTimeout=true;primaryChildParent=finishedWork.child;if(newState.timedOutAt===NoWork){// If the children had not already timed out, record the time.
+// This is used to compute the elapsed time during subsequent
+// attempts to render the children.
+newState.timedOutAt=requestCurrentTime();}}if(primaryChildParent!==null){hideOrUnhideAllChildren(primaryChildParent,newDidTimeout);}// If this boundary just timed out, then it will have a set of thenables.
+// For each thenable, attach a listener so that when it resolves, React
+// attempts to re-render the boundary in the primary (pre-timeout) state.
+var thenables=finishedWork.updateQueue;if(thenables!==null){finishedWork.updateQueue=null;var retryCache=finishedWork.stateNode;if(retryCache===null){retryCache=finishedWork.stateNode=new PossiblyWeakSet();}thenables.forEach(function(thenable){// Memoize using the boundary fiber to prevent redundant listeners.
+var retry=retryTimedOutBoundary.bind(null,finishedWork,thenable);if(enableSchedulerTracing){retry=tracing.unstable_wrap(retry);}if(!retryCache.has(thenable)){retryCache.add(thenable);thenable.then(retry,retry);}});}return;}case IncompleteClassComponent:{return;}default:{invariant(false,'This unit of work tag should not have side-effects. This error is likely caused by a bug in React. Please file an issue.');}}}function commitResetTextContent(current$$1){if(!supportsMutation){return;}resetTextContent(current$$1.stateNode);}var PossiblyWeakMap=typeof WeakMap==='function'?WeakMap:Map;function createRootErrorUpdate(fiber,errorInfo,expirationTime){var update=createUpdate(expirationTime);// Unmount the root by rendering null.
 update.tag=CaptureUpdate;// Caution: React DevTools currently depends on this property
 // being called "element".
 update.payload={element:null};var error=errorInfo.value;update.callback=function(){onUncaughtError(error);logError(fiber,errorInfo);};return update;}function createClassErrorUpdate(fiber,errorInfo,expirationTime){var update=createUpdate(expirationTime);update.tag=CaptureUpdate;var getDerivedStateFromError=fiber.type.getDerivedStateFromError;if(typeof getDerivedStateFromError==='function'){var error=errorInfo.value;update.payload=function(){return getDerivedStateFromError(error);};}var inst=fiber.stateNode;if(inst!==null&&typeof inst.componentDidCatch==='function'){update.callback=function callback(){if(typeof getDerivedStateFromError!=='function'){// To preserve the preexisting retry behavior of error boundaries,
@@ -48089,15 +48425,13 @@ var thenable=value;// Find the earliest timeout threshold of all the placeholder
 // the stack, but we choose not to because we only hit this path if we're
 // IO-bound (i.e. if something suspends). Whereas the stack is used even in
 // the non-IO- bound case.
-var _workInProgress=returnFiber;var earliestTimeoutMs=-1;var startTimeMs=-1;do{if(_workInProgress.tag===SuspenseComponent){var current=_workInProgress.alternate;if(current!==null){var currentState=current.memoizedState;if(currentState!==null&&currentState.didTimeout){// Reached a boundary that already timed out. Do not search
+var _workInProgress=returnFiber;var earliestTimeoutMs=-1;var startTimeMs=-1;do{if(_workInProgress.tag===SuspenseComponent){var current$$1=_workInProgress.alternate;if(current$$1!==null){var currentState=current$$1.memoizedState;if(currentState!==null){// Reached a boundary that already timed out. Do not search
 // any further.
 var timedOutAt=currentState.timedOutAt;startTimeMs=expirationTimeToMs(timedOutAt);// Do not search any further.
 break;}}var timeoutPropMs=_workInProgress.pendingProps.maxDuration;if(typeof timeoutPropMs==='number'){if(timeoutPropMs<=0){earliestTimeoutMs=0;}else if(earliestTimeoutMs===-1||timeoutPropMs<earliestTimeoutMs){earliestTimeoutMs=timeoutPropMs;}}}_workInProgress=_workInProgress.return;}while(_workInProgress!==null);// Schedule the nearest Suspense to re-render the timed out view.
-_workInProgress=returnFiber;do{if(_workInProgress.tag===SuspenseComponent&&shouldCaptureSuspense(_workInProgress.alternate,_workInProgress)){// Found the nearest boundary.
-// If the boundary is not in concurrent mode, we should not suspend, and
-// likewise, when the promise resolves, we should ping synchronously.
-var pingTime=(_workInProgress.mode&ConcurrentMode)===NoEffect?Sync:renderExpirationTime;// Attach a listener to the promise to "ping" the root and retry.
-var onResolveOrReject=retrySuspendedRoot.bind(null,root,_workInProgress,sourceFiber,pingTime);if(enableSchedulerTracing){onResolveOrReject=tracing.unstable_wrap(onResolveOrReject);}thenable.then(onResolveOrReject,onResolveOrReject);// If the boundary is outside of concurrent mode, we should *not*
+_workInProgress=returnFiber;do{if(_workInProgress.tag===SuspenseComponent&&shouldCaptureSuspense(_workInProgress)){// Found the nearest boundary.
+// Stash the promise on the boundary fiber. If the boundary times out, we'll
+var thenables=_workInProgress.updateQueue;if(thenables===null){_workInProgress.updateQueue=new Set([thenable]);}else{thenables.add(thenable);}// If the boundary is outside of concurrent mode, we should *not*
 // suspend the commit. Pretend as if the suspended component rendered
 // null and keep rendering. In the commit phase, we'll schedule a
 // subsequent synchronous update to re-render the Suspense.
@@ -48105,17 +48439,25 @@ var onResolveOrReject=retrySuspendedRoot.bind(null,root,_workInProgress,sourceFi
 // Note: It doesn't matter whether the component that suspended was
 // inside a concurrent mode tree. If the Suspense is outside of it, we
 // should *not* suspend the commit.
-if((_workInProgress.mode&ConcurrentMode)===NoEffect){_workInProgress.effectTag|=Callback;// Unmount the source fiber's children
-var nextChildren=null;reconcileChildren(sourceFiber.alternate,sourceFiber,nextChildren,renderExpirationTime);sourceFiber.effectTag&=~Incomplete;if(sourceFiber.tag===ClassComponent){// We're going to commit this fiber even though it didn't complete.
+if((_workInProgress.mode&ConcurrentMode)===NoEffect){_workInProgress.effectTag|=DidCapture;// We're going to commit this fiber even though it didn't complete.
 // But we shouldn't call any lifecycle methods or callbacks. Remove
 // all lifecycle effect tags.
-sourceFiber.effectTag&=~LifecycleEffectMask;var _current=sourceFiber.alternate;if(_current===null){// This is a new mount. Change the tag so it's not mistaken for a
-// completed component. For example, we should not call
+sourceFiber.effectTag&=~(LifecycleEffectMask|Incomplete);if(sourceFiber.tag===ClassComponent){var currentSourceFiber=sourceFiber.alternate;if(currentSourceFiber===null){// This is a new mount. Change the tag so it's not mistaken for a
+// completed class component. For example, we should not call
 // componentWillUnmount if it is deleted.
-sourceFiber.tag=IncompleteClassComponent;}}// Exit without suspending.
+sourceFiber.tag=IncompleteClassComponent;}else{// When we try rendering again, we should not reuse the current fiber,
+// since it's known to be in an inconsistent state. Use a force updte to
+// prevent a bail out.
+var update=createUpdate(Sync);update.tag=ForceUpdate;enqueueUpdate(sourceFiber,update);}}// The source fiber did not complete. Mark it with Sync priority to
+// indicate that it still has pending work.
+sourceFiber.expirationTime=Sync;// Exit without suspending.
 return;}// Confirmed that the boundary is in a concurrent mode tree. Continue
 // with the normal suspend path.
-var absoluteTimeoutMs=void 0;if(earliestTimeoutMs===-1){// If no explicit threshold is given, default to an abitrarily large
+// Attach a listener to the promise to "ping" the root and retry. But
+// only if one does not already exist for the current render expiration
+// time (which acts like a "thread ID" here).
+var pingCache=root.pingCache;var threadIDs=void 0;if(pingCache===null){pingCache=root.pingCache=new PossiblyWeakMap();threadIDs=new Set();pingCache.set(thenable,threadIDs);}else{threadIDs=pingCache.get(thenable);if(threadIDs===undefined){threadIDs=new Set();pingCache.set(thenable,threadIDs);}}if(!threadIDs.has(renderExpirationTime)){// Memoize using the thread ID to prevent redundant listeners.
+threadIDs.add(renderExpirationTime);var ping=pingSuspendedRoot.bind(null,root,thenable,renderExpirationTime);if(enableSchedulerTracing){ping=tracing.unstable_wrap(ping);}thenable.then(ping,ping);}var absoluteTimeoutMs=void 0;if(earliestTimeoutMs===-1){// If no explicit threshold is given, default to an abitrarily large
 // value. The actual size doesn't matter because the threshold for the
 // whole tree will be clamped to the expiration time.
 absoluteTimeoutMs=maxSigned31BitInt;}else{if(startTimeMs===-1){// This suspend happened outside of any already timed-out
@@ -48134,31 +48476,26 @@ var earliestExpirationTime=findEarliestOutstandingPriorityLevel(root,renderExpir
 renderDidSuspend(root,absoluteTimeoutMs,renderExpirationTime);_workInProgress.effectTag|=ShouldCapture;_workInProgress.expirationTime=renderExpirationTime;return;}// This boundary already captured during this render. Continue to the next
 // boundary.
 _workInProgress=_workInProgress.return;}while(_workInProgress!==null);// No boundary was found. Fallthrough to error mode.
-value=new Error('An update was suspended, but no placeholder UI was provided.');}// We didn't find a boundary that could handle this type of exception. Start
+// TODO: Use invariant so the message is stripped in prod?
+value=new Error((getComponentName(sourceFiber.type)||'A React component')+' suspended while rendering, but no fallback UI was specified.\n'+'\n'+'Add a <Suspense fallback=...> component higher in the tree to '+'provide a loading indicator or placeholder to display.'+getStackByFiberInDevAndProd(sourceFiber));}// We didn't find a boundary that could handle this type of exception. Start
 // over and traverse parent path again, this time treating the exception
 // as an error.
-renderDidError();value=createCapturedValue(value,sourceFiber);var workInProgress=returnFiber;do{switch(workInProgress.tag){case HostRoot:{var _errorInfo=value;workInProgress.effectTag|=ShouldCapture;workInProgress.expirationTime=renderExpirationTime;var update=createRootErrorUpdate(workInProgress,_errorInfo,renderExpirationTime);enqueueCapturedUpdate(workInProgress,update);return;}case ClassComponent:// Capture and retry
+renderDidError();value=createCapturedValue(value,sourceFiber);var workInProgress=returnFiber;do{switch(workInProgress.tag){case HostRoot:{var _errorInfo=value;workInProgress.effectTag|=ShouldCapture;workInProgress.expirationTime=renderExpirationTime;var _update=createRootErrorUpdate(workInProgress,_errorInfo,renderExpirationTime);enqueueCapturedUpdate(workInProgress,_update);return;}case ClassComponent:// Capture and retry
 var errorInfo=value;var ctor=workInProgress.type;var instance=workInProgress.stateNode;if((workInProgress.effectTag&DidCapture)===NoEffect&&(typeof ctor.getDerivedStateFromError==='function'||instance!==null&&typeof instance.componentDidCatch==='function'&&!isAlreadyFailedLegacyErrorBoundary(instance))){workInProgress.effectTag|=ShouldCapture;workInProgress.expirationTime=renderExpirationTime;// Schedule the error boundary to re-render using updated state
-var _update=createClassErrorUpdate(workInProgress,errorInfo,renderExpirationTime);enqueueCapturedUpdate(workInProgress,_update);return;}break;default:break;}workInProgress=workInProgress.return;}while(workInProgress!==null);}function unwindWork(workInProgress,renderExpirationTime){switch(workInProgress.tag){case ClassComponent:{var Component=workInProgress.type;if(isContextProvider(Component)){popContext(workInProgress);}var effectTag=workInProgress.effectTag;if(effectTag&ShouldCapture){workInProgress.effectTag=effectTag&~ShouldCapture|DidCapture;return workInProgress;}return null;}case HostRoot:{popHostContainer(workInProgress);popTopLevelContextObject(workInProgress);var _effectTag=workInProgress.effectTag;!((_effectTag&DidCapture)===NoEffect)?invariant(false,'The root failed to unmount after an error. This is likely a bug in React. Please file an issue.'):void 0;workInProgress.effectTag=_effectTag&~ShouldCapture|DidCapture;return workInProgress;}case HostComponent:{popHostContext(workInProgress);return null;}case SuspenseComponent:{var _effectTag2=workInProgress.effectTag;if(_effectTag2&ShouldCapture){workInProgress.effectTag=_effectTag2&~ShouldCapture|DidCapture;// Captured a suspense effect. Set the boundary's `alreadyCaptured`
-// state to true so we know to render the fallback.
-var current=workInProgress.alternate;var currentState=current!==null?current.memoizedState:null;var nextState=workInProgress.memoizedState;if(nextState===null){// No existing state. Create a new object.
-nextState={alreadyCaptured:true,didTimeout:false,timedOutAt:NoWork};}else if(currentState===nextState){// There is an existing state but it's the same as the current tree's.
-// Clone the object.
-nextState={alreadyCaptured:true,didTimeout:nextState.didTimeout,timedOutAt:nextState.timedOutAt};}else{// Already have a clone, so it's safe to mutate.
-nextState.alreadyCaptured=true;}workInProgress.memoizedState=nextState;// Re-render the boundary.
-return workInProgress;}return null;}case HostPortal:popHostContainer(workInProgress);return null;case ContextProvider:popProvider(workInProgress);return null;default:return null;}}function unwindInterruptedWork(interruptedWork){switch(interruptedWork.tag){case ClassComponent:{var childContextTypes=interruptedWork.type.childContextTypes;if(childContextTypes!==null&&childContextTypes!==undefined){popContext(interruptedWork);}break;}case HostRoot:{popHostContainer(interruptedWork);popTopLevelContextObject(interruptedWork);break;}case HostComponent:{popHostContext(interruptedWork);break;}case HostPortal:popHostContainer(interruptedWork);break;case ContextProvider:popProvider(interruptedWork);break;default:break;}}var Dispatcher={readContext:readContext};var ReactCurrentOwner$2=ReactSharedInternals.ReactCurrentOwner;var didWarnAboutStateTransition=void 0;var didWarnSetStateChildContext=void 0;var warnAboutUpdateOnUnmounted=void 0;var warnAboutInvalidUpdates=void 0;if(enableSchedulerTracing){// Provide explicit error message when production+profiling bundle of e.g. react-dom
-// is used with production (non-profiling) bundle of schedule/tracing
-!(tracing.__interactionsRef!=null&&tracing.__interactionsRef.current!=null)?invariant(false,'It is not supported to run the profiling version of a renderer (for example, `react-dom/profiling`) without also replacing the `schedule/tracing` module with `schedule/tracing-profiling`. Your bundler might have a setting for aliasing both modules. Learn more at http://fb.me/react-profiling'):void 0;}{didWarnAboutStateTransition=false;didWarnSetStateChildContext=false;var didWarnStateUpdateForUnmountedComponent={};warnAboutUpdateOnUnmounted=function(fiber){// We show the whole stack but dedupe on the top component's name because
+var _update2=createClassErrorUpdate(workInProgress,errorInfo,renderExpirationTime);enqueueCapturedUpdate(workInProgress,_update2);return;}break;default:break;}workInProgress=workInProgress.return;}while(workInProgress!==null);}function unwindWork(workInProgress,renderExpirationTime){switch(workInProgress.tag){case ClassComponent:{var Component=workInProgress.type;if(isContextProvider(Component)){popContext(workInProgress);}var effectTag=workInProgress.effectTag;if(effectTag&ShouldCapture){workInProgress.effectTag=effectTag&~ShouldCapture|DidCapture;return workInProgress;}return null;}case HostRoot:{popHostContainer(workInProgress);popTopLevelContextObject(workInProgress);var _effectTag=workInProgress.effectTag;!((_effectTag&DidCapture)===NoEffect)?invariant(false,'The root failed to unmount after an error. This is likely a bug in React. Please file an issue.'):void 0;workInProgress.effectTag=_effectTag&~ShouldCapture|DidCapture;return workInProgress;}case HostComponent:{popHostContext(workInProgress);return null;}case SuspenseComponent:{var _effectTag2=workInProgress.effectTag;if(_effectTag2&ShouldCapture){workInProgress.effectTag=_effectTag2&~ShouldCapture|DidCapture;// Captured a suspense effect. Re-render the boundary.
+return workInProgress;}return null;}case HostPortal:popHostContainer(workInProgress);return null;case ContextProvider:popProvider(workInProgress);return null;default:return null;}}function unwindInterruptedWork(interruptedWork){switch(interruptedWork.tag){case ClassComponent:{var childContextTypes=interruptedWork.type.childContextTypes;if(childContextTypes!==null&&childContextTypes!==undefined){popContext(interruptedWork);}break;}case HostRoot:{popHostContainer(interruptedWork);popTopLevelContextObject(interruptedWork);break;}case HostComponent:{popHostContext(interruptedWork);break;}case HostPortal:popHostContainer(interruptedWork);break;case ContextProvider:popProvider(interruptedWork);break;default:break;}}var Dispatcher={readContext:readContext,useCallback:useCallback,useContext:useContext,useEffect:useEffect,useImperativeMethods:useImperativeMethods,useLayoutEffect:useLayoutEffect,useMemo:useMemo,useReducer:useReducer,useRef:useRef,useState:useState};var DispatcherWithoutHooks={readContext:readContext};var ReactCurrentOwner$2=ReactSharedInternals.ReactCurrentOwner;var didWarnAboutStateTransition=void 0;var didWarnSetStateChildContext=void 0;var warnAboutUpdateOnUnmounted=void 0;var warnAboutInvalidUpdates=void 0;if(enableSchedulerTracing){// Provide explicit error message when production+profiling bundle of e.g. react-dom
+// is used with production (non-profiling) bundle of scheduler/tracing
+!(tracing.__interactionsRef!=null&&tracing.__interactionsRef.current!=null)?invariant(false,'It is not supported to run the profiling version of a renderer (for example, `react-dom/profiling`) without also replacing the `scheduler/tracing` module with `scheduler/tracing-profiling`. Your bundler might have a setting for aliasing both modules. Learn more at http://fb.me/react-profiling'):void 0;}{didWarnAboutStateTransition=false;didWarnSetStateChildContext=false;var didWarnStateUpdateForUnmountedComponent={};warnAboutUpdateOnUnmounted=function(fiber,isClass){// We show the whole stack but dedupe on the top component's name because
 // the problematic code almost always lies inside that component.
-var componentName=getComponentName(fiber.type)||'ReactClass';if(didWarnStateUpdateForUnmountedComponent[componentName]){return;}warningWithoutStack$1(false,"Can't call setState (or forceUpdate) on an unmounted component. This "+'is a no-op, but it indicates a memory leak in your application. To '+'fix, cancel all subscriptions and asynchronous tasks in the '+'componentWillUnmount method.%s',getStackByFiberInDevAndProd(fiber));didWarnStateUpdateForUnmountedComponent[componentName]=true;};warnAboutInvalidUpdates=function(instance){switch(phase){case'getChildContext':if(didWarnSetStateChildContext){return;}warningWithoutStack$1(false,'setState(...): Cannot call setState() inside getChildContext()');didWarnSetStateChildContext=true;break;case'render':if(didWarnAboutStateTransition){return;}warningWithoutStack$1(false,'Cannot update during an existing state transition (such as within '+'`render`). Render methods should be a pure function of props and state.');didWarnAboutStateTransition=true;break;}};}// Used to ensure computeUniqueAsyncExpiration is monotonically increasing.
-var lastUniqueAsyncExpiration=0;// Represents the expiration time that incoming updates should use. (If this
+var componentName=getComponentName(fiber.type)||'ReactComponent';if(didWarnStateUpdateForUnmountedComponent[componentName]){return;}warningWithoutStack$1(false,"Can't perform a React state update on an unmounted component. This "+'is a no-op, but it indicates a memory leak in your application. To '+'fix, cancel all subscriptions and asynchronous tasks in %s.%s',isClass?'the componentWillUnmount method':'a useEffect cleanup function',getStackByFiberInDevAndProd(fiber));didWarnStateUpdateForUnmountedComponent[componentName]=true;};warnAboutInvalidUpdates=function(instance){switch(phase){case'getChildContext':if(didWarnSetStateChildContext){return;}warningWithoutStack$1(false,'setState(...): Cannot call setState() inside getChildContext()');didWarnSetStateChildContext=true;break;case'render':if(didWarnAboutStateTransition){return;}warningWithoutStack$1(false,'Cannot update during an existing state transition (such as within '+'`render`). Render methods should be a pure function of props and state.');didWarnAboutStateTransition=true;break;}};}// Used to ensure computeUniqueAsyncExpiration is monotonically decreasing.
+var lastUniqueAsyncExpiration=Sync-1;// Represents the expiration time that incoming updates should use. (If this
 // is NoWork, use the default strategy: async updates in async mode, sync
 // updates in sync mode.)
 var expirationContext=NoWork;var isWorking=false;// The next work in progress fiber that we're currently working on.
 var nextUnitOfWork=null;var nextRoot=null;// The time at which we're currently rendering work.
 var nextRenderExpirationTime=NoWork;var nextLatestAbsoluteTimeoutMs=-1;var nextRenderDidError=false;// The next fiber with an effect that we're currently committing.
-var nextEffect=null;var isCommitting$1=false;var legacyErrorBoundariesThatAlreadyFailed=null;// Used for performance tracking.
-var interruptedBy=null;var stashedWorkInProgressProperties=void 0;var replayUnitOfWork=void 0;var isReplayingFailedUnitOfWork=void 0;var originalReplayError=void 0;var rethrowOriginalError=void 0;if( true&&replayFailedUnitOfWorkWithInvokeGuardedCallback){stashedWorkInProgressProperties=null;isReplayingFailedUnitOfWork=false;originalReplayError=null;replayUnitOfWork=function(failedUnitOfWork,thrownValue,isYieldy){if(thrownValue!==null&&typeof thrownValue==='object'&&typeof thrownValue.then==='function'){// Don't replay promises. Treat everything else like an error.
+var nextEffect=null;var isCommitting$1=false;var rootWithPendingPassiveEffects=null;var passiveEffectCallbackHandle=null;var passiveEffectCallback=null;var legacyErrorBoundariesThatAlreadyFailed=null;// Used for performance tracking.
+var interruptedBy=null;var stashedWorkInProgressProperties=void 0;var replayUnitOfWork=void 0;var mayReplayFailedUnitOfWork=void 0;var isReplayingFailedUnitOfWork=void 0;var originalReplayError=void 0;var rethrowOriginalError=void 0;if( true&&replayFailedUnitOfWorkWithInvokeGuardedCallback){stashedWorkInProgressProperties=null;mayReplayFailedUnitOfWork=true;isReplayingFailedUnitOfWork=false;originalReplayError=null;replayUnitOfWork=function(failedUnitOfWork,thrownValue,isYieldy){if(thrownValue!==null&&typeof thrownValue==='object'&&typeof thrownValue.then==='function'){// Don't replay promises. Treat everything else like an error.
 // TODO: Need to figure out a different strategy if/when we add
 // support for catching other types.
 return;}// Restore the original state of the work-in-progress
@@ -48183,18 +48520,14 @@ nextEffect.effectTag&=~Placement;break;}case PlacementAndUpdate:{// Placement
 commitPlacement(nextEffect);// Clear the "placement" from effect tag so that we know that this is inserted, before
 // any life-cycles like componentDidMount gets called.
 nextEffect.effectTag&=~Placement;// Update
-var _current=nextEffect.alternate;commitWork(_current,nextEffect);break;}case Update:{var _current2=nextEffect.alternate;commitWork(_current2,nextEffect);break;}case Deletion:{commitDeletion(nextEffect);break;}}nextEffect=nextEffect.nextEffect;}{resetCurrentFiber();}}function commitBeforeMutationLifecycles(){while(nextEffect!==null){{setCurrentFiber(nextEffect);}var effectTag=nextEffect.effectTag;if(effectTag&Snapshot){recordEffect();var current$$1=nextEffect.alternate;commitBeforeMutationLifeCycles(current$$1,nextEffect);}// Don't cleanup effects yet;
-// This will be done by commitAllLifeCycles()
-nextEffect=nextEffect.nextEffect;}{resetCurrentFiber();}}function commitAllLifeCycles(finishedRoot,committedExpirationTime){{ReactStrictModeWarnings.flushPendingUnsafeLifecycleWarnings();ReactStrictModeWarnings.flushLegacyContextWarning();if(warnAboutDeprecatedLifecycles){ReactStrictModeWarnings.flushPendingDeprecationWarnings();}}while(nextEffect!==null){var effectTag=nextEffect.effectTag;if(effectTag&(Update|Callback)){recordEffect();var current$$1=nextEffect.alternate;commitLifeCycles(finishedRoot,current$$1,nextEffect,committedExpirationTime);}if(effectTag&Ref){recordEffect();commitAttachRef(nextEffect);}var next=nextEffect.nextEffect;// Ensure that we clean these up so that we don't accidentally keep them.
-// I'm not actually sure this matters because we can't reset firstEffect
-// and lastEffect since they're on every node, not just the effectful
-// ones. So we have to clean everything as we reuse nodes anyway.
-nextEffect.nextEffect=null;// Ensure that we reset the effectTag here so that we can rely on effect
-// tags to reason about the current life-cycle.
-nextEffect=next;}}function isAlreadyFailedLegacyErrorBoundary(instance){return legacyErrorBoundariesThatAlreadyFailed!==null&&legacyErrorBoundariesThatAlreadyFailed.has(instance);}function markLegacyErrorBoundaryAsFailed(instance){if(legacyErrorBoundariesThatAlreadyFailed===null){legacyErrorBoundariesThatAlreadyFailed=new Set([instance]);}else{legacyErrorBoundariesThatAlreadyFailed.add(instance);}}function commitRoot(root,finishedWork){isWorking=true;isCommitting$1=true;startCommitTimer();!(root.current!==finishedWork)?invariant(false,'Cannot commit the same tree as before. This is probably a bug related to the return field. This error is likely caused by a bug in React. Please file an issue.'):void 0;var committedExpirationTime=root.pendingCommitExpirationTime;!(committedExpirationTime!==NoWork)?invariant(false,'Cannot commit an incomplete root. This error is likely caused by a bug in React. Please file an issue.'):void 0;root.pendingCommitExpirationTime=NoWork;// Update the pending priority levels to account for the work that we are
+var _current=nextEffect.alternate;commitWork(_current,nextEffect);break;}case Update:{var _current2=nextEffect.alternate;commitWork(_current2,nextEffect);break;}case Deletion:{commitDeletion(nextEffect);break;}}nextEffect=nextEffect.nextEffect;}{resetCurrentFiber();}}function commitBeforeMutationLifecycles(){while(nextEffect!==null){{setCurrentFiber(nextEffect);}var effectTag=nextEffect.effectTag;if(effectTag&Snapshot){recordEffect();var current$$1=nextEffect.alternate;commitBeforeMutationLifeCycles(current$$1,nextEffect);}nextEffect=nextEffect.nextEffect;}{resetCurrentFiber();}}function commitAllLifeCycles(finishedRoot,committedExpirationTime){{ReactStrictModeWarnings.flushPendingUnsafeLifecycleWarnings();ReactStrictModeWarnings.flushLegacyContextWarning();if(warnAboutDeprecatedLifecycles){ReactStrictModeWarnings.flushPendingDeprecationWarnings();}}while(nextEffect!==null){var effectTag=nextEffect.effectTag;if(effectTag&(Update|Callback)){recordEffect();var current$$1=nextEffect.alternate;commitLifeCycles(finishedRoot,current$$1,nextEffect,committedExpirationTime);}if(effectTag&Ref){recordEffect();commitAttachRef(nextEffect);}if(enableHooks&&effectTag&Passive){rootWithPendingPassiveEffects=finishedRoot;}nextEffect=nextEffect.nextEffect;}}function commitPassiveEffects(root,firstEffect){rootWithPendingPassiveEffects=null;passiveEffectCallbackHandle=null;passiveEffectCallback=null;// Set this to true to prevent re-entrancy
+var previousIsRendering=isRendering;isRendering=true;var effect=firstEffect;do{if(effect.effectTag&Passive){var didError=false;var error=void 0;{invokeGuardedCallback(null,commitPassiveHookEffects,null,effect);if(hasCaughtError()){didError=true;error=clearCaughtError();}}if(didError){captureCommitPhaseError(effect,error);}}effect=effect.nextEffect;}while(effect!==null);isRendering=previousIsRendering;// Check if work was scheduled by one of the effects
+var rootExpirationTime=root.expirationTime;if(rootExpirationTime!==NoWork){requestWork(root,rootExpirationTime);}}function isAlreadyFailedLegacyErrorBoundary(instance){return legacyErrorBoundariesThatAlreadyFailed!==null&&legacyErrorBoundariesThatAlreadyFailed.has(instance);}function markLegacyErrorBoundaryAsFailed(instance){if(legacyErrorBoundariesThatAlreadyFailed===null){legacyErrorBoundariesThatAlreadyFailed=new Set([instance]);}else{legacyErrorBoundariesThatAlreadyFailed.add(instance);}}function flushPassiveEffects(){if(passiveEffectCallback!==null){scheduler.unstable_cancelCallback(passiveEffectCallbackHandle);// We call the scheduled callback instead of commitPassiveEffects directly
+// to ensure tracing works correctly.
+passiveEffectCallback();}}function commitRoot(root,finishedWork){isWorking=true;isCommitting$1=true;startCommitTimer();!(root.current!==finishedWork)?invariant(false,'Cannot commit the same tree as before. This is probably a bug related to the return field. This error is likely caused by a bug in React. Please file an issue.'):void 0;var committedExpirationTime=root.pendingCommitExpirationTime;!(committedExpirationTime!==NoWork)?invariant(false,'Cannot commit an incomplete root. This error is likely caused by a bug in React. Please file an issue.'):void 0;root.pendingCommitExpirationTime=NoWork;// Update the pending priority levels to account for the work that we are
 // about to commit. This needs to happen before calling the lifecycles, since
 // they may schedule additional updates.
-var updateExpirationTimeBeforeCommit=finishedWork.expirationTime;var childExpirationTimeBeforeCommit=finishedWork.childExpirationTime;var earliestRemainingTimeBeforeCommit=updateExpirationTimeBeforeCommit===NoWork||childExpirationTimeBeforeCommit!==NoWork&&childExpirationTimeBeforeCommit<updateExpirationTimeBeforeCommit?childExpirationTimeBeforeCommit:updateExpirationTimeBeforeCommit;markCommittedPriorityLevels(root,earliestRemainingTimeBeforeCommit);var prevInteractions=null;if(enableSchedulerTracing){// Restore any pending interactions at this point,
+var updateExpirationTimeBeforeCommit=finishedWork.expirationTime;var childExpirationTimeBeforeCommit=finishedWork.childExpirationTime;var earliestRemainingTimeBeforeCommit=childExpirationTimeBeforeCommit>updateExpirationTimeBeforeCommit?childExpirationTimeBeforeCommit:updateExpirationTimeBeforeCommit;markCommittedPriorityLevels(root,earliestRemainingTimeBeforeCommit);var prevInteractions=null;if(enableSchedulerTracing){// Restore any pending interactions at this point,
 // So that cascading work triggered during the render phase will be accounted for.
 prevInteractions=tracing.__interactionsRef.current;tracing.__interactionsRef.current=root.memoizedInteractions;}// Reset this to null before calling lifecycles
 ReactCurrentOwner$2.current=null;var firstEffect=void 0;if(finishedWork.effectTag>PerformedWork){// A fiber's effect list consists only of its children, not itself. So if
@@ -48218,7 +48551,14 @@ root.current=finishedWork;// In the second pass we'll perform all life-cycles an
 // Life-cycles happen as a separate pass so that all placements, updates,
 // and deletions in the entire tree have already been invoked.
 // This pass also triggers any renderer-specific initial effects.
-nextEffect=firstEffect;startCommitLifeCyclesTimer();while(nextEffect!==null){var _didError2=false;var _error2=void 0;{invokeGuardedCallback(null,commitAllLifeCycles,null,root,committedExpirationTime);if(hasCaughtError()){_didError2=true;_error2=clearCaughtError();}}if(_didError2){!(nextEffect!==null)?invariant(false,'Should have next effect. This error is likely caused by a bug in React. Please file an issue.'):void 0;captureCommitPhaseError(nextEffect,_error2);if(nextEffect!==null){nextEffect=nextEffect.nextEffect;}}}isCommitting$1=false;isWorking=false;stopCommitLifeCyclesTimer();stopCommitTimer();onCommitRoot(finishedWork.stateNode);if( true&&ReactFiberInstrumentation_1.debugTool){ReactFiberInstrumentation_1.debugTool.onCommitWork(finishedWork);}var updateExpirationTimeAfterCommit=finishedWork.expirationTime;var childExpirationTimeAfterCommit=finishedWork.childExpirationTime;var earliestRemainingTimeAfterCommit=updateExpirationTimeAfterCommit===NoWork||childExpirationTimeAfterCommit!==NoWork&&childExpirationTimeAfterCommit<updateExpirationTimeAfterCommit?childExpirationTimeAfterCommit:updateExpirationTimeAfterCommit;if(earliestRemainingTimeAfterCommit===NoWork){// If there's no remaining work, we can clear the set of already failed
+nextEffect=firstEffect;startCommitLifeCyclesTimer();while(nextEffect!==null){var _didError2=false;var _error2=void 0;{invokeGuardedCallback(null,commitAllLifeCycles,null,root,committedExpirationTime);if(hasCaughtError()){_didError2=true;_error2=clearCaughtError();}}if(_didError2){!(nextEffect!==null)?invariant(false,'Should have next effect. This error is likely caused by a bug in React. Please file an issue.'):void 0;captureCommitPhaseError(nextEffect,_error2);if(nextEffect!==null){nextEffect=nextEffect.nextEffect;}}}if(enableHooks&&firstEffect!==null&&rootWithPendingPassiveEffects!==null){// This commit included a passive effect. These do not need to fire until
+// after the next paint. Schedule an callback to fire them in an async
+// event. To ensure serial execution, the callback will be flushed early if
+// we enter rootWithPendingPassiveEffects commit phase before then.
+var callback=commitPassiveEffects.bind(null,root,firstEffect);if(enableSchedulerTracing){// TODO: Avoid this extra callback by mutating the tracing ref directly,
+// like we do at the beginning of commitRoot. I've opted not to do that
+// here because that code is still in flux.
+callback=tracing.unstable_wrap(callback);}passiveEffectCallbackHandle=scheduler.unstable_scheduleCallback(callback);passiveEffectCallback=callback;}isCommitting$1=false;isWorking=false;stopCommitLifeCyclesTimer();stopCommitTimer();onCommitRoot(finishedWork.stateNode);if( true&&ReactFiberInstrumentation_1.debugTool){ReactFiberInstrumentation_1.debugTool.onCommitWork(finishedWork);}var updateExpirationTimeAfterCommit=finishedWork.expirationTime;var childExpirationTimeAfterCommit=finishedWork.childExpirationTime;var earliestRemainingTimeAfterCommit=childExpirationTimeAfterCommit>updateExpirationTimeAfterCommit?childExpirationTimeAfterCommit:updateExpirationTimeAfterCommit;if(earliestRemainingTimeAfterCommit===NoWork){// If there's no remaining work, we can clear the set of already failed
 // error boundaries.
 legacyErrorBoundariesThatAlreadyFailed=null;}onCommit(root,earliestRemainingTimeAfterCommit);if(enableSchedulerTracing){tracing.__interactionsRef.current=prevInteractions;var subscriber=void 0;try{subscriber=tracing.__subscriberRef.current;if(subscriber!==null&&root.memoizedInteractions.size>0){var threadID=computeThreadID(committedExpirationTime,root.interactionThreadID);subscriber.onWorkStopped(root.memoizedInteractions,threadID);}}catch(error){// It's not safe for commitRoot() to throw.
 // Store the error for now and we'll re-throw in finishRendering().
@@ -48228,7 +48568,7 @@ if(!hasUnhandledError){hasUnhandledError=true;unhandledError=error;}}finally{// 
 var pendingInteractionMap=root.pendingInteractionMap;pendingInteractionMap.forEach(function(scheduledInteractions,scheduledExpirationTime){// Only decrement the pending interaction count if we're done.
 // If there's still work at the current priority,
 // That indicates that we are waiting for suspense data.
-if(earliestRemainingTimeAfterCommit===NoWork||scheduledExpirationTime<earliestRemainingTimeAfterCommit){pendingInteractionMap.delete(scheduledExpirationTime);scheduledInteractions.forEach(function(interaction){interaction.__count--;if(subscriber!==null&&interaction.__count===0){try{subscriber.onInteractionScheduledWorkCompleted(interaction);}catch(error){// It's not safe for commitRoot() to throw.
+if(scheduledExpirationTime>earliestRemainingTimeAfterCommit){pendingInteractionMap.delete(scheduledExpirationTime);scheduledInteractions.forEach(function(interaction){interaction.__count--;if(subscriber!==null&&interaction.__count===0){try{subscriber.onInteractionScheduledWorkCompleted(interaction);}catch(error){// It's not safe for commitRoot() to throw.
 // Store the error for now and we'll re-throw in finishRendering().
 if(!hasUnhandledError){hasUnhandledError=true;unhandledError=error;}}}});}});}}}function resetChildExpirationTime(workInProgress,renderTime){if(renderTime!==Never&&workInProgress.childExpirationTime===Never){// The children of this component are hidden. Don't bubble their
 // expiration times.
@@ -48242,16 +48582,20 @@ var actualDuration=workInProgress.actualDuration;var treeBaseDuration=workInProg
 // Then this value will reflect the amount of time spent working on a previous render.
 // In that case it should not bubble.
 // We determine whether it was cloned by comparing the child pointer.
-var shouldBubbleActualDurations=workInProgress.alternate===null||workInProgress.child!==workInProgress.alternate.child;var child=workInProgress.child;while(child!==null){var childUpdateExpirationTime=child.expirationTime;var childChildExpirationTime=child.childExpirationTime;if(newChildExpirationTime===NoWork||childUpdateExpirationTime!==NoWork&&childUpdateExpirationTime<newChildExpirationTime){newChildExpirationTime=childUpdateExpirationTime;}if(newChildExpirationTime===NoWork||childChildExpirationTime!==NoWork&&childChildExpirationTime<newChildExpirationTime){newChildExpirationTime=childChildExpirationTime;}if(shouldBubbleActualDurations){actualDuration+=child.actualDuration;}treeBaseDuration+=child.treeBaseDuration;child=child.sibling;}workInProgress.actualDuration=actualDuration;workInProgress.treeBaseDuration=treeBaseDuration;}else{var _child=workInProgress.child;while(_child!==null){var _childUpdateExpirationTime=_child.expirationTime;var _childChildExpirationTime=_child.childExpirationTime;if(newChildExpirationTime===NoWork||_childUpdateExpirationTime!==NoWork&&_childUpdateExpirationTime<newChildExpirationTime){newChildExpirationTime=_childUpdateExpirationTime;}if(newChildExpirationTime===NoWork||_childChildExpirationTime!==NoWork&&_childChildExpirationTime<newChildExpirationTime){newChildExpirationTime=_childChildExpirationTime;}_child=_child.sibling;}}workInProgress.childExpirationTime=newChildExpirationTime;}function completeUnitOfWork(workInProgress){// Attempt to complete the current unit of work, then move to the
+var shouldBubbleActualDurations=workInProgress.alternate===null||workInProgress.child!==workInProgress.alternate.child;var child=workInProgress.child;while(child!==null){var childUpdateExpirationTime=child.expirationTime;var childChildExpirationTime=child.childExpirationTime;if(childUpdateExpirationTime>newChildExpirationTime){newChildExpirationTime=childUpdateExpirationTime;}if(childChildExpirationTime>newChildExpirationTime){newChildExpirationTime=childChildExpirationTime;}if(shouldBubbleActualDurations){actualDuration+=child.actualDuration;}treeBaseDuration+=child.treeBaseDuration;child=child.sibling;}workInProgress.actualDuration=actualDuration;workInProgress.treeBaseDuration=treeBaseDuration;}else{var _child=workInProgress.child;while(_child!==null){var _childUpdateExpirationTime=_child.expirationTime;var _childChildExpirationTime=_child.childExpirationTime;if(_childUpdateExpirationTime>newChildExpirationTime){newChildExpirationTime=_childUpdateExpirationTime;}if(_childChildExpirationTime>newChildExpirationTime){newChildExpirationTime=_childChildExpirationTime;}_child=_child.sibling;}}workInProgress.childExpirationTime=newChildExpirationTime;}function completeUnitOfWork(workInProgress){// Attempt to complete the current unit of work, then move to the
 // next sibling. If there are no more siblings, return to the
 // parent fiber.
 while(true){// The current, flushed, state of this fiber is the alternate.
 // Ideally nothing should rely on this, but relying on it here
 // means that we don't need an additional field on the work in
 // progress.
-var current$$1=workInProgress.alternate;{setCurrentFiber(workInProgress);}var returnFiber=workInProgress.return;var siblingFiber=workInProgress.sibling;if((workInProgress.effectTag&Incomplete)===NoEffect){// This fiber completed.
-if(enableProfilerTimer){if(workInProgress.mode&ProfileMode){startProfilerTimer(workInProgress);}nextUnitOfWork=completeWork(current$$1,workInProgress,nextRenderExpirationTime);if(workInProgress.mode&ProfileMode){// Update render duration assuming we didn't error.
-stopProfilerTimerIfRunningAndRecordDelta(workInProgress,false);}}else{nextUnitOfWork=completeWork(current$$1,workInProgress,nextRenderExpirationTime);}stopWorkTimer(workInProgress);resetChildExpirationTime(workInProgress,nextRenderExpirationTime);{resetCurrentFiber();}if(returnFiber!==null&&// Do not append effects to parents if a sibling failed to complete
+var current$$1=workInProgress.alternate;{setCurrentFiber(workInProgress);}var returnFiber=workInProgress.return;var siblingFiber=workInProgress.sibling;if((workInProgress.effectTag&Incomplete)===NoEffect){if( true&&replayFailedUnitOfWorkWithInvokeGuardedCallback){// Don't replay if it fails during completion phase.
+mayReplayFailedUnitOfWork=false;}// This fiber completed.
+// Remember we're completing this unit so we can find a boundary if it fails.
+nextUnitOfWork=workInProgress;if(enableProfilerTimer){if(workInProgress.mode&ProfileMode){startProfilerTimer(workInProgress);}nextUnitOfWork=completeWork(current$$1,workInProgress,nextRenderExpirationTime);if(workInProgress.mode&ProfileMode){// Update render duration assuming we didn't error.
+stopProfilerTimerIfRunningAndRecordDelta(workInProgress,false);}}else{nextUnitOfWork=completeWork(current$$1,workInProgress,nextRenderExpirationTime);}if( true&&replayFailedUnitOfWorkWithInvokeGuardedCallback){// We're out of completion phase so replaying is fine now.
+mayReplayFailedUnitOfWork=true;}stopWorkTimer(workInProgress);resetChildExpirationTime(workInProgress,nextRenderExpirationTime);{resetCurrentFiber();}if(nextUnitOfWork!==null){// Completing this fiber spawned new work. Work on that next.
+return nextUnitOfWork;}if(returnFiber!==null&&// Do not append effects to parents if a sibling failed to complete
 (returnFiber.effectTag&Incomplete)===NoEffect){// Append all the effects of the subtree and this fiber onto the effect
 // list of the parent. The completion order of the children affects the
 // side-effect order.
@@ -48266,14 +48610,14 @@ var effectTag=workInProgress.effectTag;// Skip both NoWork and PerformedWork tag
 if(effectTag>PerformedWork){if(returnFiber.lastEffect!==null){returnFiber.lastEffect.nextEffect=workInProgress;}else{returnFiber.firstEffect=workInProgress;}returnFiber.lastEffect=workInProgress;}}if( true&&ReactFiberInstrumentation_1.debugTool){ReactFiberInstrumentation_1.debugTool.onCompleteWork(workInProgress);}if(siblingFiber!==null){// If there is more work to do in this returnFiber, do that next.
 return siblingFiber;}else if(returnFiber!==null){// If there's no more work in this returnFiber. Complete the returnFiber.
 workInProgress=returnFiber;continue;}else{// We've reached the root.
-return null;}}else{if(workInProgress.mode&ProfileMode){// Record the render duration for the fiber that errored.
-stopProfilerTimerIfRunningAndRecordDelta(workInProgress,false);}// This fiber did not complete because something threw. Pop values off
+return null;}}else{if(enableProfilerTimer&&workInProgress.mode&ProfileMode){// Record the render duration for the fiber that errored.
+stopProfilerTimerIfRunningAndRecordDelta(workInProgress,false);// Include the time spent working on failed children before continuing.
+var actualDuration=workInProgress.actualDuration;var child=workInProgress.child;while(child!==null){actualDuration+=child.actualDuration;child=child.sibling;}workInProgress.actualDuration=actualDuration;}// This fiber did not complete because something threw. Pop values off
 // the stack without entering the complete phase. If this is a boundary,
 // capture values if possible.
 var next=unwindWork(workInProgress,nextRenderExpirationTime);// Because this fiber did not complete, don't reset its expiration time.
 if(workInProgress.effectTag&DidCapture){// Restarting an error boundary
-stopFailedWorkTimer(workInProgress);}else{stopWorkTimer(workInProgress);}{resetCurrentFiber();}if(next!==null){stopWorkTimer(workInProgress);if( true&&ReactFiberInstrumentation_1.debugTool){ReactFiberInstrumentation_1.debugTool.onCompleteWork(workInProgress);}if(enableProfilerTimer){// Include the time spent working on failed children before continuing.
-if(next.mode&ProfileMode){var actualDuration=next.actualDuration;var child=next.child;while(child!==null){actualDuration+=child.actualDuration;child=child.sibling;}next.actualDuration=actualDuration;}}// If completing this work spawned new work, do that next. We'll come
+stopFailedWorkTimer(workInProgress);}else{stopWorkTimer(workInProgress);}{resetCurrentFiber();}if(next!==null){stopWorkTimer(workInProgress);if( true&&ReactFiberInstrumentation_1.debugTool){ReactFiberInstrumentation_1.debugTool.onCompleteWork(workInProgress);}// If completing this work spawned new work, do that next. We'll come
 // back here again.
 // Since we're restarting, remove anything that is not a host effect
 // from the effect tag.
@@ -48295,13 +48639,13 @@ stopProfilerTimerIfRunningAndRecordDelta(workInProgress,true);}}else{next=beginW
 // React's internal stack is not misaligned.
 rethrowOriginalError();}}if( true&&ReactFiberInstrumentation_1.debugTool){ReactFiberInstrumentation_1.debugTool.onBeginWork(workInProgress);}if(next===null){// If this doesn't spawn new work, complete the current work.
 next=completeUnitOfWork(workInProgress);}ReactCurrentOwner$2.current=null;return next;}function workLoop(isYieldy){if(!isYieldy){// Flush work without yielding
-while(nextUnitOfWork!==null){nextUnitOfWork=performUnitOfWork(nextUnitOfWork);}}else{// Flush asynchronous work until the deadline runs out of time.
-while(nextUnitOfWork!==null&&!shouldYield()){nextUnitOfWork=performUnitOfWork(nextUnitOfWork);}}}function renderRoot(root,isYieldy,isExpired){!!isWorking?invariant(false,'renderRoot was called recursively. This error is likely caused by a bug in React. Please file an issue.'):void 0;isWorking=true;ReactCurrentOwner$2.currentDispatcher=Dispatcher;var expirationTime=root.nextExpirationTimeToWorkOn;// Check if we're starting from a fresh stack, or if we're resuming from
+while(nextUnitOfWork!==null){nextUnitOfWork=performUnitOfWork(nextUnitOfWork);}}else{// Flush asynchronous work until there's a higher priority event
+while(nextUnitOfWork!==null&&!shouldYieldToRenderer()){nextUnitOfWork=performUnitOfWork(nextUnitOfWork);}}}function renderRoot(root,isYieldy){!!isWorking?invariant(false,'renderRoot was called recursively. This error is likely caused by a bug in React. Please file an issue.'):void 0;flushPassiveEffects();isWorking=true;if(enableHooks){ReactCurrentOwner$2.currentDispatcher=Dispatcher;}else{ReactCurrentOwner$2.currentDispatcher=DispatcherWithoutHooks;}var expirationTime=root.nextExpirationTimeToWorkOn;// Check if we're starting from a fresh stack, or if we're resuming from
 // previously yielded work.
 if(expirationTime!==nextRenderExpirationTime||root!==nextRoot||nextUnitOfWork===null){// Reset the stack and start working from the root.
 resetStack();nextRoot=root;nextRenderExpirationTime=expirationTime;nextUnitOfWork=createWorkInProgress(nextRoot.current,null,nextRenderExpirationTime);root.pendingCommitExpirationTime=NoWork;if(enableSchedulerTracing){// Determine which interactions this batch of work currently includes,
 // So that we can accurately attribute time spent working on it,
-var interactions=new Set();root.pendingInteractionMap.forEach(function(scheduledInteractions,scheduledExpirationTime){if(scheduledExpirationTime<=expirationTime){scheduledInteractions.forEach(function(interaction){return interactions.add(interaction);});}});// Store the current set of interactions on the FiberRoot for a few reasons:
+var interactions=new Set();root.pendingInteractionMap.forEach(function(scheduledInteractions,scheduledExpirationTime){if(scheduledExpirationTime>=expirationTime){scheduledInteractions.forEach(function(interaction){return interactions.add(interaction);});}});// Store the current set of interactions on the FiberRoot for a few reasons:
 // We can re-use it in hot functions like renderRoot() without having to recalculate it.
 // We will also use it in commitWork() to pass to any Profiler onRender() hooks.
 // This also provides DevTools with a way to access it when the onCommitRoot() hook is called.
@@ -48310,10 +48654,14 @@ root.memoizedInteractions=interactions;if(interactions.size>0){var subscriber=tr
 // Store the error for now and we'll re-throw in finishRendering().
 if(!hasUnhandledError){hasUnhandledError=true;unhandledError=error;}}}}}}var prevInteractions=null;if(enableSchedulerTracing){// We're about to start new traced work.
 // Restore pending interactions so cascading work triggered during the render phase will be accounted for.
-prevInteractions=tracing.__interactionsRef.current;tracing.__interactionsRef.current=root.memoizedInteractions;}var didFatal=false;startWorkLoopTimer(nextUnitOfWork);do{try{workLoop(isYieldy);}catch(thrownValue){if(nextUnitOfWork===null){// This is a fatal error.
-didFatal=true;onUncaughtError(thrownValue);}else{{// Reset global debug state
+prevInteractions=tracing.__interactionsRef.current;tracing.__interactionsRef.current=root.memoizedInteractions;}var didFatal=false;startWorkLoopTimer(nextUnitOfWork);do{try{workLoop(isYieldy);}catch(thrownValue){resetContextDependences();resetHooks();// Reset in case completion throws.
+// This is only used in DEV and when replaying is on.
+var mayReplay=void 0;if( true&&replayFailedUnitOfWorkWithInvokeGuardedCallback){mayReplay=mayReplayFailedUnitOfWork;mayReplayFailedUnitOfWork=true;}if(nextUnitOfWork===null){// This is a fatal error.
+didFatal=true;onUncaughtError(thrownValue);}else{if(enableProfilerTimer&&nextUnitOfWork.mode&ProfileMode){// Record the time spent rendering before an error was thrown.
+// This avoids inaccurate Profiler durations in the case of a suspended render.
+stopProfilerTimerIfRunningAndRecordDelta(nextUnitOfWork,true);}{// Reset global debug state
 // We assume this is defined in DEV
-resetCurrentlyProcessingQueue();}var failedUnitOfWork=nextUnitOfWork;if( true&&replayFailedUnitOfWorkWithInvokeGuardedCallback){replayUnitOfWork(failedUnitOfWork,thrownValue,isYieldy);}// TODO: we already know this isn't true in some cases.
+resetCurrentlyProcessingQueue();}if( true&&replayFailedUnitOfWorkWithInvokeGuardedCallback){if(mayReplay){var failedUnitOfWork=nextUnitOfWork;replayUnitOfWork(failedUnitOfWork,thrownValue,isYieldy);}}// TODO: we already know this isn't true in some cases.
 // At least this shows a nicer error message until we figure out the cause.
 // https://github.com/facebook/react/issues/12449#issuecomment-386727431
 !(nextUnitOfWork!==null)?invariant(false,'Failed to replay rendering after an error. This is likely caused by a bug in React. Please file an issue with a reproducing case to help us find it.'):void 0;var sourceFiber=nextUnitOfWork;var returnFiber=sourceFiber.return;if(returnFiber===null){// This is the root. The root could capture its own errors. However,
@@ -48324,7 +48672,7 @@ resetCurrentlyProcessingQueue();}var failedUnitOfWork=nextUnitOfWork;if( true&&r
 // for now.
 didFatal=true;onUncaughtError(thrownValue);}else{throwException(root,returnFiber,sourceFiber,thrownValue,nextRenderExpirationTime);nextUnitOfWork=completeUnitOfWork(sourceFiber);continue;}}}break;}while(true);if(enableSchedulerTracing){// Traced work is done for now; restore the previous interactions.
 tracing.__interactionsRef.current=prevInteractions;}// We're done performing work. Time to clean up.
-isWorking=false;ReactCurrentOwner$2.currentDispatcher=null;resetContextDependences();// Yield back to main thread.
+isWorking=false;ReactCurrentOwner$2.currentDispatcher=null;resetContextDependences();resetHooks();// Yield back to main thread.
 if(didFatal){var _didCompleteRoot=false;stopWorkLoopTimer(interruptedBy,_didCompleteRoot);interruptedBy=null;// There was a fatal error.
 {resetStackAfterFatalErrorInDev();}// `nextRoot` points to the in-progress root. A non-null value indicates
 // that we're in the middle of an async render. Set it to null to indicate
@@ -48348,8 +48696,8 @@ markSuspendedPriorityLevel(root,expirationTime);var suspendedExpirationTime=expi
 // Synchronsouly attempt to render the same level one more time. This is
 // similar to a suspend, but without a timeout because we're not waiting
 // for a promise to resolve.
-!root.didError&&!isExpired){root.didError=true;var _suspendedExpirationTime=root.nextExpirationTimeToWorkOn=expirationTime;var _rootExpirationTime=root.expirationTime=Sync;onSuspend(root,rootWorkInProgress,_suspendedExpirationTime,_rootExpirationTime,-1// Indicates no timeout
-);return;}}if(!isExpired&&nextLatestAbsoluteTimeoutMs!==-1){// The tree was suspended.
+!root.didError&&isYieldy){root.didError=true;var _suspendedExpirationTime=root.nextExpirationTimeToWorkOn=expirationTime;var _rootExpirationTime=root.expirationTime=Sync;onSuspend(root,rootWorkInProgress,_suspendedExpirationTime,_rootExpirationTime,-1// Indicates no timeout
+);return;}}if(isYieldy&&nextLatestAbsoluteTimeoutMs!==-1){// The tree was suspended.
 var _suspendedExpirationTime2=expirationTime;markSuspendedPriorityLevel(root,_suspendedExpirationTime2);// Find the earliest uncommitted expiration time in the tree, including
 // work that is suspended. The timeout threshold cannot be longer than
 // the overall expiration.
@@ -48359,14 +48707,14 @@ var earliestExpirationTime=findEarliestOutstandingPriorityLevel(root,expirationT
 // to `setTimeout`.
 var currentTimeMs=expirationTimeToMs(requestCurrentTime());var msUntilTimeout=nextLatestAbsoluteTimeoutMs-currentTimeMs;msUntilTimeout=msUntilTimeout<0?0:msUntilTimeout;// TODO: Account for the Just Noticeable Difference
 var _rootExpirationTime2=root.expirationTime;onSuspend(root,rootWorkInProgress,_suspendedExpirationTime2,_rootExpirationTime2,msUntilTimeout);return;}// Ready to commit.
-onComplete(root,rootWorkInProgress,expirationTime);}function dispatch(sourceFiber,value,expirationTime){!(!isWorking||isCommitting$1)?invariant(false,'dispatch: Cannot dispatch during the render phase.'):void 0;var fiber=sourceFiber.return;while(fiber!==null){switch(fiber.tag){case ClassComponent:var ctor=fiber.type;var instance=fiber.stateNode;if(typeof ctor.getDerivedStateFromError==='function'||typeof instance.componentDidCatch==='function'&&!isAlreadyFailedLegacyErrorBoundary(instance)){var errorInfo=createCapturedValue(value,sourceFiber);var update=createClassErrorUpdate(fiber,errorInfo,expirationTime);enqueueUpdate(fiber,update);scheduleWork(fiber,expirationTime);return;}break;case HostRoot:{var _errorInfo=createCapturedValue(value,sourceFiber);var _update=createRootErrorUpdate(fiber,_errorInfo,expirationTime);enqueueUpdate(fiber,_update);scheduleWork(fiber,expirationTime);return;}}fiber=fiber.return;}if(sourceFiber.tag===HostRoot){// Error was thrown at the root. There is no parent, so the root
+onComplete(root,rootWorkInProgress,expirationTime);}function captureCommitPhaseError(sourceFiber,value){var expirationTime=Sync;var fiber=sourceFiber.return;while(fiber!==null){switch(fiber.tag){case ClassComponent:var ctor=fiber.type;var instance=fiber.stateNode;if(typeof ctor.getDerivedStateFromError==='function'||typeof instance.componentDidCatch==='function'&&!isAlreadyFailedLegacyErrorBoundary(instance)){var errorInfo=createCapturedValue(value,sourceFiber);var update=createClassErrorUpdate(fiber,errorInfo,expirationTime);enqueueUpdate(fiber,update);scheduleWork(fiber,expirationTime);return;}break;case HostRoot:{var _errorInfo=createCapturedValue(value,sourceFiber);var _update=createRootErrorUpdate(fiber,_errorInfo,expirationTime);enqueueUpdate(fiber,_update);scheduleWork(fiber,expirationTime);return;}}fiber=fiber.return;}if(sourceFiber.tag===HostRoot){// Error was thrown at the root. There is no parent, so the root
 // itself should capture it.
-var rootFiber=sourceFiber;var _errorInfo2=createCapturedValue(value,rootFiber);var _update2=createRootErrorUpdate(rootFiber,_errorInfo2,expirationTime);enqueueUpdate(rootFiber,_update2);scheduleWork(rootFiber,expirationTime);}}function captureCommitPhaseError(fiber,error){return dispatch(fiber,error,Sync);}function computeThreadID(expirationTime,interactionThreadID){// Interaction threads are unique per root and expiration time.
+var rootFiber=sourceFiber;var _errorInfo2=createCapturedValue(value,rootFiber);var _update2=createRootErrorUpdate(rootFiber,_errorInfo2,expirationTime);enqueueUpdate(rootFiber,_update2);scheduleWork(rootFiber,expirationTime);}}function computeThreadID(expirationTime,interactionThreadID){// Interaction threads are unique per root and expiration time.
 return expirationTime*1000+interactionThreadID;}// Creates a unique async expiration time.
-function computeUniqueAsyncExpiration(){var currentTime=requestCurrentTime();var result=computeAsyncExpiration(currentTime);if(result<=lastUniqueAsyncExpiration){// Since we assume the current time monotonically increases, we only hit
+function computeUniqueAsyncExpiration(){var currentTime=requestCurrentTime();var result=computeAsyncExpiration(currentTime);if(result>=lastUniqueAsyncExpiration){// Since we assume the current time monotonically increases, we only hit
 // this branch when computeUniqueAsyncExpiration is fired multiple times
 // within a 200ms window (or whatever the async bucket size is).
-result=lastUniqueAsyncExpiration+1;}lastUniqueAsyncExpiration=result;return lastUniqueAsyncExpiration;}function computeExpirationForFiber(currentTime,fiber){var expirationTime=void 0;if(expirationContext!==NoWork){// An explicit expiration context was set;
+result=lastUniqueAsyncExpiration-1;}lastUniqueAsyncExpiration=result;return lastUniqueAsyncExpiration;}function computeExpirationForFiber(currentTime,fiber){var expirationTime=void 0;if(expirationContext!==NoWork){// An explicit expiration context was set;
 expirationTime=expirationContext;}else if(isWorking){if(isCommitting$1){// Updates that occur during the commit phase should have sync priority
 // by default.
 expirationTime=Sync;}else{// Updates during the render phase should expire at the same time as
@@ -48377,32 +48725,29 @@ if(fiber.mode&ConcurrentMode){if(isBatchingInteractiveUpdates){// This is an int
 expirationTime=computeInteractiveExpiration(currentTime);}else{// This is an async update
 expirationTime=computeAsyncExpiration(currentTime);}// If we're in the middle of rendering a tree, do not update at the same
 // expiration time that is already rendering.
-if(nextRoot!==null&&expirationTime===nextRenderExpirationTime){expirationTime+=1;}}else{// This is a sync update
+if(nextRoot!==null&&expirationTime===nextRenderExpirationTime){expirationTime-=1;}}else{// This is a sync update
 expirationTime=Sync;}}if(isBatchingInteractiveUpdates){// This is an interactive update. Keep track of the lowest pending
 // interactive expiration time. This allows us to synchronously flush
 // all interactive updates when needed.
-if(expirationTime>lowestPriorityPendingInteractiveExpirationTime){lowestPriorityPendingInteractiveExpirationTime=expirationTime;}}return expirationTime;}function renderDidSuspend(root,absoluteTimeoutMs,suspendedTime){// Schedule the timeout.
-if(absoluteTimeoutMs>=0&&nextLatestAbsoluteTimeoutMs<absoluteTimeoutMs){nextLatestAbsoluteTimeoutMs=absoluteTimeoutMs;}}function renderDidError(){nextRenderDidError=true;}function retrySuspendedRoot(root,boundaryFiber,sourceFiber,suspendedTime){var retryTime=void 0;if(isPriorityLevelSuspended(root,suspendedTime)){// Ping at the original level
-retryTime=suspendedTime;markPingedPriorityLevel(root,retryTime);}else{// Suspense already timed out. Compute a new expiration time
-var currentTime=requestCurrentTime();retryTime=computeExpirationForFiber(currentTime,boundaryFiber);markPendingPriorityLevel(root,retryTime);}// TODO: If the suspense fiber has already rendered the primary children
-// without suspending (that is, all of the promises have already resolved),
-// we should not trigger another update here. One case this happens is when
-// we are in sync mode and a single promise is thrown both on initial render
-// and on update; we attach two .then(retrySuspendedRoot) callbacks and each
-// one performs Sync work, rerendering the Suspense.
-if((boundaryFiber.mode&ConcurrentMode)!==NoContext){if(root===nextRoot&&nextRenderExpirationTime===suspendedTime){// Received a ping at the same priority level at which we're currently
+if(lowestPriorityPendingInteractiveExpirationTime===NoWork||expirationTime<lowestPriorityPendingInteractiveExpirationTime){lowestPriorityPendingInteractiveExpirationTime=expirationTime;}}return expirationTime;}function renderDidSuspend(root,absoluteTimeoutMs,suspendedTime){// Schedule the timeout.
+if(absoluteTimeoutMs>=0&&nextLatestAbsoluteTimeoutMs<absoluteTimeoutMs){nextLatestAbsoluteTimeoutMs=absoluteTimeoutMs;}}function renderDidError(){nextRenderDidError=true;}function pingSuspendedRoot(root,thenable,pingTime){// A promise that previously suspended React from committing has resolved.
+// If React is still suspended, try again at the previous level (pingTime).
+var pingCache=root.pingCache;if(pingCache!==null){// The thenable resolved, so we no longer need to memoize, because it will
+// never be thrown again.
+pingCache.delete(thenable);}if(nextRoot!==null&&nextRenderExpirationTime===pingTime){// Received a ping at the same priority level at which we're currently
 // rendering. Restart from the root.
-nextRoot=null;}}scheduleWorkToRoot(boundaryFiber,retryTime);if((boundaryFiber.mode&ConcurrentMode)===NoContext){// Outside of concurrent mode, we must schedule an update on the source
-// fiber, too, since it already committed in an inconsistent state and
-// therefore does not have any pending work.
-scheduleWorkToRoot(sourceFiber,retryTime);var sourceTag=sourceFiber.tag;if(sourceTag===ClassComponent&&sourceFiber.stateNode!==null){// When we try rendering again, we should not reuse the current fiber,
-// since it's known to be in an inconsistent state. Use a force updte to
-// prevent a bail out.
-var update=createUpdate(retryTime);update.tag=ForceUpdate;enqueueUpdate(sourceFiber,update);}}var rootExpirationTime=root.expirationTime;if(rootExpirationTime!==NoWork){requestWork(root,rootExpirationTime);}}function scheduleWorkToRoot(fiber,expirationTime){recordScheduleUpdate();{if(fiber.tag===ClassComponent){var instance=fiber.stateNode;warnAboutInvalidUpdates(instance);}}// Update the source fiber's expiration time
-if(fiber.expirationTime===NoWork||fiber.expirationTime>expirationTime){fiber.expirationTime=expirationTime;}var alternate=fiber.alternate;if(alternate!==null&&(alternate.expirationTime===NoWork||alternate.expirationTime>expirationTime)){alternate.expirationTime=expirationTime;}// Walk the parent path to the root and update the child expiration time.
-var node=fiber.return;var root=null;if(node===null&&fiber.tag===HostRoot){root=fiber.stateNode;}else{while(node!==null){alternate=node.alternate;if(node.childExpirationTime===NoWork||node.childExpirationTime>expirationTime){node.childExpirationTime=expirationTime;if(alternate!==null&&(alternate.childExpirationTime===NoWork||alternate.childExpirationTime>expirationTime)){alternate.childExpirationTime=expirationTime;}}else if(alternate!==null&&(alternate.childExpirationTime===NoWork||alternate.childExpirationTime>expirationTime)){alternate.childExpirationTime=expirationTime;}if(node.return===null&&node.tag===HostRoot){root=node.stateNode;break;}node=node.return;}}if(root===null){if( true&&fiber.tag===ClassComponent){warnAboutUpdateOnUnmounted(fiber);}return null;}if(enableSchedulerTracing){var interactions=tracing.__interactionsRef.current;if(interactions.size>0){var pendingInteractionMap=root.pendingInteractionMap;var pendingInteractions=pendingInteractionMap.get(expirationTime);if(pendingInteractions!=null){interactions.forEach(function(interaction){if(!pendingInteractions.has(interaction)){// Update the pending async work count for previously unscheduled interaction.
+nextRoot=null;}else{// Confirm that the root is still suspended at this level. Otherwise exit.
+if(isPriorityLevelSuspended(root,pingTime)){// Ping at the original level
+markPingedPriorityLevel(root,pingTime);var rootExpirationTime=root.expirationTime;if(rootExpirationTime!==NoWork){requestWork(root,rootExpirationTime);}}}}function retryTimedOutBoundary(boundaryFiber,thenable){// The boundary fiber (a Suspense component) previously timed out and was
+// rendered in its fallback state. One of the promises that suspended it has
+// resolved, which means at least part of the tree was likely unblocked. Try
+var retryCache=boundaryFiber.stateNode;if(retryCache!==null){// The thenable resolved, so we no longer need to memoize, because it will
+// never be thrown again.
+retryCache.delete(thenable);}var currentTime=requestCurrentTime();var retryTime=computeExpirationForFiber(currentTime,boundaryFiber);var root=scheduleWorkToRoot(boundaryFiber,retryTime);if(root!==null){markPendingPriorityLevel(root,retryTime);var rootExpirationTime=root.expirationTime;if(rootExpirationTime!==NoWork){requestWork(root,rootExpirationTime);}}}function scheduleWorkToRoot(fiber,expirationTime){recordScheduleUpdate();{if(fiber.tag===ClassComponent){var instance=fiber.stateNode;warnAboutInvalidUpdates(instance);}}// Update the source fiber's expiration time
+if(fiber.expirationTime<expirationTime){fiber.expirationTime=expirationTime;}var alternate=fiber.alternate;if(alternate!==null&&alternate.expirationTime<expirationTime){alternate.expirationTime=expirationTime;}// Walk the parent path to the root and update the child expiration time.
+var node=fiber.return;var root=null;if(node===null&&fiber.tag===HostRoot){root=fiber.stateNode;}else{while(node!==null){alternate=node.alternate;if(node.childExpirationTime<expirationTime){node.childExpirationTime=expirationTime;if(alternate!==null&&alternate.childExpirationTime<expirationTime){alternate.childExpirationTime=expirationTime;}}else if(alternate!==null&&alternate.childExpirationTime<expirationTime){alternate.childExpirationTime=expirationTime;}if(node.return===null&&node.tag===HostRoot){root=node.stateNode;break;}node=node.return;}}if(enableSchedulerTracing){if(root!==null){var interactions=tracing.__interactionsRef.current;if(interactions.size>0){var pendingInteractionMap=root.pendingInteractionMap;var pendingInteractions=pendingInteractionMap.get(expirationTime);if(pendingInteractions!=null){interactions.forEach(function(interaction){if(!pendingInteractions.has(interaction)){// Update the pending async work count for previously unscheduled interaction.
 interaction.__count++;}pendingInteractions.add(interaction);});}else{pendingInteractionMap.set(expirationTime,new Set(interactions));// Update the pending async work count for the current interactions.
-interactions.forEach(function(interaction){interaction.__count++;});}var subscriber=tracing.__subscriberRef.current;if(subscriber!==null){var threadID=computeThreadID(expirationTime,root.interactionThreadID);subscriber.onWorkScheduled(interactions,threadID);}}}return root;}function scheduleWork(fiber,expirationTime){var root=scheduleWorkToRoot(fiber,expirationTime);if(root===null){return;}if(!isWorking&&nextRenderExpirationTime!==NoWork&&expirationTime<nextRenderExpirationTime){// This is an interruption. (Used for performance tracking.)
+interactions.forEach(function(interaction){interaction.__count++;});}var subscriber=tracing.__subscriberRef.current;if(subscriber!==null){var threadID=computeThreadID(expirationTime,root.interactionThreadID);subscriber.onWorkScheduled(interactions,threadID);}}}}return root;}function scheduleWork(fiber,expirationTime){var root=scheduleWorkToRoot(fiber,expirationTime);if(root===null){{switch(fiber.tag){case ClassComponent:warnAboutUpdateOnUnmounted(fiber,true);break;case FunctionComponent:case ForwardRef:case MemoComponent:case SimpleMemoComponent:warnAboutUpdateOnUnmounted(fiber,false);break;}}return;}if(!isWorking&&nextRenderExpirationTime!==NoWork&&expirationTime>nextRenderExpirationTime){// This is an interruption. (Used for performance tracking.)
 interruptedBy=fiber;resetStack();}markPendingPriorityLevel(root,expirationTime);if(// If we're in the render phase, we don't need to schedule this root
 // for an update, because we'll do it before we exit...
 !isWorking||isCommitting$1||// ...unless this is a different root than the one we're rendering.
@@ -48410,9 +48755,9 @@ nextRoot!==root){var rootExpirationTime=root.expirationTime;requestWork(root,roo
 nestedUpdateCount=0;invariant(false,'Maximum update depth exceeded. This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate. React limits the number of nested updates to prevent infinite loops.');}}function syncUpdates(fn,a,b,c,d){var previousExpirationContext=expirationContext;expirationContext=Sync;try{return fn(a,b,c,d);}finally{expirationContext=previousExpirationContext;}}// TODO: Everything below this is written as if it has been lifted to the
 // renderers. I'll do this in a follow-up.
 // Linked-list of roots
-var firstScheduledRoot=null;var lastScheduledRoot=null;var callbackExpirationTime=NoWork;var callbackID=void 0;var isRendering=false;var nextFlushedRoot=null;var nextFlushedExpirationTime=NoWork;var lowestPriorityPendingInteractiveExpirationTime=NoWork;var deadlineDidExpire=false;var hasUnhandledError=false;var unhandledError=null;var deadline=null;var isBatchingUpdates=false;var isUnbatchingUpdates=false;var isBatchingInteractiveUpdates=false;var completedBatches=null;var originalStartTimeMs=scheduler.unstable_now();var currentRendererTime=msToExpirationTime(originalStartTimeMs);var currentSchedulerTime=currentRendererTime;// Use these to prevent an infinite loop of nested updates
-var NESTED_UPDATE_LIMIT=50;var nestedUpdateCount=0;var lastCommittedRootDuringThisBatch=null;var timeHeuristicForUnitOfWork=1;function recomputeCurrentRendererTime(){var currentTimeMs=scheduler.unstable_now()-originalStartTimeMs;currentRendererTime=msToExpirationTime(currentTimeMs);}function scheduleCallbackWithExpirationTime(root,expirationTime){if(callbackExpirationTime!==NoWork){// A callback is already scheduled. Check its expiration time (timeout).
-if(expirationTime>callbackExpirationTime){// Existing callback has sufficient timeout. Exit.
+var firstScheduledRoot=null;var lastScheduledRoot=null;var callbackExpirationTime=NoWork;var callbackID=void 0;var isRendering=false;var nextFlushedRoot=null;var nextFlushedExpirationTime=NoWork;var lowestPriorityPendingInteractiveExpirationTime=NoWork;var hasUnhandledError=false;var unhandledError=null;var isBatchingUpdates=false;var isUnbatchingUpdates=false;var isBatchingInteractiveUpdates=false;var completedBatches=null;var originalStartTimeMs=scheduler.unstable_now();var currentRendererTime=msToExpirationTime(originalStartTimeMs);var currentSchedulerTime=currentRendererTime;// Use these to prevent an infinite loop of nested updates
+var NESTED_UPDATE_LIMIT=50;var nestedUpdateCount=0;var lastCommittedRootDuringThisBatch=null;function recomputeCurrentRendererTime(){var currentTimeMs=scheduler.unstable_now()-originalStartTimeMs;currentRendererTime=msToExpirationTime(currentTimeMs);}function scheduleCallbackWithExpirationTime(root,expirationTime){if(callbackExpirationTime!==NoWork){// A callback is already scheduled. Check its expiration time (timeout).
+if(expirationTime<callbackExpirationTime){// Existing callback has sufficient timeout. Exit.
 return;}else{if(callbackID!==null){// Existing callback has insufficient timeout. Cancel and schedule a
 // new one.
 scheduler.unstable_cancelCallback(callbackID);}}// The request callback timer is already running. Don't start a new one.
@@ -48420,7 +48765,7 @@ scheduler.unstable_cancelCallback(callbackID);}}// The request callback timer is
 // onYield is called upon exiting. We use these in lieu of returning a tuple.
 // I've also chosen not to inline them into renderRoot because these will
 // eventually be lifted into the renderer.
-function onFatal(root){root.finishedWork=null;}function onComplete(root,finishedWork,expirationTime){root.pendingCommitExpirationTime=expirationTime;root.finishedWork=finishedWork;}function onSuspend(root,finishedWork,suspendedExpirationTime,rootExpirationTime,msUntilTimeout){root.expirationTime=rootExpirationTime;if(msUntilTimeout===0&&!shouldYield()){// Don't wait an additional tick. Commit the tree immediately.
+function onFatal(root){root.finishedWork=null;}function onComplete(root,finishedWork,expirationTime){root.pendingCommitExpirationTime=expirationTime;root.finishedWork=finishedWork;}function onSuspend(root,finishedWork,suspendedExpirationTime,rootExpirationTime,msUntilTimeout){root.expirationTime=rootExpirationTime;if(msUntilTimeout===0&&!shouldYieldToRenderer()){// Don't wait an additional tick. Commit the tree immediately.
 root.pendingCommitExpirationTime=suspendedExpirationTime;root.finishedWork=finishedWork;}else if(msUntilTimeout>0){// Wait `msUntilTimeout` milliseconds before committing.
 root.timeoutHandle=scheduleTimeout(onTimeout.bind(null,root,finishedWork,suspendedExpirationTime),msUntilTimeout);}}function onYield(root){root.finishedWork=null;}function onTimeout(root,finishedWork,suspendedExpirationTime){// The root timed out. Commit it.
 root.pendingCommitExpirationTime=suspendedExpirationTime;root.finishedWork=finishedWork;// Read the current time before entering the commit phase. We can be
@@ -48459,12 +48804,12 @@ function requestWork(root,expirationTime){addRootToSchedule(root,expirationTime)
 return;}if(isBatchingUpdates){// Flush work at the end of the batch.
 if(isUnbatchingUpdates){// ...unless we're inside unbatchedUpdates, in which case we should
 // flush it now.
-nextFlushedRoot=root;nextFlushedExpirationTime=Sync;performWorkOnRoot(root,Sync,true);}return;}// TODO: Get rid of Sync and use current time?
+nextFlushedRoot=root;nextFlushedExpirationTime=Sync;performWorkOnRoot(root,Sync,false);}return;}// TODO: Get rid of Sync and use current time?
 if(expirationTime===Sync){performSyncWork();}else{scheduleCallbackWithExpirationTime(root,expirationTime);}}function addRootToSchedule(root,expirationTime){// Add the root to the schedule.
 // Check if this root is already part of the schedule.
 if(root.nextScheduledRoot===null){// This root is not already scheduled. Add it.
 root.expirationTime=expirationTime;if(lastScheduledRoot===null){firstScheduledRoot=lastScheduledRoot=root;root.nextScheduledRoot=root;}else{lastScheduledRoot.nextScheduledRoot=root;lastScheduledRoot=root;lastScheduledRoot.nextScheduledRoot=firstScheduledRoot;}}else{// This root is already scheduled, but its priority may have increased.
-var remainingExpirationTime=root.expirationTime;if(remainingExpirationTime===NoWork||expirationTime<remainingExpirationTime){// Update the priority.
+var remainingExpirationTime=root.expirationTime;if(expirationTime>remainingExpirationTime){// Update the priority.
 root.expirationTime=expirationTime;}}}function findHighestPriorityRoot(){var highestPriorityWork=NoWork;var highestPriorityRoot=null;if(lastScheduledRoot!==null){var previousScheduledRoot=lastScheduledRoot;var root=firstScheduledRoot;while(root!==null){var remainingExpirationTime=root.expirationTime;if(remainingExpirationTime===NoWork){// This root no longer has work. Remove it from the scheduler.
 // TODO: This check is redudant, but Flow is confused by the branch
 // below where we set lastScheduledRoot to null, even though we break
@@ -48472,28 +48817,31 @@ root.expirationTime=expirationTime;}}}function findHighestPriorityRoot(){var hig
 !(previousScheduledRoot!==null&&lastScheduledRoot!==null)?invariant(false,'Should have a previous and last root. This error is likely caused by a bug in React. Please file an issue.'):void 0;if(root===root.nextScheduledRoot){// This is the only root in the list.
 root.nextScheduledRoot=null;firstScheduledRoot=lastScheduledRoot=null;break;}else if(root===firstScheduledRoot){// This is the first root in the list.
 var next=root.nextScheduledRoot;firstScheduledRoot=next;lastScheduledRoot.nextScheduledRoot=next;root.nextScheduledRoot=null;}else if(root===lastScheduledRoot){// This is the last root in the list.
-lastScheduledRoot=previousScheduledRoot;lastScheduledRoot.nextScheduledRoot=firstScheduledRoot;root.nextScheduledRoot=null;break;}else{previousScheduledRoot.nextScheduledRoot=root.nextScheduledRoot;root.nextScheduledRoot=null;}root=previousScheduledRoot.nextScheduledRoot;}else{if(highestPriorityWork===NoWork||remainingExpirationTime<highestPriorityWork){// Update the priority, if it's higher
+lastScheduledRoot=previousScheduledRoot;lastScheduledRoot.nextScheduledRoot=firstScheduledRoot;root.nextScheduledRoot=null;break;}else{previousScheduledRoot.nextScheduledRoot=root.nextScheduledRoot;root.nextScheduledRoot=null;}root=previousScheduledRoot.nextScheduledRoot;}else{if(remainingExpirationTime>highestPriorityWork){// Update the priority, if it's higher
 highestPriorityWork=remainingExpirationTime;highestPriorityRoot=root;}if(root===lastScheduledRoot){break;}if(highestPriorityWork===Sync){// Sync is highest priority by definition so
 // we can stop searching.
-break;}previousScheduledRoot=root;root=root.nextScheduledRoot;}}}nextFlushedRoot=highestPriorityRoot;nextFlushedExpirationTime=highestPriorityWork;}function performAsyncWork(dl){if(dl.didTimeout){// The callback timed out. That means at least one update has expired.
+break;}previousScheduledRoot=root;root=root.nextScheduledRoot;}}}nextFlushedRoot=highestPriorityRoot;nextFlushedExpirationTime=highestPriorityWork;}// TODO: This wrapper exists because many of the older tests (the ones that use
+// flushDeferredPri) rely on the number of times `shouldYield` is called. We
+// should get rid of it.
+var didYield=false;function shouldYieldToRenderer(){if(didYield){return true;}if(scheduler.unstable_shouldYield()){didYield=true;return true;}return false;}function performAsyncWork(){try{if(!shouldYieldToRenderer()){// The callback timed out. That means at least one update has expired.
 // Iterate through the root schedule. If they contain expired work, set
 // the next render expiration time to the current time. This has the effect
 // of flushing all expired work in a single batch, instead of flushing each
 // level one at a time.
 if(firstScheduledRoot!==null){recomputeCurrentRendererTime();var root=firstScheduledRoot;do{didExpireAtExpirationTime(root,currentRendererTime);// The root schedule is circular, so this is never null.
-root=root.nextScheduledRoot;}while(root!==firstScheduledRoot);}}performWork(NoWork,dl);}function performSyncWork(){performWork(Sync,null);}function performWork(minExpirationTime,dl){deadline=dl;// Keep working on roots until there's no more work, or until we reach
-// the deadline.
-findHighestPriorityRoot();if(deadline!==null){recomputeCurrentRendererTime();currentSchedulerTime=currentRendererTime;if(enableUserTimingAPI){var didExpire=nextFlushedExpirationTime<currentRendererTime;var timeout=expirationTimeToMs(nextFlushedExpirationTime);stopRequestCallbackTimer(didExpire,timeout);}while(nextFlushedRoot!==null&&nextFlushedExpirationTime!==NoWork&&(minExpirationTime===NoWork||minExpirationTime>=nextFlushedExpirationTime)&&(!deadlineDidExpire||currentRendererTime>=nextFlushedExpirationTime)){performWorkOnRoot(nextFlushedRoot,nextFlushedExpirationTime,currentRendererTime>=nextFlushedExpirationTime);findHighestPriorityRoot();recomputeCurrentRendererTime();currentSchedulerTime=currentRendererTime;}}else{while(nextFlushedRoot!==null&&nextFlushedExpirationTime!==NoWork&&(minExpirationTime===NoWork||minExpirationTime>=nextFlushedExpirationTime)){performWorkOnRoot(nextFlushedRoot,nextFlushedExpirationTime,true);findHighestPriorityRoot();}}// We're done flushing work. Either we ran out of time in this callback,
+root=root.nextScheduledRoot;}while(root!==firstScheduledRoot);}}performWork(NoWork,true);}finally{didYield=false;}}function performSyncWork(){performWork(Sync,false);}function performWork(minExpirationTime,isYieldy){// Keep working on roots until there's no more work, or until there's a higher
+// priority event.
+findHighestPriorityRoot();if(isYieldy){recomputeCurrentRendererTime();currentSchedulerTime=currentRendererTime;if(enableUserTimingAPI){var didExpire=nextFlushedExpirationTime>currentRendererTime;var timeout=expirationTimeToMs(nextFlushedExpirationTime);stopRequestCallbackTimer(didExpire,timeout);}while(nextFlushedRoot!==null&&nextFlushedExpirationTime!==NoWork&&minExpirationTime<=nextFlushedExpirationTime&&!(didYield&&currentRendererTime>nextFlushedExpirationTime)){performWorkOnRoot(nextFlushedRoot,nextFlushedExpirationTime,currentRendererTime>nextFlushedExpirationTime);findHighestPriorityRoot();recomputeCurrentRendererTime();currentSchedulerTime=currentRendererTime;}}else{while(nextFlushedRoot!==null&&nextFlushedExpirationTime!==NoWork&&minExpirationTime<=nextFlushedExpirationTime){performWorkOnRoot(nextFlushedRoot,nextFlushedExpirationTime,false);findHighestPriorityRoot();}}// We're done flushing work. Either we ran out of time in this callback,
 // or there's no more work left with sufficient priority.
 // If we're inside a callback, set this to false since we just completed it.
-if(deadline!==null){callbackExpirationTime=NoWork;callbackID=null;}// If there's work left over, schedule a new callback.
+if(isYieldy){callbackExpirationTime=NoWork;callbackID=null;}// If there's work left over, schedule a new callback.
 if(nextFlushedExpirationTime!==NoWork){scheduleCallbackWithExpirationTime(nextFlushedRoot,nextFlushedExpirationTime);}// Clean-up.
-deadline=null;deadlineDidExpire=false;finishRendering();}function flushRoot(root,expirationTime){!!isRendering?invariant(false,'work.commit(): Cannot commit while already rendering. This likely means you attempted to commit from inside a lifecycle method.'):void 0;// Perform work on root as if the given expiration time is the current time.
+finishRendering();}function flushRoot(root,expirationTime){!!isRendering?invariant(false,'work.commit(): Cannot commit while already rendering. This likely means you attempted to commit from inside a lifecycle method.'):void 0;// Perform work on root as if the given expiration time is the current time.
 // This has the effect of synchronously flushing all work up to and
 // including the given time.
-nextFlushedRoot=root;nextFlushedExpirationTime=expirationTime;performWorkOnRoot(root,expirationTime,true);// Flush any sync work that was scheduled by lifecycles
-performSyncWork();}function finishRendering(){nestedUpdateCount=0;lastCommittedRootDuringThisBatch=null;if(completedBatches!==null){var batches=completedBatches;completedBatches=null;for(var i=0;i<batches.length;i++){var batch=batches[i];try{batch._onComplete();}catch(error){if(!hasUnhandledError){hasUnhandledError=true;unhandledError=error;}}}}if(hasUnhandledError){var error=unhandledError;unhandledError=null;hasUnhandledError=false;throw error;}}function performWorkOnRoot(root,expirationTime,isExpired){!!isRendering?invariant(false,'performWorkOnRoot was called recursively. This error is likely caused by a bug in React. Please file an issue.'):void 0;isRendering=true;// Check if this is async work or sync/expired work.
-if(deadline===null||isExpired){// Flush work without yielding.
+nextFlushedRoot=root;nextFlushedExpirationTime=expirationTime;performWorkOnRoot(root,expirationTime,false);// Flush any sync work that was scheduled by lifecycles
+performSyncWork();}function finishRendering(){nestedUpdateCount=0;lastCommittedRootDuringThisBatch=null;if(completedBatches!==null){var batches=completedBatches;completedBatches=null;for(var i=0;i<batches.length;i++){var batch=batches[i];try{batch._onComplete();}catch(error){if(!hasUnhandledError){hasUnhandledError=true;unhandledError=error;}}}}if(hasUnhandledError){var error=unhandledError;unhandledError=null;hasUnhandledError=false;throw error;}}function performWorkOnRoot(root,expirationTime,isYieldy){!!isRendering?invariant(false,'performWorkOnRoot was called recursively. This error is likely caused by a bug in React. Please file an issue.'):void 0;isRendering=true;// Check if this is async work or sync/expired work.
+if(!isYieldy){// Flush work without yielding.
 // TODO: Non-yieldy work does not necessarily imply expired work. A renderer
 // may want to perform some work without yielding, but also without
 // requiring the root to complete (by triggering placeholders).
@@ -48501,19 +48849,19 @@ var finishedWork=root.finishedWork;if(finishedWork!==null){// This root is alrea
 completeRoot(root,finishedWork,expirationTime);}else{root.finishedWork=null;// If this root previously suspended, clear its existing timeout, since
 // we're about to try rendering again.
 var timeoutHandle=root.timeoutHandle;if(timeoutHandle!==noTimeout){root.timeoutHandle=noTimeout;// $FlowFixMe Complains noTimeout is not a TimeoutID, despite the check above
-cancelTimeout(timeoutHandle);}var isYieldy=false;renderRoot(root,isYieldy,isExpired);finishedWork=root.finishedWork;if(finishedWork!==null){// We've completed the root. Commit it.
+cancelTimeout(timeoutHandle);}renderRoot(root,isYieldy);finishedWork=root.finishedWork;if(finishedWork!==null){// We've completed the root. Commit it.
 completeRoot(root,finishedWork,expirationTime);}}}else{// Flush async work.
 var _finishedWork=root.finishedWork;if(_finishedWork!==null){// This root is already complete. We can commit it.
 completeRoot(root,_finishedWork,expirationTime);}else{root.finishedWork=null;// If this root previously suspended, clear its existing timeout, since
 // we're about to try rendering again.
 var _timeoutHandle=root.timeoutHandle;if(_timeoutHandle!==noTimeout){root.timeoutHandle=noTimeout;// $FlowFixMe Complains noTimeout is not a TimeoutID, despite the check above
-cancelTimeout(_timeoutHandle);}var _isYieldy=true;renderRoot(root,_isYieldy,isExpired);_finishedWork=root.finishedWork;if(_finishedWork!==null){// We've completed the root. Check the deadline one more time
+cancelTimeout(_timeoutHandle);}renderRoot(root,isYieldy);_finishedWork=root.finishedWork;if(_finishedWork!==null){// We've completed the root. Check the if we should yield one more time
 // before committing.
-if(!shouldYield()){// Still time left. Commit the root.
+if(!shouldYieldToRenderer()){// Still time left. Commit the root.
 completeRoot(root,_finishedWork,expirationTime);}else{// There's no time left. Mark this root as complete. We'll come
 // back and commit it later.
 root.finishedWork=_finishedWork;}}}}isRendering=false;}function completeRoot(root,finishedWork,expirationTime){// Check if there's a batch that matches this expiration time.
-var firstBatch=root.firstBatch;if(firstBatch!==null&&firstBatch._expirationTime<=expirationTime){if(completedBatches===null){completedBatches=[firstBatch];}else{completedBatches.push(firstBatch);}if(firstBatch._defer){// This root is blocked from committing by a batch. Unschedule it until
+var firstBatch=root.firstBatch;if(firstBatch!==null&&firstBatch._expirationTime>=expirationTime){if(completedBatches===null){completedBatches=[firstBatch];}else{completedBatches.push(firstBatch);}if(firstBatch._defer){// This root is blocked from committing by a batch. Unschedule it until
 // we receive another update.
 root.finishedWork=finishedWork;root.expirationTime=NoWork;return;}}// Commit the root.
 root.finishedWork=null;// Check if this is a nested update (a sync update scheduled during the
@@ -48521,11 +48869,7 @@ root.finishedWork=null;// Check if this is a nested update (a sync update schedu
 if(root===lastCommittedRootDuringThisBatch){// If the next root is the same as the previous root, this is a nested
 // update. To prevent an infinite loop, increment the nested update count.
 nestedUpdateCount++;}else{// Reset whenever we switch roots.
-lastCommittedRootDuringThisBatch=root;nestedUpdateCount=0;}commitRoot(root,finishedWork);}// When working on async work, the reconciler asks the renderer if it should
-// yield execution. For DOM, we implement this with requestIdleCallback.
-function shouldYield(){if(deadlineDidExpire){return true;}if(deadline===null||deadline.timeRemaining()>timeHeuristicForUnitOfWork){// Disregard deadline.didTimeout. Only expired work should be flushed
-// during a timeout. This path is only hit for non-expired work.
-return false;}deadlineDidExpire=true;return true;}function onUncaughtError(error){!(nextFlushedRoot!==null)?invariant(false,'Should be working on a root. This error is likely caused by a bug in React. Please file an issue.'):void 0;// Unschedule this root so we don't work on it again until there's
+lastCommittedRootDuringThisBatch=root;nestedUpdateCount=0;}commitRoot(root,finishedWork);}function onUncaughtError(error){!(nextFlushedRoot!==null)?invariant(false,'Should be working on a root. This error is likely caused by a bug in React. Please file an issue.'):void 0;// Unschedule this root so we don't work on it again until there's
 // another update.
 nextFlushedRoot.expirationTime=NoWork;if(!hasUnhandledError){hasUnhandledError=true;unhandledError=error;}}// TODO: Batching should be implemented at the renderer level, not inside
 // the reconciler.
@@ -48538,19 +48882,21 @@ function flushSync(fn,a){!!isRendering?invariant(false,'flushSync was called fro
 // the previous event may influence which handlers are called during
 // this event.
 if(!isBatchingUpdates&&!isRendering&&lowestPriorityPendingInteractiveExpirationTime!==NoWork){// Synchronously flush pending interactive updates.
-performWork(lowestPriorityPendingInteractiveExpirationTime,null);lowestPriorityPendingInteractiveExpirationTime=NoWork;}var previousIsBatchingInteractiveUpdates=isBatchingInteractiveUpdates;var previousIsBatchingUpdates=isBatchingUpdates;isBatchingInteractiveUpdates=true;isBatchingUpdates=true;try{return fn(a,b);}finally{isBatchingInteractiveUpdates=previousIsBatchingInteractiveUpdates;isBatchingUpdates=previousIsBatchingUpdates;if(!isBatchingUpdates&&!isRendering){performSyncWork();}}}function flushInteractiveUpdates$1(){if(!isRendering&&lowestPriorityPendingInteractiveExpirationTime!==NoWork){// Synchronously flush pending interactive updates.
-performWork(lowestPriorityPendingInteractiveExpirationTime,null);lowestPriorityPendingInteractiveExpirationTime=NoWork;}}function flushControlled(fn){var previousIsBatchingUpdates=isBatchingUpdates;isBatchingUpdates=true;try{syncUpdates(fn);}finally{isBatchingUpdates=previousIsBatchingUpdates;if(!isBatchingUpdates&&!isRendering){performSyncWork();}}}// 0 is PROD, 1 is DEV.
+performWork(lowestPriorityPendingInteractiveExpirationTime,false);lowestPriorityPendingInteractiveExpirationTime=NoWork;}var previousIsBatchingInteractiveUpdates=isBatchingInteractiveUpdates;var previousIsBatchingUpdates=isBatchingUpdates;isBatchingInteractiveUpdates=true;isBatchingUpdates=true;try{return fn(a,b);}finally{isBatchingInteractiveUpdates=previousIsBatchingInteractiveUpdates;isBatchingUpdates=previousIsBatchingUpdates;if(!isBatchingUpdates&&!isRendering){performSyncWork();}}}function flushInteractiveUpdates$1(){if(!isRendering&&lowestPriorityPendingInteractiveExpirationTime!==NoWork){// Synchronously flush pending interactive updates.
+performWork(lowestPriorityPendingInteractiveExpirationTime,false);lowestPriorityPendingInteractiveExpirationTime=NoWork;}}function flushControlled(fn){var previousIsBatchingUpdates=isBatchingUpdates;isBatchingUpdates=true;try{syncUpdates(fn);}finally{isBatchingUpdates=previousIsBatchingUpdates;if(!isBatchingUpdates&&!isRendering){performSyncWork();}}}// 0 is PROD, 1 is DEV.
 // Might add PROFILE later.
 var didWarnAboutNestedUpdates=void 0;var didWarnAboutFindNodeInStrictMode=void 0;{didWarnAboutNestedUpdates=false;didWarnAboutFindNodeInStrictMode={};}function getContextForSubtree(parentComponent){if(!parentComponent){return emptyContextObject;}var fiber=get(parentComponent);var parentContext=findCurrentUnmaskedContext(fiber);if(fiber.tag===ClassComponent){var Component=fiber.type;if(isContextProvider(Component)){return processChildContext(fiber,Component,parentContext);}}return parentContext;}function scheduleRootUpdate(current$$1,element,expirationTime,callback){{if(phase==='render'&&current!==null&&!didWarnAboutNestedUpdates){didWarnAboutNestedUpdates=true;warningWithoutStack$1(false,'Render methods should be a pure function of props and state; '+'triggering nested component updates from render is not allowed. '+'If necessary, trigger nested updates in componentDidUpdate.\n\n'+'Check the render method of %s.',getComponentName(current.type)||'Unknown');}}var update=createUpdate(expirationTime);// Caution: React DevTools currently depends on this property
 // being called "element".
-update.payload={element:element};callback=callback===undefined?null:callback;if(callback!==null){!(typeof callback==='function')?warningWithoutStack$1(false,'render(...): Expected the last optional `callback` argument to be a '+'function. Instead received: %s.',callback):void 0;update.callback=callback;}enqueueUpdate(current$$1,update);scheduleWork(current$$1,expirationTime);return expirationTime;}function updateContainerAtExpirationTime(element,container,parentComponent,expirationTime,callback){// TODO: If this is a nested container, this won't be the root.
-var current$$1=container.current;{if(ReactFiberInstrumentation_1.debugTool){if(current$$1.alternate===null){ReactFiberInstrumentation_1.debugTool.onMountContainer(container);}else if(element===null){ReactFiberInstrumentation_1.debugTool.onUnmountContainer(container);}else{ReactFiberInstrumentation_1.debugTool.onUpdateContainer(container);}}}var context=getContextForSubtree(parentComponent);if(container.context===null){container.context=context;}else{container.pendingContext=context;}return scheduleRootUpdate(current$$1,element,expirationTime,callback);}function findHostInstance(component){var fiber=get(component);if(fiber===undefined){if(typeof component.render==='function'){invariant(false,'Unable to find node on an unmounted component.');}else{invariant(false,'Argument appears to not be a ReactComponent. Keys: %s',Object.keys(component));}}var hostFiber=findCurrentHostFiber(fiber);if(hostFiber===null){return null;}return hostFiber.stateNode;}function findHostInstanceWithWarning(component,methodName){{var fiber=get(component);if(fiber===undefined){if(typeof component.render==='function'){invariant(false,'Unable to find node on an unmounted component.');}else{invariant(false,'Argument appears to not be a ReactComponent. Keys: %s',Object.keys(component));}}var hostFiber=findCurrentHostFiber(fiber);if(hostFiber===null){return null;}if(hostFiber.mode&StrictMode){var componentName=getComponentName(fiber.type)||'Component';if(!didWarnAboutFindNodeInStrictMode[componentName]){didWarnAboutFindNodeInStrictMode[componentName]=true;if(fiber.mode&StrictMode){warningWithoutStack$1(false,'%s is deprecated in StrictMode. '+'%s was passed an instance of %s which is inside StrictMode. '+'Instead, add a ref directly to the element you want to reference.'+'\n%s'+'\n\nLearn more about using refs safely here:'+'\nhttps://fb.me/react-strict-mode-find-node',methodName,methodName,componentName,getStackByFiberInDevAndProd(hostFiber));}else{warningWithoutStack$1(false,'%s is deprecated in StrictMode. '+'%s was passed an instance of %s which renders StrictMode children. '+'Instead, add a ref directly to the element you want to reference.'+'\n%s'+'\n\nLearn more about using refs safely here:'+'\nhttps://fb.me/react-strict-mode-find-node',methodName,methodName,componentName,getStackByFiberInDevAndProd(hostFiber));}}}return hostFiber.stateNode;}return findHostInstance(component);}function createContainer(containerInfo,isConcurrent,hydrate){return createFiberRoot(containerInfo,isConcurrent,hydrate);}function updateContainer(element,container,parentComponent,callback){var current$$1=container.current;var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,current$$1);return updateContainerAtExpirationTime(element,container,parentComponent,expirationTime,callback);}function getPublicRootInstance(container){var containerFiber=container.current;if(!containerFiber.child){return null;}switch(containerFiber.child.tag){case HostComponent:return getPublicInstance(containerFiber.child.stateNode);default:return containerFiber.child.stateNode;}}function findHostInstanceWithNoPortals(fiber){var hostFiber=findCurrentHostFiberWithNoPortals(fiber);if(hostFiber===null){return null;}return hostFiber.stateNode;}function injectIntoDevTools(devToolsConfig){var findFiberByHostInstance=devToolsConfig.findFiberByHostInstance;return injectInternals(_assign({},devToolsConfig,{findHostInstanceByFiber:function(fiber){var hostFiber=findCurrentHostFiber(fiber);if(hostFiber===null){return null;}return hostFiber.stateNode;},findFiberByHostInstance:function(instance){if(!findFiberByHostInstance){// Might not be implemented by the renderer.
+update.payload={element:element};callback=callback===undefined?null:callback;if(callback!==null){!(typeof callback==='function')?warningWithoutStack$1(false,'render(...): Expected the last optional `callback` argument to be a '+'function. Instead received: %s.',callback):void 0;update.callback=callback;}flushPassiveEffects();enqueueUpdate(current$$1,update);scheduleWork(current$$1,expirationTime);return expirationTime;}function updateContainerAtExpirationTime(element,container,parentComponent,expirationTime,callback){// TODO: If this is a nested container, this won't be the root.
+var current$$1=container.current;{if(ReactFiberInstrumentation_1.debugTool){if(current$$1.alternate===null){ReactFiberInstrumentation_1.debugTool.onMountContainer(container);}else if(element===null){ReactFiberInstrumentation_1.debugTool.onUnmountContainer(container);}else{ReactFiberInstrumentation_1.debugTool.onUpdateContainer(container);}}}var context=getContextForSubtree(parentComponent);if(container.context===null){container.context=context;}else{container.pendingContext=context;}return scheduleRootUpdate(current$$1,element,expirationTime,callback);}function findHostInstance(component){var fiber=get(component);if(fiber===undefined){if(typeof component.render==='function'){invariant(false,'Unable to find node on an unmounted component.');}else{invariant(false,'Argument appears to not be a ReactComponent. Keys: %s',Object.keys(component));}}var hostFiber=findCurrentHostFiber(fiber);if(hostFiber===null){return null;}return hostFiber.stateNode;}function findHostInstanceWithWarning(component,methodName){{var fiber=get(component);if(fiber===undefined){if(typeof component.render==='function'){invariant(false,'Unable to find node on an unmounted component.');}else{invariant(false,'Argument appears to not be a ReactComponent. Keys: %s',Object.keys(component));}}var hostFiber=findCurrentHostFiber(fiber);if(hostFiber===null){return null;}if(hostFiber.mode&StrictMode){var componentName=getComponentName(fiber.type)||'Component';if(!didWarnAboutFindNodeInStrictMode[componentName]){didWarnAboutFindNodeInStrictMode[componentName]=true;if(fiber.mode&StrictMode){warningWithoutStack$1(false,'%s is deprecated in StrictMode. '+'%s was passed an instance of %s which is inside StrictMode. '+'Instead, add a ref directly to the element you want to reference.'+'\n%s'+'\n\nLearn more about using refs safely here:'+'\nhttps://fb.me/react-strict-mode-find-node',methodName,methodName,componentName,getStackByFiberInDevAndProd(hostFiber));}else{warningWithoutStack$1(false,'%s is deprecated in StrictMode. '+'%s was passed an instance of %s which renders StrictMode children. '+'Instead, add a ref directly to the element you want to reference.'+'\n%s'+'\n\nLearn more about using refs safely here:'+'\nhttps://fb.me/react-strict-mode-find-node',methodName,methodName,componentName,getStackByFiberInDevAndProd(hostFiber));}}}return hostFiber.stateNode;}return findHostInstance(component);}function createContainer(containerInfo,isConcurrent,hydrate){return createFiberRoot(containerInfo,isConcurrent,hydrate);}function updateContainer(element,container,parentComponent,callback){var current$$1=container.current;var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,current$$1);return updateContainerAtExpirationTime(element,container,parentComponent,expirationTime,callback);}function getPublicRootInstance(container){var containerFiber=container.current;if(!containerFiber.child){return null;}switch(containerFiber.child.tag){case HostComponent:return getPublicInstance(containerFiber.child.stateNode);default:return containerFiber.child.stateNode;}}function findHostInstanceWithNoPortals(fiber){var hostFiber=findCurrentHostFiberWithNoPortals(fiber);if(hostFiber===null){return null;}return hostFiber.stateNode;}var overrideProps=null;{var copyWithSetImpl=function(obj,path,idx,value){if(idx>=path.length){return value;}var key=path[idx];var updated=Array.isArray(obj)?obj.slice():_assign({},obj);// $FlowFixMe number or string is fine here
+updated[key]=copyWithSetImpl(obj[key],path,idx+1,value);return updated;};var copyWithSet=function(obj,path,value){return copyWithSetImpl(obj,path,0,value);};// Support DevTools props for function components, forwardRef, memo, host components, etc.
+overrideProps=function(fiber,path,value){flushPassiveEffects();fiber.pendingProps=copyWithSet(fiber.memoizedProps,path,value);if(fiber.alternate){fiber.alternate.pendingProps=fiber.pendingProps;}scheduleWork(fiber,Sync);};}function injectIntoDevTools(devToolsConfig){var findFiberByHostInstance=devToolsConfig.findFiberByHostInstance;return injectInternals(_assign({},devToolsConfig,{overrideProps:overrideProps,findHostInstanceByFiber:function(fiber){var hostFiber=findCurrentHostFiber(fiber);if(hostFiber===null){return null;}return hostFiber.stateNode;},findFiberByHostInstance:function(instance){if(!findFiberByHostInstance){// Might not be implemented by the renderer.
 return null;}return findFiberByHostInstance(instance);}}));}// This file intentionally does *not* have the Flow annotation.
 // Don't add it. See `./inline-typed.js` for an explanation.
 function createPortal$1(children,containerInfo,// TODO: figure out the API for cross-renderer implementation.
 implementation){var key=arguments.length>3&&arguments[3]!==undefined?arguments[3]:null;return{// This tag allow us to uniquely identify this as a React Portal
 $$typeof:REACT_PORTAL_TYPE,key:key==null?null:''+key,children:children,containerInfo:containerInfo,implementation:implementation};}// TODO: this is special because it gets imported during build.
-var ReactVersion='16.6.0';// TODO: This type is shared between the reconciler and ReactDOM, but will
+var ReactVersion='16.7.0';// TODO: This type is shared between the reconciler and ReactDOM, but will
 // eventually be lifted out to the renderer.
 var ReactCurrentOwner=ReactSharedInternals.ReactCurrentOwner;var topLevelUpdateWarnings=void 0;var warnOnInvalidCallback=void 0;var didWarnAboutUnstableCreatePortal=false;{if(typeof Map!=='function'||// $FlowIssue Flow incorrectly thinks Map has no prototype
 Map.prototype==null||typeof Map.prototype.forEach!=='function'||typeof Set!=='function'||// $FlowIssue Flow incorrectly thinks Set has no prototype
@@ -48573,7 +48919,7 @@ for(var i=0;i<callbacks.length;i++){var _callback=callbacks[i];_callback();}};fu
 // list of Work objects.
 this._onCommit=this._onCommit.bind(this);}ReactWork.prototype.then=function(onCommit){if(this._didCommit){onCommit();return;}var callbacks=this._callbacks;if(callbacks===null){callbacks=this._callbacks=[];}callbacks.push(onCommit);};ReactWork.prototype._onCommit=function(){if(this._didCommit){return;}this._didCommit=true;var callbacks=this._callbacks;if(callbacks===null){return;}// TODO: Error handling.
 for(var i=0;i<callbacks.length;i++){var _callback2=callbacks[i];!(typeof _callback2==='function')?invariant(false,'Invalid argument passed as callback. Expected a function. Instead received: %s',_callback2):void 0;_callback2();}};function ReactRoot(container,isConcurrent,hydrate){var root=createContainer(container,isConcurrent,hydrate);this._internalRoot=root;}ReactRoot.prototype.render=function(children,callback){var root=this._internalRoot;var work=new ReactWork();callback=callback===undefined?null:callback;{warnOnInvalidCallback(callback,'render');}if(callback!==null){work.then(callback);}updateContainer(children,root,null,work._onCommit);return work;};ReactRoot.prototype.unmount=function(callback){var root=this._internalRoot;var work=new ReactWork();callback=callback===undefined?null:callback;{warnOnInvalidCallback(callback,'render');}if(callback!==null){work.then(callback);}updateContainer(null,root,null,work._onCommit);return work;};ReactRoot.prototype.legacy_renderSubtreeIntoContainer=function(parentComponent,children,callback){var root=this._internalRoot;var work=new ReactWork();callback=callback===undefined?null:callback;{warnOnInvalidCallback(callback,'render');}if(callback!==null){work.then(callback);}updateContainer(children,root,parentComponent,work._onCommit);return work;};ReactRoot.prototype.createBatch=function(){var batch=new ReactBatch(this);var expirationTime=batch._expirationTime;var internalRoot=this._internalRoot;var firstBatch=internalRoot.firstBatch;if(firstBatch===null){internalRoot.firstBatch=batch;batch._next=null;}else{// Insert sorted by expiration time then insertion order
-var insertAfter=null;var insertBefore=firstBatch;while(insertBefore!==null&&insertBefore._expirationTime<=expirationTime){insertAfter=insertBefore;insertBefore=insertBefore._next;}batch._next=insertBefore;if(insertAfter!==null){insertAfter._next=batch;}}return batch;};/**
+var insertAfter=null;var insertBefore=firstBatch;while(insertBefore!==null&&insertBefore._expirationTime>=expirationTime){insertAfter=insertBefore;insertBefore=insertBefore._next;}batch._next=insertBefore;if(insertAfter!==null){insertAfter._next=batch;}}return batch;};/**
  * True if the supplied DOM node is a valid node element.
  *
  * @param {?DOMElement} node The candidate DOM node.
@@ -48587,17 +48933,17 @@ var isConcurrent=false;return new ReactRoot(container,isConcurrent,shouldHydrate
 var root=container._reactRootContainer;if(!root){// Initial mount
 root=container._reactRootContainer=legacyCreateRootFromDOMContainer(container,forceHydrate);if(typeof callback==='function'){var originalCallback=callback;callback=function(){var instance=getPublicRootInstance(root._internalRoot);originalCallback.call(instance);};}// Initial mount should not be batched.
 unbatchedUpdates(function(){if(parentComponent!=null){root.legacy_renderSubtreeIntoContainer(parentComponent,children,callback);}else{root.render(children,callback);}});}else{if(typeof callback==='function'){var _originalCallback=callback;callback=function(){var instance=getPublicRootInstance(root._internalRoot);_originalCallback.call(instance);};}// Update
-if(parentComponent!=null){root.legacy_renderSubtreeIntoContainer(parentComponent,children,callback);}else{root.render(children,callback);}}return getPublicRootInstance(root._internalRoot);}function createPortal(children,container){var key=arguments.length>2&&arguments[2]!==undefined?arguments[2]:null;!isValidContainer(container)?invariant(false,'Target container is not a DOM element.'):void 0;// TODO: pass ReactDOM portal implementation as third argument
-return createPortal$1(children,container,null,key);}var ReactDOM={createPortal:createPortal,findDOMNode:function(componentOrElement){{var owner=ReactCurrentOwner.current;if(owner!==null&&owner.stateNode!==null){var warnedAboutRefsInRender=owner.stateNode._warnedAboutRefsInRender;!warnedAboutRefsInRender?warningWithoutStack$1(false,'%s is accessing findDOMNode inside its render(). '+'render() should be a pure function of props and state. It should '+'never access something that requires stale data from the previous '+'render, such as refs. Move this logic to componentDidMount and '+'componentDidUpdate instead.',getComponentName(owner.type)||'A component'):void 0;owner.stateNode._warnedAboutRefsInRender=true;}}if(componentOrElement==null){return null;}if(componentOrElement.nodeType===ELEMENT_NODE){return componentOrElement;}{return findHostInstanceWithWarning(componentOrElement,'findDOMNode');}return findHostInstance(componentOrElement);},hydrate:function(element,container,callback){// TODO: throw or warn if we couldn't hydrate?
+if(parentComponent!=null){root.legacy_renderSubtreeIntoContainer(parentComponent,children,callback);}else{root.render(children,callback);}}return getPublicRootInstance(root._internalRoot);}function createPortal$$1(children,container){var key=arguments.length>2&&arguments[2]!==undefined?arguments[2]:null;!isValidContainer(container)?invariant(false,'Target container is not a DOM element.'):void 0;// TODO: pass ReactDOM portal implementation as third argument
+return createPortal$1(children,container,null,key);}var ReactDOM={createPortal:createPortal$$1,findDOMNode:function(componentOrElement){{var owner=ReactCurrentOwner.current;if(owner!==null&&owner.stateNode!==null){var warnedAboutRefsInRender=owner.stateNode._warnedAboutRefsInRender;!warnedAboutRefsInRender?warningWithoutStack$1(false,'%s is accessing findDOMNode inside its render(). '+'render() should be a pure function of props and state. It should '+'never access something that requires stale data from the previous '+'render, such as refs. Move this logic to componentDidMount and '+'componentDidUpdate instead.',getComponentName(owner.type)||'A component'):void 0;owner.stateNode._warnedAboutRefsInRender=true;}}if(componentOrElement==null){return null;}if(componentOrElement.nodeType===ELEMENT_NODE){return componentOrElement;}{return findHostInstanceWithWarning(componentOrElement,'findDOMNode');}return findHostInstance(componentOrElement);},hydrate:function(element,container,callback){// TODO: throw or warn if we couldn't hydrate?
 return legacyRenderSubtreeIntoContainer(null,element,container,true,callback);},render:function(element,container,callback){return legacyRenderSubtreeIntoContainer(null,element,container,false,callback);},unstable_renderSubtreeIntoContainer:function(parentComponent,element,containerNode,callback){!(parentComponent!=null&&has(parentComponent))?invariant(false,'parentComponent must be a valid React Component'):void 0;return legacyRenderSubtreeIntoContainer(parentComponent,element,containerNode,false,callback);},unmountComponentAtNode:function(container){!isValidContainer(container)?invariant(false,'unmountComponentAtNode(...): Target container is not a DOM element.'):void 0;if(container._reactRootContainer){{var rootEl=getReactRootElementInContainer(container);var renderedByDifferentReact=rootEl&&!getInstanceFromNode$1(rootEl);!!renderedByDifferentReact?warningWithoutStack$1(false,"unmountComponentAtNode(): The node you're attempting to unmount "+'was rendered by another copy of React.'):void 0;}// Unmount should not be batched.
 unbatchedUpdates(function(){legacyRenderSubtreeIntoContainer(null,null,container,false,function(){container._reactRootContainer=null;});});// If you call unmountComponentAtNode twice in quick succession, you'll
 // get `true` twice. That's probably fine?
 return true;}else{{var _rootEl=getReactRootElementInContainer(container);var hasNonRootReactChild=!!(_rootEl&&getInstanceFromNode$1(_rootEl));// Check if the container itself is a React root node.
 var isContainerReactRoot=container.nodeType===ELEMENT_NODE&&isValidContainer(container.parentNode)&&!!container.parentNode._reactRootContainer;!!hasNonRootReactChild?warningWithoutStack$1(false,"unmountComponentAtNode(): The node you're attempting to unmount "+'was rendered by React and is not a top-level container. %s',isContainerReactRoot?'You may have accidentally passed in a React root node instead '+'of its container.':'Instead, have the parent component update its state and '+'rerender in order to remove this component.'):void 0;}return false;}},// Temporary alias since we already shipped React 16 RC with it.
 // TODO: remove in React 17.
-unstable_createPortal:function(){if(!didWarnAboutUnstableCreatePortal){didWarnAboutUnstableCreatePortal=true;lowPriorityWarning$1(false,'The ReactDOM.unstable_createPortal() alias has been deprecated, '+'and will be removed in React 17+. Update your code to use '+'ReactDOM.createPortal() instead. It has the exact same API, '+'but without the "unstable_" prefix.');}return createPortal.apply(undefined,arguments);},unstable_batchedUpdates:batchedUpdates$1,unstable_interactiveUpdates:interactiveUpdates$1,flushSync:flushSync,unstable_flushControlled:flushControlled,__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{// Keep in sync with ReactDOMUnstableNativeDependencies.js
+unstable_createPortal:function(){if(!didWarnAboutUnstableCreatePortal){didWarnAboutUnstableCreatePortal=true;lowPriorityWarning$1(false,'The ReactDOM.unstable_createPortal() alias has been deprecated, '+'and will be removed in React 17+. Update your code to use '+'ReactDOM.createPortal() instead. It has the exact same API, '+'but without the "unstable_" prefix.');}return createPortal$$1.apply(undefined,arguments);},unstable_batchedUpdates:batchedUpdates$1,unstable_interactiveUpdates:interactiveUpdates$1,flushSync:flushSync,unstable_createRoot:createRoot,unstable_flushControlled:flushControlled,__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{// Keep in sync with ReactDOMUnstableNativeDependencies.js
 // and ReactTestUtils.js. This is an array for better minification.
-Events:[getInstanceFromNode$1,getNodeFromInstance$1,getFiberCurrentPropsFromNode$1,injection.injectEventPluginsByName,eventNameDispatchConfigs,accumulateTwoPhaseDispatches,accumulateDirectDispatches,enqueueStateRestore,restoreStateIfNeeded,dispatchEvent,runEventsInBatch]}};ReactDOM.unstable_createRoot=function createRoot(container,options){!isValidContainer(container)?invariant(false,'unstable_createRoot(...): Target container is not a DOM element.'):void 0;var hydrate=options!=null&&options.hydrate===true;return new ReactRoot(container,true,hydrate);};var foundDevTools=injectIntoDevTools({findFiberByHostInstance:getClosestInstanceFromNode,bundleType:1,version:ReactVersion,rendererPackageName:'react-dom'});{if(!foundDevTools&&canUseDOM&&window.top===window.self){// If we're in Chrome or Firefox, provide a download link if not installed.
+Events:[getInstanceFromNode$1,getNodeFromInstance$1,getFiberCurrentPropsFromNode$1,injection.injectEventPluginsByName,eventNameDispatchConfigs,accumulateTwoPhaseDispatches,accumulateDirectDispatches,enqueueStateRestore,restoreStateIfNeeded,dispatchEvent,runEventsInBatch]}};function createRoot(container,options){var functionName=enableStableConcurrentModeAPIs?'createRoot':'unstable_createRoot';!isValidContainer(container)?invariant(false,'%s(...): Target container is not a DOM element.',functionName):void 0;var hydrate=options!=null&&options.hydrate===true;return new ReactRoot(container,true,hydrate);}if(enableStableConcurrentModeAPIs){ReactDOM.createRoot=createRoot;ReactDOM.unstable_createRoot=undefined;}var foundDevTools=injectIntoDevTools({findFiberByHostInstance:getClosestInstanceFromNode,bundleType:1,version:ReactVersion,rendererPackageName:'react-dom'});{if(!foundDevTools&&canUseDOM&&window.top===window.self){// If we're in Chrome or Firefox, provide a download link if not installed.
 if(navigator.userAgent.indexOf('Chrome')>-1&&navigator.userAgent.indexOf('Edge')===-1||navigator.userAgent.indexOf('Firefox')>-1){var protocol=window.location.protocol;// Don't warn in exotic cases like chrome-extension://.
 if(/^(https?|file):$/.test(protocol)){console.info('%cDownload the React DevTools '+'for a better development experience: '+'https://fb.me/react-devtools'+(protocol==='file:'?'\nYou might need to use a local HTTP server (instead of file://): '+'https://fb.me/react-devtools-faq':''),'font-weight:bold');}}}}var ReactDOM$2=Object.freeze({default:ReactDOM});var ReactDOM$3=ReactDOM$2&&ReactDOM||ReactDOM$2;// TODO: decide on the top-level export form.
 // This is hacky but makes it work with both Rollup and Jest.
@@ -48656,7 +49002,7 @@ if (false) {} else {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v16.6.0
+/** @license React v16.7.0
  * react.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -48675,7 +49021,7 @@ if (true) {
     var checkPropTypes = __webpack_require__(/*! prop-types/checkPropTypes */ "./node_modules/prop-types/checkPropTypes.js"); // TODO: this is special because it gets imported during build.
 
 
-    var ReactVersion = '16.6.0'; // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
+    var ReactVersion = '16.7.0'; // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
     // nor polyfill, then a plain number is used for performance.
 
     var hasSymbol = typeof Symbol === 'function' && Symbol.for;
@@ -48707,6 +49053,27 @@ if (true) {
 
       return null;
     }
+
+    var enableHooks = false; // Helps identify side effects in begin-phase lifecycle hooks and setState reducers:
+    // In some cases, StrictMode should also double-render lifecycles.
+    // This can be confusing for tests though,
+    // And it can be bad for performance in production.
+    // This feature flag can be used to control the behavior:
+    // To preserve the "Pause on caught exceptions" behavior of the debugger, we
+    // replay the begin phase of a failed component inside invokeGuardedCallback.
+    // Warn about deprecated, async-unsafe lifecycles; relates to RFC #6:
+    // Gather advanced timing metrics for Profiler subtrees.
+    // Trace which interactions trigger each commit.
+    // Only used in www builds.
+    // TODO: true? Here it might just be false.
+    // Only used in www builds.
+    // Only used in www builds.
+    // React Fire: prevent the value and checked attributes from syncing
+    // with their related DOM properties
+    // These APIs will no longer be "unstable" in the upcoming 16.7 release,
+    // Control this behavior with a flag to support 16.6 minor releases in the meanwhile.
+
+    var enableStableConcurrentModeAPIs = false;
     /**
      * Use invariant() to assert state which your program assumes to be true.
      *
@@ -48717,7 +49084,6 @@ if (true) {
      * The invariant message will be stripped in production, but the invariant
      * will remain to ensure logic does not differ in production.
      */
-
 
     var validateFormat = function () {};
 
@@ -48837,61 +49203,13 @@ if (true) {
         }
 
         if (typeof console !== 'undefined') {
-          var _args$map = args.map(function (item) {
+          var argsWithFormat = args.map(function (item) {
             return '' + item;
-          }),
-              a = _args$map[0],
-              b = _args$map[1],
-              c = _args$map[2],
-              d = _args$map[3],
-              e = _args$map[4],
-              f = _args$map[5],
-              g = _args$map[6],
-              h = _args$map[7];
+          });
+          argsWithFormat.unshift('Warning: ' + format); // We intentionally don't use spread (or .apply) directly because it
+          // breaks IE9: https://github.com/facebook/react/issues/13610
 
-          var message = 'Warning: ' + format; // We intentionally don't use spread (or .apply) because it breaks IE9:
-          // https://github.com/facebook/react/issues/13610
-
-          switch (args.length) {
-            case 0:
-              console.error(message);
-              break;
-
-            case 1:
-              console.error(message, a);
-              break;
-
-            case 2:
-              console.error(message, a, b);
-              break;
-
-            case 3:
-              console.error(message, a, b, c);
-              break;
-
-            case 4:
-              console.error(message, a, b, c, d);
-              break;
-
-            case 5:
-              console.error(message, a, b, c, d, e);
-              break;
-
-            case 6:
-              console.error(message, a, b, c, d, e, f);
-              break;
-
-            case 7:
-              console.error(message, a, b, c, d, e, f, g);
-              break;
-
-            case 8:
-              console.error(message, a, b, c, d, e, f, g, h);
-              break;
-
-            default:
-              throw new Error('warningWithoutStack() currently supports at most 8 arguments.');
-          }
+          Function.prototype.apply.call(console.error, console, argsWithFormat);
         }
 
         try {
@@ -48899,12 +49217,10 @@ if (true) {
           // This error was thrown as a convenience so that you can use this stack
           // to find the callsite that caused this warning to fire.
           var argIndex = 0;
-
-          var _message = 'Warning: ' + format.replace(/%s/g, function () {
+          var message = 'Warning: ' + format.replace(/%s/g, function () {
             return args[argIndex++];
           });
-
-          throw new Error(_message);
+          throw new Error(message);
         } catch (x) {}
       };
     }
@@ -49995,6 +50311,9 @@ if (true) {
         // Secondary renderers store their context values on separate fields.
         _currentValue: defaultValue,
         _currentValue2: defaultValue,
+        // Used to track how many concurrent renderers this context currently
+        // supports within in a single renderer. Such as parallel server rendering.
+        _threadCount: 0,
         // These are circular
         Provider: null,
         Consumer: null
@@ -50045,6 +50364,14 @@ if (true) {
               context._currentValue2 = _currentValue2;
             }
           },
+          _threadCount: {
+            get: function () {
+              return context._threadCount;
+            },
+            set: function (_threadCount) {
+              context._threadCount = _threadCount;
+            }
+          },
           Consumer: {
             get: function () {
               if (!hasWarnedAboutUsingNestedContextConsumers) {
@@ -50067,18 +50394,56 @@ if (true) {
     }
 
     function lazy(ctor) {
-      return {
+      var lazyType = {
         $$typeof: REACT_LAZY_TYPE,
         _ctor: ctor,
         // React uses these fields to store the result.
         _status: -1,
         _result: null
       };
+      {
+        // In production, this would just set it on the object.
+        var defaultProps = void 0;
+        var propTypes = void 0;
+        Object.defineProperties(lazyType, {
+          defaultProps: {
+            configurable: true,
+            get: function () {
+              return defaultProps;
+            },
+            set: function (newDefaultProps) {
+              warning$1(false, 'React.lazy(...): It is not supported to assign `defaultProps` to ' + 'a lazy component import. Either specify them where the component ' + 'is defined, or create a wrapping component around it.');
+              defaultProps = newDefaultProps; // Match production behavior more closely:
+
+              Object.defineProperty(lazyType, 'defaultProps', {
+                enumerable: true
+              });
+            }
+          },
+          propTypes: {
+            configurable: true,
+            get: function () {
+              return propTypes;
+            },
+            set: function (newPropTypes) {
+              warning$1(false, 'React.lazy(...): It is not supported to assign `propTypes` to ' + 'a lazy component import. Either specify them where the component ' + 'is defined, or create a wrapping component around it.');
+              propTypes = newPropTypes; // Match production behavior more closely:
+
+              Object.defineProperty(lazyType, 'propTypes', {
+                enumerable: true
+              });
+            }
+          }
+        });
+      }
+      return lazyType;
     }
 
     function forwardRef(render) {
       {
-        if (typeof render !== 'function') {
+        if (render != null && render.$$typeof === REACT_MEMO_TYPE) {
+          warningWithoutStack$1(false, 'forwardRef requires a render function but received a `memo` ' + 'component. Instead of forwardRef(memo(...)), use ' + 'memo(forwardRef(...)).');
+        } else if (typeof render !== 'function') {
           warningWithoutStack$1(false, 'forwardRef requires a render function but was given %s.', render === null ? 'null' : typeof render);
         } else {
           !( // Do not warn for 0 arguments because it could be due to usage of the 'arguments' object
@@ -50111,6 +50476,70 @@ if (true) {
         type: type,
         compare: compare === undefined ? null : compare
       };
+    }
+
+    function resolveDispatcher() {
+      var dispatcher = ReactCurrentOwner.currentDispatcher;
+      !(dispatcher !== null) ? invariant(false, 'Hooks can only be called inside the body of a function component.') : void 0;
+      return dispatcher;
+    }
+
+    function useContext(Context, observedBits) {
+      var dispatcher = resolveDispatcher();
+      {
+        // TODO: add a more generic warning for invalid values.
+        if (Context._context !== undefined) {
+          var realContext = Context._context; // Don't deduplicate because this legitimately causes bugs
+          // and nobody should be using this in existing code.
+
+          if (realContext.Consumer === Context) {
+            warning$1(false, 'Calling useContext(Context.Consumer) is not supported, may cause bugs, and will be ' + 'removed in a future major release. Did you mean to call useContext(Context) instead?');
+          } else if (realContext.Provider === Context) {
+            warning$1(false, 'Calling useContext(Context.Provider) is not supported. ' + 'Did you mean to call useContext(Context) instead?');
+          }
+        }
+      }
+      return dispatcher.useContext(Context, observedBits);
+    }
+
+    function useState(initialState) {
+      var dispatcher = resolveDispatcher();
+      return dispatcher.useState(initialState);
+    }
+
+    function useReducer(reducer, initialState, initialAction) {
+      var dispatcher = resolveDispatcher();
+      return dispatcher.useReducer(reducer, initialState, initialAction);
+    }
+
+    function useRef(initialValue) {
+      var dispatcher = resolveDispatcher();
+      return dispatcher.useRef(initialValue);
+    }
+
+    function useEffect(create, inputs) {
+      var dispatcher = resolveDispatcher();
+      return dispatcher.useEffect(create, inputs);
+    }
+
+    function useLayoutEffect(create, inputs) {
+      var dispatcher = resolveDispatcher();
+      return dispatcher.useLayoutEffect(create, inputs);
+    }
+
+    function useCallback(callback, inputs) {
+      var dispatcher = resolveDispatcher();
+      return dispatcher.useCallback(callback, inputs);
+    }
+
+    function useMemo(create, inputs) {
+      var dispatcher = resolveDispatcher();
+      return dispatcher.useMemo(create, inputs);
+    }
+
+    function useImperativeMethods(ref, create, inputs) {
+      var dispatcher = resolveDispatcher();
+      return dispatcher.useImperativeMethods(ref, create, inputs);
     }
     /**
      * ReactElementValidator provides a wrapper around a element factory
@@ -50269,17 +50698,19 @@ if (true) {
 
     function validatePropTypes(element) {
       var type = element.type;
-      var name = void 0,
-          propTypes = void 0;
+
+      if (type === null || type === undefined || typeof type === 'string') {
+        return;
+      }
+
+      var name = getComponentName(type);
+      var propTypes = void 0;
 
       if (typeof type === 'function') {
-        // Class or function component
-        name = type.displayName || type.name;
         propTypes = type.propTypes;
-      } else if (typeof type === 'object' && type !== null && type.$$typeof === REACT_FORWARD_REF_TYPE) {
-        // ForwardRef
-        var functionName = type.render.displayName || type.render.name || '';
-        name = type.displayName || (functionName !== '' ? 'ForwardRef(' + functionName + ')' : 'ForwardRef');
+      } else if (typeof type === 'object' && (type.$$typeof === REACT_FORWARD_REF_TYPE || // Note: Memo only checks outer props here.
+      // Inner props are checked in the reconciler.
+      type.$$typeof === REACT_MEMO_TYPE)) {
         propTypes = type.propTypes;
       } else {
         return;
@@ -50433,16 +50864,39 @@ if (true) {
       memo: memo,
       Fragment: REACT_FRAGMENT_TYPE,
       StrictMode: REACT_STRICT_MODE_TYPE,
-      unstable_ConcurrentMode: REACT_CONCURRENT_MODE_TYPE,
       Suspense: REACT_SUSPENSE_TYPE,
-      unstable_Profiler: REACT_PROFILER_TYPE,
       createElement: createElementWithValidation,
       cloneElement: cloneElementWithValidation,
       createFactory: createFactoryWithValidation,
       isValidElement: isValidElement,
       version: ReactVersion,
+      unstable_ConcurrentMode: REACT_CONCURRENT_MODE_TYPE,
+      unstable_Profiler: REACT_PROFILER_TYPE,
       __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: ReactSharedInternals
-    };
+    }; // Note: some APIs are added with feature flags.
+    // Make sure that stable builds for open source
+    // don't modify the React object to avoid deopts.
+    // Also let's not expose their names in stable builds.
+
+    if (enableStableConcurrentModeAPIs) {
+      React.ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+      React.Profiler = REACT_PROFILER_TYPE;
+      React.unstable_ConcurrentMode = undefined;
+      React.unstable_Profiler = undefined;
+    }
+
+    if (enableHooks) {
+      React.useCallback = useCallback;
+      React.useContext = useContext;
+      React.useEffect = useEffect;
+      React.useImperativeMethods = useImperativeMethods;
+      React.useLayoutEffect = useLayoutEffect;
+      React.useMemo = useMemo;
+      React.useReducer = useReducer;
+      React.useRef = useRef;
+      React.useState = useState;
+    }
+
     var React$2 = Object.freeze({
       default: React
     });
@@ -50480,7 +50934,7 @@ if (false) {} else {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v16.6.0
+/** @license React v0.12.0
  * scheduler-tracing.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -50508,9 +50962,13 @@ if (true) {
     // Trace which interactions trigger each commit.
 
     var enableSchedulerTracing = true; // Only used in www builds.
+    // TODO: true? Here it might just be false.
+    // Only used in www builds.
     // Only used in www builds.
     // React Fire: prevent the value and checked attributes from syncing
     // with their related DOM properties
+    // These APIs will no longer be "unstable" in the upcoming 16.7 release,
+    // Control this behavior with a flag to support 16.6 minor releases in the meanwhile.
 
     var DEFAULT_THREAD_ID = 0; // Counters used to generate unique IDs.
 
@@ -50874,7 +51332,7 @@ if (true) {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v16.6.0
+/* WEBPACK VAR INJECTION */(function(global) {/** @license React v0.12.0
  * scheduler.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -50890,14 +51348,34 @@ if (true) {
 
     Object.defineProperty(exports, '__esModule', {
       value: true
-    });
+    }); // Helps identify side effects in begin-phase lifecycle hooks and setState reducers:
+    // In some cases, StrictMode should also double-render lifecycles.
+    // This can be confusing for tests though,
+    // And it can be bad for performance in production.
+    // This feature flag can be used to control the behavior:
+    // To preserve the "Pause on caught exceptions" behavior of the debugger, we
+    // replay the begin phase of a failed component inside invokeGuardedCallback.
+    // Warn about deprecated, async-unsafe lifecycles; relates to RFC #6:
+    // Gather advanced timing metrics for Profiler subtrees.
+    // Trace which interactions trigger each commit.
+    // Only used in www builds.
+    // TODO: true? Here it might just be false.
+    // Only used in www builds.
+
+    var enableSchedulerDebugging = true; // Only used in www builds.
+    // React Fire: prevent the value and checked attributes from syncing
+    // with their related DOM properties
+    // These APIs will no longer be "unstable" in the upcoming 16.7 release,
+    // Control this behavior with a flag to support 16.6 minor releases in the meanwhile.
+
     /* eslint-disable no-var */
     // TODO: Use symbols?
 
     var ImmediatePriority = 1;
     var UserBlockingPriority = 2;
     var NormalPriority = 3;
-    var IdlePriority = 4; // Max 31 bit integer. The max integer size in V8 for 32-bit systems.
+    var LowPriority = 4;
+    var IdlePriority = 5; // Max 31 bit integer. The max integer size in V8 for 32-bit systems.
     // Math.pow(2, 30) - 1
     // 0b111111111111111111111111111111
 
@@ -50906,11 +51384,15 @@ if (true) {
     var IMMEDIATE_PRIORITY_TIMEOUT = -1; // Eventually times out
 
     var USER_BLOCKING_PRIORITY = 250;
-    var NORMAL_PRIORITY_TIMEOUT = 5000; // Never times out
+    var NORMAL_PRIORITY_TIMEOUT = 5000;
+    var LOW_PRIORITY_TIMEOUT = 10000; // Never times out
 
     var IDLE_PRIORITY = maxSigned31BitInt; // Callbacks are stored as a circular, doubly linked list.
 
     var firstCallbackNode = null;
+    var currentDidTimeout = false; // Pausing the scheduler is useful for debugging.
+
+    var isSchedulerPaused = false;
     var currentPriorityLevel = NormalPriority;
     var currentEventStartTime = -1;
     var currentExpirationTime = -1; // This is set when a callback is being executed, to prevent re-entrancy.
@@ -50918,37 +51400,6 @@ if (true) {
     var isExecutingCallback = false;
     var isHostCallbackScheduled = false;
     var hasNativePerformanceNow = typeof performance === 'object' && typeof performance.now === 'function';
-    var timeRemaining;
-
-    if (hasNativePerformanceNow) {
-      timeRemaining = function () {
-        if (firstCallbackNode !== null && firstCallbackNode.expirationTime < currentExpirationTime) {
-          // A higher priority callback was scheduled. Yield so we can switch to
-          // working on that.
-          return 0;
-        } // We assume that if we have a performance timer that the rAF callback
-        // gets a performance timer value. Not sure if this is always true.
-
-
-        var remaining = getFrameDeadline() - performance.now();
-        return remaining > 0 ? remaining : 0;
-      };
-    } else {
-      timeRemaining = function () {
-        // Fallback to Date.now()
-        if (firstCallbackNode !== null && firstCallbackNode.expirationTime < currentExpirationTime) {
-          return 0;
-        }
-
-        var remaining = getFrameDeadline() - Date.now();
-        return remaining > 0 ? remaining : 0;
-      };
-    }
-
-    var deadlineObject = {
-      timeRemaining: timeRemaining,
-      didTimeout: false
-    };
 
     function ensureHostCallbackIsScheduled() {
       if (isExecutingCallback) {
@@ -50997,7 +51448,7 @@ if (true) {
       var continuationCallback;
 
       try {
-        continuationCallback = callback(deadlineObject);
+        continuationCallback = callback();
       } finally {
         currentPriorityLevel = previousPriorityLevel;
         currentExpirationTime = previousExpirationTime;
@@ -51057,7 +51508,6 @@ if (true) {
       if ( // Confirm we've exited the outer most event handler
       currentEventStartTime === -1 && firstCallbackNode !== null && firstCallbackNode.priorityLevel === ImmediatePriority) {
         isExecutingCallback = true;
-        deadlineObject.didTimeout = true;
 
         try {
           do {
@@ -51078,13 +51528,20 @@ if (true) {
     }
 
     function flushWork(didTimeout) {
+      // Exit right away if we're currently paused
+      if (enableSchedulerDebugging && isSchedulerPaused) {
+        return;
+      }
+
       isExecutingCallback = true;
-      deadlineObject.didTimeout = didTimeout;
+      var previousDidTimeout = currentDidTimeout;
+      currentDidTimeout = didTimeout;
 
       try {
         if (didTimeout) {
           // Flush all the expired callbacks without yielding.
-          while (firstCallbackNode !== null) {
+          while (firstCallbackNode !== null && !(enableSchedulerDebugging && isSchedulerPaused)) {
+            // TODO Wrap i nfeature flag
             // Read the current time. Flush all the callbacks that expire at or
             // earlier than that time. Then read the current time again and repeat.
             // This optimizes for as few performance.now calls as possible.
@@ -51093,7 +51550,7 @@ if (true) {
             if (firstCallbackNode.expirationTime <= currentTime) {
               do {
                 flushFirstCallback();
-              } while (firstCallbackNode !== null && firstCallbackNode.expirationTime <= currentTime);
+              } while (firstCallbackNode !== null && firstCallbackNode.expirationTime <= currentTime && !(enableSchedulerDebugging && isSchedulerPaused));
 
               continue;
             }
@@ -51104,12 +51561,17 @@ if (true) {
           // Keep flushing callbacks until we run out of time in the frame.
           if (firstCallbackNode !== null) {
             do {
+              if (enableSchedulerDebugging && isSchedulerPaused) {
+                break;
+              }
+
               flushFirstCallback();
-            } while (firstCallbackNode !== null && getFrameDeadline() - exports.unstable_now() > 0);
+            } while (firstCallbackNode !== null && !shouldYieldToHost());
           }
         }
       } finally {
         isExecutingCallback = false;
+        currentDidTimeout = previousDidTimeout;
 
         if (firstCallbackNode !== null) {
           // There's still work remaining. Request another callback.
@@ -51128,6 +51590,7 @@ if (true) {
         case ImmediatePriority:
         case UserBlockingPriority:
         case NormalPriority:
+        case LowPriority:
         case IdlePriority:
           break;
 
@@ -51190,6 +51653,10 @@ if (true) {
             expirationTime = startTime + IDLE_PRIORITY;
             break;
 
+          case LowPriority:
+            expirationTime = startTime + LOW_PRIORITY_TIMEOUT;
+            break;
+
           case NormalPriority:
           default:
             expirationTime = startTime + NORMAL_PRIORITY_TIMEOUT;
@@ -51243,6 +51710,22 @@ if (true) {
       return newNode;
     }
 
+    function unstable_pauseExecution() {
+      isSchedulerPaused = true;
+    }
+
+    function unstable_continueExecution() {
+      isSchedulerPaused = false;
+
+      if (firstCallbackNode !== null) {
+        ensureHostCallbackIsScheduled();
+      }
+    }
+
+    function unstable_getFirstCallbackNode() {
+      return firstCallbackNode;
+    }
+
     function unstable_cancelCallback(callbackNode) {
       var next = callbackNode.next;
 
@@ -51270,6 +51753,10 @@ if (true) {
 
     function unstable_getCurrentPriorityLevel() {
       return currentPriorityLevel;
+    }
+
+    function unstable_shouldYield() {
+      return !currentDidTimeout && (firstCallbackNode !== null && firstCallbackNode.expirationTime < currentExpirationTime || shouldYieldToHost());
     } // The remaining code is essentially a polyfill for requestIdleCallback. It
     // works by scheduling a requestAnimationFrame, storing the time for the start
     // of the frame, then scheduling a postMessage which gets scheduled after paint.
@@ -51330,45 +51817,47 @@ if (true) {
 
     var requestHostCallback;
     var cancelHostCallback;
-    var getFrameDeadline;
+    var shouldYieldToHost;
+    var globalValue = null;
 
-    if (typeof window !== 'undefined' && window._schedMock) {
+    if (typeof window !== 'undefined') {
+      globalValue = window;
+    } else if (typeof global !== 'undefined') {
+      globalValue = global;
+    }
+
+    if (globalValue && globalValue._schedMock) {
       // Dynamic injection, only for testing purposes.
-      var impl = window._schedMock;
-      requestHostCallback = impl[0];
-      cancelHostCallback = impl[1];
-      getFrameDeadline = impl[2];
+      var globalImpl = globalValue._schedMock;
+      requestHostCallback = globalImpl[0];
+      cancelHostCallback = globalImpl[1];
+      shouldYieldToHost = globalImpl[2];
+      exports.unstable_now = globalImpl[3];
     } else if ( // If Scheduler runs in a non-DOM environment, it falls back to a naive
     // implementation using setTimeout.
-    typeof window === 'undefined' || // "addEventListener" might not be available on the window object
-    // if this is a mocked "window" object. So we need to validate that too.
-    typeof window.addEventListener !== 'function') {
+    typeof window === 'undefined' || // Check if MessageChannel is supported, too.
+    typeof MessageChannel !== 'function') {
+      // If this accidentally gets imported in a non-browser environment, e.g. JavaScriptCore,
+      // fallback to a naive implementation.
       var _callback = null;
 
-      var _currentTime = -1;
-
-      var _flushCallback = function (didTimeout, ms) {
+      var _flushCallback = function (didTimeout) {
         if (_callback !== null) {
-          var cb = _callback;
-          _callback = null;
-
           try {
-            _currentTime = ms;
-            cb(didTimeout);
+            _callback(didTimeout);
           } finally {
-            _currentTime = -1;
+            _callback = null;
           }
         }
       };
 
       requestHostCallback = function (cb, ms) {
-        if (_currentTime !== -1) {
+        if (_callback !== null) {
           // Protect against re-entrancy.
-          setTimeout(requestHostCallback, 0, cb, ms);
+          setTimeout(requestHostCallback, 0, cb);
         } else {
           _callback = cb;
-          setTimeout(_flushCallback, ms, true, ms);
-          setTimeout(_flushCallback, maxSigned31BitInt, false, maxSigned31BitInt);
+          setTimeout(_flushCallback, 0, false);
         }
       };
 
@@ -51376,12 +51865,8 @@ if (true) {
         _callback = null;
       };
 
-      getFrameDeadline = function () {
-        return Infinity;
-      };
-
-      exports.unstable_now = function () {
-        return _currentTime === -1 ? 0 : _currentTime;
+      shouldYieldToHost = function () {
+        return false;
       };
     } else {
       if (typeof console !== 'undefined') {
@@ -51407,18 +51892,15 @@ if (true) {
       var previousFrameTime = 33;
       var activeFrameTime = 33;
 
-      getFrameDeadline = function () {
-        return frameDeadline;
+      shouldYieldToHost = function () {
+        return frameDeadline <= exports.unstable_now();
       }; // We use the postMessage trick to defer idle work until after the repaint.
 
 
-      var messageKey = '__reactIdleCallback$' + Math.random().toString(36).slice(2);
+      var channel = new MessageChannel();
+      var port = channel.port2;
 
-      var idleTick = function (event) {
-        if (event.source !== window || event.data !== messageKey) {
-          return;
-        }
-
+      channel.port1.onmessage = function (event) {
         isMessageEventScheduled = false;
         var prevScheduledCallback = scheduledHostCallback;
         var prevTimeoutTime = timeoutTime;
@@ -51458,11 +51940,7 @@ if (true) {
             isFlushingHostCallback = false;
           }
         }
-      }; // Assumes that we have addEventListener in this environment. Might need
-      // something better for old IE.
-
-
-      window.addEventListener('message', idleTick, false);
+      };
 
       var animationTick = function (rafTime) {
         if (scheduledHostCallback !== null) {
@@ -51506,7 +51984,7 @@ if (true) {
 
         if (!isMessageEventScheduled) {
           isMessageEventScheduled = true;
-          window.postMessage(messageKey, '*');
+          port.postMessage(undefined);
         }
       };
 
@@ -51516,7 +51994,7 @@ if (true) {
 
         if (isFlushingHostCallback || absoluteTimeout < 0) {
           // Don't wait for the next frame. Continue working ASAP, in a new event.
-          window.postMessage(messageKey, '*');
+          port.postMessage(undefined);
         } else if (!isAnimationFrameScheduled) {
           // If rAF didn't already schedule one, we need to schedule a frame.
           // TODO: If this rAF doesn't materialize because the browser throttles, we
@@ -51538,13 +52016,19 @@ if (true) {
     exports.unstable_UserBlockingPriority = UserBlockingPriority;
     exports.unstable_NormalPriority = NormalPriority;
     exports.unstable_IdlePriority = IdlePriority;
+    exports.unstable_LowPriority = LowPriority;
     exports.unstable_runWithPriority = unstable_runWithPriority;
     exports.unstable_scheduleCallback = unstable_scheduleCallback;
     exports.unstable_cancelCallback = unstable_cancelCallback;
     exports.unstable_wrapCallback = unstable_wrapCallback;
     exports.unstable_getCurrentPriorityLevel = unstable_getCurrentPriorityLevel;
+    exports.unstable_shouldYield = unstable_shouldYield;
+    exports.unstable_continueExecution = unstable_continueExecution;
+    exports.unstable_pauseExecution = unstable_pauseExecution;
+    exports.unstable_getFirstCallbackNode = unstable_getFirstCallbackNode;
   })();
 }
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
@@ -77579,7 +78063,7 @@ g = function () {
 
 try {
   // This works if eval is allowed (see CSP)
-  g = g || Function("return this")() || (1, eval)("this");
+  g = g || new Function("return this")();
 } catch (e) {
   // This works if the window reference is available
   if (typeof window === "object") g = window;
@@ -77626,836 +78110,672 @@ module.exports = function (module) {
 
 /***/ }),
 
-/***/ "./src/inputs/BaseInput.js":
-/*!*********************************!*\
-  !*** ./src/inputs/BaseInput.js ***!
-  \*********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/inputs/BaseInput.tsx":
+/*!**********************************!*\
+  !*** ./src/inputs/BaseInput.tsx ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-var BaseInput =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(BaseInput, _React$Component);
-
-  function BaseInput() {
-    var _getPrototypeOf2;
-
-    var _this;
-
-    _classCallCheck(this, BaseInput);
-
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var BaseInput = /** @class */ (function (_super) {
+    __extends(BaseInput, _super);
+    function BaseInput() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.closePopup = function () {
+            _this.setState({ popupIsClosed: true }, _this.onPopupClose);
+        };
+        _this.onPopupClose = function () {
+            // When `closable` prop is true on *Input element
+            // `this.closePopup` is invoked after selection complete.
+            // To allow popup to be opened again we need to set
+            // `popupIsClosed` to false
+            // Also `this.closePopup` is used when we force popup to close on blur
+            // when using Tab navigation
+            _this.setState({
+                popupIsClosed: false,
+            });
+        };
+        _this.isPickerInFocus = function () {
+            return document.activeElement === _this.calendarNode;
+        };
+        _this.isTriggerInFocus = function () {
+            return document.activeElement === _this.inputNode;
+        };
+        _this.onModeSwitch = function () {
+            // when using keyboard for selecting values on inline calendar
+            // and when mode switches, picker looses focus.
+            // In order to preserve focus on active picker
+            // we call focus() on `calendarNode`.
+            // `calendarNode` goes from *View component via
+            // `this.onCalendarViewMount` callback
+            if (_this.props.inline
+                && !_this.isPickerInFocus()
+                && _this.calendarNode) {
+                _this.calendarNode.focus();
+            }
+        };
+        _this.onCalendarViewMount = function (calendarNode) {
+            _this.calendarNode = calendarNode;
+        };
+        _this.onInputViewMount = function (inputNode) {
+            _this.inputNode = inputNode;
+        };
+        return _this;
     }
+    BaseInput.defaultProps = {
+        inline: false,
+    };
+    return BaseInput;
+}(React.Component));
+exports.default = BaseInput;
 
-    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(BaseInput)).call.apply(_getPrototypeOf2, [this].concat(args)));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "closePopup", function () {
-      _this.setState({
-        popupIsClosed: true
-      }, _this.onPopupClose);
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onPopupClose", function () {
-      // When `closable` prop is true on *Input element
-      // `this.closePopup` is invoked after selection complete.
-      // To allow popup to be opened again we need to set
-      // `popupIsClosed` to false
-      // Also `this.closePopup` is used when we force popup to close on blur
-      // when using Tab navigation
-      _this.setState({
-        popupIsClosed: false
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "isPickerInFocus", function () {
-      return document.activeElement === _this.calendarNode;
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "isTriggerInFocus", function () {
-      return document.activeElement === _this.inputNode;
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onModeSwitch", function () {
-      // when using keyboard for selecting values on inline calendar
-      // and when mode switches, picker looses focus.
-      // In order to preserve focus on active picker
-      // we call focus() on `calendarNode`.
-      // `calendarNode` goes from *View component via
-      // `this.onCalendarViewMount` callback
-      if (_this.props.inline && !_this.isPickerInFocus()) {
-        _this.calendarNode && _this.calendarNode.focus();
-      }
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onCalendarViewMount", function (calendarNode) {
-      _this.calendarNode = calendarNode;
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onInputViewMount", function (inputNode) {
-      _this.inputNode = inputNode;
-    });
-
-    return _this;
-  }
-
-  return BaseInput;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-/* harmony default export */ __webpack_exports__["default"] = (BaseInput);
 
 /***/ }),
 
-/***/ "./src/inputs/DateInput.js":
-/*!*********************************!*\
-  !*** ./src/inputs/DateInput.js ***!
-  \*********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/inputs/DateInput.tsx":
+/*!**********************************!*\
+  !*** ./src/inputs/DateInput.tsx ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _views_InputView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../views/InputView */ "./src/views/InputView.js");
-/* harmony import */ var _pickers_YearPicker__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../pickers/YearPicker */ "./src/pickers/YearPicker.js");
-/* harmony import */ var _pickers_MonthPicker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../pickers/MonthPicker */ "./src/pickers/MonthPicker.js");
-/* harmony import */ var _pickers_dayPicker_DayPicker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../pickers/dayPicker/DayPicker */ "./src/pickers/dayPicker/DayPicker.js");
-/* harmony import */ var _BaseInput__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.js");
-/* harmony import */ var _parse__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./parse */ "./src/inputs/parse.js");
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../lib */ "./src/lib/index.js");
-/* harmony import */ var _shared__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./shared */ "./src/inputs/shared.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+var PropTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var CustomPropTypes_1 = __webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts");
+var DayPicker_1 = __webpack_require__(/*! ../pickers/dayPicker/DayPicker */ "./src/pickers/dayPicker/DayPicker.tsx");
+var MonthPicker_1 = __webpack_require__(/*! ../pickers/MonthPicker */ "./src/pickers/MonthPicker.tsx");
+var YearPicker_1 = __webpack_require__(/*! ../pickers/YearPicker */ "./src/pickers/YearPicker.tsx");
+var InputView_1 = __webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx");
+var BaseInput_1 = __webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx");
+var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
+var parse_1 = __webpack_require__(/*! ./parse */ "./src/inputs/parse.ts");
+var shared_1 = __webpack_require__(/*! ./shared */ "./src/inputs/shared.ts");
 function getNextMode(currentMode) {
-  if (currentMode === 'year') return 'month';
-  if (currentMode === 'month') return 'day';
-  return 'year';
+    if (currentMode === 'year') {
+        return 'month';
+    }
+    if (currentMode === 'month') {
+        return 'day';
+    }
+    return 'year';
 }
-
 function getPrevMode(currentMode) {
-  if (currentMode === 'day') return 'month';
-  if (currentMode === 'month') return 'year';
-  return 'day';
+    if (currentMode === 'day') {
+        return 'month';
+    }
+    if (currentMode === 'month') {
+        return 'year';
+    }
+    return 'day';
 }
-
-var DateInput =
-/*#__PURE__*/
-function (_BaseInput) {
-  _inherits(DateInput, _BaseInput);
-
-  function DateInput(props) {
-    var _this;
-
-    _classCallCheck(this, DateInput);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(DateInput).call(this, props));
-    /*
-      state fields:
-        - mode: one of [ 'year', 'month', 'day' ]
-        - year: number
-        - month: number
-        - date: number
-    */
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_switchToNextModeUndelayed", function () {
-      _this.setState(function (_ref) {
-        var mode = _ref.mode;
-        return {
-          mode: getNextMode(mode)
+var DateInput = /** @class */ (function (_super) {
+    __extends(DateInput, _super);
+    function DateInput(props) {
+        var _this = _super.call(this, props) || this;
+        _this.getPicker = function (_a) {
+            var tabIndex = _a.tabIndex;
+            var _b = _this.props, value = _b.value, initialDate = _b.initialDate, dateFormat = _b.dateFormat, disable = _b.disable, minDate = _b.minDate, maxDate = _b.maxDate, enable = _b.enable, inline = _b.inline;
+            var pickerProps = {
+                isPickerInFocus: _this.isPickerInFocus,
+                isTriggerInFocus: _this.isTriggerInFocus,
+                inline: inline,
+                onCalendarViewMount: _this.onCalendarViewMount,
+                closePopup: _this.closePopup,
+                tabIndex: tabIndex,
+                onChange: _this.handleSelect,
+                onHeaderClick: _this.switchToPrevMode,
+                initializeWith: parse_1.getInitializer({ initialDate: initialDate, dateFormat: dateFormat, dateParams: _this.getDateParams() }),
+                value: parse_1.parseValue(parse_1.chooseValue(value, initialDate), dateFormat),
+                enable: parse_1.parseArrayOrValue(enable, dateFormat),
+                minDate: parse_1.parseValue(minDate, dateFormat),
+                maxDate: parse_1.parseValue(maxDate, dateFormat),
+            };
+            var disableParsed = parse_1.parseArrayOrValue(disable, dateFormat);
+            var mode = _this.state.mode;
+            if (mode === 'year') {
+                return (React.createElement(YearPicker_1.default, __assign({}, pickerProps, { disable: shared_1.getDisabledYears(disableParsed) })));
+            }
+            if (mode === 'month') {
+                return (React.createElement(MonthPicker_1.default, __assign({}, pickerProps, { hasHeader: true, disable: shared_1.getDisabledMonths(disableParsed) })));
+            }
+            return React.createElement(DayPicker_1.default, __assign({}, pickerProps, { disable: disableParsed }));
         };
-      }, _this.onModeSwitch);
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToNextMode", function () {
-      Object(_lib__WEBPACK_IMPORTED_MODULE_10__["tick"])(_this._switchToNextModeUndelayed);
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_switchToPrevModeUndelayed", function () {
-      _this.setState(function (_ref2) {
-        var mode = _ref2.mode;
-        return {
-          mode: getPrevMode(mode)
+        _this.switchToNextModeUndelayed = function () {
+            _this.setState(function (_a) {
+                var mode = _a.mode;
+                return { mode: getNextMode(mode) };
+            }, _this.onModeSwitch);
         };
-      }, _this.onModeSwitch);
-    });
+        _this.switchToNextMode = function () {
+            lib_1.tick(_this.switchToNextModeUndelayed);
+        };
+        _this.switchToPrevModeUndelayed = function () {
+            _this.setState(function (_a) {
+                var mode = _a.mode;
+                return { mode: getPrevMode(mode) };
+            }, _this.onModeSwitch);
+        };
+        _this.switchToPrevMode = function () {
+            lib_1.tick(_this.switchToPrevModeUndelayed);
+        };
+        _this.onFocus = function () {
+            if (!_this.props.preserveViewMode) {
+                _this.setState({ mode: _this.props.startMode });
+            }
+        };
+        _this.handleSelect = function (e, _a) {
+            var value = _a.value;
+            if (_this.state.mode === 'day' && _this.props.closable) {
+                _this.closePopup();
+            }
+            _this.setState(function (prevState) {
+                var mode = prevState.mode;
+                if (mode === 'day') {
+                    var outValue = moment(value).format(_this.props.dateFormat);
+                    _.invoke(_this.props, 'onChange', e, __assign({}, _this.props, { value: outValue }));
+                }
+                return {
+                    year: value.year,
+                    month: value.month,
+                    date: value.date,
+                };
+            }, function () { return _this.state.mode !== 'day' && _this.switchToNextMode(); });
+        };
+        var parsedValue = parse_1.parseValue(props.value, props.dateFormat);
+        _this.state = {
+            mode: props.startMode,
+            popupIsClosed: false,
+            year: parsedValue ? parsedValue.year() : undefined,
+            month: parsedValue ? parsedValue.month() : undefined,
+            date: parsedValue ? parsedValue.date() : undefined,
+        };
+        return _this;
+    }
+    DateInput.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, value = _a.value, icon = _a.icon, dateFormat = _a.dateFormat, initialDate = _a.initialDate, disable = _a.disable, enable = _a.enable, maxDate = _a.maxDate, minDate = _a.minDate, preserveViewMode = _a.preserveViewMode, startMode = _a.startMode, closable = _a.closable, rest = __rest(_a, ["value", "icon", "dateFormat", "initialDate", "disable", "enable", "maxDate", "minDate", "preserveViewMode", "startMode", "closable"]);
+        return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, onMount: this.onInputViewMount, icon: _.isBoolean(icon) && !icon ? undefined : icon, onFocus: this.onFocus }, rest, { render: function (props) { return _this.getPicker(props); }, value: parse_1.dateValueToString(parse_1.chooseValue(value, undefined), dateFormat) })));
+    };
+    DateInput.prototype.getDateParams = function () {
+        /*
+          Return date params that are used for picker initialization.
+          Return undefined if none of [ 'year', 'month', 'date' ]
+          state fields defined.
+        */
+        var _a = this.state, year = _a.year, month = _a.month, date = _a.date;
+        if (!_.isNil(year) || !_.isNil(month) || !_.isNil(date)) {
+            return { year: year, month: month, date: date };
+        }
+    };
+    /**
+     * Component responsibility:
+     *  - parse input value
+     *  - handle underlying picker change
+     */
+    DateInput.defaultProps = {
+        dateFormat: 'DD-MM-YYYY',
+        startMode: 'day',
+        preserveViewMode: true,
+        inline: false,
+        icon: 'calendar',
+    };
+    DateInput.propTypes = {
+        /** Currently selected value. */
+        value: PropTypes.string.isRequired,
+        /** Moment date formatting string. */
+        dateFormat: PropTypes.string,
+        /** Date to display initially when no date is selected. */
+        initialDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** Date or list of dates that are displayed as disabled. */
+        disable: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.arrayOf(PropTypes.string),
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+            PropTypes.instanceOf(Date),
+            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
+        ]),
+        /** Date or list of dates that are enabled (the rest are disabled). */
+        enable: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.arrayOf(PropTypes.string),
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+            PropTypes.instanceOf(Date),
+            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
+        ]),
+        /** Maximum date that can be selected. */
+        maxDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** Minimum date that can be selected. */
+        minDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** Preserve viewmode on focus? */
+        preserveViewMode: PropTypes.bool,
+        /** Display mode to start. */
+        startMode: PropTypes.oneOf([
+            'year', 'month', 'day',
+        ]),
+        /** If true, popup closes after selecting a date-time. */
+        closable: PropTypes.bool,
+        /**
+         * Called on clear.
+         *
+         * @param {SyntheticEvent} event - React's original SyntheticEvent.
+         * @param {object} data - All props and proposed value.
+         */
+        onClear: PropTypes.func,
+        /** Using the clearable setting will let users remove their selection from a calendar. */
+        clearable: PropTypes.bool,
+        /** Optional Icon to display inside the clearable Input. */
+        clearIcon: PropTypes.any,
+    };
+    return DateInput;
+}(BaseInput_1.default));
+exports.default = DateInput;
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToPrevMode", function () {
-      Object(_lib__WEBPACK_IMPORTED_MODULE_10__["tick"])(_this._switchToPrevModeUndelayed);
-    });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_onFocus", function () {
-      if (!_this.props.preserveViewMode) {
-        _this.setState({
-          mode: _this.props.startMode
-        });
-      }
-    });
+/***/ }),
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleSelect", function (e, _ref3) {
-      var value = _ref3.value;
+/***/ "./src/inputs/DateTimeInput.tsx":
+/*!**************************************!*\
+  !*** ./src/inputs/DateTimeInput.tsx ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
-      if (_this.state.mode === 'day' && _this.props.closable) {
-        _this.closePopup();
-      }
+"use strict";
 
-      _this.setState(function (prevState) {
-        var mode = prevState.mode;
-
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+var PropTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var CustomPropTypes_1 = __webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts");
+var DayPicker_1 = __webpack_require__(/*! ../pickers/dayPicker/DayPicker */ "./src/pickers/dayPicker/DayPicker.tsx");
+var MonthPicker_1 = __webpack_require__(/*! ../pickers/MonthPicker */ "./src/pickers/MonthPicker.tsx");
+var HourPicker_1 = __webpack_require__(/*! ../pickers/timePicker/HourPicker */ "./src/pickers/timePicker/HourPicker.tsx");
+var MinutePicker_1 = __webpack_require__(/*! ../pickers/timePicker/MinutePicker */ "./src/pickers/timePicker/MinutePicker.tsx");
+var YearPicker_1 = __webpack_require__(/*! ../pickers/YearPicker */ "./src/pickers/YearPicker.tsx");
+var InputView_1 = __webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx");
+var BaseInput_1 = __webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx");
+var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
+var parse_1 = __webpack_require__(/*! ./parse */ "./src/inputs/parse.ts");
+var shared_1 = __webpack_require__(/*! ./shared */ "./src/inputs/shared.ts");
+var nextMode = {
+    year: 'month',
+    month: 'day',
+    day: 'hour',
+    hour: 'minute',
+    minute: 'year',
+};
+function getNextMode(currentMode) {
+    return nextMode[currentMode];
+}
+var prevMode = {
+    minute: 'hour',
+    hour: 'day',
+    day: 'month',
+    month: 'year',
+    year: 'minute',
+};
+function getPrevMode(currentMode) {
+    return prevMode[currentMode];
+}
+var DateTimeInput = /** @class */ (function (_super) {
+    __extends(DateTimeInput, _super);
+    function DateTimeInput(props) {
+        var _this = _super.call(this, props) || this;
+        _this.switchToNextModeUndelayed = function () {
+            _this.setState(function (_a) {
+                var mode = _a.mode;
+                return { mode: getNextMode(mode) };
+            }, _this.onModeSwitch);
+        };
+        _this.switchToNextMode = function () {
+            lib_1.tick(_this.switchToNextModeUndelayed);
+        };
+        _this.switchToPrevModeUndelayed = function () {
+            _this.setState(function (_a) {
+                var mode = _a.mode;
+                return { mode: getPrevMode(mode) };
+            }, _this.onModeSwitch);
+        };
+        _this.switchToPrevMode = function () {
+            lib_1.tick(_this.switchToPrevModeUndelayed);
+        };
+        _this.handleSelect = function (e, _a) {
+            var value = _a.value;
+            lib_1.tick(_this.handleSelectUndelayed, e, { value: value });
+        };
+        _this.onFocus = function () {
+            if (!_this.props.preserveViewMode) {
+                _this.setState({ mode: _this.props.startMode });
+            }
+        };
+        _this.handleSelectUndelayed = function (e, _a) {
+            var value = _a.value;
+            if (_this.props.closable && _this.state.mode === 'minute') {
+                _this.closePopup();
+            }
+            _this.setState(function (prevState) {
+                var mode = prevState.mode;
+                if (mode === 'minute') {
+                    var outValue = moment(value).format(_this.getDateTimeFormat());
+                    _.invoke(_this.props, 'onChange', e, __assign({}, _this.props, { value: outValue }));
+                }
+                return {
+                    year: value.year,
+                    month: value.month,
+                    date: value.date,
+                    hour: value.hour,
+                    minute: value.minute,
+                };
+            }, function () { return _this.state.mode !== 'minute' && _this.switchToNextMode(); });
+        };
+        var parsedValue = parse_1.parseValue(props.value, props.dateFormat);
+        _this.state = {
+            mode: props.startMode,
+            year: parsedValue ? parsedValue.year() : undefined,
+            month: parsedValue ? parsedValue.month() : undefined,
+            date: parsedValue ? parsedValue.date() : undefined,
+            hour: parsedValue ? parsedValue.hour() : undefined,
+            minute: parsedValue ? parsedValue.minute() : undefined,
+            popupIsClosed: false,
+        };
+        return _this;
+    }
+    DateTimeInput.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, value = _a.value, dateTimeFormat = _a.dateTimeFormat, dateFormat = _a.dateFormat, timeFormat = _a.timeFormat, initialDate = _a.initialDate, disable = _a.disable, maxDate = _a.maxDate, minDate = _a.minDate, preserveViewMode = _a.preserveViewMode, startMode = _a.startMode, divider = _a.divider, closable = _a.closable, icon = _a.icon, rest = __rest(_a, ["value", "dateTimeFormat", "dateFormat", "timeFormat", "initialDate", "disable", "maxDate", "minDate", "preserveViewMode", "startMode", "divider", "closable", "icon"]);
+        return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, icon: _.isBoolean(icon) && !icon ? undefined : icon, onFocus: this.onFocus, onMount: this.onInputViewMount }, rest, { value: value, render: function (pickerProps) { return _this.getPicker(pickerProps); } })));
+    };
+    DateTimeInput.prototype.getDateParams = function () {
+        /*
+          Return date params that are used for picker initialization.
+          Return undefined if none of [ 'year', 'month', 'date', 'hour', 'minute' ]
+          state fields defined.
+        */
+        var _a = this.state, year = _a.year, month = _a.month, date = _a.date, hour = _a.hour, minute = _a.minute;
+        if (!_.isNil(year)
+            || !_.isNil(month)
+            || !_.isNil(date)
+            || !_.isNil(hour)
+            || !_.isNil(minute)) {
+            return { year: year, month: month, date: date, hour: hour, minute: minute };
+        }
+    };
+    DateTimeInput.prototype.getDateTimeFormat = function () {
+        var _a = this.props, dateFormat = _a.dateFormat, divider = _a.divider, timeFormat = _a.timeFormat, dateTimeFormat = _a.dateTimeFormat;
+        return dateTimeFormat || "" + dateFormat + divider + parse_1.TIME_FORMAT[timeFormat];
+    };
+    DateTimeInput.prototype.getPicker = function (_a) {
+        var tabIndex = _a.tabIndex;
+        var _b = this.props, value = _b.value, initialDate = _b.initialDate, dateFormat = _b.dateFormat, disable = _b.disable, minDate = _b.minDate, maxDate = _b.maxDate, inline = _b.inline;
+        var dateTimeFormat = this.getDateTimeFormat();
+        var pickerProps = {
+            tabIndex: tabIndex,
+            isPickerInFocus: this.isPickerInFocus,
+            isTriggerInFocus: this.isTriggerInFocus,
+            inline: inline,
+            onCalendarViewMount: this.onCalendarViewMount,
+            closePopup: this.closePopup,
+            onChange: this.handleSelect,
+            onHeaderClick: this.switchToPrevMode,
+            initializeWith: parse_1.getInitializer({ initialDate: initialDate, dateFormat: dateTimeFormat, dateParams: this.getDateParams() }),
+            value: parse_1.parseValue(parse_1.chooseValue(value, initialDate), dateTimeFormat),
+            minDate: parse_1.parseValue(minDate, dateFormat),
+            maxDate: parse_1.parseValue(maxDate, dateFormat),
+        };
+        var disableParsed = parse_1.parseArrayOrValue(disable, dateFormat);
+        var mode = this.state.mode;
+        if (mode === 'year') {
+            return (React.createElement(YearPicker_1.default, __assign({}, pickerProps, { disable: shared_1.getDisabledYears(disableParsed) })));
+        }
+        if (mode === 'month') {
+            return (React.createElement(MonthPicker_1.default, __assign({}, pickerProps, { hasHeader: true, disable: shared_1.getDisabledMonths(disableParsed) })));
+        }
         if (mode === 'day') {
-          var outValue = moment__WEBPACK_IMPORTED_MODULE_2__(value).format(_this.props.dateFormat);
-
-          lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-            value: outValue
-          }));
+            return (React.createElement(DayPicker_1.default, __assign({}, pickerProps, { disable: disableParsed })));
         }
-
-        return _objectSpread({}, value);
-      }, function () {
-        return _this.state.mode !== 'day' && _this.switchToNextMode();
-      });
-    });
-
-    _this.state = {
-      mode: props.startMode
+        if (mode === 'hour') {
+            return (React.createElement(HourPicker_1.default, __assign({ timeFormat: this.props.timeFormat, hasHeader: true }, pickerProps, { disable: disableParsed })));
+        }
+        return (React.createElement(MinutePicker_1.default, __assign({ timeFormat: this.props.timeFormat, hasHeader: true }, pickerProps, { disable: disableParsed })));
     };
-    var parsedValue = Object(_parse__WEBPACK_IMPORTED_MODULE_9__["parseValue"])(props.value);
+    /**
+     * Component responsibility:
+     *  - parse input value
+     *  - handle underlying picker change
+     */
+    DateTimeInput.defaultProps = {
+        dateFormat: 'DD-MM-YYYY',
+        timeFormat: '24',
+        startMode: 'day',
+        divider: ' ',
+        icon: 'calendar',
+        preserveViewMode: true,
+        inline: false,
+    };
+    DateTimeInput.propTypes = {
+        /** Currently selected value. */
+        value: PropTypes.string,
+        /** Moment datetime formatting string */
+        dateTimeFormat: PropTypes.string,
+        /** Moment date formatting string. */
+        dateFormat: PropTypes.string,
+        /** Time format ["AMPM", "ampm", "24"] */
+        timeFormat: PropTypes.string,
+        /** Date to display initially when no date is selected. */
+        initialDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** Date or list of dates that are displayed as disabled. */
+        disable: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.arrayOf(PropTypes.string),
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+            PropTypes.instanceOf(Date),
+            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
+        ]),
+        /** Maximum date that can be selected. */
+        maxDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** Minimum date that can be selected. */
+        minDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** Preserve viewmode on focus? */
+        preserveViewMode: PropTypes.bool,
+        /** Display mode to start. */
+        startMode: PropTypes.oneOf([
+            'year', 'month', 'day',
+        ]),
+        /** Date and time divider. */
+        divider: PropTypes.string,
+        /** If true, popup closes after selecting a date-time. */
+        closable: PropTypes.bool,
+        /**
+         * Called on clear.
+         *
+         * @param {SyntheticEvent} event - React's original SyntheticEvent.
+         * @param {object} data - All props and proposed value.
+         */
+        onClear: PropTypes.func,
+        /** Using the clearable setting will let users remove their selection from a calendar. */
+        clearable: PropTypes.bool,
+        /** Optional Icon to display inside the clearable Input. */
+        clearIcon: PropTypes.any,
+    };
+    return DateTimeInput;
+}(BaseInput_1.default));
+exports.default = DateTimeInput;
 
-    if (parsedValue) {
-      _this.state.year = parsedValue.year();
-      _this.state.month = parsedValue.month();
-      _this.state.date = parsedValue.date();
-    }
-
-    return _this;
-  }
-
-  _createClass(DateInput, [{
-    key: "getDateParams",
-    value: function getDateParams() {
-      /* 
-        Return date params that are used for picker initialization.
-        Return undefined if none of [ 'year', 'month', 'date' ]
-        state fields defined.
-      */
-      var _this$state = this.state,
-          year = _this$state.year,
-          month = _this$state.month,
-          date = _this$state.date;
-
-      if (!lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](year) || !lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](month) || !lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](date)) {
-        return {
-          year: year,
-          month: month,
-          date: date
-        };
-      }
-    }
-  }, {
-    key: "getPicker",
-    value: function getPicker(_ref4) {
-      var tabIndex = _ref4.tabIndex;
-      var _this$props = this.props,
-          value = _this$props.value,
-          initialDate = _this$props.initialDate,
-          dateFormat = _this$props.dateFormat,
-          disable = _this$props.disable,
-          minDate = _this$props.minDate,
-          maxDate = _this$props.maxDate,
-          enable = _this$props.enable,
-          inline = _this$props.inline;
-      var pickerProps = {
-        isPickerInFocus: this.isPickerInFocus,
-        isTriggerInFocus: this.isTriggerInFocus,
-        inline: inline,
-        onCalendarViewMount: this.onCalendarViewMount,
-        closePopup: this.closePopup,
-        tabIndex: tabIndex,
-        hasHeader: true,
-        onChange: this.handleSelect,
-        onHeaderClick: this.switchToPrevMode,
-        initializeWith: Object(_parse__WEBPACK_IMPORTED_MODULE_9__["getInitializer"])({
-          initialDate: initialDate,
-          dateFormat: dateFormat,
-          dateParams: this.getDateParams()
-        }),
-        value: Object(_parse__WEBPACK_IMPORTED_MODULE_9__["parseValue"])(Object(_parse__WEBPACK_IMPORTED_MODULE_9__["chooseValue"])(value, initialDate), dateFormat),
-        enable: Object(_parse__WEBPACK_IMPORTED_MODULE_9__["parseArrayOrValue"])(enable, dateFormat),
-        minDate: Object(_parse__WEBPACK_IMPORTED_MODULE_9__["parseValue"])(minDate, dateFormat),
-        maxDate: Object(_parse__WEBPACK_IMPORTED_MODULE_9__["parseValue"])(maxDate, dateFormat) // key: value, // seems like it works without reinstantiating picker every time value changes
-
-      };
-      var disableParsed = Object(_parse__WEBPACK_IMPORTED_MODULE_9__["parseArrayOrValue"])(disable, dateFormat);
-      var mode = this.state.mode;
-
-      if (mode === 'year') {
-        return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_pickers_YearPicker__WEBPACK_IMPORTED_MODULE_5__["default"], _extends({}, pickerProps, {
-          disable: Object(_shared__WEBPACK_IMPORTED_MODULE_11__["getDisabledYears"])(disableParsed)
-        }));
-      }
-
-      if (mode === 'month') {
-        return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_pickers_MonthPicker__WEBPACK_IMPORTED_MODULE_6__["default"], _extends({}, pickerProps, {
-          disable: Object(_shared__WEBPACK_IMPORTED_MODULE_11__["getDisabledMonths"])(disableParsed)
-        }));
-      }
-
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_pickers_dayPicker_DayPicker__WEBPACK_IMPORTED_MODULE_7__["default"], _extends({}, pickerProps, {
-        disable: disableParsed
-      }));
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this2 = this;
-
-      var value = this.props.value;
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_10__["getUnhandledProps"])(DateInput, this.props);
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_views_InputView__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({
-        popupIsClosed: this.state.popupIsClosed,
-        onMount: this.onInputViewMount,
-        icon: "calendar",
-        onFocus: this._onFocus
-      }, rest, {
-        render: function render(props) {
-          return _this2.getPicker(props);
-        },
-        value: Object(_parse__WEBPACK_IMPORTED_MODULE_9__["chooseValue"])(value, undefined)
-      }));
-    }
-  }]);
-
-  return DateInput;
-}(_BaseInput__WEBPACK_IMPORTED_MODULE_8__["default"]);
-
-_defineProperty(DateInput, "handledProps", ["closable", "dateFormat", "disable", "enable", "initialDate", "maxDate", "minDate", "preserveViewMode", "startMode", "value"]);
-
-DateInput.propTypes = {
-  /** Currently selected value. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** Moment date formatting string. */
-  dateFormat: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** Date to display initially when no date is selected. */
-  initialDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** Date or list of dates that are displayed as disabled. */
-  disable: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["string"]), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__)), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date), prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date))]),
-
-  /** Date or list of dates that are enabled (the rest are disabled). */
-  enable: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["string"]), prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__)), prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date))]),
-
-  /** Maximum date that can be selected. */
-  maxDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** Minimum date that can be selected. */
-  minDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** Preserve viewmode on focus? */
-  preserveViewMode: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"],
-
-  /** Display mode to start. */
-  startMode: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOf"](['year', 'month', 'day']),
-
-  /** If true, popup closes after selecting a date-time. */
-  closable: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"]
-};
-DateInput.defaultProps = {
-  dateFormat: 'DD-MM-YYYY',
-  startMode: 'day',
-  preserveViewMode: true
-};
-/* harmony default export */ __webpack_exports__["default"] = (DateInput);
 
 /***/ }),
 
-/***/ "./src/inputs/DateTimeInput.js":
-/*!*************************************!*\
-  !*** ./src/inputs/DateTimeInput.js ***!
-  \*************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/inputs/DatesRangeInput.tsx":
+/*!****************************************!*\
+  !*** ./src/inputs/DatesRangeInput.tsx ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _views_InputView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../views/InputView */ "./src/views/InputView.js");
-/* harmony import */ var _pickers_YearPicker__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../pickers/YearPicker */ "./src/pickers/YearPicker.js");
-/* harmony import */ var _pickers_MonthPicker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../pickers/MonthPicker */ "./src/pickers/MonthPicker.js");
-/* harmony import */ var _pickers_dayPicker_DayPicker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../pickers/dayPicker/DayPicker */ "./src/pickers/dayPicker/DayPicker.js");
-/* harmony import */ var _pickers_timePicker_HourPicker__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../pickers/timePicker/HourPicker */ "./src/pickers/timePicker/HourPicker.js");
-/* harmony import */ var _pickers_timePicker_MinutePicker__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../pickers/timePicker/MinutePicker */ "./src/pickers/timePicker/MinutePicker.js");
-/* harmony import */ var _BaseInput__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.js");
-/* harmony import */ var _parse__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./parse */ "./src/inputs/parse.js");
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../lib */ "./src/lib/index.js");
-/* harmony import */ var _shared__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./shared */ "./src/inputs/shared.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function getNextMode(currentMode) {
-  if (currentMode === 'year') return 'month';
-  if (currentMode === 'month') return 'day';
-  if (currentMode === 'day') return 'hour';
-  if (currentMode === 'hour') return 'minute';
-  return 'year';
-}
-
-function getPrevMode(currentMode) {
-  if (currentMode === 'minute') return 'hour';
-  if (currentMode === 'hour') return 'day';
-  if (currentMode === 'day') return 'month';
-  if (currentMode === 'month') return 'year';
-  return 'minute';
-}
-
-var DateTimeInput =
-/*#__PURE__*/
-function (_BaseInput) {
-  _inherits(DateTimeInput, _BaseInput);
-
-  function DateTimeInput(props) {
-    var _this;
-
-    _classCallCheck(this, DateTimeInput);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(DateTimeInput).call(this, props));
-    /*
-      state fields:
-        - mode: one of [ 'year', 'month', 'day', 'hour', 'minute' ]
-        - year: number
-        - month: number
-        - date: number
-        - hour: number
-        - minute: number
-    */
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_switchToNextModeUndelayed", function () {
-      _this.setState(function (_ref) {
-        var mode = _ref.mode;
-        return {
-          mode: getNextMode(mode)
-        };
-      }, _this.onModeSwitch);
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToNextMode", function () {
-      Object(_lib__WEBPACK_IMPORTED_MODULE_12__["tick"])(_this._switchToNextModeUndelayed);
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_switchToPrevModeUndelayed", function () {
-      _this.setState(function (_ref2) {
-        var mode = _ref2.mode;
-        return {
-          mode: getPrevMode(mode)
-        };
-      }, _this.onModeSwitch);
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToPrevMode", function () {
-      Object(_lib__WEBPACK_IMPORTED_MODULE_12__["tick"])(_this._switchToPrevModeUndelayed);
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleSelect", function (e, _ref3) {
-      var value = _ref3.value;
-      Object(_lib__WEBPACK_IMPORTED_MODULE_12__["tick"])(_this._handleSelectUndelayed, e, {
-        value: value
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_onFocus", function () {
-      if (!_this.props.preserveViewMode) {
-        _this.setState({
-          mode: _this.props.startMode
-        });
-      }
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_handleSelectUndelayed", function (e, _ref4) {
-      var value = _ref4.value;
-
-      if (_this.props.closable && _this.state.mode === 'minute') {
-        _this.closePopup();
-      }
-
-      _this.setState(function (prevState) {
-        var mode = prevState.mode;
-
-        if (mode === 'minute') {
-          var outValue = moment__WEBPACK_IMPORTED_MODULE_2__(value).format(_this.getDateTimeFormat());
-
-          lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-            value: outValue
-          }));
-        }
-
-        return _objectSpread({}, value);
-      }, function () {
-        return _this.state.mode !== 'minute' && _this.switchToNextMode();
-      });
-    });
-
-    _this.state = {
-      mode: props.startMode
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
     };
-    var parsedValue = Object(_parse__WEBPACK_IMPORTED_MODULE_11__["parseValue"])(props.value);
-
-    if (parsedValue) {
-      _this.state.year = parsedValue.year();
-      _this.state.month = parsedValue.month();
-      _this.state.date = parsedValue.date();
-      _this.state.hour = parsedValue.hour();
-      _this.state.minute = parsedValue.minute();
-    }
-
-    return _this;
-  }
-
-  _createClass(DateTimeInput, [{
-    key: "getDateParams",
-    value: function getDateParams() {
-      /* 
-        Return date params that are used for picker initialization.
-        Return undefined if none of [ 'year', 'month', 'date', 'hour', 'minute' ]
-        state fields defined.
-      */
-      var _this$state = this.state,
-          year = _this$state.year,
-          month = _this$state.month,
-          date = _this$state.date,
-          hour = _this$state.hour,
-          minute = _this$state.minute;
-
-      if (!lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](year) || !lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](month) || !lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](date) || !lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](hour) || !lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](minute)) {
-        return {
-          year: year,
-          month: month,
-          date: date,
-          hour: hour,
-          minute: minute
-        };
-      }
-    }
-  }, {
-    key: "getDateTimeFormat",
-    value: function getDateTimeFormat() {
-      var _this$props = this.props,
-          dateFormat = _this$props.dateFormat,
-          divider = _this$props.divider,
-          timeFormat = _this$props.timeFormat,
-          dateTimeFormat = _this$props.dateTimeFormat;
-      return dateTimeFormat || "".concat(dateFormat).concat(divider).concat(_parse__WEBPACK_IMPORTED_MODULE_11__["TIME_FORMAT"][timeFormat]);
-    }
-  }, {
-    key: "getPicker",
-    value: function getPicker(_ref5) {
-      var tabIndex = _ref5.tabIndex;
-      var _this$props2 = this.props,
-          value = _this$props2.value,
-          initialDate = _this$props2.initialDate,
-          dateFormat = _this$props2.dateFormat,
-          disable = _this$props2.disable,
-          minDate = _this$props2.minDate,
-          maxDate = _this$props2.maxDate,
-          inline = _this$props2.inline;
-      var dateTimeFormat = this.getDateTimeFormat();
-      var pickerProps = {
-        tabIndex: tabIndex,
-        isPickerInFocus: this.isPickerInFocus,
-        isTriggerInFocus: this.isTriggerInFocus,
-        inline: inline,
-        onCalendarViewMount: this.onCalendarViewMount,
-        closePopup: this.closePopup,
-        displayWeeks: true,
-        hasHeader: true,
-        onChange: this.handleSelect,
-        onHeaderClick: this.switchToPrevMode,
-        initializeWith: Object(_parse__WEBPACK_IMPORTED_MODULE_11__["getInitializer"])({
-          initialDate: initialDate,
-          dateFormat: dateTimeFormat,
-          dateParams: this.getDateParams()
-        }),
-        value: Object(_parse__WEBPACK_IMPORTED_MODULE_11__["parseValue"])(Object(_parse__WEBPACK_IMPORTED_MODULE_11__["chooseValue"])(value, initialDate), dateTimeFormat),
-        minDate: Object(_parse__WEBPACK_IMPORTED_MODULE_11__["parseValue"])(minDate, dateFormat),
-        maxDate: Object(_parse__WEBPACK_IMPORTED_MODULE_11__["parseValue"])(maxDate, dateFormat) // key: value, // seems like it works without reinstantiating picker every time value changes
-
-      };
-      var disableParsed = Object(_parse__WEBPACK_IMPORTED_MODULE_11__["parseArrayOrValue"])(disable, dateFormat);
-      var mode = this.state.mode;
-
-      if (mode === 'year') {
-        return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_pickers_YearPicker__WEBPACK_IMPORTED_MODULE_5__["default"], _extends({}, pickerProps, {
-          disable: Object(_shared__WEBPACK_IMPORTED_MODULE_13__["getDisabledYears"])(disableParsed)
-        }));
-      }
-
-      if (mode === 'month') {
-        return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_pickers_MonthPicker__WEBPACK_IMPORTED_MODULE_6__["default"], _extends({}, pickerProps, {
-          disable: Object(_shared__WEBPACK_IMPORTED_MODULE_13__["getDisabledMonths"])(disableParsed)
-        }));
-      }
-
-      if (mode === 'day') {
-        return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_pickers_dayPicker_DayPicker__WEBPACK_IMPORTED_MODULE_7__["default"], _extends({}, pickerProps, {
-          disable: disableParsed
-        }));
-      }
-
-      if (mode === 'hour') {
-        return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_pickers_timePicker_HourPicker__WEBPACK_IMPORTED_MODULE_8__["default"], _extends({
-          timeFormat: this.props.timeFormat
-        }, pickerProps, {
-          disable: disableParsed
-        }));
-      }
-
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_pickers_timePicker_MinutePicker__WEBPACK_IMPORTED_MODULE_9__["default"], _extends({
-        timeFormat: this.props.timeFormat
-      }, pickerProps, {
-        disable: disableParsed
-      }));
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this2 = this;
-
-      var value = this.props.value;
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_12__["getUnhandledProps"])(DateTimeInput, this.props);
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_views_InputView__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({
-        popupIsClosed: this.state.popupIsClosed,
-        icon: "calendar",
-        onFocus: this._onFocus,
-        onMount: this.onInputViewMount
-      }, rest, {
-        value: value,
-        render: function render(pickerProps) {
-          return _this2.getPicker(pickerProps);
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
         }
-      }));
-    }
-  }]);
-
-  return DateTimeInput;
-}(_BaseInput__WEBPACK_IMPORTED_MODULE_10__["default"]);
-
-_defineProperty(DateTimeInput, "handledProps", ["closable", "dateFormat", "dateTimeFormat", "disable", "divider", "initialDate", "maxDate", "minDate", "preserveViewMode", "startMode", "timeFormat", "value"]);
-
-DateTimeInput.propTypes = {
-  /** Currently selected value. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** Moment datetime formatting string */
-  dateTimeFormat: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** Moment date formatting string. */
-  dateFormat: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** Time format ["AMPM", "ampm", "24"] */
-  timeFormat: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** Date to display initially when no date is selected. */
-  initialDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** Date or list of dates that are displayed as disabled. */
-  disable: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["string"]), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__)), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date), prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date))]),
-
-  /** Maximum date that can be selected. */
-  maxDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** Minimum date that can be selected. */
-  minDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** Preserve viewmode on focus? */
-  preserveViewMode: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"],
-
-  /** Display mode to start. */
-  startMode: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOf"](['year', 'month', 'day']),
-
-  /** Date and time divider. */
-  divider: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** If true, popup closes after selecting a date-time. */
-  closable: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"]
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
-DateTimeInput.defaultProps = {
-  dateFormat: 'DD-MM-YYYY',
-  timeFormat: '24',
-  startMode: 'day',
-  divider: ' ',
-  preserveViewMode: true
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
 };
-/* harmony default export */ __webpack_exports__["default"] = (DateTimeInput);
-
-/***/ }),
-
-/***/ "./src/inputs/DatesRangeInput.js":
-/*!***************************************!*\
-  !*** ./src/inputs/DatesRangeInput.js ***!
-  \***************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _views_InputView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../views/InputView */ "./src/views/InputView.js");
-/* harmony import */ var _parse__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./parse */ "./src/inputs/parse.js");
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib */ "./src/lib/index.js");
-/* harmony import */ var _pickers_dayPicker_DatesRangePicker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../pickers/dayPicker/DatesRangePicker */ "./src/pickers/dayPicker/DatesRangePicker.js");
-/* harmony import */ var _BaseInput__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-
-
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+var PropTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var CustomPropTypes_1 = __webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts");
+var InputView_1 = __webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx");
+var parse_1 = __webpack_require__(/*! ./parse */ "./src/inputs/parse.ts");
+var DatesRangePicker_1 = __webpack_require__(/*! ../pickers/dayPicker/DatesRangePicker */ "./src/pickers/dayPicker/DatesRangePicker.tsx");
+var BaseInput_1 = __webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx");
 var DATES_SEPARATOR = ' - ';
-
 function cleanDate(inputString, dateFormat) {
-  var formattedDateLength = moment__WEBPACK_IMPORTED_MODULE_2__().format(dateFormat).length;
-  return inputString.trim().slice(0, formattedDateLength);
+    var formattedDateLength = moment().format(dateFormat).length;
+    return inputString.trim().slice(0, formattedDateLength);
 }
 /**
  * Extract start and end dates from input string.
@@ -78463,853 +78783,684 @@ function cleanDate(inputString, dateFormat) {
  * @param {string} inputString Row input string from user
  * @param {string} dateFormat Moment formatting string
  */
-
-
 function parseDatesRange(inputString, dateFormat) {
-  // dates range is "startDate - endDate"
-  var dates = inputString.split(DATES_SEPARATOR).map(function (date) {
-    return cleanDate(date, dateFormat);
-  });
-  var result = {};
-  var start;
-  var end;
-  start = moment__WEBPACK_IMPORTED_MODULE_2__(dates[0], dateFormat);
-
-  if (dates.length === 2) {
-    end = moment__WEBPACK_IMPORTED_MODULE_2__(dates[1], dateFormat);
-  }
-
-  if (start && start.isValid()) {
-    result.start = start;
-  }
-
-  if (end && end.isValid()) {
-    result.end = end;
-  }
-
-  return result;
-}
-
-var DatesRangeInput =
-/*#__PURE__*/
-function (_BaseInput) {
-  _inherits(DatesRangeInput, _BaseInput);
-
-  /**
-   * Component responsibility:
-   *  - parse input value (start: Moment, end: Moment)
-   *  - handle DayPicker change (format {start: Moment, end: Moment} into
-   *    string 'start - end')
-   */
-  function DatesRangeInput(props) {
-    var _this;
-
-    _classCallCheck(this, DatesRangeInput);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(DatesRangeInput).call(this, props));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleSelect", function (e, _ref) {
-      var value = _ref.value;
-      var dateFormat = _this.props.dateFormat;
-      var start = value.start,
-          end = value.end;
-      var outputString = '';
-
-      if (start && end) {
-        outputString = "".concat(start.format(dateFormat)).concat(DATES_SEPARATOR).concat(end.format(dateFormat));
-      } else if (start) {
-        outputString = "".concat(start.format(dateFormat)).concat(DATES_SEPARATOR);
-      }
-
-      lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-        value: outputString
-      }));
-
-      if (_this.props.closable && start && end) {
-        _this.closePopup();
-      }
-    });
-
-    _this.state = {};
-    return _this;
-  }
-
-  _createClass(DatesRangeInput, [{
-    key: "render",
-    value: function render() {
-      var _this2 = this;
-
-      var _this$props = this.props,
-          value = _this$props.value,
-          initialDate = _this$props.initialDate,
-          dateFormat = _this$props.dateFormat,
-          minDate = _this$props.minDate,
-          maxDate = _this$props.maxDate;
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_6__["getUnhandledProps"])(DatesRangeInput, this.props);
-
-      var _parseDatesRange = parseDatesRange(value, dateFormat),
-          start = _parseDatesRange.start,
-          end = _parseDatesRange.end;
-
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_views_InputView__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({
-        popupIsClosed: this.state.popupIsClosed,
-        icon: "calendar"
-      }, rest, {
-        value: value,
-        onMount: this.onInputViewMount,
-        render: function render(pickerProps) {
-          return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_pickers_dayPicker_DatesRangePicker__WEBPACK_IMPORTED_MODULE_7__["default"], _extends({}, pickerProps, {
-            isPickerInFocus: _this2.isPickerInFocus,
-            isTriggerInFocus: _this2.isTriggerInFocus,
-            inline: _this2.props.inline,
-            onCalendarViewMount: _this2.onCalendarViewMount,
-            closePopup: _this2.closePopup,
-            onChange: _this2.handleSelect,
-            dateFormat: dateFormat,
-            initializeWith: Object(_parse__WEBPACK_IMPORTED_MODULE_5__["getInitializer"])({
-              initialDate: initialDate,
-              dateFormat: dateFormat
-            }),
-            start: start,
-            end: end,
-            minDate: Object(_parse__WEBPACK_IMPORTED_MODULE_5__["parseValue"])(minDate, dateFormat),
-            maxDate: Object(_parse__WEBPACK_IMPORTED_MODULE_5__["parseValue"])(maxDate, dateFormat)
-          }));
-        }
-      }));
+    // dates range is "startDate - endDate"
+    var dates = inputString.split(DATES_SEPARATOR)
+        .map(function (date) { return cleanDate(date, dateFormat); });
+    var result = {};
+    var start;
+    var end;
+    start = moment(dates[0], dateFormat);
+    if (dates.length === 2) {
+        end = moment(dates[1], dateFormat);
     }
-  }]);
-
-  return DatesRangeInput;
-}(_BaseInput__WEBPACK_IMPORTED_MODULE_8__["default"]);
-
-_defineProperty(DatesRangeInput, "handledProps", ["closable", "dateFormat", "initialDate", "maxDate", "minDate", "value"]);
-
-DatesRangeInput.propTypes = {
-  /** Currently selected value. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** Moment date formatting string. */
-  dateFormat: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** Date to display initially when no date is selected. */
-  initialDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** Maximum date that can be selected. */
-  maxDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** Minimum date that can be selected. */
-  minDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** If true, popup closes after selecting a date-time. */
-  closable: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"]
-};
-DatesRangeInput.defaultProps = {
-  dateFormat: 'DD-MM-YYYY'
-};
-/* harmony default export */ __webpack_exports__["default"] = (DatesRangeInput);
-
-/***/ }),
-
-/***/ "./src/inputs/MonthInput.js":
-/*!**********************************!*\
-  !*** ./src/inputs/MonthInput.js ***!
-  \**********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _views_InputView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../views/InputView */ "./src/views/InputView.js");
-/* harmony import */ var _pickers_MonthPicker__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../pickers/MonthPicker */ "./src/pickers/MonthPicker.js");
-/* harmony import */ var _BaseInput__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.js");
-/* harmony import */ var _parse__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./parse */ "./src/inputs/parse.js");
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib */ "./src/lib/index.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-
-
-
-var MonthInput =
-/*#__PURE__*/
-function (_BaseInput) {
-  _inherits(MonthInput, _BaseInput);
-
-  function MonthInput(props) {
-    var _this;
-
-    _classCallCheck(this, MonthInput);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(MonthInput).call(this, props));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleSelect", function (e, _ref) {
-      var value = _ref.value;
-      var date = moment__WEBPACK_IMPORTED_MODULE_2__({
-        month: value.month
-      });
-      var output = '';
-
-      if (date.isValid()) {
-        output = date.format(_this.props.dateFormat);
-      }
-
-      lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-        value: output
-      }));
-
-      if (_this.props.closable) {
-        _this.closePopup();
-      }
-    });
-
-    _this.state = {};
-    return _this;
-  }
-
-  _createClass(MonthInput, [{
-    key: "render",
-    value: function render() {
-      var _this2 = this;
-
-      var _this$props = this.props,
-          value = _this$props.value,
-          disable = _this$props.disable,
-          maxDate = _this$props.maxDate,
-          minDate = _this$props.minDate,
-          initialDate = _this$props.initialDate,
-          dateFormat = _this$props.dateFormat;
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_8__["getUnhandledProps"])(MonthInput, this.props);
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_views_InputView__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({
-        popupIsClosed: this.state.popupIsClosed,
-        icon: "calendar"
-      }, rest, {
-        value: value,
-        onMount: this.onInputViewMount,
-        render: function render(pickerProps) {
-          return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_pickers_MonthPicker__WEBPACK_IMPORTED_MODULE_5__["default"], _extends({}, pickerProps, {
-            inline: _this2.props.inline,
-            isPickerInFocus: _this2.isPickerInFocus,
-            isTriggerInFocus: _this2.isTriggerInFocus,
-            onCalendarViewMount: _this2.onCalendarViewMount,
-            closePopup: _this2.closePopup,
-            hasHeader: false,
-            onChange: _this2.handleSelect,
-            initializeWith: Object(_parse__WEBPACK_IMPORTED_MODULE_7__["getInitializer"])({
-              initialDate: initialDate,
-              dateFormat: dateFormat
-            }),
-            value: Object(_parse__WEBPACK_IMPORTED_MODULE_7__["parseValue"])(value, dateFormat),
-            disable: Object(_parse__WEBPACK_IMPORTED_MODULE_7__["parseArrayOrValue"])(disable, dateFormat),
-            maxDate: Object(_parse__WEBPACK_IMPORTED_MODULE_7__["parseValue"])(maxDate, dateFormat),
-            minDate: Object(_parse__WEBPACK_IMPORTED_MODULE_7__["parseValue"])(minDate, dateFormat)
-          }));
-        }
-      }));
+    if (start && start.isValid()) {
+        result.start = start;
     }
-  }]);
-
-  return MonthInput;
-}(_BaseInput__WEBPACK_IMPORTED_MODULE_6__["default"]);
-
-_defineProperty(MonthInput, "handledProps", ["closable", "dateFormat", "disable", "initialDate", "maxDate", "minDate", "value"]);
-
-MonthInput.propTypes = {
-  /** Currently selected value. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** Moment date formatting string. */
-  dateFormat: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** Date to display initially when no date is selected. */
-  initialDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** Date or list of dates that are displayed as disabled. */
-  disable: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["string"]), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__)), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date), prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date))]),
-
-  /** Maximum date that can be selected. */
-  maxDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** Minimum date that can be selected. */
-  minDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** If true, popup closes after selecting a date-time. */
-  closable: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"]
-};
-MonthInput.defaultProps = {
-  dateFormat: 'MMM'
-};
-/* harmony default export */ __webpack_exports__["default"] = (MonthInput);
-
-/***/ }),
-
-/***/ "./src/inputs/TimeInput.js":
-/*!*********************************!*\
-  !*** ./src/inputs/TimeInput.js ***!
-  \*********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _views_InputView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../views/InputView */ "./src/views/InputView.js");
-/* harmony import */ var _pickers_timePicker_HourPicker__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../pickers/timePicker/HourPicker */ "./src/pickers/timePicker/HourPicker.js");
-/* harmony import */ var _pickers_timePicker_MinutePicker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../pickers/timePicker/MinutePicker */ "./src/pickers/timePicker/MinutePicker.js");
-/* harmony import */ var _BaseInput__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.js");
-/* harmony import */ var _parse__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./parse */ "./src/inputs/parse.js");
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib */ "./src/lib/index.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-
-
-
-
-function getNextMode(currentMode) {
-  if (currentMode === 'hour') return 'minute';
-  return 'hour';
+    if (end && end.isValid()) {
+        result.end = end;
+    }
+    return result;
 }
-
-var TimeInput =
-/*#__PURE__*/
-function (_BaseInput) {
-  _inherits(TimeInput, _BaseInput);
-
-  /**
-   * Component responsibility:
-   *  - parse time input string
-   *  - switch between modes ['hour', 'minute']
-   *  - handle HourPicker/MinutePicker change (format { hour: number, minute: number } into output time string)
-   */
-  function TimeInput(props) {
-    var _this;
-
-    _classCallCheck(this, TimeInput);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(TimeInput).call(this, props));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleSelect", function (e, _ref) {
-      var value = _ref.value;
-      Object(_lib__WEBPACK_IMPORTED_MODULE_9__["tick"])(_this.handleSelectUndelayed, e, {
-        value: value
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleSelectUndelayed", function (e, _ref2) {
-      var value = _ref2.value;
-      var hour = value.hour,
-          minute = value.minute;
-      var _this$props = _this.props,
-          timeFormat = _this$props.timeFormat,
-          disableMinute = _this$props.disableMinute;
-      var outputTimeString = '';
-
-      if (_this.state.mode === 'hour' && !lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](hour)) {
-        outputTimeString = moment__WEBPACK_IMPORTED_MODULE_2__({
-          hour: hour
-        }).format(_parse__WEBPACK_IMPORTED_MODULE_8__["TIME_FORMAT"][timeFormat]);
-      } else if (!lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](hour) && !lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](minute)) {
-        outputTimeString = moment__WEBPACK_IMPORTED_MODULE_2__({
-          hour: hour,
-          minute: minute
-        }).format(_parse__WEBPACK_IMPORTED_MODULE_8__["TIME_FORMAT"][timeFormat]);
-      }
-
-      lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-        value: outputTimeString
-      }));
-
-      if (_this.props.closable && _this.state.mode === 'minute') {
-        _this.closePopup();
-      }
-
-      if (!disableMinute) _this.switchToNextMode();
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToNextMode", function () {
-      _this.setState(function (_ref3) {
-        var mode = _ref3.mode;
-        return {
-          mode: getNextMode(mode)
+var DatesRangeInput = /** @class */ (function (_super) {
+    __extends(DatesRangeInput, _super);
+    function DatesRangeInput(props) {
+        var _this = _super.call(this, props) || this;
+        _this.handleSelect = function (e, _a) {
+            var value = _a.value;
+            var dateFormat = _this.props.dateFormat;
+            var start = value.start, end = value.end;
+            var outputString = '';
+            if (start && end) {
+                outputString = "" + start.format(dateFormat) + DATES_SEPARATOR + end.format(dateFormat);
+            }
+            else if (start) {
+                outputString = "" + start.format(dateFormat) + DATES_SEPARATOR;
+            }
+            _.invoke(_this.props, 'onChange', e, __assign({}, _this.props, { value: outputString }));
+            if (_this.props.closable && start && end) {
+                _this.closePopup();
+            }
         };
-      }, _this.onModeSwitch);
-    });
-
-    _this.state = {
-      mode: 'hour'
+        _this.state = {
+            popupIsClosed: false,
+        };
+        return _this;
+    }
+    DatesRangeInput.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, value = _a.value, icon = _a.icon, dateFormat = _a.dateFormat, initialDate = _a.initialDate, maxDate = _a.maxDate, minDate = _a.minDate, closable = _a.closable, rest = __rest(_a, ["value", "icon", "dateFormat", "initialDate", "maxDate", "minDate", "closable"]);
+        var _b = parseDatesRange(value, dateFormat), start = _b.start, end = _b.end;
+        return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, icon: _.isBoolean(icon) && !icon ? undefined : icon }, rest, { value: value, onMount: this.onInputViewMount, render: function (pickerProps) {
+                return (React.createElement(DatesRangePicker_1.default, __assign({}, pickerProps, { isPickerInFocus: _this.isPickerInFocus, isTriggerInFocus: _this.isTriggerInFocus, inline: _this.props.inline, onCalendarViewMount: _this.onCalendarViewMount, closePopup: _this.closePopup, onChange: _this.handleSelect, dateFormat: dateFormat, initializeWith: parse_1.getInitializer({ initialDate: initialDate, dateFormat: dateFormat }), start: start, end: end, minDate: parse_1.parseValue(minDate, dateFormat), maxDate: parse_1.parseValue(maxDate, dateFormat) })));
+            } })));
     };
-    return _this;
-  }
+    /**
+     * Component responsibility:
+     *  - parse input value (start: Moment, end: Moment)
+     *  - handle DayPicker change (format {start: Moment, end: Moment} into
+     *    string 'start - end')
+     */
+    DatesRangeInput.defaultProps = {
+        dateFormat: 'DD-MM-YYYY',
+        icon: 'calendar',
+        inline: false,
+    };
+    DatesRangeInput.propTypes = {
+        /** Currently selected value. */
+        value: PropTypes.string,
+        /** Moment date formatting string. */
+        dateFormat: PropTypes.string,
+        /** Date to display initially when no date is selected. */
+        initialDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** Maximum date that can be selected. */
+        maxDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** Minimum date that can be selected. */
+        minDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** If true, popup closes after selecting a date-time. */
+        closable: PropTypes.bool,
+        /**
+         * Called on clear.
+         *
+         * @param {SyntheticEvent} event - React's original SyntheticEvent.
+         * @param {object} data - All props and proposed value.
+         */
+        onClear: PropTypes.func,
+        /** Using the clearable setting will let users remove their selection from a calendar. */
+        clearable: PropTypes.bool,
+        /** Optional Icon to display inside the clearable Input. */
+        clearIcon: PropTypes.any,
+    };
+    return DatesRangeInput;
+}(BaseInput_1.default));
+exports.default = DatesRangeInput;
 
-  _createClass(TimeInput, [{
-    key: "getPicker",
-    value: function getPicker(_ref4) {
-      var tabIndex = _ref4.tabIndex;
-      var _this$props2 = this.props,
-          value = _this$props2.value,
-          timeFormat = _this$props2.timeFormat,
-          inline = _this$props2.inline;
-      var currentValue = Object(_parse__WEBPACK_IMPORTED_MODULE_8__["parseValue"])(value, _parse__WEBPACK_IMPORTED_MODULE_8__["TIME_FORMAT"][timeFormat]);
-      var pickerProps = {
-        inline: inline,
-        onCalendarViewMount: this.onCalendarViewMount,
-        isPickerInFocus: this.isPickerInFocus,
-        isTriggerInFocus: this.isTriggerInFocus,
-        hasHeader: false,
-        closePopup: this.closePopup,
-        initializeWith: Object(_parse__WEBPACK_IMPORTED_MODULE_8__["getInitializer"])({
-          initialDate: currentValue,
-          dateFormat: _parse__WEBPACK_IMPORTED_MODULE_8__["TIME_FORMAT"][timeFormat]
-        }),
-        value: currentValue,
-        onChange: this.handleSelect,
-        timeFormat: timeFormat,
-        tabIndex: tabIndex // key: value, // seems like it works without reinstantiating picker every time value changes
 
-      };
+/***/ }),
 
-      if (this.state.mode === 'hour') {
-        return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_pickers_timePicker_HourPicker__WEBPACK_IMPORTED_MODULE_5__["default"], pickerProps);
-      }
+/***/ "./src/inputs/MonthInput.tsx":
+/*!***********************************!*\
+  !*** ./src/inputs/MonthInput.tsx ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_pickers_timePicker_MinutePicker__WEBPACK_IMPORTED_MODULE_6__["default"], pickerProps);
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this2 = this;
+"use strict";
 
-      var value = this.props.value;
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_9__["getUnhandledProps"])(TimeInput, this.props);
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_views_InputView__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({
-        popupIsClosed: this.state.popupIsClosed,
-        icon: "time",
-        onMount: this.onInputViewMount
-      }, rest, {
-        value: value,
-        render: function render(pickerProps) {
-          return _this2.getPicker(pickerProps);
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
         }
-      }));
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+var PropTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var CustomPropTypes_1 = __webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts");
+var MonthPicker_1 = __webpack_require__(/*! ../pickers/MonthPicker */ "./src/pickers/MonthPicker.tsx");
+var InputView_1 = __webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx");
+var BaseInput_1 = __webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx");
+var parse_1 = __webpack_require__(/*! ./parse */ "./src/inputs/parse.ts");
+var MonthInput = /** @class */ (function (_super) {
+    __extends(MonthInput, _super);
+    function MonthInput(props) {
+        var _this = _super.call(this, props) || this;
+        _this.handleSelect = function (e, _a) {
+            var value = _a.value;
+            var date = moment({ month: value.month });
+            var output = '';
+            if (date.isValid()) {
+                output = date.format(_this.props.dateFormat);
+            }
+            _.invoke(_this.props, 'onChange', e, __assign({}, _this.props, { value: output }));
+            if (_this.props.closable) {
+                _this.closePopup();
+            }
+        };
+        _this.state = {
+            popupIsClosed: false,
+        };
+        return _this;
     }
-  }]);
+    MonthInput.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, value = _a.value, dateFormat = _a.dateFormat, initialDate = _a.initialDate, disable = _a.disable, maxDate = _a.maxDate, minDate = _a.minDate, closable = _a.closable, rest = __rest(_a, ["value", "dateFormat", "initialDate", "disable", "maxDate", "minDate", "closable"]);
+        return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed }, rest, { value: value, onMount: this.onInputViewMount, render: function (pickerProps) { return (React.createElement(MonthPicker_1.default, __assign({}, pickerProps, { inline: _this.props.inline, isPickerInFocus: _this.isPickerInFocus, isTriggerInFocus: _this.isTriggerInFocus, onCalendarViewMount: _this.onCalendarViewMount, closePopup: _this.closePopup, hasHeader: false, onChange: _this.handleSelect, initializeWith: parse_1.getInitializer({ initialDate: initialDate, dateFormat: dateFormat }), value: parse_1.parseValue(value, dateFormat), disable: parse_1.parseArrayOrValue(disable, dateFormat), maxDate: parse_1.parseValue(maxDate, dateFormat), minDate: parse_1.parseValue(minDate, dateFormat) }))); } })));
+    };
+    MonthInput.defaultProps = {
+        dateFormat: 'MMM',
+        icon: 'calendar',
+        inline: false,
+    };
+    MonthInput.propTypes = {
+        /** Called on selected value change. */
+        onChange: PropTypes.func.isRequired,
+        /** Currently selected value. */
+        value: PropTypes.string,
+        /** Moment date formatting string. */
+        dateFormat: PropTypes.string,
+        /** Date to display initially when no date is selected. */
+        initialDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** Date or list of dates that are displayed as disabled. */
+        disable: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.arrayOf(PropTypes.string),
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+            PropTypes.instanceOf(Date),
+            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
+        ]),
+        /** Maximum date that can be selected. */
+        maxDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** Minimum date that can be selected. */
+        minDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** If true, popup closes after selecting a date-time. */
+        closable: PropTypes.bool,
+        /**
+         * Called on clear.
+         *
+         * @param {SyntheticEvent} event - React's original SyntheticEvent.
+         * @param {object} data - All props and proposed value.
+         */
+        onClear: PropTypes.func,
+        /** Using the clearable setting will let users remove their selection from a calendar. */
+        clearable: PropTypes.bool,
+        /** Optional Icon to display inside the clearable Input. */
+        clearIcon: PropTypes.any,
+    };
+    return MonthInput;
+}(BaseInput_1.default));
+exports.default = MonthInput;
 
-  return TimeInput;
-}(_BaseInput__WEBPACK_IMPORTED_MODULE_7__["default"]);
-
-_defineProperty(TimeInput, "handledProps", ["closable", "disableMinute", "timeFormat", "value"]);
-
-TimeInput.propTypes = {
-  /** Currently selected value. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** One of ["24", "AMPM", "ampm"] */
-  timeFormat: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOf"](['24', 'AMPM', 'ampm']),
-
-  /** If true, popup closes after selecting a date-time. */
-  closable: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"],
-
-  /** If true, minutes picker won't be shown after picking the hour. */
-  disableMinute: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"]
-};
-TimeInput.defaultProps = {
-  timeFormat: '24',
-  disableMinute: false
-};
-/* harmony default export */ __webpack_exports__["default"] = (TimeInput);
 
 /***/ }),
 
-/***/ "./src/inputs/YearInput.js":
-/*!*********************************!*\
-  !*** ./src/inputs/YearInput.js ***!
-  \*********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/inputs/TimeInput.tsx":
+/*!**********************************!*\
+  !*** ./src/inputs/TimeInput.tsx ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _views_InputView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../views/InputView */ "./src/views/InputView.js");
-/* harmony import */ var _pickers_YearPicker__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../pickers/YearPicker */ "./src/pickers/YearPicker.js");
-/* harmony import */ var _BaseInput__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.js");
-/* harmony import */ var _parse__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./parse */ "./src/inputs/parse.js");
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib */ "./src/lib/index.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-
-
-
-var YearInput =
-/*#__PURE__*/
-function (_BaseInput) {
-  _inherits(YearInput, _BaseInput);
-
-  function YearInput(props) {
-    var _this;
-
-    _classCallCheck(this, YearInput);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(YearInput).call(this, props));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleSelect", function (e, _ref) {
-      var value = _ref.value;
-      var date = moment__WEBPACK_IMPORTED_MODULE_2__({
-        year: value.year
-      });
-      var output = '';
-
-      if (date.isValid()) {
-        output = date.format(_this.props.dateFormat);
-      }
-
-      lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-        value: output
-      }));
-
-      if (_this.props.closable) {
-        _this.closePopup();
-      }
-    });
-
-    _this.state = {};
-    return _this;
-  }
-
-  _createClass(YearInput, [{
-    key: "render",
-    value: function render() {
-      var _this2 = this;
-
-      var _this$props = this.props,
-          value = _this$props.value,
-          disable = _this$props.disable,
-          maxDate = _this$props.maxDate,
-          minDate = _this$props.minDate,
-          initialDate = _this$props.initialDate,
-          dateFormat = _this$props.dateFormat;
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_8__["getUnhandledProps"])(YearInput, this.props);
-      var initializeWith = Object(_parse__WEBPACK_IMPORTED_MODULE_7__["getInitializer"])({
-        dateParams: {
-          year: parseInt(value)
-        },
-        initialDate: initialDate,
-        dateFormat: dateFormat
-      });
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_views_InputView__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({
-        popupIsClosed: this.state.popupIsClosed,
-        icon: "calendar"
-      }, rest, {
-        value: value,
-        onMount: this.onInputViewMount,
-        render: function render(pickerProps) {
-          return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_pickers_YearPicker__WEBPACK_IMPORTED_MODULE_5__["default"], _extends({}, pickerProps, {
-            isPickerInFocus: _this2.isPickerInFocus,
-            isTriggerInFocus: _this2.isTriggerInFocus,
-            inline: _this2.props.inline,
-            onCalendarViewMount: _this2.onCalendarViewMount,
-            closePopup: _this2.closePopup,
-            onChange: _this2.handleSelect,
-            initializeWith: initializeWith,
-            value: Object(_parse__WEBPACK_IMPORTED_MODULE_7__["parseValue"])(value, dateFormat),
-            disable: Object(_parse__WEBPACK_IMPORTED_MODULE_7__["parseArrayOrValue"])(disable, dateFormat),
-            maxDate: Object(_parse__WEBPACK_IMPORTED_MODULE_7__["parseValue"])(maxDate, dateFormat),
-            minDate: Object(_parse__WEBPACK_IMPORTED_MODULE_7__["parseValue"])(minDate, dateFormat)
-          }));
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
         }
-      }));
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+var PropTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
+var HourPicker_1 = __webpack_require__(/*! ../pickers/timePicker/HourPicker */ "./src/pickers/timePicker/HourPicker.tsx");
+var MinutePicker_1 = __webpack_require__(/*! ../pickers/timePicker/MinutePicker */ "./src/pickers/timePicker/MinutePicker.tsx");
+var InputView_1 = __webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx");
+var BaseInput_1 = __webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx");
+var parse_1 = __webpack_require__(/*! ./parse */ "./src/inputs/parse.ts");
+function getNextMode(currentMode) {
+    if (currentMode === 'hour') {
+        return 'minute';
     }
-  }]);
+    return 'hour';
+}
+var TimeInput = /** @class */ (function (_super) {
+    __extends(TimeInput, _super);
+    function TimeInput(props) {
+        var _this = _super.call(this, props) || this;
+        _this.handleSelect = function (e, _a) {
+            var value = _a.value;
+            lib_1.tick(_this.handleSelectUndelayed, e, { value: value });
+        };
+        _this.handleSelectUndelayed = function (e, _a) {
+            var value = _a.value;
+            var hour = value.hour, minute = value.minute;
+            var _b = _this.props, timeFormat = _b.timeFormat, disableMinute = _b.disableMinute;
+            var outputTimeString = '';
+            if (_this.state.mode === 'hour' && !_.isNil(hour)) {
+                outputTimeString = moment({ hour: hour }).format(parse_1.TIME_FORMAT[timeFormat]);
+            }
+            else if (!_.isNil(hour) && !_.isNil(minute)) {
+                outputTimeString = moment({ hour: hour, minute: minute }).format(parse_1.TIME_FORMAT[timeFormat]);
+            }
+            _.invoke(_this.props, 'onChange', e, __assign({}, _this.props, { value: outputTimeString }));
+            if (_this.props.closable && _this.state.mode === 'minute') {
+                _this.closePopup();
+            }
+            if (!disableMinute) {
+                _this.switchToNextMode();
+            }
+        };
+        _this.switchToNextMode = function () {
+            _this.setState(function (_a) {
+                var mode = _a.mode;
+                return { mode: getNextMode(mode) };
+            }, _this.onModeSwitch);
+        };
+        _this.state = {
+            mode: 'hour',
+            popupIsClosed: false,
+        };
+        return _this;
+    }
+    TimeInput.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, value = _a.value, timeFormat = _a.timeFormat, closable = _a.closable, disableMinute = _a.disableMinute, rest = __rest(_a, ["value", "timeFormat", "closable", "disableMinute"]);
+        return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, onMount: this.onInputViewMount }, rest, { value: value, render: function (pickerProps) { return _this.getPicker(pickerProps); } })));
+    };
+    TimeInput.prototype.getPicker = function (_a) {
+        var tabIndex = _a.tabIndex;
+        var _b = this.props, value = _b.value, timeFormat = _b.timeFormat, inline = _b.inline;
+        var currentValue = parse_1.parseValue(value, parse_1.TIME_FORMAT[timeFormat]);
+        var pickerProps = {
+            inline: inline,
+            onCalendarViewMount: this.onCalendarViewMount,
+            isPickerInFocus: this.isPickerInFocus,
+            isTriggerInFocus: this.isTriggerInFocus,
+            hasHeader: false,
+            onHeaderClick: function () { return undefined; },
+            closePopup: this.closePopup,
+            initializeWith: parse_1.getInitializer({ initialDate: currentValue, dateFormat: parse_1.TIME_FORMAT[timeFormat] }),
+            value: currentValue,
+            onChange: this.handleSelect,
+            timeFormat: timeFormat,
+            tabIndex: tabIndex,
+        };
+        if (this.state.mode === 'hour') {
+            return React.createElement(HourPicker_1.default, __assign({}, pickerProps));
+        }
+        return React.createElement(MinutePicker_1.default, __assign({}, pickerProps));
+    };
+    /**
+     * Component responsibility:
+     *  - parse time input string
+     *  - switch between modes ['hour', 'minute']
+     *  - handle HourPicker/MinutePicker change (format { hour: number, minute: number } into output time string)
+     */
+    TimeInput.defaultProps = {
+        icon: 'time',
+        timeFormat: '24',
+        disableMinute: false,
+        inline: false,
+    };
+    TimeInput.propTypes = {
+        /** Currently selected value. */
+        value: PropTypes.string,
+        /** One of ["24", "AMPM", "ampm"] */
+        timeFormat: PropTypes.oneOf([
+            '24', 'AMPM', 'ampm',
+        ]),
+        /** If true, popup closes after selecting a date-time. */
+        closable: PropTypes.bool,
+        /** If true, minutes picker won't be shown after picking the hour. */
+        disableMinute: PropTypes.bool,
+        /**
+         * Called on clear.
+         *
+         * @param {SyntheticEvent} event - React's original SyntheticEvent.
+         * @param {object} data - All props and proposed value.
+         */
+        onClear: PropTypes.func,
+        /** Using the clearable setting will let users remove their selection from a calendar. */
+        clearable: PropTypes.bool,
+        /** Optional Icon to display inside the clearable Input. */
+        clearIcon: PropTypes.any,
+    };
+    return TimeInput;
+}(BaseInput_1.default));
+exports.default = TimeInput;
 
-  return YearInput;
-}(_BaseInput__WEBPACK_IMPORTED_MODULE_6__["default"]);
-
-_defineProperty(YearInput, "handledProps", ["closable", "dateFormat", "disable", "initialDate", "maxDate", "minDate", "value"]);
-
-YearInput.propTypes = {
-  /** Currently selected value. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** Moment date formatting string. */
-  dateFormat: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** Date to display initially when no date is selected. */
-  initialDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** Date or list of dates that are displayed as disabled. */
-  disable: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["string"]), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__)), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date), prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date))]),
-
-  /** Maximum date that can be selected. */
-  maxDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** Minimum date that can be selected. */
-  minDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_1__["string"], prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__), prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](Date)]),
-
-  /** If true, popup closes after selecting a date-time. */
-  closable: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"]
-};
-YearInput.defaultProps = {
-  dateFormat: 'YYYY'
-};
-/* harmony default export */ __webpack_exports__["default"] = (YearInput);
 
 /***/ }),
 
-/***/ "./src/inputs/index.js":
-/*!*****************************!*\
-  !*** ./src/inputs/index.js ***!
-  \*****************************/
-/*! exports provided: DateInput, DateTimeInput, DatesRangeInput, YearInput, MonthInput, TimeInput */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/inputs/YearInput.tsx":
+/*!**********************************!*\
+  !*** ./src/inputs/YearInput.tsx ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _DateInput__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DateInput */ "./src/inputs/DateInput.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DateInput", function() { return _DateInput__WEBPACK_IMPORTED_MODULE_0__["default"]; });
 
-/* harmony import */ var _DateTimeInput__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DateTimeInput */ "./src/inputs/DateTimeInput.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DateTimeInput", function() { return _DateTimeInput__WEBPACK_IMPORTED_MODULE_1__["default"]; });
-
-/* harmony import */ var _DatesRangeInput__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DatesRangeInput */ "./src/inputs/DatesRangeInput.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DatesRangeInput", function() { return _DatesRangeInput__WEBPACK_IMPORTED_MODULE_2__["default"]; });
-
-/* harmony import */ var _YearInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./YearInput */ "./src/inputs/YearInput.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "YearInput", function() { return _YearInput__WEBPACK_IMPORTED_MODULE_3__["default"]; });
-
-/* harmony import */ var _MonthInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./MonthInput */ "./src/inputs/MonthInput.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MonthInput", function() { return _MonthInput__WEBPACK_IMPORTED_MODULE_4__["default"]; });
-
-/* harmony import */ var _TimeInput__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TimeInput */ "./src/inputs/TimeInput.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TimeInput", function() { return _TimeInput__WEBPACK_IMPORTED_MODULE_5__["default"]; });
-
-
-
-
-
-
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+var PropTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var CustomPropTypes_1 = __webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts");
+var YearPicker_1 = __webpack_require__(/*! ../pickers/YearPicker */ "./src/pickers/YearPicker.tsx");
+var InputView_1 = __webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx");
+var BaseInput_1 = __webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx");
+var parse_1 = __webpack_require__(/*! ./parse */ "./src/inputs/parse.ts");
+var YearInput = /** @class */ (function (_super) {
+    __extends(YearInput, _super);
+    function YearInput(props) {
+        var _this = _super.call(this, props) || this;
+        _this.handleSelect = function (e, _a) {
+            var value = _a.value;
+            var date = moment({ year: value.year });
+            var output = '';
+            if (date.isValid()) {
+                output = date.format(_this.props.dateFormat);
+            }
+            var data = __assign({}, _this.props, { value: output });
+            _this.props.onChange(e, data);
+            if (_this.props.closable) {
+                _this.closePopup();
+            }
+        };
+        _this.state = {
+            popupIsClosed: false,
+        };
+        return _this;
+    }
+    YearInput.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, value = _a.value, disable = _a.disable, maxDate = _a.maxDate, minDate = _a.minDate, initialDate = _a.initialDate, dateFormat = _a.dateFormat, closable = _a.closable, rest = __rest(_a, ["value", "disable", "maxDate", "minDate", "initialDate", "dateFormat", "closable"]);
+        var initializeWith = parse_1.getInitializer({
+            dateParams: { year: parseInt(value, 10) },
+            initialDate: initialDate,
+            dateFormat: dateFormat,
+        });
+        return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed }, rest, { value: value, onMount: this.onInputViewMount, render: function (pickerProps) { return (React.createElement(YearPicker_1.default, __assign({}, pickerProps, { isPickerInFocus: _this.isPickerInFocus, isTriggerInFocus: _this.isTriggerInFocus, inline: _this.props.inline, onCalendarViewMount: _this.onCalendarViewMount, closePopup: _this.closePopup, onChange: _this.handleSelect, initializeWith: initializeWith, value: parse_1.parseValue(value, dateFormat), disable: parse_1.parseArrayOrValue(disable, dateFormat), maxDate: parse_1.parseValue(maxDate, dateFormat), minDate: parse_1.parseValue(minDate, dateFormat) }))); } })));
+    };
+    YearInput.defaultProps = {
+        dateFormat: 'YYYY',
+        inline: false,
+        icon: 'calendar',
+    };
+    YearInput.propTypes = {
+        /** Currently selected value. */
+        value: PropTypes.string,
+        /** Moment date formatting string. */
+        dateFormat: PropTypes.string,
+        /** Date to display initially when no date is selected. */
+        initialDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** Date or list of dates that are displayed as disabled. */
+        disable: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.arrayOf(PropTypes.string),
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+            PropTypes.instanceOf(Date),
+            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
+        ]),
+        /** Maximum date that can be selected. */
+        maxDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** Minimum date that can be selected. */
+        minDate: PropTypes.oneOfType([
+            PropTypes.string,
+            CustomPropTypes_1.default.momentObj,
+            PropTypes.instanceOf(Date),
+        ]),
+        /** If true, popup closes after selecting a date-time. */
+        closable: PropTypes.bool,
+        /**
+         * Called on clear.
+         *
+         * @param {SyntheticEvent} event - React's original SyntheticEvent.
+         * @param {object} data - All props and proposed value.
+         */
+        onClear: PropTypes.func,
+        /** Using the clearable setting will let users remove their selection from a calendar. */
+        clearable: PropTypes.bool,
+        /** Optional Icon to display inside the clearable Input. */
+        clearIcon: PropTypes.any,
+    };
+    return YearInput;
+}(BaseInput_1.default));
+exports.default = YearInput;
 
 
 /***/ }),
 
-/***/ "./src/inputs/parse.js":
+/***/ "./src/inputs/index.ts":
 /*!*****************************!*\
-  !*** ./src/inputs/parse.js ***!
+  !*** ./src/inputs/index.ts ***!
   \*****************************/
-/*! exports provided: TIME_FORMAT, parseValue, parseArrayOrValue, getInitializer, chooseValue */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TIME_FORMAT", function() { return TIME_FORMAT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseValue", function() { return parseValue; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseArrayOrValue", function() { return parseArrayOrValue; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInitializer", function() { return getInitializer; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "chooseValue", function() { return chooseValue; });
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var DateInput_1 = __webpack_require__(/*! ./DateInput */ "./src/inputs/DateInput.tsx");
+exports.DateInput = DateInput_1.default;
+var DateTimeInput_1 = __webpack_require__(/*! ./DateTimeInput */ "./src/inputs/DateTimeInput.tsx");
+exports.DateTimeInput = DateTimeInput_1.default;
+var DatesRangeInput_1 = __webpack_require__(/*! ./DatesRangeInput */ "./src/inputs/DatesRangeInput.tsx");
+exports.DatesRangeInput = DatesRangeInput_1.default;
+var TimeInput_1 = __webpack_require__(/*! ./TimeInput */ "./src/inputs/TimeInput.tsx");
+exports.TimeInput = TimeInput_1.default;
+var YearInput_1 = __webpack_require__(/*! ./YearInput */ "./src/inputs/YearInput.tsx");
+exports.YearInput = YearInput_1.default;
+var MonthInput_1 = __webpack_require__(/*! ./MonthInput */ "./src/inputs/MonthInput.tsx");
+exports.MonthInput = MonthInput_1.default;
 
 
-var TIME_FORMAT = {
-  '24': 'HH:mm',
-  'AMPM': 'hh:mm A',
-  'ampm': 'hh:mm a'
+/***/ }),
+
+/***/ "./src/inputs/parse.ts":
+/*!*****************************!*\
+  !*** ./src/inputs/parse.ts ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+exports.TIME_FORMAT = {
+    24: 'HH:mm',
+    AMPM: 'hh:mm A',
+    ampm: 'hh:mm a',
 };
 /** Parse string, moment, Date.
- * 
+ *
  * Return unedfined on invalid input.
  */
-
 function parseValue(value, dateFormat) {
-  if (!lodash__WEBPACK_IMPORTED_MODULE_1__["isNil"](value) && !lodash__WEBPACK_IMPORTED_MODULE_1__["isNil"](dateFormat)) {
-    var date = moment__WEBPACK_IMPORTED_MODULE_0__(value, dateFormat);
-
-    if (date.isValid()) {
-      return date;
+    if (!_.isNil(value) && !_.isNil(dateFormat)) {
+        var date = moment(value, dateFormat);
+        if (date.isValid()) {
+            return date;
+        }
     }
-  }
 }
+exports.parseValue = parseValue;
 /** Parse string, moment, Date, string[], moment[], Date[].
- * 
+ *
  * Return array of moments. Returned value contains only valid moments.
  * Return undefined if none of the input values are valid.
  */
-
 function parseArrayOrValue(data, dateFormat) {
-  if (lodash__WEBPACK_IMPORTED_MODULE_1__["isArray"](data)) {
-    var parsed = lodash__WEBPACK_IMPORTED_MODULE_1__["compact"](data.map(function (item) {
-      return parseValue(item, dateFormat);
-    }));
-
-    if (parsed.length > 0) {
-      return parsed;
+    if (_.isArray(data)) {
+        var parsed = _.compact(data.map(function (item) { return parseValue(item, dateFormat); }));
+        if (parsed.length > 0) {
+            return parsed;
+        }
     }
-  }
-
-  var parsedValue = parseValue(data, dateFormat);
-  return parsedValue && [parsedValue];
+    var parsedValue = parseValue(data, dateFormat);
+    return parsedValue && [parsedValue];
 }
+exports.parseArrayOrValue = parseArrayOrValue;
 /** Create moment.
- * 
+ *
  * Creates moment using `dateParams` or `initialDate` arguments (if provided).
  * Precedense order: dateParams -> initialDate -> default value
  */
-
-function getInitializer(context
-/*value, initialDate, dateFormat, dateParams*/
-) {
-  var dateParams = context.dateParams,
-      initialDate = context.initialDate,
-      dateFormat = context.dateFormat;
-
-  if (dateParams) {
-    var parsedParams = moment__WEBPACK_IMPORTED_MODULE_0__(dateParams);
-
-    if (parsedParams.isValid()) {
-      return parsedParams;
+function getInitializer(context) {
+    var dateParams = context.dateParams, initialDate = context.initialDate, dateFormat = context.dateFormat;
+    if (dateParams) {
+        var parsedParams = moment(dateParams);
+        if (parsedParams.isValid()) {
+            return parsedParams;
+        }
     }
-  }
-
-  var parsedInitialDate = parseValue(initialDate, dateFormat);
-
-  if (parsedInitialDate) {
-    return parsedInitialDate;
-  }
-
-  return moment__WEBPACK_IMPORTED_MODULE_0__();
+    var parsedInitialDate = parseValue(initialDate, dateFormat);
+    if (parsedInitialDate) {
+        return parsedInitialDate;
+    }
+    return moment();
 }
+exports.getInitializer = getInitializer;
 /** Return initial date if `value` is empty and if `initialDate` provided. */
-
 function chooseValue(value, initialDate) {
-  if (value === '' && initialDate) {
-    return initialDate;
-  }
-
-  return value;
+    if (value === '' && initialDate) {
+        return initialDate;
+    }
+    return value;
 }
+exports.chooseValue = chooseValue;
+function dateValueToString(value, dateFormat) {
+    if (_.isString(value)) {
+        return value;
+    }
+    if (moment.isMoment(value)) {
+        return value.format(dateFormat);
+    }
+    return moment(value, dateFormat).format(dateFormat);
+}
+exports.dateValueToString = dateValueToString;
+
 
 /***/ }),
 
-/***/ "./src/inputs/shared.js":
+/***/ "./src/inputs/shared.ts":
 /*!******************************!*\
-  !*** ./src/inputs/shared.js ***!
+  !*** ./src/inputs/shared.ts ***!
   \******************************/
-/*! exports provided: getDisabledMonths, getDisabledYears */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDisabledMonths", function() { return getDisabledMonths; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDisabledYears", function() { return getDisabledYears; });
+
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Filter out all moments that don't have
  * all dates in month disabled.
@@ -79318,60 +79469,34 @@ __webpack_require__.r(__webpack_exports__);
  * doesn't have any selectable date in month.
  */
 function getDisabledMonths(moments) {
-  if (!moments) {
-    return;
-  }
-
-  var disabledMonths = [];
-  var checkedMonths = [];
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
-
-  try {
-    var _loop = function _loop() {
-      var m = _step.value;
-
-      if (checkedMonths.indexOf(m.month()) < 0) {
-        var momentsForMonth = moments.filter(function (_m) {
-          return _m.month() === m.month();
-        });
-        var momentsForMonthUniq = [];
-
-        for (var i = 0; i < momentsForMonth.length; i++) {
-          if (momentsForMonthUniq.indexOf(momentsForMonth[i]) < 0) {
-            momentsForMonthUniq.push(momentsForMonth[i]);
-          }
+    if (!moments) {
+        return;
+    }
+    var disabledMonths = [];
+    var checkedMonths = [];
+    var _loop_1 = function (m) {
+        if (checkedMonths.indexOf(m.month()) < 0) {
+            var momentsForMonth = moments.filter(function (mForMonth) { return mForMonth.month() === m.month(); });
+            var momentsForMonthUniq = [];
+            for (var _i = 0, momentsForMonth_1 = momentsForMonth; _i < momentsForMonth_1.length; _i++) {
+                var mForMonth = momentsForMonth_1[_i];
+                if (momentsForMonthUniq.indexOf(mForMonth) < 0) {
+                    momentsForMonthUniq.push(mForMonth);
+                }
+            }
+            if (momentsForMonthUniq.length === m.daysInMonth()) {
+                disabledMonths.push(m);
+            }
+            checkedMonths.push(m);
         }
-
-        if (momentsForMonthUniq.length === m.daysInMonth()) {
-          disabledMonths.push(m);
-        }
-
-        checkedMonths.push(m);
-      }
     };
-
-    for (var _iterator = moments[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      _loop();
+    for (var _i = 0, moments_1 = moments; _i < moments_1.length; _i++) {
+        var m = moments_1[_i];
+        _loop_1(m);
     }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return != null) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
-
-  return disabledMonths;
+    return disabledMonths;
 }
+exports.getDisabledMonths = getDisabledMonths;
 /**
  * Filter out all moments that don't have
  * all months in year disabled.
@@ -79379,4239 +79504,2620 @@ function getDisabledMonths(moments) {
  * @return An array of moments; each of these moments
  * doesn't have any selectable month in year.
  */
-
 function getDisabledYears(moments) {
-  if (!moments) {
-    return;
-  }
-
-  var disabledYears = [];
-  var checkedYears = [];
-  var _iteratorNormalCompletion2 = true;
-  var _didIteratorError2 = false;
-  var _iteratorError2 = undefined;
-
-  try {
-    var _loop2 = function _loop2() {
-      var y = _step2.value;
-
-      if (checkedYears.indexOf(y.year()) < 0) {
-        var momentsForYear = getDisabledMonths(moments.filter(function (_y) {
-          return _y.year() === y.year();
-        }));
-        var momentsForYearUniq = [];
-
-        for (var i = 0; i < momentsForYear.length; i++) {
-          if (momentsForYearUniq.indexOf(momentsForYear[i]) < 0) {
-            momentsForYearUniq.push(momentsForYear[i]);
-          }
+    if (!moments) {
+        return;
+    }
+    var disabledYears = [];
+    var checkedYears = [];
+    var _loop_2 = function (y) {
+        if (checkedYears.indexOf(y.year()) < 0) {
+            var momentsForYear = getDisabledMonths(moments.filter(function (mForYear) { return mForYear.year() === y.year(); }));
+            var momentsForYearUniq = [];
+            for (var _i = 0, momentsForYear_1 = momentsForYear; _i < momentsForYear_1.length; _i++) {
+                var mForYear = momentsForYear_1[_i];
+                if (momentsForYearUniq.indexOf(mForYear) < 0) {
+                    momentsForYearUniq.push(mForYear);
+                }
+            }
+            if (momentsForYearUniq.length === 12) {
+                disabledYears.push(y);
+            }
+            checkedYears.push(y);
         }
-
-        if (momentsForYearUniq.length === 12) {
-          disabledYears.push(y);
-        }
-
-        checkedYears.push(y);
-      }
     };
-
-    for (var _iterator2 = moments[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-      _loop2();
+    for (var _i = 0, moments_2 = moments; _i < moments_2.length; _i++) {
+        var y = moments_2[_i];
+        _loop_2(y);
     }
-  } catch (err) {
-    _didIteratorError2 = true;
-    _iteratorError2 = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-        _iterator2.return();
-      }
-    } finally {
-      if (_didIteratorError2) {
-        throw _iteratorError2;
-      }
-    }
-  }
-
-  return disabledYears;
+    return disabledYears;
 }
+exports.getDisabledYears = getDisabledYears;
+
 
 /***/ }),
 
-/***/ "./src/lib/getUnhandledProps.js":
-/*!**************************************!*\
-  !*** ./src/lib/getUnhandledProps.js ***!
-  \**************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/lib/CustomPropTypes.ts":
+/*!************************************!*\
+  !*** ./src/lib/CustomPropTypes.ts ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/**
- * Returns an object consisting of props beyond the scope of the Component.
- * Useful for getting and spreading unknown props from the user.
- * @param {function} Component A function or ReactClass.
- * @param {object} props A ReactElement props object
- * @returns {{}} A shallow copy of the prop object
- */
-var getUnhandledProps = function getUnhandledProps(Component, props) {
-  // Note that `handledProps` are generated automatically during build with `babel-plugin-transform-react-handled-props`
-  var _Component$handledPro = Component.handledProps,
-      handledProps = _Component$handledPro === void 0 ? [] : _Component$handledPro;
-  return Object.keys(props).reduce(function (acc, propKey) {
-    if (handledProps.indexOf(propKey) === -1) acc[propKey] = props[propKey];
-    return acc;
-  }, {});
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+function momentObj(props, propName, componentName) {
+    if (props[propName]) {
+        var value = props[propName];
+        if (moment.isMoment(value)) {
+            if (!value.isValid()) {
+                return new Error(propName + " in " + componentName + " is invalid 'moment' object");
+            }
+        }
+        else {
+            return new Error(propName + " in " + componentName + " is not 'moment' object");
+        }
+    }
+    return null;
+}
+exports.momentObj = momentObj;
+exports.default = {
+    momentObj: momentObj,
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (getUnhandledProps);
 
 /***/ }),
 
-/***/ "./src/lib/index.js":
+/***/ "./src/lib/findHTMLElement.ts":
+/*!************************************!*\
+  !*** ./src/lib/findHTMLElement.ts ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ReactDOM = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+function findHTMLElement(e) {
+    var el = ReactDOM.findDOMNode(e);
+    if (el && el.focus) {
+        return el;
+    }
+    return undefined;
+}
+exports.default = findHTMLElement;
+
+
+/***/ }),
+
+/***/ "./src/lib/index.ts":
 /*!**************************!*\
-  !*** ./src/lib/index.js ***!
+  !*** ./src/lib/index.ts ***!
   \**************************/
-/*! exports provided: getUnhandledProps, tick */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _getUnhandledProps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getUnhandledProps */ "./src/lib/getUnhandledProps.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getUnhandledProps", function() { return _getUnhandledProps__WEBPACK_IMPORTED_MODULE_0__["default"]; });
 
-/* harmony import */ var _tick__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tick */ "./src/lib/tick.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "tick", function() { return _tick__WEBPACK_IMPORTED_MODULE_1__["default"]; });
-
-
+Object.defineProperty(exports, "__esModule", { value: true });
+var tick_1 = __webpack_require__(/*! ./tick */ "./src/lib/tick.ts");
+exports.tick = tick_1.default;
+var findHTMLElement_1 = __webpack_require__(/*! ./findHTMLElement */ "./src/lib/findHTMLElement.ts");
+exports.findHTMLElement = findHTMLElement_1.default;
 
 
 /***/ }),
 
-/***/ "./src/lib/tick.js":
+/***/ "./src/lib/tick.ts":
 /*!*************************!*\
-  !*** ./src/lib/tick.js ***!
+  !*** ./src/lib/tick.ts ***!
   \*************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
+
+Object.defineProperty(exports, "__esModule", { value: true });
 /** Set zero timeout.
- * 
+ *
  * Sometimes we need to delay rerendering components
  * on one tick (if they are inside  `Popup` and rerendering could
  * change `Popup`'s content sizes).
- * Becouse it races with Popup's onclick handler.
+ * Because it races with Popup's onclick handler.
  * `Popup` relies on it's content sizes when computing
  * should popup stay open or be closed. So we need
  * to wait until `Popup`'s onclick handler done its job.
  */
-var tick = function tick(leadToRerendering) {
-  for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    args[_key - 1] = arguments[_key];
-  }
-
-  setTimeout.apply(void 0, [leadToRerendering, 0].concat(args));
+var tick = function (leadToRerendering) {
+    var args = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args[_i - 1] = arguments[_i];
+    }
+    setTimeout.apply(void 0, [leadToRerendering, 0].concat(args));
 };
+exports.default = tick;
 
-/* harmony default export */ __webpack_exports__["default"] = (tick);
 
 /***/ }),
 
-/***/ "./src/pickers/BasePicker.js":
-/*!***********************************!*\
-  !*** ./src/pickers/BasePicker.js ***!
-  \***********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! keyboard-key */ "./node_modules/keyboard-key/src/keyboardKey.js");
-/* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(keyboard_key__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_2__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-var BasePicker =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(BasePicker, _React$Component);
-
-  function BasePicker() {
-    var _getPrototypeOf2;
-
-    var _this;
-
-    _classCallCheck(this, BasePicker);
-
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(BasePicker)).call.apply(_getPrototypeOf2, [this].concat(args)));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onHoveredCellPositionChange", function (e, _ref) {
-      var itemPosition = _ref.itemPosition;
-
-      _this.setState({
-        hoveredCellPosition: itemPosition
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "canCalendarCatchKeyboardEvents", function () {
-      if (_this.props.inline) {
-        return _this.props.isPickerInFocus();
-      }
-
-      return _this.props.isTriggerInFocus();
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleKeyPress", function (event) {
-      if (!_this.canCalendarCatchKeyboardEvents()) {
-        return;
-      }
-
-      var key = keyboard_key__WEBPACK_IMPORTED_MODULE_1___default.a.getKey(event);
-
-      switch (key) {
-        case 'Enter':
-          _this.handleEnterKeyPress(event);
-
-          break;
-
-        default:
-          _this.handleArrowKeyPress(event);
-
-      }
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleEnterKeyPress", function (event) {
-      var key = keyboard_key__WEBPACK_IMPORTED_MODULE_1___default.a.getKey(event);
-
-      if (key === 'Enter' && _this.canCalendarCatchKeyboardEvents()) {
-        event.preventDefault();
-
-        var selectedValue = _this.buildCalendarValues()[_this.state.hoveredCellPosition];
-
-        _this.handleChange(null, {
-          value: selectedValue,
-          itemPosition: _this.state.hoveredCellPosition
-        });
-      }
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleBlur", function () {
-      _this.props.closePopup && _this.props.closePopup();
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleArrowKeyPress", function (event) {
-      if (!_this.canCalendarCatchKeyboardEvents()) {
-        return;
-      }
-
-      var key = keyboard_key__WEBPACK_IMPORTED_MODULE_1___default.a.getKey(event);
-
-      var selectableCells = _this.getSelectableCellPositions();
-
-      var nextSelectableCellPositionLeft = selectableCells.slice(0, selectableCells.indexOf(_this.state.hoveredCellPosition)).pop();
-      var nextSelectableCellPositionRight = selectableCells.slice(selectableCells.indexOf(_this.state.hoveredCellPosition) + 1)[0];
-
-      switch (key) {
-        case 'ArrowLeft':
-          event.preventDefault();
-
-          if (nextSelectableCellPositionLeft) {
-            _this.onHoveredCellPositionChange(null, {
-              itemPosition: nextSelectableCellPositionLeft
-            });
-          } else {
-            _this.isPrevPageAvailable() && _this.switchToPrevPage(null, null, function () {
-              var selectableCells = _this.getSelectableCellPositions();
-
-              _this.onHoveredCellPositionChange(null, {
-                itemPosition: selectableCells[selectableCells.length - 1]
-              });
-            });
-          }
-
-          break;
-
-        case 'ArrowRight':
-          event.preventDefault();
-
-          if (nextSelectableCellPositionRight) {
-            _this.onHoveredCellPositionChange(null, {
-              itemPosition: nextSelectableCellPositionRight
-            });
-          } else {
-            _this.isNextPageAvailable() && _this.switchToNextPage(null, null, function () {
-              var selectableCells = _this.getSelectableCellPositions();
-
-              _this.onHoveredCellPositionChange(null, {
-                itemPosition: selectableCells[0]
-              });
-            });
-          }
-
-          break;
-
-        case 'ArrowUp':
-          event.preventDefault();
-
-          if (lodash__WEBPACK_IMPORTED_MODULE_2__["includes"](selectableCells, _this.state.hoveredCellPosition - _this.PAGE_WIDTH)) {
-            _this.onHoveredCellPositionChange(null, {
-              itemPosition: _this.state.hoveredCellPosition - _this.PAGE_WIDTH
-            });
-          }
-
-          break;
-
-        case 'ArrowDown':
-          event.preventDefault();
-
-          if (lodash__WEBPACK_IMPORTED_MODULE_2__["includes"](selectableCells, _this.state.hoveredCellPosition + _this.PAGE_WIDTH)) {
-            _this.onHoveredCellPositionChange(null, {
-              itemPosition: _this.state.hoveredCellPosition + _this.PAGE_WIDTH
-            });
-          }
-
-          break;
-
-        default:
-          break;
-      }
-    });
-
-    return _this;
-  }
-
-  _createClass(BasePicker, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this.setState({
-        hoveredCellPosition: this.getActiveCellPosition && this.getActiveCellPosition() || this.getInitialDatePosition()
-      });
-      document.addEventListener('keydown', this.handleKeyPress);
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      document.removeEventListener('keydown', this.handleKeyPress);
-    }
-  }]);
-
-  return BasePicker;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-/* harmony default export */ __webpack_exports__["default"] = (BasePicker);
-
-/***/ }),
-
-/***/ "./src/pickers/MonthPicker.js":
+/***/ "./src/pickers/BasePicker.tsx":
 /*!************************************!*\
-  !*** ./src/pickers/MonthPicker.js ***!
+  !*** ./src/pickers/BasePicker.tsx ***!
   \************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _views_MonthView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../views/MonthView */ "./src/views/MonthView.js");
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib */ "./src/lib/index.js");
-/* harmony import */ var _BasePicker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./BasePicker */ "./src/pickers/BasePicker.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var keyboardKey = __webpack_require__(/*! keyboard-key */ "./node_modules/keyboard-key/src/keyboardKey.js");
+var lodash_1 = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/** Do not expose this class. Instead use RangeSelectionPicker and SingleSelectionPicker. */
+var BasePicker = /** @class */ (function (_super) {
+    __extends(BasePicker, _super);
+    function BasePicker(props) {
+        var _this = _super.call(this, props) || this;
+        _this.onHoveredCellPositionChange = function (e, _a) {
+            var itemPosition = _a.itemPosition;
+            _this.setState({
+                hoveredCellPosition: itemPosition,
+            });
+        };
+        _this.canCalendarCatchKeyboardEvents = function () {
+            if (_this.props.inline) {
+                return _this.props.isPickerInFocus();
+            }
+            return _this.props.isTriggerInFocus();
+        };
+        _this.handleKeyPress = function (event) {
+            if (!_this.canCalendarCatchKeyboardEvents()) {
+                return;
+            }
+            var key = keyboardKey.getKey(event);
+            switch (key) {
+                case 'Enter':
+                    _this.handleEnterKeyPress(event);
+                    break;
+                default:
+                    _this.handleArrowKeyPress(event);
+            }
+        };
+        _this.handleEnterKeyPress = function (event) {
+            var key = keyboardKey.getKey(event);
+            if (key === 'Enter' && _this.canCalendarCatchKeyboardEvents()) {
+                event.preventDefault();
+                var selectedValue = _this.buildCalendarValues()[_this.state.hoveredCellPosition];
+                _this.handleChange(null, {
+                    value: selectedValue,
+                    itemPosition: _this.state.hoveredCellPosition,
+                });
+            }
+        };
+        _this.handleBlur = function () {
+            _this.props.closePopup();
+        };
+        _this.handleArrowKeyPress = function (event) {
+            if (!_this.canCalendarCatchKeyboardEvents()) {
+                return;
+            }
+            var key = keyboardKey.getKey(event);
+            var selectableCells = _this.getSelectableCellPositions();
+            var nextSelectableCellPositionLeft = selectableCells
+                .slice(0, selectableCells.indexOf(_this.state.hoveredCellPosition)).pop();
+            var nextSelectableCellPositionRight = selectableCells
+                .slice(selectableCells.indexOf(_this.state.hoveredCellPosition) + 1)[0];
+            switch (key) {
+                case 'ArrowLeft':
+                    event.preventDefault();
+                    if (nextSelectableCellPositionLeft) {
+                        _this.onHoveredCellPositionChange(null, { itemPosition: nextSelectableCellPositionLeft });
+                    }
+                    else {
+                        if (_this.isPrevPageAvailable()) {
+                            _this.switchToPrevPage(null, null, function () {
+                                var selectableCellsPrevPage = _this.getSelectableCellPositions();
+                                _this.onHoveredCellPositionChange(null, { itemPosition: selectableCellsPrevPage[selectableCellsPrevPage.length - 1] });
+                            });
+                        }
+                    }
+                    break;
+                case 'ArrowRight':
+                    event.preventDefault();
+                    if (nextSelectableCellPositionRight) {
+                        _this.onHoveredCellPositionChange(null, { itemPosition: nextSelectableCellPositionRight });
+                    }
+                    else {
+                        if (_this.isNextPageAvailable()) {
+                            _this.switchToNextPage(null, null, function () {
+                                var selectableCellsNextPage = _this.getSelectableCellPositions();
+                                _this.onHoveredCellPositionChange(null, { itemPosition: selectableCellsNextPage[0] });
+                            });
+                        }
+                    }
+                    break;
+                case 'ArrowUp':
+                    event.preventDefault();
+                    if (lodash_1.includes(selectableCells, _this.state.hoveredCellPosition - _this.PAGE_WIDTH)) {
+                        _this.onHoveredCellPositionChange(null, { itemPosition: _this.state.hoveredCellPosition - _this.PAGE_WIDTH });
+                    }
+                    break;
+                case 'ArrowDown':
+                    event.preventDefault();
+                    if (lodash_1.includes(selectableCells, _this.state.hoveredCellPosition + _this.PAGE_WIDTH)) {
+                        _this.onHoveredCellPositionChange(null, { itemPosition: _this.state.hoveredCellPosition + _this.PAGE_WIDTH });
+                    }
+                    break;
+                default:
+                    break;
+            }
+        };
+        _this.state = {
+            hoveredCellPosition: undefined,
+            date: props.initializeWith.clone(),
+        };
+        return _this;
+    }
+    BasePicker.prototype.componentDidMount = function () {
+        document.addEventListener('keydown', this.handleKeyPress);
+    };
+    BasePicker.prototype.componentWillUnmount = function () {
+        document.removeEventListener('keydown', this.handleKeyPress);
+    };
+    return BasePicker;
+}(React.Component));
+var RangeSelectionPicker = /** @class */ (function (_super) {
+    __extends(RangeSelectionPicker, _super);
+    function RangeSelectionPicker() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    RangeSelectionPicker.prototype.componentDidMount = function () {
+        _super.prototype.componentDidMount.call(this);
+        var _a = this.getActiveCellsPositions(), start = _a.start, end = _a.end;
+        var hoveredPos;
+        if (end) {
+            hoveredPos = end;
+        }
+        else if (start) {
+            hoveredPos = start;
+        }
+        else {
+            hoveredPos = this.getInitialDatePosition();
+        }
+        this.setState({
+            hoveredCellPosition: hoveredPos,
+        });
+    };
+    return RangeSelectionPicker;
+}(BasePicker));
+exports.RangeSelectionPicker = RangeSelectionPicker;
+var SingleSelectionPicker = /** @class */ (function (_super) {
+    __extends(SingleSelectionPicker, _super);
+    function SingleSelectionPicker() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    SingleSelectionPicker.prototype.componentDidMount = function () {
+        _super.prototype.componentDidMount.call(this);
+        var active = this.getActiveCellPosition();
+        this.setState({
+            hoveredCellPosition: lodash_1.isNumber(active) ? active : this.getInitialDatePosition(),
+        });
+    };
+    return SingleSelectionPicker;
+}(BasePicker));
+exports.SingleSelectionPicker = SingleSelectionPicker;
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+/***/ }),
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+/***/ "./src/pickers/MonthPicker.tsx":
+/*!*************************************!*\
+  !*** ./src/pickers/MonthPicker.tsx ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+"use strict";
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var MonthView_1 = __webpack_require__(/*! ../views/MonthView */ "./src/views/MonthView.tsx");
+var BasePicker_1 = __webpack_require__(/*! ./BasePicker */ "./src/pickers/BasePicker.tsx");
 var MONTHS_IN_YEAR = 12;
 var PAGE_WIDTH = 3;
-
-var MonthPicker =
-/*#__PURE__*/
-function (_BasePicker) {
-  _inherits(MonthPicker, _BasePicker);
-
-  /*
-    Note:
-      use it like this <MonthPicker key={someInputValue} />
-      to make react create new instance when input value changes
-  */
-  function MonthPicker(props) {
-    var _this;
-
-    _classCallCheck(this, MonthPicker);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(MonthPicker).call(this, props));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getSelectableCellPositions", function () {
-      return lodash__WEBPACK_IMPORTED_MODULE_3__["filter"](lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, MONTHS_IN_YEAR), function (m) {
-        return !lodash__WEBPACK_IMPORTED_MODULE_3__["includes"](_this.getDisabledMonthsPositions(), m);
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleChange", function (e, _ref) {
-      var value = _ref.value;
-      var year = parseInt(_this.getCurrentYear());
-
-      var month = _this.buildCalendarValues().indexOf(value);
-
-      lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-        value: {
-          year: year,
-          month: month
-        }
-      }));
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToNextPage", function () {
-      _this.setState(function (_ref2) {
-        var date = _ref2.date;
-        var nextDate = date.clone();
-        nextDate.add(1, 'year');
-        return {
-          date: nextDate
+var MonthPicker = /** @class */ (function (_super) {
+    __extends(MonthPicker, _super);
+    /*
+      Note:
+        use it like this <MonthPicker key={someInputValue} />
+        to make react create new instance when input value changes
+    */
+    function MonthPicker(props) {
+        var _this = _super.call(this, props) || this;
+        _this.handleChange = function (e, _a) {
+            var value = _a.value;
+            var data = __assign({}, _this.props, { value: {
+                    year: parseInt(_this.getCurrentDate(), 10),
+                    month: _this.buildCalendarValues().indexOf(value),
+                } });
+            _this.props.onChange(e, data);
         };
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToPrevPage", function () {
-      _this.setState(function (_ref3) {
-        var date = _ref3.date;
-        var prevDate = date.clone();
-        prevDate.subtract(1, 'year');
-        return {
-          date: prevDate
+        _this.switchToNextPage = function () {
+            _this.setState(function (_a) {
+                var date = _a.date;
+                var nextDate = date.clone();
+                nextDate.add(1, 'year');
+                return { date: nextDate };
+            });
         };
-      });
-    });
-
-    _this.state = {
-      /* moment instance */
-      date: props.initializeWith.clone()
+        _this.switchToPrevPage = function () {
+            _this.setState(function (_a) {
+                var date = _a.date;
+                var prevDate = date.clone();
+                prevDate.subtract(1, 'year');
+                return { date: prevDate };
+            });
+        };
+        _this.PAGE_WIDTH = PAGE_WIDTH;
+        return _this;
+    }
+    MonthPicker.prototype.render = function () {
+        var _a = this.props, onChange = _a.onChange, value = _a.value, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, disable = _a.disable, enable = _a.enable, minDate = _a.minDate, maxDate = _a.maxDate, rest = __rest(_a, ["onChange", "value", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "disable", "enable", "minDate", "maxDate"]);
+        return (React.createElement(MonthView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onValueClick: this.handleChange, onCellHover: this.onHoveredCellPositionChange, onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, disabledItemIndexes: this.getDisabledPositions(), activeItemIndex: this.getActiveCellPosition(), hoveredItemIndex: this.state.hoveredCellPosition, currentHeadingValue: this.getCurrentDate() })));
     };
-    _this.PAGE_WIDTH = PAGE_WIDTH;
-    return _this;
-  }
-
-  _createClass(MonthPicker, [{
-    key: "buildCalendarValues",
-    value: function buildCalendarValues() {
-      /*
-        Return array of months (strings) like ['Aug', 'Sep', ...]
-        that used to populate calendar's page.
-      */
-      return moment__WEBPACK_IMPORTED_MODULE_2__["monthsShort"]();
-    }
-  }, {
-    key: "getInitialDatePosition",
-    value: function getInitialDatePosition() {
-      return this.state.date.month();
-    }
-  }, {
-    key: "getActiveCellPosition",
-    value: function getActiveCellPosition() {
-      /*
-        Return position of a month that should be displayed as active
-        (position in array returned by `this.buildCalendarValues`).
-      */
-      if (!lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](this.props.value)) {
-        if (this.props.value.year() === this.state.date.year()) {
-          return this.props.value.month();
+    MonthPicker.prototype.getCurrentDate = function () {
+        /* Return current year(string) to display in calendar header. */
+        return this.state.date.year().toString();
+    };
+    MonthPicker.prototype.buildCalendarValues = function () {
+        /*
+          Return array of months (strings) like ['Aug', 'Sep', ...]
+          that used to populate calendar's page.
+        */
+        return moment.monthsShort();
+    };
+    MonthPicker.prototype.getSelectableCellPositions = function () {
+        var _this = this;
+        return _.filter(_.range(0, MONTHS_IN_YEAR), function (m) { return !_.includes(_this.getDisabledPositions(), m); });
+    };
+    MonthPicker.prototype.getInitialDatePosition = function () {
+        var selectable = this.getSelectableCellPositions();
+        if (selectable.indexOf(this.state.date.month()) < 0) {
+            return selectable[0];
         }
-      }
-    }
-  }, {
-    key: "getDisabledMonthsPositions",
-    value: function getDisabledMonthsPositions() {
-      var _this2 = this;
-
-      /*
-        Return position numbers of months that should be displayed as disabled
-        (position in array returned by `this.buildCalendarValues`).
-      */
-      var disabled = [];
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isArray"](this.props.enable)) {
-        var enabledMonthPositions = this.props.enable.filter(function (monthMoment) {
-          return monthMoment.isSame(_this2.state.date, 'year');
-        }).map(function (monthMoment) {
-          return monthMoment.month();
-        });
-        disabled = disabled.concat(lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, MONTHS_IN_YEAR).filter(function (monthPosition) {
-          return !lodash__WEBPACK_IMPORTED_MODULE_3__["includes"](enabledMonthPositions, monthPosition);
-        }));
-      }
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isArray"](this.props.disable)) {
-        disabled = disabled.concat(this.props.disable.filter(function (monthMoment) {
-          return monthMoment.year() === _this2.state.date.year();
-        }).map(function (monthMoment) {
-          return monthMoment.month();
-        }));
-      }
-
-      if (!lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](this.props.maxDate)) {
-        if (this.props.maxDate.year() === this.state.date.year()) {
-          disabled = disabled.concat(lodash__WEBPACK_IMPORTED_MODULE_3__["range"](this.props.maxDate.month() + 1, MONTHS_IN_YEAR));
+        return this.state.date.month();
+    };
+    MonthPicker.prototype.getActiveCellPosition = function () {
+        /*
+          Return position of a month that should be displayed as active
+          (position in array returned by `this.buildCalendarValues`).
+        */
+        if (!_.isNil(this.props.value)) {
+            if (this.props.value.year() === this.state.date.year()) {
+                return this.props.value.month();
+            }
         }
-
-        if (this.props.maxDate.year() < this.state.date.year()) {
-          disabled = lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, MONTHS_IN_YEAR);
+    };
+    MonthPicker.prototype.getDisabledPositions = function () {
+        var _this = this;
+        /*
+          Return position numbers of months that should be displayed as disabled
+          (position in array returned by `this.buildCalendarValues`).
+        */
+        var disabled = [];
+        if (_.isArray(this.props.enable)) {
+            var enabledMonthPositions_1 = this.props.enable
+                .filter(function (monthMoment) { return monthMoment.isSame(_this.state.date, 'year'); })
+                .map(function (monthMoment) { return monthMoment.month(); });
+            disabled = disabled.concat(_.range(0, MONTHS_IN_YEAR)
+                .filter(function (monthPosition) { return !_.includes(enabledMonthPositions_1, monthPosition); }));
         }
-      }
-
-      if (!lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](this.props.minDate)) {
-        if (this.props.minDate.year() === this.state.date.year()) {
-          disabled = disabled.concat(lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, this.props.minDate.month()));
+        if (_.isArray(this.props.disable)) {
+            disabled = disabled.concat(this.props.disable
+                .filter(function (monthMoment) { return monthMoment.year() === _this.state.date.year(); })
+                .map(function (monthMoment) { return monthMoment.month(); }));
         }
-
-        if (this.props.minDate.year() > this.state.date.year()) {
-          disabled = lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, MONTHS_IN_YEAR);
+        if (!_.isNil(this.props.maxDate)) {
+            if (this.props.maxDate.year() === this.state.date.year()) {
+                disabled = disabled.concat(_.range(this.props.maxDate.month() + 1, MONTHS_IN_YEAR));
+            }
+            if (this.props.maxDate.year() < this.state.date.year()) {
+                disabled = _.range(0, MONTHS_IN_YEAR);
+            }
         }
-      }
+        if (!_.isNil(this.props.minDate)) {
+            if (this.props.minDate.year() === this.state.date.year()) {
+                disabled = disabled.concat(_.range(0, this.props.minDate.month()));
+            }
+            if (this.props.minDate.year() > this.state.date.year()) {
+                disabled = _.range(0, MONTHS_IN_YEAR);
+            }
+        }
+        if (disabled.length > 0) {
+            return _.uniq(disabled);
+        }
+    };
+    MonthPicker.prototype.isNextPageAvailable = function () {
+        var _this = this;
+        var _a = this.props, maxDate = _a.maxDate, enable = _a.enable;
+        if (_.isArray(enable)) {
+            return _.some(enable, function (enabledMonth) { return enabledMonth.isAfter(_this.state.date, 'year'); });
+        }
+        if (_.isNil(maxDate)) {
+            return true;
+        }
+        if (this.state.date.year() >= maxDate.year()) {
+            return false;
+        }
+        return true;
+    };
+    MonthPicker.prototype.isPrevPageAvailable = function () {
+        var _this = this;
+        var _a = this.props, minDate = _a.minDate, enable = _a.enable;
+        if (_.isArray(enable)) {
+            return _.some(enable, function (enabledMonth) { return enabledMonth.isBefore(_this.state.date, 'year'); });
+        }
+        if (_.isNil(minDate)) {
+            return true;
+        }
+        if (this.state.date.year() <= minDate.year()) {
+            return false;
+        }
+        return true;
+    };
+    return MonthPicker;
+}(BasePicker_1.SingleSelectionPicker));
+exports.default = MonthPicker;
 
-      if (disabled.length > 0) {
-        return lodash__WEBPACK_IMPORTED_MODULE_3__["uniq"](disabled);
-      }
-    }
-  }, {
-    key: "isNextPageAvailable",
-    value: function isNextPageAvailable() {
-      var _this3 = this;
-
-      var _this$props = this.props,
-          maxDate = _this$props.maxDate,
-          enable = _this$props.enable;
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isArray"](enable)) {
-        return lodash__WEBPACK_IMPORTED_MODULE_3__["some"](enable, function (enabledMonth) {
-          return enabledMonth.isAfter(_this3.state.date, 'year');
-        });
-      }
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](maxDate)) return true;
-      if (this.state.date.year() >= maxDate.year()) return false;
-      return true;
-    }
-  }, {
-    key: "isPrevPageAvailable",
-    value: function isPrevPageAvailable() {
-      var _this4 = this;
-
-      var _this$props2 = this.props,
-          minDate = _this$props2.minDate,
-          enable = _this$props2.enable;
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isArray"](enable)) {
-        return lodash__WEBPACK_IMPORTED_MODULE_3__["some"](enable, function (enabledMonth) {
-          return enabledMonth.isBefore(_this4.state.date, 'year');
-        });
-      }
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](minDate)) return true;
-      if (this.state.date.year() <= minDate.year()) return false;
-      return true;
-    }
-  }, {
-    key: "getCurrentYear",
-    value: function getCurrentYear() {
-      /* Return current year(string) to display in calendar header. */
-      return this.state.date.year().toString();
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_5__["getUnhandledProps"])(MonthPicker, this.props);
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_views_MonthView__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, rest, {
-        months: this.buildCalendarValues(),
-        onMonthClick: this.handleChange,
-        onCellHover: this.onHoveredCellPositionChange,
-        onNextPageBtnClick: this.switchToNextPage,
-        onPrevPageBtnClick: this.switchToPrevPage,
-        hasPrevPage: this.isPrevPageAvailable(),
-        hasNextPage: this.isNextPageAvailable(),
-        onBlur: this.handleBlur,
-        inline: this.props.inline,
-        onMount: this.props.onCalendarViewMount,
-        disabled: this.getDisabledMonthsPositions(),
-        active: this.getActiveCellPosition(),
-        hovered: this.state.hoveredCellPosition,
-        currentYear: this.getCurrentYear()
-      }));
-    }
-  }]);
-
-  return MonthPicker;
-}(_BasePicker__WEBPACK_IMPORTED_MODULE_6__["default"]);
-
-_defineProperty(MonthPicker, "handledProps", ["closePopup", "disable", "enable", "initializeWith", "inline", "isPickerInFocus", "isTriggerInFocus", "maxDate", "minDate", "onCalendarViewMount", "onChange", "value"]);
-
-MonthPicker.propTypes = {
-  /** Called after month is selected. */
-  onChange: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"].isRequired,
-
-  /** A value for initializing month picker's state. */
-  initializeWith: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__).isRequired,
-
-  /** Currently selected month. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Array of disabled months. */
-  disable: prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__)),
-
-  /** Array of enabled months. */
-  enable: prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__)),
-
-  /** Minimal month that could be selected. */
-  minDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Maximal month that could be selected. */
-  maxDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Force popup to close. */
-  closePopup: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  isPickerInFocus: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  isTriggerInFocus: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  onCalendarViewMount: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  inline: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"]
-};
-/* harmony default export */ __webpack_exports__["default"] = (MonthPicker);
 
 /***/ }),
 
-/***/ "./src/pickers/YearPicker.js":
-/*!***********************************!*\
-  !*** ./src/pickers/YearPicker.js ***!
-  \***********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/pickers/YearPicker.tsx":
+/*!************************************!*\
+  !*** ./src/pickers/YearPicker.tsx ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _views_YearView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../views/YearView */ "./src/views/YearView.js");
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib */ "./src/lib/index.js");
-/* harmony import */ var _BasePicker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./BasePicker */ "./src/pickers/BasePicker.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var YearView_1 = __webpack_require__(/*! ../views/YearView */ "./src/views/YearView.tsx");
+var BasePicker_1 = __webpack_require__(/*! ./BasePicker */ "./src/pickers/BasePicker.tsx");
 var PAGE_WIDTH = 3;
 var PAGE_HEIGHT = 4;
 var YEARS_ON_PAGE = PAGE_WIDTH * PAGE_HEIGHT;
-
-var YearPicker =
-/*#__PURE__*/
-function (_BasePicker) {
-  _inherits(YearPicker, _BasePicker);
-
-  /*
-    Note:
-      use it like this <YearPicker key={someInputValue} />
-      to make react create new instance when input value changes
-  */
-  function YearPicker(props) {
-    var _this;
-
-    _classCallCheck(this, YearPicker);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(YearPicker).call(this, props));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getInitialDatePosition", function () {
-      return _this.buildCalendarValues().indexOf(_this.state.date.year().toString());
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getSelectableCellPositions", function () {
-      return lodash__WEBPACK_IMPORTED_MODULE_3__["filter"](lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, YEARS_ON_PAGE), function (y) {
-        return !lodash__WEBPACK_IMPORTED_MODULE_3__["includes"](_this.getDisabledYearsPositions(), y);
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleChange", function (e, _ref) {
-      var value = _ref.value;
-      var year = parseInt(value);
-
-      lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-        value: {
-          year: year
-        }
-      }));
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToNextPage", function (e, data, callback) {
-      _this.setState(function (_ref2) {
-        var date = _ref2.date;
-        var nextDate = date.clone();
-        nextDate.add(YEARS_ON_PAGE, 'year');
-        return {
-          date: nextDate
+var YearPicker = /** @class */ (function (_super) {
+    __extends(YearPicker, _super);
+    /*
+      Note:
+        use it like this <YearPicker key={someInputValue} />
+        to make react create new instance when input value changes
+    */
+    function YearPicker(props) {
+        var _this = _super.call(this, props) || this;
+        _this.handleChange = function (e, _a) {
+            var value = _a.value;
+            var data = __assign({}, _this.props, { value: { year: parseInt(value, 10) } });
+            _this.props.onChange(e, data);
         };
-      }, callback);
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToPrevPage", function (e, data, callback) {
-      _this.setState(function (_ref3) {
-        var date = _ref3.date;
-        var prevDate = date.clone();
-        prevDate.subtract(YEARS_ON_PAGE, 'year');
-        return {
-          date: prevDate
+        _this.switchToNextPage = function (e, data, callback) {
+            _this.setState(function (_a) {
+                var date = _a.date;
+                var nextDate = date.clone();
+                nextDate.add(YEARS_ON_PAGE, 'year');
+                return { date: nextDate };
+            }, callback);
         };
-      }, callback);
-    });
-
-    _this.state = {
-      /* moment instance */
-      date: props.initializeWith.clone()
+        _this.switchToPrevPage = function (e, data, callback) {
+            _this.setState(function (_a) {
+                var date = _a.date;
+                var prevDate = date.clone();
+                prevDate.subtract(YEARS_ON_PAGE, 'year');
+                return { date: prevDate };
+            }, callback);
+        };
+        _this.PAGE_WIDTH = PAGE_WIDTH;
+        return _this;
+    }
+    YearPicker.prototype.render = function () {
+        var _a = this.props, onChange = _a.onChange, value = _a.value, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, disable = _a.disable, enable = _a.enable, minDate = _a.minDate, maxDate = _a.maxDate, rest = __rest(_a, ["onChange", "value", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "disable", "enable", "minDate", "maxDate"]);
+        return (React.createElement(YearView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onValueClick: this.handleChange, onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, hoveredItemIndex: this.state.hoveredCellPosition, onCellHover: this.onHoveredCellPositionChange, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), disabledItemIndexes: this.getDisabledPositions(), activeItemIndex: this.getActiveCellPosition() })));
     };
-    _this.PAGE_WIDTH = PAGE_WIDTH;
-    return _this;
-  }
-
-  _createClass(YearPicker, [{
-    key: "buildCalendarValues",
-    value: function buildCalendarValues() {
-      /*
-        Return array of years (strings) like ['2012', '2013', ...]
-        that used to populate calendar's page.
-      */
-      var years = [];
-      var date = this.state.date;
-      var padd = date.year() % YEARS_ON_PAGE;
-      var first = date.year() - padd;
-
-      for (var i = 0; i < YEARS_ON_PAGE; i++) {
-        years[i] = (first + i).toString();
-      }
-
-      return years;
-    }
-  }, {
-    key: "getActiveCellPosition",
-    value: function getActiveCellPosition() {
-      /*
-        Return position of a year that should be displayed as active
-        (position in array returned by `this.buildCalendarValues`).
-      */
-      if (!lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](this.props.value)) {
+    YearPicker.prototype.buildCalendarValues = function () {
+        /*
+          Return array of years (strings) like ['2012', '2013', ...]
+          that used to populate calendar's page.
+        */
+        var years = [];
+        var date = this.state.date;
+        var padd = date.year() % YEARS_ON_PAGE;
+        var first = date.year() - padd;
+        for (var i = 0; i < YEARS_ON_PAGE; i++) {
+            years[i] = (first + i).toString();
+        }
+        return years;
+    };
+    YearPicker.prototype.getInitialDatePosition = function () {
+        var selectable = this.getSelectableCellPositions();
+        var values = this.buildCalendarValues();
+        var currentYearIndex = values.indexOf(this.state.date.year().toString());
+        if (selectable.indexOf(currentYearIndex) < 0) {
+            return selectable[0];
+        }
+        return currentYearIndex;
+    };
+    YearPicker.prototype.getActiveCellPosition = function () {
+        /*
+          Return position of a year that should be displayed as active
+          (position in array returned by `this.buildCalendarValues`).
+        */
+        if (!_.isNil(this.props.value)) {
+            var years = this.buildCalendarValues();
+            var yearIndex = years.indexOf(this.props.value.year().toString());
+            if (yearIndex >= 0) {
+                return yearIndex;
+            }
+        }
+    };
+    YearPicker.prototype.getSelectableCellPositions = function () {
+        var _this = this;
+        return _.filter(_.range(0, YEARS_ON_PAGE), function (y) { return !_.includes(_this.getDisabledPositions(), y); });
+    };
+    YearPicker.prototype.getDisabledPositions = function () {
+        /*
+          Return position numbers of years that should be displayed as disabled
+          (position in array returned by `this.buildCalendarValues`).
+        */
+        var disabled = [];
         var years = this.buildCalendarValues();
-        var yearIndex = years.indexOf(this.props.value.year().toString());
-
-        if (yearIndex >= 0) {
-          return yearIndex;
+        if (_.isArray(this.props.enable)) {
+            var enabledYears_1 = this.props.enable.map(function (yearMoment) { return yearMoment.year().toString(); });
+            disabled = _.concat(disabled, years
+                .filter(function (year) { return !_.includes(enabledYears_1, year); })
+                .map(function (year) { return years.indexOf(year); }));
         }
-      }
-    }
-  }, {
-    key: "getDisabledYearsPositions",
-    value: function getDisabledYearsPositions() {
-      /*
-        Return position numbers of years that should be displayed as disabled
-        (position in array returned by `this.buildCalendarValues`).
-      */
-      var disabled = [];
-      var years = this.buildCalendarValues();
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isArray"](this.props.enable)) {
-        var enabledYears = this.props.enable.map(function (yearMoment) {
-          return yearMoment.year().toString();
-        });
-        disabled = lodash__WEBPACK_IMPORTED_MODULE_3__["concat"](disabled, years.filter(function (year) {
-          return !lodash__WEBPACK_IMPORTED_MODULE_3__["includes"](enabledYears, year);
-        }).map(function (year) {
-          return years.indexOf(year);
-        }));
-      }
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isArray"](this.props.disable)) {
-        disabled = lodash__WEBPACK_IMPORTED_MODULE_3__["concat"](disabled, this.props.disable.filter(function (yearMoment) {
-          return lodash__WEBPACK_IMPORTED_MODULE_3__["includes"](years, yearMoment.year().toString());
-        }).map(function (yearMoment) {
-          return years.indexOf(yearMoment.year().toString());
-        }));
-      }
-
-      if (!lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](this.props.maxDate)) {
-        if (parseInt(lodash__WEBPACK_IMPORTED_MODULE_3__["first"](years)) > this.props.maxDate.year()) {
-          disabled = lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, years.length);
-        } else if (lodash__WEBPACK_IMPORTED_MODULE_3__["includes"](years, this.props.maxDate.year().toString())) {
-          disabled = lodash__WEBPACK_IMPORTED_MODULE_3__["concat"](disabled, lodash__WEBPACK_IMPORTED_MODULE_3__["range"](years.indexOf(this.props.maxDate.year().toString()) + 1, years.length));
+        if (_.isArray(this.props.disable)) {
+            disabled = _.concat(disabled, this.props.disable
+                .filter(function (yearMoment) { return _.includes(years, yearMoment.year().toString()); })
+                .map(function (yearMoment) { return years.indexOf(yearMoment.year().toString()); }));
         }
-      }
-
-      if (!lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](this.props.minDate)) {
-        if (parseInt(lodash__WEBPACK_IMPORTED_MODULE_3__["last"](years)) < this.props.minDate.year()) {
-          disabled = lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, years.length);
-        } else if (lodash__WEBPACK_IMPORTED_MODULE_3__["includes"](years, this.props.minDate.year().toString())) {
-          disabled = lodash__WEBPACK_IMPORTED_MODULE_3__["concat"](disabled, lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, years.indexOf(this.props.minDate.year().toString())));
+        if (!_.isNil(this.props.maxDate)) {
+            if (parseInt(_.first(years), 10) > this.props.maxDate.year()) {
+                disabled = _.range(0, years.length);
+            }
+            else if (_.includes(years, this.props.maxDate.year().toString())) {
+                disabled = _.concat(disabled, _.range(years.indexOf(this.props.maxDate.year().toString()) + 1, years.length));
+            }
         }
-      }
+        if (!_.isNil(this.props.minDate)) {
+            if (parseInt(_.last(years), 10) < this.props.minDate.year()) {
+                disabled = _.range(0, years.length);
+            }
+            else if (_.includes(years, this.props.minDate.year().toString())) {
+                disabled = _.concat(disabled, _.range(0, years.indexOf(this.props.minDate.year().toString())));
+            }
+        }
+        if (disabled.length > 0) {
+            return _.uniq(disabled);
+        }
+    };
+    YearPicker.prototype.isNextPageAvailable = function () {
+        var _a = this.props, maxDate = _a.maxDate, enable = _a.enable;
+        var lastOnPage = parseInt(_.last(this.buildCalendarValues()), 10);
+        if (_.isArray(enable)) {
+            return _.some(enable, function (enabledYear) { return enabledYear.year() > lastOnPage; });
+        }
+        if (_.isNil(maxDate)) {
+            return true;
+        }
+        return lastOnPage < maxDate.year();
+    };
+    YearPicker.prototype.isPrevPageAvailable = function () {
+        var _a = this.props, minDate = _a.minDate, enable = _a.enable;
+        var firstOnPage = parseInt(_.first(this.buildCalendarValues()), 10);
+        if (_.isArray(enable)) {
+            return _.some(enable, function (enabledYear) { return enabledYear.year() < firstOnPage; });
+        }
+        if (_.isNil(minDate)) {
+            return true;
+        }
+        return firstOnPage > minDate.year();
+    };
+    return YearPicker;
+}(BasePicker_1.SingleSelectionPicker));
+exports.default = YearPicker;
 
-      if (disabled.length > 0) {
-        return lodash__WEBPACK_IMPORTED_MODULE_3__["uniq"](disabled);
-      }
-    }
-  }, {
-    key: "isNextPageAvailable",
-    value: function isNextPageAvailable() {
-      var _this$props = this.props,
-          maxDate = _this$props.maxDate,
-          enable = _this$props.enable;
-      var lastOnPage = parseInt(lodash__WEBPACK_IMPORTED_MODULE_3__["last"](this.buildCalendarValues()));
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isArray"](enable)) {
-        return lodash__WEBPACK_IMPORTED_MODULE_3__["some"](enable, function (enabledYear) {
-          return enabledYear.year() > lastOnPage;
-        });
-      }
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](maxDate)) return true;
-      return lastOnPage < maxDate.year();
-    }
-  }, {
-    key: "isPrevPageAvailable",
-    value: function isPrevPageAvailable() {
-      var _this$props2 = this.props,
-          minDate = _this$props2.minDate,
-          enable = _this$props2.enable;
-      var firstOnPage = parseInt(lodash__WEBPACK_IMPORTED_MODULE_3__["first"](this.buildCalendarValues()));
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isArray"](enable)) {
-        return lodash__WEBPACK_IMPORTED_MODULE_3__["some"](enable, function (enabledYear) {
-          return enabledYear.year() < firstOnPage;
-        });
-      }
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](minDate)) return true;
-      return firstOnPage > minDate.year();
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_5__["getUnhandledProps"])(YearPicker, this.props);
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_views_YearView__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, rest, {
-        years: this.buildCalendarValues(),
-        onNextPageBtnClick: this.switchToNextPage,
-        onPrevPageBtnClick: this.switchToPrevPage,
-        onYearClick: this.handleChange,
-        onBlur: this.handleBlur,
-        inline: this.props.inline,
-        onMount: this.props.onCalendarViewMount,
-        hovered: this.state.hoveredCellPosition,
-        onCellHover: this.onHoveredCellPositionChange,
-        hasPrevPage: this.isPrevPageAvailable(),
-        hasNextPage: this.isNextPageAvailable(),
-        disabled: this.getDisabledYearsPositions(),
-        active: this.getActiveCellPosition()
-      }));
-    }
-  }]);
-
-  return YearPicker;
-}(_BasePicker__WEBPACK_IMPORTED_MODULE_6__["default"]);
-
-_defineProperty(YearPicker, "handledProps", ["closePopup", "disable", "enable", "hasHeader", "initializeWith", "inline", "isPickerInFocus", "isTriggerInFocus", "maxDate", "minDate", "onCalendarViewMount", "onChange", "value"]);
-
-YearPicker.propTypes = {
-  /** Called after year is selected. */
-  onChange: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"].isRequired,
-
-  /** A value for initializing year picker's state. */
-  initializeWith: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__).isRequired,
-  hasHeader: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"],
-
-  /** Currently selected year. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Array of disabled years. */
-  disable: prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__)),
-
-  /** Array of enabled years. */
-  enable: prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__)),
-
-  /** Minimal year that could be selected. */
-  minDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Maximal year that could be selected. */
-  maxDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Force popup to close. */
-  closePopup: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  isPickerInFocus: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  isTriggerInFocus: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  onCalendarViewMount: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  inline: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"]
-};
-/* harmony default export */ __webpack_exports__["default"] = (YearPicker);
 
 /***/ }),
 
-/***/ "./src/pickers/dayPicker/DatesRangePicker.js":
-/*!***************************************************!*\
-  !*** ./src/pickers/dayPicker/DatesRangePicker.js ***!
-  \***************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/pickers/dayPicker/DatesRangePicker.tsx":
+/*!****************************************************!*\
+  !*** ./src/pickers/dayPicker/DatesRangePicker.tsx ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _views_DatesRangeView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../views/DatesRangeView */ "./src/views/DatesRangeView.js");
-/* harmony import */ var _DayPicker__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./DayPicker */ "./src/pickers/dayPicker/DayPicker.js");
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../lib */ "./src/lib/index.js");
-/* harmony import */ var _sharedFunctions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./sharedFunctions */ "./src/pickers/dayPicker/sharedFunctions.js");
-/* harmony import */ var _BasePicker__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../BasePicker */ "./src/pickers/BasePicker.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-
-
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var DatesRangeView_1 = __webpack_require__(/*! ../../views/DatesRangeView */ "./src/views/DatesRangeView.tsx");
+var BasePicker_1 = __webpack_require__(/*! ../BasePicker */ "./src/pickers/BasePicker.tsx");
+var DayPicker_1 = __webpack_require__(/*! ./DayPicker */ "./src/pickers/dayPicker/DayPicker.tsx");
+var sharedFunctions_1 = __webpack_require__(/*! ./sharedFunctions */ "./src/pickers/dayPicker/sharedFunctions.ts");
 var PAGE_WIDTH = 7;
+var DatesRangePicker = /** @class */ (function (_super) {
+    __extends(DatesRangePicker, _super);
+    function DatesRangePicker(props) {
+        var _this = _super.call(this, props) || this;
+        _this.handleChange = function (e, _a) {
+            var itemPosition = _a.itemPosition;
+            // call `onChange` with value: { start: moment, end: moment }
+            var _b = _this.props, start = _b.start, end = _b.end;
+            var data = __assign({}, _this.props, { value: {} });
+            var firstOnPage = parseInt(_this.buildCalendarValues()[0], 10);
+            if (_.isNil(start) && _.isNil(end)) {
+                data.value = { start: buildMoment(_this.state.date, firstOnPage, itemPosition) };
+            }
+            else if (!_.isNil(start) && _.isNil(end)) {
+                var selectedDate = buildMoment(_this.state.date, firstOnPage, itemPosition);
+                if (selectedDate.isAfter(start, 'date')) {
+                    data.value = {
+                        start: start,
+                        end: selectedDate,
+                    };
+                }
+            }
+            _this.props.onChange(e, data);
+        };
+        _this.switchToNextPage = function () {
+            _this.setState(function (_a) {
+                var date = _a.date;
+                var nextDate = date.clone();
+                nextDate.add(1, 'month');
+                return { date: nextDate };
+            });
+        };
+        _this.switchToPrevPage = function () {
+            _this.setState(function (_a) {
+                var date = _a.date;
+                var prevDate = date.clone();
+                prevDate.subtract(1, 'month');
+                return { date: prevDate };
+            });
+        };
+        _this.PAGE_WIDTH = PAGE_WIDTH;
+        return _this;
+    }
+    DatesRangePicker.prototype.render = function () {
+        var _a = this.props, onChange = _a.onChange, value = _a.value, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, dateFormat = _a.dateFormat, start = _a.start, end = _a.end, minDate = _a.minDate, maxDate = _a.maxDate, rest = __rest(_a, ["onChange", "value", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "dateFormat", "start", "end", "minDate", "maxDate"]);
+        return (React.createElement(DatesRangeView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onCellHover: this.onHoveredCellPositionChange, hoveredItemIndex: this.state.hoveredCellPosition, onValueClick: this.handleChange, inline: this.props.inline, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), onBlur: this.handleBlur, onMount: this.props.onCalendarViewMount, currentHeadingValue: this.getCurrentDate(), currentRangeHeadingValue: this.getSelectedRange(), activeRange: this.getActiveCellsPositions(), disabledItemIndexes: this.getDisabledPositions() })));
+    };
+    DatesRangePicker.prototype.getCurrentDate = function () {
+        /* Return currently selected year and month(string) to display in calendar header. */
+        return this.state.date.format('MMMM YYYY');
+    };
+    DatesRangePicker.prototype.buildCalendarValues = function () {
+        /*
+          Return array of dates (strings) like ['31', '1', ...]
+          that used to populate calendar's page.
+        */
+        return sharedFunctions_1.buildDays(this.state.date, DayPicker_1.DAYS_ON_PAGE);
+    };
+    DatesRangePicker.prototype.getSelectableCellPositions = function () {
+        var _this = this;
+        return _.filter(_.range(0, DayPicker_1.DAYS_ON_PAGE), function (d) { return !_.includes(_this.getDisabledPositions(), d); });
+    };
+    DatesRangePicker.prototype.getInitialDatePosition = function () {
+        return sharedFunctions_1.getInitialDatePosition(this.state.date.date().toString(), this.buildCalendarValues(), this.getSelectableCellPositions());
+    };
+    // TODO: too complicated method
+    DatesRangePicker.prototype.getActiveCellsPositions = function () {
+        /*
+          Return starting and ending positions of dates range that should be displayed as active
+          { start: number, end: number }
+          (position in array returned by `this.buildCalendarValues`).
+        */
+        var date = this.state.date;
+        var _a = this.props, start = _a.start, end = _a.end;
+        var allDays = this.buildCalendarValues();
+        var fromCurrentMonthDayPositions = sharedFunctions_1.getDefaultEnabledDayPositions(allDays, date);
+        var fromPrevMonthDates = getDatesFromPrevMonth(date, allDays, fromCurrentMonthDayPositions[0]);
+        var fromNextMonthDates = getDatesFromNextMonth(date, allDays, _.last(fromCurrentMonthDayPositions) + 1);
+        var fromCurrentMonthDates = _.range(1, this.state.date.daysInMonth() + 1);
+        var prevMonth = date.clone();
+        prevMonth.subtract(1, 'month');
+        var nextMonth = date.clone();
+        nextMonth.add(1, 'month');
+        if (start && end) {
+            var startPosition = getDatePosition(prevMonth, this.state.date, nextMonth, start, fromPrevMonthDates, fromCurrentMonthDates, fromNextMonthDates);
+            var endPosition = getDatePosition(prevMonth, this.state.date, nextMonth, end, fromPrevMonthDates, fromCurrentMonthDates, fromNextMonthDates);
+            if (startPosition && endPosition) {
+                return { start: startPosition, end: endPosition };
+            }
+            if (startPosition) {
+                return { start: startPosition, end: DayPicker_1.DAYS_ON_PAGE - 1 };
+            }
+            if (endPosition) {
+                return { start: 0, end: endPosition };
+            }
+            if (this.state.date.isBetween(start, end)) {
+                return { start: 0, end: DayPicker_1.DAYS_ON_PAGE - 1 };
+            }
+        }
+        if (start) {
+            var startPosition = getDatePosition(prevMonth, this.state.date, nextMonth, start, fromPrevMonthDates, fromCurrentMonthDates, fromNextMonthDates);
+            return { start: startPosition, end: undefined };
+        }
+        return { start: undefined, end: undefined };
+    };
+    DatesRangePicker.prototype.getDisabledPositions = function () {
+        /*
+          Return position numbers of dates that should be displayed as disabled
+          (position in array returned by `this.buildCalendarValues`).
+        */
+        var _a = this.props, maxDate = _a.maxDate, minDate = _a.minDate;
+        return sharedFunctions_1.getDisabledDays(undefined, maxDate, minDate, this.state.date, DayPicker_1.DAYS_ON_PAGE, undefined);
+    };
+    DatesRangePicker.prototype.isNextPageAvailable = function () {
+        return sharedFunctions_1.isNextPageAvailable(this.state.date, this.props.maxDate);
+    };
+    DatesRangePicker.prototype.isPrevPageAvailable = function () {
+        return sharedFunctions_1.isPrevPageAvailable(this.state.date, this.props.minDate);
+    };
+    DatesRangePicker.prototype.getSelectedRange = function () {
+        /* Return currently selected dates range(string) to display in calendar header. */
+        var _a = this.props, start = _a.start, end = _a.end, dateFormat = _a.dateFormat;
+        return (start ? start.format(dateFormat) : '- - -') + " - " + (end ? end.format(dateFormat) : '- - -');
+    };
+    return DatesRangePicker;
+}(BasePicker_1.RangeSelectionPicker));
 /** Return position of a given date on the page.
- * 
+ *
  * Page consists of some dates from previous month, dates from current month
  * and some dates from next month.
+ *
  * Return undefined if date that is under test is out of page.
- * 
- * @param {Moment} prevMonth 
- * @param {Moment} currentMonth 
- * @param {Moment} nextMonth 
- * @param {Moment} date Date to test
- * @param {number[]} fromPrevMonthDates 
- * @param {number[]} fromCurrentMonthDates 
- * @param {number[]} fromNextMonthDates 
  */
-
 function getDatePosition(prevMonth, currentMonth, nextMonth, date, fromPrevMonthDates, fromCurrentMonthDates, fromNextMonthDates) {
-  if (date.isSame(prevMonth, 'month')) {
-    var position = fromPrevMonthDates.indexOf(date.date());
-
-    if (position >= 0) {
-      return position;
+    if (date.isSame(prevMonth, 'month')) {
+        var position = fromPrevMonthDates.indexOf(date.date());
+        if (position >= 0) {
+            return position;
+        }
     }
-  }
-
-  if (date.isSame(currentMonth, 'month')) {
-    return fromCurrentMonthDates.indexOf(date.date()) + fromPrevMonthDates.length;
-  }
-
-  if (date.isSame(nextMonth, 'month')) {
-    var _position = fromNextMonthDates.indexOf(date.date());
-
-    if (_position >= 0) {
-      return _position + fromPrevMonthDates.length + fromCurrentMonthDates.length;
+    if (date.isSame(currentMonth, 'month')) {
+        return fromCurrentMonthDates.indexOf(date.date()) + fromPrevMonthDates.length;
     }
-  }
+    if (date.isSame(nextMonth, 'month')) {
+        var position = fromNextMonthDates.indexOf(date.date());
+        if (position >= 0) {
+            return position + fromPrevMonthDates.length + fromCurrentMonthDates.length;
+        }
+    }
 }
-
 function getDatesFromPrevMonth(date, allDays, currentMonthStartPosition) {
-  if (currentMonthStartPosition === 0) {
-    return [];
-  }
-
-  return allDays.slice(0, currentMonthStartPosition).map(function (date) {
-    return parseInt(date);
-  });
+    if (currentMonthStartPosition === 0) {
+        return [];
+    }
+    return allDays.slice(0, currentMonthStartPosition).map(function (d) { return parseInt(d, 10); });
 }
-
 function getDatesFromNextMonth(date, allDays, nextMonthStartPosition) {
-  if (nextMonthStartPosition === allDays.length) {
-    return [];
-  }
-
-  return allDays.slice(nextMonthStartPosition, allDays.length).map(function (date) {
-    return parseInt(date);
-  });
+    if (nextMonthStartPosition === allDays.length) {
+        return [];
+    }
+    return allDays.slice(nextMonthStartPosition, allDays.length).map(function (d) { return parseInt(d, 10); });
 }
 /** Build moment based on current page and date position on that page. */
-
-
-function buildMoment(date
-/*Moment*/
-, firstOnPage
-/*number*/
-, dateToBuildPosition
-/*number*/
-) {
-  var result;
-
-  if (firstOnPage === 1
-  /* page starts from first day in month */
-  ) {
-      result = moment__WEBPACK_IMPORTED_MODULE_2__({
-        year: date.year(),
-        month: date.month(),
-        date: firstOnPage
-      });
-    } else {
-    /* page starts from day in previous month */
-    result = moment__WEBPACK_IMPORTED_MODULE_2__({
-      year: date.month() ? date.year() : date.year() - 1,
-      month: (date.month() + 11) % 12,
-      date: firstOnPage
-    });
-  }
-
-  result.add(dateToBuildPosition, 'day');
-  return result;
+function buildMoment(pageReferenceDate, firstOnPage, dateToBuildPosition) {
+    var result;
+    if (firstOnPage === 1 /* page starts from first day in month */) {
+        result = moment({ year: pageReferenceDate.year(), month: pageReferenceDate.month(), date: firstOnPage });
+    }
+    else {
+        /* page starts from day in previous month */
+        result = moment({ year: pageReferenceDate.month() ? pageReferenceDate.year() : pageReferenceDate.year() - 1,
+            month: (pageReferenceDate.month() + 11) % 12,
+            date: firstOnPage });
+    }
+    result.add(dateToBuildPosition, 'day');
+    return result;
 }
+exports.default = DatesRangePicker;
 
-var DatesRangePicker =
-/*#__PURE__*/
-function (_BasePicker) {
-  _inherits(DatesRangePicker, _BasePicker);
-
-  function DatesRangePicker(props) {
-    var _this;
-
-    _classCallCheck(this, DatesRangePicker);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(DatesRangePicker).call(this, props));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getSelectableCellPositions", function () {
-      return lodash__WEBPACK_IMPORTED_MODULE_3__["filter"](lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, _DayPicker__WEBPACK_IMPORTED_MODULE_5__["DAYS_ON_PAGE"]), function (d) {
-        return !lodash__WEBPACK_IMPORTED_MODULE_3__["includes"](_this.getDisabledDaysPositions(), d);
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getInitialDatePosition", function () {
-      return _this.buildCalendarValues().indexOf(_this.state.date.date().toString());
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleChange", function (e, _ref) {
-      var itemPosition = _ref.itemPosition;
-      // call `onChange` with value: { start: moment, end: moment }
-      var _this$props = _this.props,
-          start = _this$props.start,
-          end = _this$props.end;
-      var firstOnPage = parseInt(_this.buildCalendarValues()[0]);
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](start) && lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](end)) {
-        var range = {
-          start: buildMoment(_this.state.date, firstOnPage, itemPosition)
-        };
-
-        lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-          value: range
-        }));
-      } else if (!lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](start) && lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](end)) {
-        var selectedDate = buildMoment(_this.state.date, firstOnPage, itemPosition);
-
-        if (selectedDate.isAfter(start, 'date')) {
-          var _range = {
-            start: start,
-            end: selectedDate
-          };
-
-          lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-            value: _range
-          }));
-        } else {
-          lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-            value: {}
-          }));
-        }
-      } else {
-        lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-          value: {}
-        }));
-      }
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToNextPage", function () {
-      _this.setState(function (_ref2) {
-        var date = _ref2.date;
-        var nextDate = date.clone();
-        nextDate.add(1, 'month');
-        return {
-          date: nextDate
-        };
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToPrevPage", function () {
-      _this.setState(function (_ref3) {
-        var date = _ref3.date;
-        var prevDate = date.clone();
-        prevDate.subtract(1, 'month');
-        return {
-          date: prevDate
-        };
-      });
-    });
-
-    _this.state = {
-      /* moment instance */
-      date: props.initializeWith.clone()
-    };
-    _this.PAGE_WIDTH = PAGE_WIDTH;
-    return _this;
-  }
-
-  _createClass(DatesRangePicker, [{
-    key: "buildCalendarValues",
-    value: function buildCalendarValues() {
-      /*
-        Return array of dates (strings) like ['31', '1', ...]
-        that used to populate calendar's page.
-      */
-      return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_7__["buildDays"])(this.state.date, _DayPicker__WEBPACK_IMPORTED_MODULE_5__["DAYS_ON_PAGE"]);
-    }
-  }, {
-    key: "getActiveCellsPositions",
-    // TODO: too complicated method
-    value: function getActiveCellsPositions() {
-      /*
-        Return starting and ending positions of dates range that should be displayed as active
-        { start: number, end: number }
-        (position in array returned by `this.buildCalendarValues`).
-      */
-      var date = this.state.date;
-      var _this$props2 = this.props,
-          start = _this$props2.start,
-          end = _this$props2.end;
-      var allDays = this.buildCalendarValues();
-      var fromCurrentMonthDayPositions = Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_7__["getDefaultEnabledDayPositions"])(allDays, date);
-      var fromPrevMonthDates = getDatesFromPrevMonth(date, allDays, fromCurrentMonthDayPositions[0]);
-      var fromNextMonthDates = getDatesFromNextMonth(date, allDays, lodash__WEBPACK_IMPORTED_MODULE_3__["last"](fromCurrentMonthDayPositions) + 1);
-
-      var fromCurrentMonthDates = lodash__WEBPACK_IMPORTED_MODULE_3__["range"](1, this.state.date.daysInMonth() + 1);
-
-      var prevMonth = date.clone();
-      prevMonth.subtract(1, 'month');
-      var nextMonth = date.clone();
-      nextMonth.add(1, 'month');
-
-      if (start && end) {
-        var startPosition = getDatePosition(prevMonth, this.state.date, nextMonth, start, fromPrevMonthDates, fromCurrentMonthDates, fromNextMonthDates);
-        var endPosition = getDatePosition(prevMonth, this.state.date, nextMonth, end, fromPrevMonthDates, fromCurrentMonthDates, fromNextMonthDates);
-
-        if (startPosition && endPosition) {
-          return {
-            start: startPosition,
-            end: endPosition
-          };
-        }
-
-        if (startPosition) {
-          return {
-            start: startPosition,
-            end: _DayPicker__WEBPACK_IMPORTED_MODULE_5__["DAYS_ON_PAGE"] - 1
-          };
-        }
-
-        if (endPosition) {
-          return {
-            start: 0,
-            end: endPosition
-          };
-        }
-
-        if (this.state.date.isBetween(start, end)) {
-          return {
-            start: 0,
-            end: _DayPicker__WEBPACK_IMPORTED_MODULE_5__["DAYS_ON_PAGE"] - 1
-          };
-        }
-      }
-
-      if (start) {
-        var _startPosition = getDatePosition(prevMonth, this.state.date, nextMonth, start, fromPrevMonthDates, fromCurrentMonthDates, fromNextMonthDates);
-
-        return {
-          start: _startPosition,
-          end: undefined
-        };
-      }
-
-      return {
-        start: undefined,
-        end: undefined
-      };
-    }
-  }, {
-    key: "getDisabledDaysPositions",
-    value: function getDisabledDaysPositions() {
-      /*
-        Return position numbers of dates that should be displayed as disabled
-        (position in array returned by `this.buildCalendarValues`).
-      */
-      var _this$props3 = this.props,
-          maxDate = _this$props3.maxDate,
-          minDate = _this$props3.minDate;
-      return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_7__["getDisabledDays"])(undefined, maxDate, minDate, this.state.date, _DayPicker__WEBPACK_IMPORTED_MODULE_5__["DAYS_ON_PAGE"]);
-    }
-  }, {
-    key: "isNextPageAvailable",
-    value: function isNextPageAvailable() {
-      return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_7__["isNextPageAvailable"])(this.state.date, this.props.maxDate);
-    }
-  }, {
-    key: "isPrevPageAvailable",
-    value: function isPrevPageAvailable() {
-      return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_7__["isPrevPageAvailable"])(this.state.date, this.props.minDate);
-    }
-  }, {
-    key: "getCurrentDate",
-    value: function getCurrentDate() {
-      /* Return currently selected year and month(string) to display in calendar header. */
-      return this.state.date.format('MMMM YYYY');
-    }
-  }, {
-    key: "getSelectedRange",
-    value: function getSelectedRange() {
-      /* Return currently selected dates range(string) to display in calendar header. */
-      var _this$props4 = this.props,
-          start = _this$props4.start,
-          end = _this$props4.end,
-          dateFormat = _this$props4.dateFormat;
-      return "".concat(start ? start.format(dateFormat) : '- - -', " - ").concat(end ? end.format(dateFormat) : '- - -');
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_6__["getUnhandledProps"])(DatesRangePicker, this.props);
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_views_DatesRangeView__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, rest, {
-        days: this.buildCalendarValues(),
-        onNextPageBtnClick: this.switchToNextPage,
-        onPrevPageBtnClick: this.switchToPrevPage,
-        onCellHover: this.onHoveredCellPositionChange,
-        hovered: this.state.hoveredCellPosition,
-        onDayClick: this.handleChange,
-        inline: this.props.inline,
-        hasPrevPage: this.isPrevPageAvailable(),
-        hasNextPage: this.isNextPageAvailable(),
-        onBlur: this.handleBlur,
-        onMount: this.props.onCalendarViewMount,
-        currentDate: this.getCurrentDate(),
-        selectedRange: this.getSelectedRange(),
-        active: this.getActiveCellsPositions(),
-        disabled: this.getDisabledDaysPositions()
-      }));
-    }
-  }]);
-
-  return DatesRangePicker;
-}(_BasePicker__WEBPACK_IMPORTED_MODULE_8__["default"]);
-
-_defineProperty(DatesRangePicker, "handledProps", ["closePopup", "dateFormat", "end", "initializeWith", "inline", "isPickerInFocus", "isTriggerInFocus", "maxDate", "minDate", "onCalendarViewMount", "onChange", "start"]);
-
-DatesRangePicker.propTypes = {
-  /** Called after day is selected. */
-  onChange: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"].isRequired,
-
-  /** A value for initializing day picker's state. */
-  initializeWith: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__).isRequired,
-
-  /** Moment date formatting string. */
-  dateFormat: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"].isRequired,
-
-  /** Start of currently selected dates range. */
-  start: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** End of currently selected dates range. */
-  end: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Minimal date that could be selected. */
-  minDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Maximal date that could be selected. */
-  maxDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-  isPickerInFocus: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  isTriggerInFocus: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  onCalendarViewMount: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-
-  /** Force popup to close. */
-  closePopup: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  inline: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"]
-};
-/* harmony default export */ __webpack_exports__["default"] = (DatesRangePicker);
 
 /***/ }),
 
-/***/ "./src/pickers/dayPicker/DayPicker.js":
-/*!********************************************!*\
-  !*** ./src/pickers/dayPicker/DayPicker.js ***!
-  \********************************************/
-/*! exports provided: DAYS_ON_PAGE, default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/pickers/dayPicker/DayPicker.tsx":
+/*!*********************************************!*\
+  !*** ./src/pickers/dayPicker/DayPicker.tsx ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DAYS_ON_PAGE", function() { return DAYS_ON_PAGE; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _views_DayView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../views/DayView */ "./src/views/DayView.js");
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../lib */ "./src/lib/index.js");
-/* harmony import */ var _sharedFunctions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./sharedFunctions */ "./src/pickers/dayPicker/sharedFunctions.js");
-/* harmony import */ var _BasePicker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../BasePicker */ "./src/pickers/BasePicker.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-
-
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var DayView_1 = __webpack_require__(/*! ../../views/DayView */ "./src/views/DayView.tsx");
+var DayView_2 = __webpack_require__(/*! ../../views/DayView */ "./src/views/DayView.tsx");
+var BasePicker_1 = __webpack_require__(/*! ../BasePicker */ "./src/pickers/BasePicker.tsx");
+var sharedFunctions_1 = __webpack_require__(/*! ./sharedFunctions */ "./src/pickers/dayPicker/sharedFunctions.ts");
 var PAGE_WIDTH = 7;
-var DAYS_ON_PAGE = _views_DayView__WEBPACK_IMPORTED_MODULE_4__["WEEKS_TO_DISPLAY"] * PAGE_WIDTH;
-
-var DayPicker =
-/*#__PURE__*/
-function (_BasePicker) {
-  _inherits(DayPicker, _BasePicker);
-
-  function DayPicker(props) {
-    var _this;
-
-    _classCallCheck(this, DayPicker);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(DayPicker).call(this, props));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getSelectableCellPositions", function () {
-      return lodash__WEBPACK_IMPORTED_MODULE_3__["filter"](lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, DAYS_ON_PAGE), function (d) {
-        return !lodash__WEBPACK_IMPORTED_MODULE_3__["includes"](_this.getDisabledDaysPositions(), d);
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getInitialDatePosition", function () {
-      return _this.buildCalendarValues().indexOf(_this.state.date.date().toString());
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleChange", function (e, _ref) {
-      var value = _ref.value;
-      // `value` is selected date(string) like '31' or '1'
-      var result = {
-        year: _this.state.date.year(),
-        month: _this.state.date.month(),
-        date: parseInt(value)
-      };
-
-      lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-        value: result
-      }));
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToNextPage", function () {
-      _this.setState(function (_ref2) {
-        var date = _ref2.date;
-        var nextDate = date.clone();
-        nextDate.add(1, 'month');
-        return {
-          date: nextDate
+exports.DAYS_ON_PAGE = DayView_2.WEEKS_TO_DISPLAY * PAGE_WIDTH;
+var DayPicker = /** @class */ (function (_super) {
+    __extends(DayPicker, _super);
+    function DayPicker(props) {
+        var _this = _super.call(this, props) || this;
+        _this.isNextPageAvailable = function () {
+            var _a = _this.props, maxDate = _a.maxDate, enable = _a.enable;
+            if (_.isArray(enable)) {
+                return _.some(enable, function (enabledDate) { return enabledDate.isAfter(_this.state.date, 'month'); });
+            }
+            return sharedFunctions_1.isNextPageAvailable(_this.state.date, maxDate);
         };
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToPrevPage", function () {
-      _this.setState(function (_ref3) {
-        var date = _ref3.date;
-        var prevDate = date.clone();
-        prevDate.subtract(1, 'month');
-        return {
-          date: prevDate
+        _this.isPrevPageAvailable = function () {
+            var _a = _this.props, minDate = _a.minDate, enable = _a.enable;
+            if (_.isArray(enable)) {
+                return _.some(enable, function (enabledDate) { return enabledDate.isBefore(_this.state.date, 'month'); });
+            }
+            return sharedFunctions_1.isPrevPageAvailable(_this.state.date, minDate);
         };
-      });
-    });
-
-    _this.state = {
-      /* moment instance */
-      date: props.initializeWith.clone()
+        _this.handleChange = function (e, _a) {
+            var value = _a.value;
+            // `value` is selected date(string) like '31' or '1'
+            var data = __assign({}, _this.props, { value: {
+                    year: _this.state.date.year(),
+                    month: _this.state.date.month(),
+                    date: parseInt(value, 10),
+                } });
+            _this.props.onChange(e, data);
+        };
+        _this.switchToNextPage = function () {
+            _this.setState(function (_a) {
+                var date = _a.date;
+                var nextDate = date.clone();
+                nextDate.add(1, 'month');
+                return { date: nextDate };
+            });
+        };
+        _this.switchToPrevPage = function () {
+            _this.setState(function (_a) {
+                var date = _a.date;
+                var prevDate = date.clone();
+                prevDate.subtract(1, 'month');
+                return { date: prevDate };
+            });
+        };
+        _this.PAGE_WIDTH = PAGE_WIDTH;
+        return _this;
+    }
+    DayPicker.prototype.render = function () {
+        var _a = this.props, onChange = _a.onChange, value = _a.value, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, disable = _a.disable, enable = _a.enable, minDate = _a.minDate, maxDate = _a.maxDate, rest = __rest(_a, ["onChange", "value", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "disable", "enable", "minDate", "maxDate"]);
+        return (React.createElement(DayView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), hasNextPage: this.isNextPageAvailable(), hasPrevPage: this.isPrevPageAvailable(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onValueClick: this.handleChange, onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, hoveredItemIndex: this.state.hoveredCellPosition, onCellHover: this.onHoveredCellPositionChange, currentHeadingValue: this.getCurrentDate(), disabledItemIndexes: this.getDisabledPositions(), activeItemIndex: this.getActiveCellPosition() })));
     };
-    _this.PAGE_WIDTH = PAGE_WIDTH;
-    return _this;
-  }
-
-  _createClass(DayPicker, [{
-    key: "buildCalendarValues",
-    value: function buildCalendarValues() {
-      /*
-        Return array of dates (strings) like ['31', '1', ...]
-        that used to populate calendar's page.
-      */
-      return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_6__["buildDays"])(this.state.date, DAYS_ON_PAGE);
-    }
-  }, {
-    key: "getActiveCellPosition",
-    value: function getActiveCellPosition() {
-      /*
-        Return position of a date that should be displayed as active
-        (position in array returned by `this.buildCalendarValues`).
-      */
-      if (this.props.value && this.props.value.isSame(this.state.date, 'month')) {
-        var disabledPositions = this.getDisabledDaysPositions();
-        var active = this.buildCalendarValues().map(function (day, i) {
-          return lodash__WEBPACK_IMPORTED_MODULE_3__["includes"](disabledPositions, i) ? undefined : day;
-        }).indexOf(this.props.value.date().toString());
-
-        if (active >= 0) {
-          return active;
+    DayPicker.prototype.getCurrentDate = function () {
+        /* Return currently selected year and month(string) to display in calendar header. */
+        return this.state.date.format('MMMM YYYY');
+    };
+    DayPicker.prototype.buildCalendarValues = function () {
+        /*
+          Return array of dates (strings) like ['31', '1', ...]
+          that used to populate calendar's page.
+        */
+        return sharedFunctions_1.buildDays(this.state.date, exports.DAYS_ON_PAGE);
+    };
+    DayPicker.prototype.getSelectableCellPositions = function () {
+        var _this = this;
+        return _.filter(_.range(0, exports.DAYS_ON_PAGE), function (d) { return !_.includes(_this.getDisabledPositions(), d); });
+    };
+    DayPicker.prototype.getInitialDatePosition = function () {
+        return sharedFunctions_1.getInitialDatePosition(this.state.date.date().toString(), this.buildCalendarValues(), this.getSelectableCellPositions());
+    };
+    DayPicker.prototype.getActiveCellPosition = function () {
+        /*
+          Return position of a date that should be displayed as active
+          (position in array returned by `this.buildCalendarValues`).
+        */
+        if (this.props.value && this.props.value.isSame(this.state.date, 'month')) {
+            var disabledPositions_1 = this.getDisabledPositions();
+            var active = this.buildCalendarValues()
+                .map(function (day, i) { return _.includes(disabledPositions_1, i) ? undefined : day; })
+                .indexOf(this.props.value.date().toString());
+            if (active >= 0) {
+                return active;
+            }
         }
-      }
-    }
-  }, {
-    key: "getDisabledDaysPositions",
-    value: function getDisabledDaysPositions() {
-      /*
-        Return position numbers of dates that should be displayed as disabled
-        (position in array returned by `this.buildCalendarValues`).
-      */
-      var _this$props = this.props,
-          disable = _this$props.disable,
-          maxDate = _this$props.maxDate,
-          minDate = _this$props.minDate,
-          enable = _this$props.enable;
-      return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_6__["getDisabledDays"])(disable, maxDate, minDate, this.state.date, DAYS_ON_PAGE, enable);
-    }
-  }, {
-    key: "isNextPageAvailable",
-    value: function isNextPageAvailable() {
-      var _this2 = this;
+    };
+    DayPicker.prototype.getDisabledPositions = function () {
+        /*
+          Return position numbers of dates that should be displayed as disabled
+          (position in array returned by `this.buildCalendarValues`).
+        */
+        var _a = this.props, disable = _a.disable, maxDate = _a.maxDate, minDate = _a.minDate, enable = _a.enable;
+        return sharedFunctions_1.getDisabledDays(disable, maxDate, minDate, this.state.date, exports.DAYS_ON_PAGE, enable);
+    };
+    return DayPicker;
+}(BasePicker_1.SingleSelectionPicker));
+exports.default = DayPicker;
 
-      var _this$props2 = this.props,
-          maxDate = _this$props2.maxDate,
-          enable = _this$props2.enable;
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isArray"](enable)) {
-        return lodash__WEBPACK_IMPORTED_MODULE_3__["some"](enable, function (enabledDate) {
-          return enabledDate.isAfter(_this2.state.date, 'month');
-        });
-      }
-
-      return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_6__["isNextPageAvailable"])(this.state.date, maxDate);
-    }
-  }, {
-    key: "isPrevPageAvailable",
-    value: function isPrevPageAvailable() {
-      var _this3 = this;
-
-      var _this$props3 = this.props,
-          minDate = _this$props3.minDate,
-          enable = _this$props3.enable;
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isArray"](enable)) {
-        return lodash__WEBPACK_IMPORTED_MODULE_3__["some"](enable, function (enabledDate) {
-          return enabledDate.isBefore(_this3.state.date, 'month');
-        });
-      }
-
-      return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_6__["isPrevPageAvailable"])(this.state.date, minDate);
-    }
-  }, {
-    key: "getCurrentDate",
-    value: function getCurrentDate() {
-      /* Return currently selected year and month(string) to display in calendar header. */
-      return this.state.date.format('MMMM YYYY');
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_5__["getUnhandledProps"])(DayPicker, this.props);
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_views_DayView__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, rest, {
-        days: this.buildCalendarValues(),
-        hasNextPage: this.isNextPageAvailable(),
-        hasPrevPage: this.isPrevPageAvailable(),
-        onNextPageBtnClick: this.switchToNextPage,
-        onPrevPageBtnClick: this.switchToPrevPage,
-        onDayClick: this.handleChange,
-        onBlur: this.handleBlur,
-        inline: this.props.inline,
-        onMount: this.props.onCalendarViewMount,
-        hovered: this.state.hoveredCellPosition,
-        onCellHover: this.onHoveredCellPositionChange,
-        currentDate: this.getCurrentDate(),
-        disabled: this.getDisabledDaysPositions(),
-        active: this.getActiveCellPosition()
-      }));
-    }
-  }]);
-
-  return DayPicker;
-}(_BasePicker__WEBPACK_IMPORTED_MODULE_7__["default"]);
-
-_defineProperty(DayPicker, "handledProps", ["closePopup", "disable", "displayWeeks", "enable", "initializeWith", "inline", "isPickerInFocus", "isTriggerInFocus", "maxDate", "minDate", "onCalendarViewMount", "onChange", "value"]);
-
-DayPicker.propTypes = {
-  /** Called after day is selected. */
-  onChange: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"].isRequired,
-
-  /** A value for initializing day picker's state. */
-  initializeWith: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__).isRequired,
-  displayWeeks: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"],
-
-  /** Currently selected day. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Array of disabled days. */
-  disable: prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__)),
-
-  /** Array of enabled days. */
-  enable: prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__)),
-
-  /** Minimal date that could be selected. */
-  minDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Maximal date that could be selected. */
-  maxDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Force popup to close. */
-  closePopup: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  isPickerInFocus: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  isTriggerInFocus: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  onCalendarViewMount: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  inline: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"]
-};
-/* harmony default export */ __webpack_exports__["default"] = (DayPicker);
 
 /***/ }),
 
-/***/ "./src/pickers/dayPicker/sharedFunctions.js":
+/***/ "./src/pickers/dayPicker/sharedFunctions.ts":
 /*!**************************************************!*\
-  !*** ./src/pickers/dayPicker/sharedFunctions.js ***!
+  !*** ./src/pickers/dayPicker/sharedFunctions.ts ***!
   \**************************************************/
-/*! exports provided: buildDays, getBrakepoints, getDefaultEnabledDayPositions, getDisabledDays, isNextPageAvailable, isPrevPageAvailable, getDaysArray */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buildDays", function() { return buildDays; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBrakepoints", function() { return getBrakepoints; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDefaultEnabledDayPositions", function() { return getDefaultEnabledDayPositions; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDisabledDays", function() { return getDisabledDays; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isNextPageAvailable", function() { return isNextPageAvailable; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPrevPageAvailable", function() { return isPrevPageAvailable; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDaysArray", function() { return getDaysArray; });
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
 
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /** Build days to fill page. */
-
-function buildDays(date
-/*moment*/
-, daysOnPage
-/*number*/
-) {
-  var start = date.clone().startOf('month').startOf('week');
-  return getDaysArray(start.date(), getBrakepoints(date), daysOnPage).map(function (date) {
-    return date.toString();
-  });
+function buildDays(date, daysOnPage) {
+    var start = date.clone().startOf('month').startOf('week');
+    return getDaysArray(start.date(), getBrakepoints(date), daysOnPage).map(function (d) { return d.toString(); });
 }
+exports.buildDays = buildDays;
 /** Return dates from ends of months.
- * 
+ *
  * On one datepicker's page not only days from current month are displayed
  * but also some days from adjacent months. This function returns days
  * that separate one month from other (last day in month).
  * Return array of one or two numbers.
  */
-
-function getBrakepoints(date
-/*moment*/
-) {
-  var dateClone = date.clone();
-  var currentMonth = dateClone.month();
-  var brakepoints = [];
-  dateClone.startOf('month').startOf('week');
-
-  if (dateClone.month() !== currentMonth) {
-    brakepoints.push(dateClone.endOf('month').date());
-    dateClone.add(1, 'month');
-  }
-
-  brakepoints.push(dateClone.endOf('month').date());
-  return brakepoints;
+function getBrakepoints(referenceDate) {
+    var dateInCurrentMonth = referenceDate.clone();
+    var currentMonth = dateInCurrentMonth.month();
+    var brakepoints = [];
+    var firstDateOnPage = dateInCurrentMonth.clone().startOf('month').startOf('week');
+    if (firstDateOnPage.month() !== currentMonth) {
+        brakepoints.push(firstDateOnPage.clone().endOf('month').date());
+    }
+    brakepoints.push(dateInCurrentMonth.clone().endOf('month').date());
+    return brakepoints;
 }
 /* Return array of day positions that are not disabled by default. */
-
-function getDefaultEnabledDayPositions(allDays
-/*string[]*/
-, date
-/*moment*/
-) {
-  var dateClone = date.clone();
-  var brakepoints = getBrakepoints(dateClone);
-
-  if (brakepoints.length === 1) {
-    return lodash__WEBPACK_IMPORTED_MODULE_0__["range"](0, lodash__WEBPACK_IMPORTED_MODULE_0__["indexOf"](allDays, brakepoints[0].toString()) + 1);
-  } else {
-    return lodash__WEBPACK_IMPORTED_MODULE_0__["range"](lodash__WEBPACK_IMPORTED_MODULE_0__["indexOf"](allDays, brakepoints[0].toString()) + 1, lodash__WEBPACK_IMPORTED_MODULE_0__["lastIndexOf"](allDays, brakepoints[1].toString()) + 1);
-  }
+function getDefaultEnabledDayPositions(allDays, date) {
+    var dateClone = date.clone();
+    var brakepoints = getBrakepoints(dateClone);
+    if (brakepoints.length === 1) {
+        return _.range(0, _.indexOf(allDays, brakepoints[0].toString()) + 1);
+    }
+    else {
+        return _.range(_.indexOf(allDays, brakepoints[0].toString()) + 1, _.lastIndexOf(allDays, brakepoints[1].toString()) + 1);
+    }
 }
+exports.getDefaultEnabledDayPositions = getDefaultEnabledDayPositions;
 /** Return day positions that shoud be displayed as disabled. */
-
 function getDisabledDays(disable, maxDate, minDate, currentDate, daysOnPage, enable) {
-  var dayPositions = lodash__WEBPACK_IMPORTED_MODULE_0__["range"](daysOnPage);
-
-  var daysInCurrentMonthPositions = getDefaultEnabledDayPositions(buildDays(currentDate, daysOnPage), currentDate);
-  var disabledDays = dayPositions.filter(function (dayPosition) {
-    return !lodash__WEBPACK_IMPORTED_MODULE_0__["includes"](daysInCurrentMonthPositions, dayPosition);
-  });
-
-  if (lodash__WEBPACK_IMPORTED_MODULE_0__["isArray"](enable)) {
-    var enabledDaysPositions = enable.filter(function (date) {
-      return date.isSame(currentDate, 'month');
-    }).map(function (date) {
-      return date.date();
-    }).map(function (date) {
-      return daysInCurrentMonthPositions[date - 1];
-    });
-    disabledDays = lodash__WEBPACK_IMPORTED_MODULE_0__["concat"](disabledDays, dayPositions.filter(function (position) {
-      return !lodash__WEBPACK_IMPORTED_MODULE_0__["includes"](enabledDaysPositions, position);
-    }));
-  }
-
-  if (lodash__WEBPACK_IMPORTED_MODULE_0__["isArray"](disable)) {
-    disabledDays = lodash__WEBPACK_IMPORTED_MODULE_0__["concat"](disabledDays, disable.filter(function (date) {
-      return date.isSame(currentDate, 'month');
-    }).map(function (date) {
-      return date.date();
-    }).map(function (date) {
-      return daysInCurrentMonthPositions[date - 1];
-    }));
-  }
-
-  if (!lodash__WEBPACK_IMPORTED_MODULE_0__["isNil"](maxDate)) {
-    if (maxDate.isBefore(currentDate, 'month')) {
-      disabledDays = dayPositions;
+    var dayPositions = _.range(daysOnPage);
+    var daysInCurrentMonthPositions = getDefaultEnabledDayPositions(buildDays(currentDate, daysOnPage), currentDate);
+    var disabledDays = dayPositions.filter(function (dayPosition) { return !_.includes(daysInCurrentMonthPositions, dayPosition); });
+    if (_.isArray(enable)) {
+        var enabledDaysPositions_1 = enable
+            .filter(function (date) { return date.isSame(currentDate, 'month'); })
+            .map(function (date) { return date.date(); })
+            .map(function (date) { return daysInCurrentMonthPositions[date - 1]; });
+        disabledDays = _.concat(disabledDays, dayPositions.filter(function (position) {
+            return !_.includes(enabledDaysPositions_1, position);
+        }));
     }
-
-    if (maxDate.isSame(currentDate, 'month')) {
-      disabledDays = lodash__WEBPACK_IMPORTED_MODULE_0__["concat"](disabledDays, lodash__WEBPACK_IMPORTED_MODULE_0__["range"](1, daysInCurrentMonthPositions.length + 1).filter(function (date) {
-        return date > maxDate.date();
-      }).map(function (date) {
-        return daysInCurrentMonthPositions[date - 1];
-      }));
+    if (_.isArray(disable)) {
+        disabledDays = _.concat(disabledDays, disable
+            .filter(function (date) { return date.isSame(currentDate, 'month'); })
+            .map(function (date) { return date.date(); })
+            .map(function (date) { return daysInCurrentMonthPositions[date - 1]; }));
     }
-  }
-
-  if (!lodash__WEBPACK_IMPORTED_MODULE_0__["isNil"](minDate)) {
-    if (minDate.isAfter(currentDate, 'month')) {
-      disabledDays = dayPositions;
+    if (!_.isNil(maxDate)) {
+        if (maxDate.isBefore(currentDate, 'month')) {
+            disabledDays = dayPositions;
+        }
+        if (maxDate.isSame(currentDate, 'month')) {
+            disabledDays = _.concat(disabledDays, _.range(1, daysInCurrentMonthPositions.length + 1)
+                .filter(function (date) { return date > maxDate.date(); })
+                .map(function (date) { return daysInCurrentMonthPositions[date - 1]; }));
+        }
     }
-
-    if (minDate.isSame(currentDate, 'month')) {
-      disabledDays = lodash__WEBPACK_IMPORTED_MODULE_0__["concat"](disabledDays, lodash__WEBPACK_IMPORTED_MODULE_0__["range"](1, daysInCurrentMonthPositions.length + 1).filter(function (date) {
-        return date < minDate.date();
-      }).map(function (date) {
-        return daysInCurrentMonthPositions[date - 1];
-      }));
+    if (!_.isNil(minDate)) {
+        if (minDate.isAfter(currentDate, 'month')) {
+            disabledDays = dayPositions;
+        }
+        if (minDate.isSame(currentDate, 'month')) {
+            disabledDays = _.concat(disabledDays, _.range(1, daysInCurrentMonthPositions.length + 1)
+                .filter(function (date) { return date < minDate.date(); })
+                .map(function (date) { return daysInCurrentMonthPositions[date - 1]; }));
+        }
     }
-  }
-
-  return lodash__WEBPACK_IMPORTED_MODULE_0__["sortBy"](lodash__WEBPACK_IMPORTED_MODULE_0__["uniq"](disabledDays).filter(function (day) {
-    return !lodash__WEBPACK_IMPORTED_MODULE_0__["isNil"](day);
-  }));
+    return _.sortBy(_.uniq(disabledDays).filter(function (day) { return !_.isNil(day); }));
 }
+exports.getDisabledDays = getDisabledDays;
 function isNextPageAvailable(date, maxDate) {
-  if (lodash__WEBPACK_IMPORTED_MODULE_0__["isNil"](maxDate)) return true;
-  if (date.isSameOrAfter(maxDate, 'month')) return false;
-  return true;
-}
-function isPrevPageAvailable(date, minDate) {
-  if (lodash__WEBPACK_IMPORTED_MODULE_0__["isNil"](minDate)) return true;
-  if (date.isSameOrBefore(minDate, 'month')) return false;
-  return true;
-} // helper
-
-function getDaysArray(start
-/*number*/
-, brakepoints
-/*number[]*/
-, length) {
-  var currentDay = start;
-  var days = [];
-  var brakepointsLeft = brakepoints.slice();
-
-  while (!(days.length === length)) {
-    days.push(currentDay);
-
-    var bp = lodash__WEBPACK_IMPORTED_MODULE_0__["first"](brakepointsLeft);
-
-    if (currentDay === bp) {
-      currentDay = 1;
-      brakepointsLeft = lodash__WEBPACK_IMPORTED_MODULE_0__["slice"](brakepointsLeft, 1);
-    } else {
-      currentDay = currentDay + 1;
+    if (_.isNil(maxDate)) {
+        return true;
     }
-  }
-
-  return days;
+    if (date.isSameOrAfter(maxDate, 'month')) {
+        return false;
+    }
+    return true;
 }
+exports.isNextPageAvailable = isNextPageAvailable;
+function isPrevPageAvailable(date, minDate) {
+    if (_.isNil(minDate)) {
+        return true;
+    }
+    if (date.isSameOrBefore(minDate, 'month')) {
+        return false;
+    }
+    return true;
+}
+exports.isPrevPageAvailable = isPrevPageAvailable;
+// helper
+function getDaysArray(start, brakepoints, length) {
+    var currentDay = start;
+    var days = [];
+    var brakepointsLeft = brakepoints.slice();
+    while (!(days.length === length)) {
+        days.push(currentDay);
+        var bp = _.first(brakepointsLeft);
+        if (currentDay === bp) {
+            currentDay = 1;
+            brakepointsLeft = _.slice(brakepointsLeft, 1);
+        }
+        else {
+            currentDay = currentDay + 1;
+        }
+    }
+    return days;
+}
+exports.testExport = {
+    buildDays: buildDays,
+    getBrakepoints: getBrakepoints,
+    getDisabledDays: getDisabledDays,
+    isNextPageAvailable: isNextPageAvailable,
+    isPrevPageAvailable: isPrevPageAvailable,
+    getDaysArray: getDaysArray,
+    getDefaultEnabledDayPositions: getDefaultEnabledDayPositions,
+};
+function getInitialDatePosition(initDate, values, selectablePositions) {
+    var selectable = selectablePositions.reduce(function (acc, pos) {
+        acc.push({ value: values[pos], position: pos });
+        return acc;
+    }, []);
+    var res = _.find(selectable, function (item) { return item.value === initDate; });
+    if (res) {
+        return res.position;
+    }
+    return selectable[0].position;
+}
+exports.getInitialDatePosition = getInitialDatePosition;
+
 
 /***/ }),
 
-/***/ "./src/pickers/timePicker/HourPicker.js":
-/*!**********************************************!*\
-  !*** ./src/pickers/timePicker/HourPicker.js ***!
-  \**********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/pickers/timePicker/HourPicker.tsx":
+/*!***********************************************!*\
+  !*** ./src/pickers/timePicker/HourPicker.tsx ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _views_HourView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../views/HourView */ "./src/views/HourView.js");
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../lib */ "./src/lib/index.js");
-/* harmony import */ var _sharedFunctions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./sharedFunctions */ "./src/pickers/timePicker/sharedFunctions.js");
-/* harmony import */ var _BasePicker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../BasePicker */ "./src/pickers/BasePicker.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var HourView_1 = __webpack_require__(/*! ../../views/HourView */ "./src/views/HourView.tsx");
+var BasePicker_1 = __webpack_require__(/*! ../BasePicker */ "./src/pickers/BasePicker.tsx");
+var sharedFunctions_1 = __webpack_require__(/*! ./sharedFunctions */ "./src/pickers/timePicker/sharedFunctions.ts");
 var HOURS_ON_PAGE = 24;
 var PAGE_WIDTH = 4;
-
-var HourPicker =
-/*#__PURE__*/
-function (_BasePicker) {
-  _inherits(HourPicker, _BasePicker);
-
-  function HourPicker(props) {
-    var _this;
-
-    _classCallCheck(this, HourPicker);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(HourPicker).call(this, props));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getSelectableCellPositions", function () {
-      return lodash__WEBPACK_IMPORTED_MODULE_3__["filter"](lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, HOURS_ON_PAGE), function (h) {
-        return !lodash__WEBPACK_IMPORTED_MODULE_3__["includes"](_this.getDisabledHoursPositions(), h);
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getInitialDatePosition", function () {
-      return 0;
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleChange", function (e, _ref) {
-      var value = _ref.value;
-      var data = {
-        year: _this.state.date.year(),
-        month: _this.state.date.month(),
-        date: _this.state.date.date(),
-        hour: _this.buildCalendarValues().indexOf(value)
-      };
-
-      lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-        value: data
-      }));
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToNextPage", function () {
-      _this.setState(function (_ref2) {
-        var date = _ref2.date;
-        var nextDate = date.clone();
-        nextDate.add(1, 'day');
-        return {
-          date: nextDate
+var HourPicker = /** @class */ (function (_super) {
+    __extends(HourPicker, _super);
+    function HourPicker(props) {
+        var _this = _super.call(this, props) || this;
+        _this.handleChange = function (e, _a) {
+            var value = _a.value;
+            var data = __assign({}, _this.props, { value: {
+                    year: _this.state.date.year(),
+                    month: _this.state.date.month(),
+                    date: _this.state.date.date(),
+                    hour: _this.buildCalendarValues().indexOf(value),
+                } });
+            _this.props.onChange(e, data);
         };
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToPrevPage", function () {
-      _this.setState(function (_ref3) {
-        var date = _ref3.date;
-        var prevDate = date.clone();
-        prevDate.subtract(1, 'day');
-        return {
-          date: prevDate
+        _this.switchToNextPage = function () {
+            _this.setState(function (_a) {
+                var date = _a.date;
+                var nextDate = date.clone();
+                nextDate.add(1, 'day');
+                return { date: nextDate };
+            });
         };
-      });
-    });
-
-    _this.state = {
-      /* moment instance */
-      date: props.initializeWith.clone()
+        _this.switchToPrevPage = function () {
+            _this.setState(function (_a) {
+                var date = _a.date;
+                var prevDate = date.clone();
+                prevDate.subtract(1, 'day');
+                return { date: prevDate };
+            });
+        };
+        _this.PAGE_WIDTH = PAGE_WIDTH;
+        return _this;
+    }
+    HourPicker.prototype.render = function () {
+        var _a = this.props, onChange = _a.onChange, value = _a.value, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, minDate = _a.minDate, maxDate = _a.maxDate, disable = _a.disable, timeFormat = _a.timeFormat, rest = __rest(_a, ["onChange", "value", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "minDate", "maxDate", "disable", "timeFormat"]);
+        return (React.createElement(HourView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), onValueClick: this.handleChange, onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, hoveredItemIndex: this.state.hoveredCellPosition, onCellHover: this.onHoveredCellPositionChange, disabledItemIndexes: this.getDisabledPositions(), activeItemIndex: this.getActiveCellPosition(), currentHeadingValue: this.getCurrentDate() })));
     };
-    _this.PAGE_WIDTH = PAGE_WIDTH;
-    return _this;
-  }
-
-  _createClass(HourPicker, [{
-    key: "buildCalendarValues",
-    value: function buildCalendarValues() {
-      var _this2 = this;
-
-      /*
-        Return array of hours (strings) like ['16:00', '17:00', ...]
-        that used to populate calendar's page.
-      */
-      return lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, 24).map(function (h) {
-        return "".concat(h < 10 ? '0' : '').concat(h);
-      }).map(function (hour) {
-        return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_6__["buildTimeStringWithSuffix"])(hour, '00', _this2.props.timeFormat);
-      });
-    }
-  }, {
-    key: "getActiveCellPosition",
-    value: function getActiveCellPosition() {
-      /*
-        Return position of an hour that should be displayed as active
-        (position in array returned by `this.buildCalendarValues`).
-      */
-      var value = this.props.value;
-
-      if (value && value.isSame(this.state.date, 'date')) {
-        return this.props.value.hour();
-      }
-    }
-  }, {
-    key: "isNextPageAvailable",
-    value: function isNextPageAvailable() {
-      return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_6__["isNextPageAvailable"])(this.state.date, this.props.maxDate);
-    }
-  }, {
-    key: "isPrevPageAvailable",
-    value: function isPrevPageAvailable() {
-      return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_6__["isPrevPageAvailable"])(this.state.date, this.props.minDate);
-    }
-  }, {
-    key: "getDisabledHoursPositions",
-    value: function getDisabledHoursPositions() {
-      var _this3 = this;
-
-      /*
-        Return position numbers of hours that should be displayed as disabled
-        (position in array returned by `this.buildCalendarValues`).
-      */
-      var _this$props = this.props,
-          disable = _this$props.disable,
-          minDate = _this$props.minDate,
-          maxDate = _this$props.maxDate;
-      var disabledByDisable = [];
-      var disabledByMaxDate = [];
-      var disabledByMinDate = [];
-
-      if (lodash__WEBPACK_IMPORTED_MODULE_3__["isArray"](disable)) {
-        disabledByDisable = lodash__WEBPACK_IMPORTED_MODULE_3__["concat"](disabledByDisable, disable.filter(function (date) {
-          return date.isSame(_this3.state.date, 'day');
-        }).map(function (date) {
-          return date.hour();
-        }));
-      }
-
-      if (minDate) {
-        if (minDate.isSame(this.state.date, 'day')) {
-          disabledByMinDate = lodash__WEBPACK_IMPORTED_MODULE_3__["concat"](disabledByMinDate, lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, minDate.hour()));
+    HourPicker.prototype.getCurrentDate = function () {
+        /* Return currently selected month, date and year(string) to display in calendar header. */
+        return sharedFunctions_1.getCurrentDate(this.state.date);
+    };
+    HourPicker.prototype.buildCalendarValues = function () {
+        var _this = this;
+        /*
+          Return array of hours (strings) like ['16:00', '17:00', ...]
+          that used to populate calendar's page.
+        */
+        return _.range(0, 24).map(function (h) {
+            return "" + (h < 10 ? '0' : '') + h;
+        }).map(function (hour) { return sharedFunctions_1.buildTimeStringWithSuffix(hour, '00', _this.props.timeFormat); });
+    };
+    HourPicker.prototype.getSelectableCellPositions = function () {
+        var _this = this;
+        return _.filter(_.range(0, HOURS_ON_PAGE), function (h) { return !_.includes(_this.getDisabledPositions(), h); });
+    };
+    HourPicker.prototype.getInitialDatePosition = function () {
+        var selectable = this.getSelectableCellPositions();
+        if (selectable.indexOf(this.state.date.hour()) < 0) {
+            return selectable[0];
         }
-      }
-
-      if (maxDate) {
-        if (maxDate.isSame(this.state.date, 'day')) {
-          disabledByMaxDate = lodash__WEBPACK_IMPORTED_MODULE_3__["concat"](disabledByMaxDate, lodash__WEBPACK_IMPORTED_MODULE_3__["range"](maxDate.hour() + 1, 24));
+        return this.state.date.hour();
+    };
+    HourPicker.prototype.getActiveCellPosition = function () {
+        /*
+          Return position of an hour that should be displayed as active
+          (position in array returned by `this.buildCalendarValues`).
+        */
+        var value = this.props.value;
+        if (value && value.isSame(this.state.date, 'date')) {
+            return this.props.value.hour();
         }
-      }
+    };
+    HourPicker.prototype.isNextPageAvailable = function () {
+        return sharedFunctions_1.isNextPageAvailable(this.state.date, this.props.maxDate);
+    };
+    HourPicker.prototype.isPrevPageAvailable = function () {
+        return sharedFunctions_1.isPrevPageAvailable(this.state.date, this.props.minDate);
+    };
+    HourPicker.prototype.getDisabledPositions = function () {
+        var _this = this;
+        /*
+          Return position numbers of hours that should be displayed as disabled
+          (position in array returned by `this.buildCalendarValues`).
+        */
+        var _a = this.props, disable = _a.disable, minDate = _a.minDate, maxDate = _a.maxDate;
+        var disabledByDisable = [];
+        var disabledByMaxDate = [];
+        var disabledByMinDate = [];
+        if (_.isArray(disable)) {
+            disabledByDisable = _.concat(disabledByDisable, disable.filter(function (date) { return date.isSame(_this.state.date, 'day'); })
+                .map(function (date) { return date.hour(); }));
+        }
+        if (minDate) {
+            if (minDate.isSame(this.state.date, 'day')) {
+                disabledByMinDate = _.concat(disabledByMinDate, _.range(0, minDate.hour()));
+            }
+        }
+        if (maxDate) {
+            if (maxDate.isSame(this.state.date, 'day')) {
+                disabledByMaxDate = _.concat(disabledByMaxDate, _.range(maxDate.hour() + 1, 24));
+            }
+        }
+        var result = _.sortBy(_.uniq(_.concat(disabledByDisable, disabledByMaxDate, disabledByMinDate)));
+        if (result.length > 0) {
+            return result;
+        }
+    };
+    HourPicker.defaultProps = {
+        timeFormat: '24',
+    };
+    return HourPicker;
+}(BasePicker_1.SingleSelectionPicker));
+exports.default = HourPicker;
 
-      var result = lodash__WEBPACK_IMPORTED_MODULE_3__["sortBy"](lodash__WEBPACK_IMPORTED_MODULE_3__["uniq"](lodash__WEBPACK_IMPORTED_MODULE_3__["concat"](disabledByDisable, disabledByMaxDate, disabledByMinDate)));
-
-      if (result.length > 0) {
-        return result;
-      }
-    }
-  }, {
-    key: "getCurrentDate",
-    value: function getCurrentDate() {
-      /* Return currently selected month, date and year(string) to display in calendar header. */
-      return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_6__["getCurrentDate"])(this.state.date);
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_5__["getUnhandledProps"])(HourPicker, this.props);
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_views_HourView__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, rest, {
-        hours: this.buildCalendarValues(),
-        onNextPageBtnClick: this.switchToNextPage,
-        onPrevPageBtnClick: this.switchToPrevPage,
-        hasPrevPage: this.isPrevPageAvailable(),
-        hasNextPage: this.isNextPageAvailable(),
-        onHourClick: this.handleChange,
-        onBlur: this.handleBlur,
-        inline: this.props.inline,
-        onMount: this.props.onCalendarViewMount,
-        hovered: this.state.hoveredCellPosition,
-        onCellHover: this.onHoveredCellPositionChange,
-        disabled: this.getDisabledHoursPositions(),
-        active: this.getActiveCellPosition(),
-        currentDate: this.getCurrentDate()
-      }));
-    }
-  }]);
-
-  return HourPicker;
-}(_BasePicker__WEBPACK_IMPORTED_MODULE_7__["default"]);
-
-_defineProperty(HourPicker, "handledProps", ["closePopup", "disable", "initializeWith", "inline", "isPickerInFocus", "isTriggerInFocus", "maxDate", "minDate", "onCalendarViewMount", "onChange", "timeFormat", "value"]);
-
-HourPicker.propTypes = {
-  /** Called after hour is selected. */
-  onChange: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"].isRequired,
-
-  /** A value for initializing hour picker's state. */
-  initializeWith: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__).isRequired,
-
-  /** Currently selected hour. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Array of disabled hours. */
-  disable: prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__)),
-
-  /** Minimal date that could be selected. */
-  minDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Maximal date that could be selected. */
-  maxDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Time format. */
-  timeFormat: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOf"](['ampm', 'AMPM', '24']),
-  isPickerInFocus: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  isTriggerInFocus: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  onCalendarViewMount: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-
-  /** Force popup to close. */
-  closePopup: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  inline: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"]
-};
-HourPicker.defaultProps = {
-  timeFormat: '24'
-};
-/* harmony default export */ __webpack_exports__["default"] = (HourPicker);
 
 /***/ }),
 
-/***/ "./src/pickers/timePicker/MinutePicker.js":
-/*!************************************************!*\
-  !*** ./src/pickers/timePicker/MinutePicker.js ***!
-  \************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/pickers/timePicker/MinutePicker.tsx":
+/*!*************************************************!*\
+  !*** ./src/pickers/timePicker/MinutePicker.tsx ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _views_MinuteView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../views/MinuteView */ "./src/views/MinuteView.js");
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../lib */ "./src/lib/index.js");
-/* harmony import */ var _sharedFunctions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./sharedFunctions */ "./src/pickers/timePicker/sharedFunctions.js");
-/* harmony import */ var _BasePicker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../BasePicker */ "./src/pickers/BasePicker.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var MinuteView_1 = __webpack_require__(/*! ../../views/MinuteView */ "./src/views/MinuteView.tsx");
+var BasePicker_1 = __webpack_require__(/*! ../BasePicker */ "./src/pickers/BasePicker.tsx");
+var sharedFunctions_1 = __webpack_require__(/*! ./sharedFunctions */ "./src/pickers/timePicker/sharedFunctions.ts");
 var MINUTES_STEP = 5;
 var MINUTES_ON_PAGE = 12;
 var PAGE_WIDTH = 3;
-
-var MinutePicker =
-/*#__PURE__*/
-function (_BasePicker) {
-  _inherits(MinutePicker, _BasePicker);
-
-  function MinutePicker(props) {
-    var _this;
-
-    _classCallCheck(this, MinutePicker);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(MinutePicker).call(this, props));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getSelectableCellPositions", function () {
-      return lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, MINUTES_ON_PAGE);
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getInitialDatePosition", function () {
-      return 0;
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleChange", function (e, _ref) {
-      var value = _ref.value;
-      var data = {
-        year: _this.state.date.year(),
-        month: _this.state.date.month(),
-        date: _this.state.date.date(),
-        hour: _this.state.date.hour(),
-        minute: _this.buildCalendarValues().indexOf(value) * MINUTES_STEP
-      };
-
-      lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onChange', e, _objectSpread({}, _this.props, {
-        value: data
-      }));
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToNextPage", function () {
-      _this.setState(function (_ref2) {
-        var date = _ref2.date;
-        var nextDate = date.clone();
-        nextDate.add(1, 'day');
-        return {
-          date: nextDate
+var MinutePicker = /** @class */ (function (_super) {
+    __extends(MinutePicker, _super);
+    function MinutePicker(props) {
+        var _this = _super.call(this, props) || this;
+        _this.handleChange = function (e, _a) {
+            var value = _a.value;
+            var data = __assign({}, _this.props, { value: {
+                    year: _this.state.date.year(),
+                    month: _this.state.date.month(),
+                    date: _this.state.date.date(),
+                    hour: _this.state.date.hour(),
+                    minute: _this.buildCalendarValues().indexOf(value) * MINUTES_STEP,
+                } });
+            _this.props.onChange(e, data);
         };
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "switchToPrevPage", function () {
-      _this.setState(function (_ref3) {
-        var date = _ref3.date;
-        var prevDate = date.clone();
-        prevDate.subtract(1, 'day');
-        return {
-          date: prevDate
+        _this.switchToNextPage = function () {
+            _this.setState(function (_a) {
+                var date = _a.date;
+                var nextDate = date.clone();
+                nextDate.add(1, 'day');
+                return { date: nextDate };
+            });
         };
-      });
-    });
-
-    _this.state = {
-      /* moment instance */
-      date: props.initializeWith.clone()
+        _this.switchToPrevPage = function () {
+            _this.setState(function (_a) {
+                var date = _a.date;
+                var prevDate = date.clone();
+                prevDate.subtract(1, 'day');
+                return { date: prevDate };
+            });
+        };
+        _this.PAGE_WIDTH = PAGE_WIDTH;
+        return _this;
+    }
+    MinutePicker.prototype.render = function () {
+        var _a = this.props, onChange = _a.onChange, value = _a.value, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, minDate = _a.minDate, maxDate = _a.maxDate, disable = _a.disable, timeFormat = _a.timeFormat, rest = __rest(_a, ["onChange", "value", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "minDate", "maxDate", "disable", "timeFormat"]);
+        return (React.createElement(MinuteView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onValueClick: this.handleChange, hoveredItemIndex: this.state.hoveredCellPosition, onCellHover: this.onHoveredCellPositionChange, onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, hasNextPage: this.isNextPageAvailable(), hasPrevPage: this.isPrevPageAvailable(), disabledItemIndexes: this.getDisabledPositions(), currentHeadingValue: this.getCurrentDate(), activeItemIndex: this.getActiveCellPosition() })));
     };
-    _this.PAGE_WIDTH = PAGE_WIDTH;
-    return _this;
-  }
+    MinutePicker.prototype.getCurrentDate = function () {
+        /* Return currently selected month, date and year(string) to display in calendar header. */
+        return sharedFunctions_1.getCurrentDate(this.state.date);
+    };
+    MinutePicker.prototype.buildCalendarValues = function () {
+        var _this = this;
+        /*
+          Return array of minutes (strings) like ['16:15', '16:20', ...]
+          that used to populate calendar's page.
+        */
+        var hour = this.state.date.hour() < 10
+            ? '0' + this.state.date.hour().toString()
+            : this.state.date.hour().toString();
+        return _.range(0, 60, MINUTES_STEP)
+            .map(function (minute) { return "" + (minute < 10 ? '0' : '') + minute; })
+            .map(function (minute) { return sharedFunctions_1.buildTimeStringWithSuffix(hour, minute, _this.props.timeFormat); });
+    };
+    MinutePicker.prototype.getSelectableCellPositions = function () {
+        return _.range(0, MINUTES_ON_PAGE);
+    };
+    MinutePicker.prototype.getInitialDatePosition = function () {
+        var selectable = this.getSelectableCellPositions();
+        if (selectable.indexOf(this.state.date.hour()) < 0) {
+            return selectable[0];
+        }
+    };
+    MinutePicker.prototype.getDisabledPositions = function () {
+        var _this = this;
+        var _a = this.props, disable = _a.disable, minDate = _a.minDate, maxDate = _a.maxDate;
+        var disabledByDisable = [];
+        var disabledByMaxDate = [];
+        var disabledByMinDate = [];
+        if (_.isArray(disable)) {
+            disabledByDisable = _.concat(disabledByDisable, disable.filter(function (date) { return date.isSame(_this.state.date, 'day'); })
+                .map(function (date) { return getMinuteCellPosition(date.minute()); }));
+        }
+        if (minDate) {
+            if (minDate.isSame(this.state.date, 'day')) {
+                disabledByMinDate = _.concat(disabledByMinDate, _.range(0, minDate.minute()).map(function (m) { return getMinuteCellPosition(m); }));
+            }
+        }
+        if (maxDate) {
+            if (maxDate.isSame(this.state.date, 'day')) {
+                disabledByMaxDate = _.concat(disabledByMaxDate, _.range(maxDate.minute() + MINUTES_STEP, 60).map(function (m) { return getMinuteCellPosition(m); }));
+            }
+        }
+        var result = _.sortBy(_.uniq(_.concat(disabledByDisable, disabledByMaxDate, disabledByMinDate)));
+        if (result.length > 0) {
+            return result;
+        }
+    };
+    MinutePicker.prototype.getActiveCellPosition = function () {
+        /*
+          Return position of a minute that should be displayed as active
+          (position in array returned by `this.buildCalendarValues`).
+        */
+        var value = this.props.value;
+        if (value && value.isSame(this.state.date, 'date')) {
+            return Math.floor(this.props.value.minutes() / MINUTES_STEP);
+        }
+    };
+    MinutePicker.prototype.isNextPageAvailable = function () {
+        return sharedFunctions_1.isNextPageAvailable(this.state.date, this.props.maxDate);
+    };
+    MinutePicker.prototype.isPrevPageAvailable = function () {
+        return sharedFunctions_1.isPrevPageAvailable(this.state.date, this.props.minDate);
+    };
+    MinutePicker.defaultProps = {
+        timeFormat: '24',
+    };
+    return MinutePicker;
+}(BasePicker_1.SingleSelectionPicker));
+function getMinuteCellPosition(minute) {
+    return Math.floor(minute / MINUTES_STEP);
+}
+exports.default = MinutePicker;
 
-  _createClass(MinutePicker, [{
-    key: "buildCalendarValues",
-    value: function buildCalendarValues() {
-      var _this2 = this;
-
-      /*
-        Return array of minutes (strings) like ['16:15', '16:20', ...]
-        that used to populate calendar's page.
-      */
-      var hour = this.state.date.hour() < 10 ? '0' + this.state.date.hour().toString() : this.state.date.hour().toString();
-      return lodash__WEBPACK_IMPORTED_MODULE_3__["range"](0, 60, MINUTES_STEP).map(function (minute) {
-        return "".concat(minute < 10 ? '0' : '').concat(minute);
-      }).map(function (minute) {
-        return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_6__["buildTimeStringWithSuffix"])(hour, minute, _this2.props.timeFormat);
-      });
-    }
-  }, {
-    key: "getActiveCellPosition",
-    value: function getActiveCellPosition() {
-      /*
-        Return position of a minute that should be displayed as active
-        (position in array returned by `this.buildCalendarValues`).
-      */
-      var value = this.props.value;
-
-      if (value && value.isSame(this.state.date, 'date')) {
-        return Math.floor(this.props.value.minutes() / MINUTES_STEP);
-      }
-    }
-  }, {
-    key: "isNextPageAvailable",
-    value: function isNextPageAvailable() {
-      return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_6__["isNextPageAvailable"])(this.state.date, this.props.maxDate);
-    }
-  }, {
-    key: "isPrevPageAvailable",
-    value: function isPrevPageAvailable() {
-      return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_6__["isPrevPageAvailable"])(this.state.date, this.props.minDate);
-    }
-  }, {
-    key: "getCurrentDate",
-    value: function getCurrentDate() {
-      /* Return currently selected month, date and year(string) to display in calendar header. */
-      return Object(_sharedFunctions__WEBPACK_IMPORTED_MODULE_6__["getCurrentDate"])(this.state.date);
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_5__["getUnhandledProps"])(MinutePicker, this.props);
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_views_MinuteView__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, rest, {
-        minutes: this.buildCalendarValues(),
-        onNextPageBtnClick: this.switchToNextPage,
-        onPrevPageBtnClick: this.switchToPrevPage,
-        onMinuteClick: this.handleChange,
-        hovered: this.state.hoveredCellPosition,
-        onCellHover: this.onHoveredCellPositionChange,
-        onBlur: this.handleBlur,
-        inline: this.props.inline,
-        onMount: this.props.onCalendarViewMount,
-        hasNextPage: this.isNextPageAvailable(),
-        hasPrevPage: this.isPrevPageAvailable(),
-        currentDate: this.getCurrentDate(),
-        active: this.getActiveCellPosition()
-      }));
-    }
-  }]);
-
-  return MinutePicker;
-}(_BasePicker__WEBPACK_IMPORTED_MODULE_7__["default"]);
-
-_defineProperty(MinutePicker, "handledProps", ["closePopup", "disable", "initializeWith", "inline", "isPickerInFocus", "isTriggerInFocus", "maxDate", "minDate", "onCalendarViewMount", "onChange", "timeFormat", "value"]);
-
-MinutePicker.propTypes = {
-  /** Called after minute is selected. */
-  onChange: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"].isRequired,
-
-  /** A value for initializing minute picker's state. */
-  initializeWith: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__).isRequired,
-
-  /** Currently selected minute. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Array of disabled dates. */
-  disable: prop_types__WEBPACK_IMPORTED_MODULE_1__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__)),
-
-  /** Minimal date that could be selected. */
-  minDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Maximal date that could be selected. */
-  maxDate: prop_types__WEBPACK_IMPORTED_MODULE_1__["instanceOf"](moment__WEBPACK_IMPORTED_MODULE_2__),
-
-  /** Time format. */
-  timeFormat: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOf"](['ampm', 'AMPM', '24']),
-  isPickerInFocus: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  isTriggerInFocus: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  onCalendarViewMount: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-
-  /** Force popup to close. */
-  closePopup: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"],
-  inline: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"]
-};
-MinutePicker.defaultProps = {
-  timeFormat: '24'
-};
-/* harmony default export */ __webpack_exports__["default"] = (MinutePicker);
 
 /***/ }),
 
-/***/ "./src/pickers/timePicker/sharedFunctions.js":
+/***/ "./src/pickers/timePicker/sharedFunctions.ts":
 /*!***************************************************!*\
-  !*** ./src/pickers/timePicker/sharedFunctions.js ***!
+  !*** ./src/pickers/timePicker/sharedFunctions.ts ***!
   \***************************************************/
-/*! exports provided: buildTimeStringWithSuffix, isNextPageAvailable, isPrevPageAvailable, getCurrentDate */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buildTimeStringWithSuffix", function() { return buildTimeStringWithSuffix; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isNextPageAvailable", function() { return isNextPageAvailable; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPrevPageAvailable", function() { return isPrevPageAvailable; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCurrentDate", function() { return getCurrentDate; });
-function buildTimeStringWithSuffix(hour
-/*string*/
-, minute
-/*string*/
-, timeFormat
-/*string*/
-) {
-  if (timeFormat === 'ampm') {
-    if (parseInt(hour) < 12) {
-      return "".concat(convertHourTo_12_Format(hour), ":").concat(minute, " am");
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function buildTimeStringWithSuffix(hour, minute, timeFormat) {
+    if (timeFormat === 'ampm') {
+        if (parseInt(hour, 10) < 12) {
+            return convertHourTo_12_Format(hour) + ":" + minute + " am";
+        }
+        return convertHourTo_12_Format(hour) + ":" + minute + " pm";
     }
-
-    return "".concat(convertHourTo_12_Format(hour), ":").concat(minute, " pm");
-  }
-
-  if (timeFormat === 'AMPM') {
-    if (parseInt(hour) < 12) {
-      return "".concat(convertHourTo_12_Format(hour), ":").concat(minute, " AM");
+    if (timeFormat === 'AMPM') {
+        if (parseInt(hour, 10) < 12) {
+            return convertHourTo_12_Format(hour) + ":" + minute + " AM";
+        }
+        return convertHourTo_12_Format(hour) + ":" + minute + " PM";
     }
-
-    return "".concat(convertHourTo_12_Format(hour), ":").concat(minute, " PM");
-  }
-
-  return "".concat(hour, ":").concat(minute);
+    return hour + ":" + minute;
 }
-
-function convertHourTo_12_Format(hour
-/*string*/
-) {
-  if (hour === '00' || hour === '12') {
-    return '12';
-  }
-
-  if (parseInt(hour) < 12) {
-    return hour;
-  }
-
-  var h = (parseInt(hour) - 12).toString();
-
-  if (h.length === 1) {
-    return '0' + h;
-  }
-
-  return h;
+exports.buildTimeStringWithSuffix = buildTimeStringWithSuffix;
+function convertHourTo_12_Format(hour) {
+    if (hour === '00' || hour === '12') {
+        return '12';
+    }
+    if (parseInt(hour, 10) < 12) {
+        return hour;
+    }
+    var h = (parseInt(hour, 10) - 12).toString();
+    if (h.length === 1) {
+        return '0' + h;
+    }
+    return h;
 }
-
-function isNextPageAvailable(date
-/*Moment*/
-, maxDate
-/*Moment*/
-) {
-  if (maxDate) {
-    return maxDate.isAfter(date, 'day');
-  }
-
-  return true;
+function isNextPageAvailable(date, maxDate) {
+    if (maxDate) {
+        return maxDate.isAfter(date, 'day');
+    }
+    return true;
 }
-function isPrevPageAvailable(date
-/*Moment*/
-, minDate
-/*Moment*/
-) {
-  if (minDate) {
-    return minDate.isBefore(date, 'day');
-  }
+exports.isNextPageAvailable = isNextPageAvailable;
+function isPrevPageAvailable(date, minDate) {
+    if (minDate) {
+        return minDate.isBefore(date, 'day');
+    }
+    return true;
+}
+exports.isPrevPageAvailable = isPrevPageAvailable;
+function getCurrentDate(date) {
+    return date.format('MMMM DD, YYYY');
+}
+exports.getCurrentDate = getCurrentDate;
 
-  return true;
-}
-function getCurrentDate(date
-/*Moment*/
-) {
-  return date.format('MMMM DD, YYYY');
-}
 
 /***/ }),
 
-/***/ "./src/views/BaseView.js":
-/*!*******************************!*\
-  !*** ./src/views/BaseView.js ***!
-  \*******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/views/BaseCalendarView.ts":
+/*!***************************************!*\
+  !*** ./src/views/BaseCalendarView.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /** Base class for picker view components. */
-
-var BaseView =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(BaseView, _React$Component);
-
-  function BaseView() {
-    _classCallCheck(this, BaseView);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(BaseView).apply(this, arguments));
-  }
-
-  _createClass(BaseView, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this.props.onMount && this.props.onMount(this.calendarNode);
+var BaseCalendarView = /** @class */ (function (_super) {
+    __extends(BaseCalendarView, _super);
+    function BaseCalendarView() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-  }]);
+    BaseCalendarView.prototype.componentDidMount = function () {
+        if (this.props.onMount) {
+            this.props.onMount(this.calendarNode);
+        }
+    };
+    return BaseCalendarView;
+}(React.Component));
+exports.default = BaseCalendarView;
 
-  return BaseView;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-/* harmony default export */ __webpack_exports__["default"] = (BaseView);
 
 /***/ }),
 
-/***/ "./src/views/Calendar.js":
-/*!*******************************!*\
-  !*** ./src/views/Calendar.js ***!
-  \*******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/views/Calendar.tsx":
+/*!********************************!*\
+  !*** ./src/views/Calendar.tsx ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-var Calendar =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(Calendar, _React$Component);
-
-  function Calendar() {
-    _classCallCheck(this, Calendar);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(Calendar).apply(this, arguments));
-  }
-
-  _createClass(Calendar, [{
-    key: "render",
-    value: function render() {
-      var _this$props = this.props,
-          children = _this$props.children,
-          inline = _this$props.inline,
-          rest = _objectWithoutProperties(_this$props, ["children", "inline"]);
-
-      var style = {
-        // Prevent poped up picker from beeing outlined on focus.
-        // Inline picker should be outlined when in focus.
-        outline: inline ? undefined : 'none'
-      };
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_1__["Table"], _extends({
-        style: style,
-        unstackable: true,
-        celled: true
-      }, rest, {
-        textAlign: "center"
-      }), children);
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
+var Calendar = /** @class */ (function (_super) {
+    __extends(Calendar, _super);
+    function Calendar() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-  }]);
-
-  return Calendar;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-_defineProperty(Calendar, "handledProps", ["children"]);
-
-Calendar.propTypes = {
-  children: prop_types__WEBPACK_IMPORTED_MODULE_2__["node"].isRequired
-};
-/* harmony default export */ __webpack_exports__["default"] = (Calendar);
-
-/***/ }),
-
-/***/ "./src/views/CalendarBody/Body.js":
-/*!****************************************!*\
-  !*** ./src/views/CalendarBody/Body.js ***!
-  \****************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _Cell__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Cell */ "./src/views/CalendarBody/Cell.js");
-
-
-
-
-
-var cellStyleWidth3 = {
-  width: '33.333333%',
-  minWidth: '7em'
-};
-var cellStyleWidth4 = {
-  width: '25%'
-};
-var cellStyleWidth7 = {
-  width: '14.285714%'
-};
-
-function buildRows(data
-/*array*/
-, width
-/*number*/
-) {
-  var height = data.length / width;
-  var rows = [];
-
-  for (var i = 0; i < height; i++) {
-    rows.push(data.slice(i * width, i * width + width));
-  }
-
-  return rows;
-}
-
-function isActive(rowIndex, rowWidth, colIndex, active) {
-  if (lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](active)) return false;
-
-  if (lodash__WEBPACK_IMPORTED_MODULE_3__["isArray"](active)) {
-    for (var i = 0; i < active.length; i++) {
-      if (rowIndex * rowWidth + colIndex === active[i]) return true;
-    }
-  }
-
-  return rowIndex * rowWidth + colIndex === active;
-}
-
-function isHovered(rowIndex, rowWidth, colIndex, hovered) {
-  if (lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](hovered)) return false;
-  return rowIndex * rowWidth + colIndex === hovered;
-}
-
-function isDisabled(rowIndex, rowWidth, colIndex, disabledIndexes) {
-  if (lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](disabledIndexes) || disabledIndexes.length === 0) return false;
-
-  for (var i = 0; i < disabledIndexes.length; i++) {
-    if (rowIndex * rowWidth + colIndex === disabledIndexes[i]) return true;
-  }
-
-  return false;
-}
-
-function getCellStyle(width) {
-  if (width === '3') {
-    return cellStyleWidth3;
-  }
-
-  if (width === '4') {
-    return cellStyleWidth4;
-  }
-
-  if (width === '7') {
-    return cellStyleWidth7;
-  }
-
-  return;
-}
-
-function Body(props) {
-  var data = props.data,
-      width = props.width,
-      onCellClick = props.onCellClick,
-      active = props.active,
-      disabled = props.disabled,
-      hovered = props.hovered,
-      onCellHover = props.onCellHover;
-  var content = buildRows(data, parseInt(width)).map(function (row, rowIndex) {
-    return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_1__["Table"].Row, {
-      key: "".concat(rowIndex).concat(row[0])
-    }, row.map(function (item, itemIndex) {
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_Cell__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        style: getCellStyle(width),
-        active: isActive(rowIndex, parseInt(width), itemIndex, active),
-        hovered: isHovered(rowIndex, parseInt(width), itemIndex, hovered),
-        disabled: isDisabled(rowIndex, parseInt(width), itemIndex, disabled),
-        key: "".concat(rowIndex * width + itemIndex),
-        itemPosition: rowIndex * width + itemIndex,
-        content: item,
-        onHover: onCellHover,
-        onClick: onCellClick
-      });
-    }));
-  });
-  return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_1__["Table"].Body, null, content);
-}
-
-Body.handledProps = ["active", "data", "disabled", "hovered", "onCellClick", "onCellHover", "width"];
-Body.propTypes = {
-  /** A number of columns in a row. */
-  width: prop_types__WEBPACK_IMPORTED_MODULE_2__["oneOf"](['3', '4', '7']).isRequired,
-
-  /** Data that is used to fill a calendar. */
-  data: prop_types__WEBPACK_IMPORTED_MODULE_2__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["string"]), prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["number"])]).isRequired,
-
-  /** Called after a click on calendar's cell. */
-  onCellClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-  onCellHover: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Index of an element in `data` array that should be displayed as hovered. */
-  hovered: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"],
-
-  /** Index of an element (or array of indexes) in `data` array that should be displayed as active. */
-  active: prop_types__WEBPACK_IMPORTED_MODULE_2__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_2__["number"], prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["number"])]),
-
-  /** Array of element indexes in `data` array that should be displayed as disabled. */
-  disabled: prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["number"])
-};
-/* harmony default export */ __webpack_exports__["default"] = (Body);
-
-/***/ }),
-
-/***/ "./src/views/CalendarBody/Cell.js":
-/*!****************************************!*\
-  !*** ./src/views/CalendarBody/Cell.js ***!
-  \****************************************/
-/*! exports provided: default, Cell */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Cell", function() { return Cell; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../lib */ "./src/lib/index.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-var hoverCellStyles = {
-  outline: '1px solid #85b7d9',
-  cursor: 'pointer'
-};
-
-var Cell =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(Cell, _React$Component);
-
-  function Cell() {
-    var _getPrototypeOf2;
-
-    var _this;
-
-    _classCallCheck(this, Cell);
-
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Cell)).call.apply(_getPrototypeOf2, [this].concat(args)));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "toggleHoverCell", function () {
-      _this.setState(function (prevState) {
-        return {
-          hoverCell: !prevState.hoverCell
+    Calendar.prototype.render = function () {
+        var _a = this.props, children = _a.children, outlineOnFocus = _a.outlineOnFocus, rest = __rest(_a, ["children", "outlineOnFocus"]);
+        var style = {
+            // Prevent poped up picker from beeing outlined on focus.
+            // Inline picker should be outlined when in focus.
+            outline: outlineOnFocus ? undefined : 'none',
         };
-      });
-    });
+        return (React.createElement(semantic_ui_react_1.Table, __assign({ style: style, unstackable: true, celled: true }, rest, { textAlign: 'center' }), children));
+    };
+    return Calendar;
+}(React.Component));
+exports.default = Calendar;
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onCellClick", function (event) {
-      lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onClick', event, _objectSpread({}, _this.props, {
-        value: _this.props.content
-      }));
-    });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onCellHover", function (event) {
-      lodash__WEBPACK_IMPORTED_MODULE_3__["invoke"](_this.props, 'onHover', event, _objectSpread({}, _this.props));
-    });
+/***/ }),
 
-    return _this;
-  }
+/***/ "./src/views/CalendarBody/Body.tsx":
+/*!*****************************************!*\
+  !*** ./src/views/CalendarBody/Body.tsx ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
-  _createClass(Cell, [{
-    key: "render",
-    value: function render() {
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_4__["getUnhandledProps"])(Cell, this.props);
+"use strict";
 
-      var style = _objectSpread({}, this.props.style, this.props.hovered ? hoverCellStyles : undefined);
-
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_1__["Table"].Cell, _extends({}, rest, {
-        style: style,
-        onMouseOver: this.onCellHover,
-        onClick: this.onCellClick
-      }), this.props.content);
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
+var Cell_1 = __webpack_require__(/*! ./Cell */ "./src/views/CalendarBody/Cell.tsx");
+var Cell_2 = __webpack_require__(/*! ./Cell */ "./src/views/CalendarBody/Cell.tsx");
+function Body(props) {
+    var data = props.data, width = props.width, onCellClick = props.onCellClick, active = props.active, disabled = props.disabled, hovered = props.hovered, onCellHover = props.onCellHover;
+    var content = buildRows(data, width).map(function (row, rowIndex) { return (React.createElement(semantic_ui_react_1.Table.Row, { key: "" + rowIndex + row[0] }, row.map(function (item, itemIndex) { return (React.createElement(Cell_1.default, { style: getCellStyle(width), active: isActive(rowIndex, width, itemIndex, active), hovered: isHovered(rowIndex, width, itemIndex, hovered), disabled: isDisabled(rowIndex, width, itemIndex, disabled), key: "" + (rowIndex * width + itemIndex), itemPosition: rowIndex * width + itemIndex, content: item, onHover: onCellHover, onClick: onCellClick })); }))); });
+    return (React.createElement(semantic_ui_react_1.Table.Body, null, content));
+}
+function buildRows(data, width) {
+    var height = data.length / width;
+    var rows = [];
+    for (var i = 0; i < height; i++) {
+        rows.push(data.slice((i * width), (i * width) + width));
     }
-  }]);
-
-  return Cell;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-_defineProperty(Cell, "handledProps", ["content", "hovered", "itemPosition", "onClick", "onHover", "style"]);
-
-Cell.propTypes = {
-  /** Position of a cell on the page. */
-  itemPosition: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"].isRequired,
-
-  /** Cell's content. */
-  content: prop_types__WEBPACK_IMPORTED_MODULE_2__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_2__["number"], prop_types__WEBPACK_IMPORTED_MODULE_2__["string"]]).isRequired,
-
-  /** Called after click on a cell. */
-  onClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-  onHover: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-  hovered: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-  style: prop_types__WEBPACK_IMPORTED_MODULE_2__["object"]
-};
-/* harmony default export */ __webpack_exports__["default"] = (Cell);
+    return rows;
+}
+function isActive(rowIndex, rowWidth, colIndex, active) {
+    if (_.isNil(active)) {
+        return false;
+    }
+    if (_.isArray(active)) {
+        for (var _i = 0, _a = active; _i < _a.length; _i++) {
+            var activeIndex = _a[_i];
+            if (rowIndex * rowWidth + colIndex === activeIndex) {
+                return true;
+            }
+        }
+    }
+    return rowIndex * rowWidth + colIndex === active;
+}
+function isHovered(rowIndex, rowWidth, colIndex, hovered) {
+    if (_.isNil(hovered)) {
+        return false;
+    }
+    return rowIndex * rowWidth + colIndex === hovered;
+}
+function isDisabled(rowIndex, rowWidth, colIndex, disabledIndexes) {
+    if (_.isNil(disabledIndexes) || disabledIndexes.length === 0) {
+        return false;
+    }
+    for (var _i = 0, disabledIndexes_1 = disabledIndexes; _i < disabledIndexes_1.length; _i++) {
+        var disabledIndex = disabledIndexes_1[_i];
+        if (rowIndex * rowWidth + colIndex === disabledIndex) {
+            return true;
+        }
+    }
+    return false;
+}
+function getCellStyle(width) {
+    switch (width) {
+        case 3:
+            return Cell_2.cellStyleWidth3;
+        case 4:
+            return Cell_2.cellStyleWidth4;
+        case 7:
+            return Cell_2.cellStyleWidth7;
+        default:
+            break;
+    }
+}
+exports.default = Body;
 
 
 /***/ }),
 
-/***/ "./src/views/CalendarHeader/Header.js":
-/*!********************************************!*\
-  !*** ./src/views/CalendarHeader/Header.js ***!
-  \********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/views/CalendarBody/Cell.tsx":
+/*!*****************************************!*\
+  !*** ./src/views/CalendarBody/Cell.tsx ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _HeaderRange__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./HeaderRange */ "./src/views/CalendarHeader/HeaderRange.js");
-/* harmony import */ var _HeaderWeeks__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./HeaderWeeks */ "./src/views/CalendarHeader/HeaderWeeks.js");
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
+var hoverCellStyles = {
+    outline: '1px solid #85b7d9',
+    cursor: 'pointer',
+};
+exports.cellStyleWidth3 = {
+    width: '33.333333%',
+    minWidth: '7em',
+};
+exports.cellStyleWidth4 = {
+    width: '25%',
+};
+exports.cellStyleWidth7 = {
+    width: '14.285714%',
+};
+var Cell = /** @class */ (function (_super) {
+    __extends(Cell, _super);
+    function Cell() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.onCellClick = function (event) {
+            var _a = _this.props, itemPosition = _a.itemPosition, content = _a.content;
+            _.invoke(_this.props, 'onClick', event, __assign({}, _this.props, { itemPosition: itemPosition, value: content }));
+        };
+        _this.onCellHover = function (event) {
+            var itemPosition = _this.props.itemPosition;
+            _.invoke(_this.props, 'onHover', event, __assign({}, _this.props, { itemPosition: itemPosition }));
+        };
+        return _this;
+    }
+    Cell.prototype.render = function () {
+        var _a = this.props, itemPosition = _a.itemPosition, content = _a.content, style = _a.style, onClick = _a.onClick, onHover = _a.onHover, hovered = _a.hovered, rest = __rest(_a, ["itemPosition", "content", "style", "onClick", "onHover", "hovered"]);
+        var cellStyle = __assign({}, style, (hovered ? hoverCellStyles : {}));
+        return (React.createElement(semantic_ui_react_1.Table.Cell, __assign({}, rest, { style: cellStyle, onMouseOver: this.onCellHover, onClick: this.onCellClick }), content));
+    };
+    return Cell;
+}(React.Component));
+exports.default = Cell;
 
 
+/***/ }),
 
+/***/ "./src/views/CalendarHeader/Header.tsx":
+/*!*********************************************!*\
+  !*** ./src/views/CalendarHeader/Header.tsx ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
 
-
-
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
+var HeaderRange_1 = __webpack_require__(/*! ./HeaderRange */ "./src/views/CalendarHeader/HeaderRange.tsx");
+var HeaderWeeks_1 = __webpack_require__(/*! ./HeaderWeeks */ "./src/views/CalendarHeader/HeaderWeeks.tsx");
 function Header(props) {
-  var rangeRowContent = props.rangeRowContent,
-      displayWeeks = props.displayWeeks,
-      onNextPageBtnClick = props.onNextPageBtnClick,
-      onPrevPageBtnClick = props.onPrevPageBtnClick,
-      hasPrevPage = props.hasPrevPage,
-      hasNextPage = props.hasNextPage,
-      onHeaderClick = props.onHeaderClick,
-      width = props.width,
-      title = props.title;
-  var cellStyle = {
-    border: 'none',
-    borderBottom: displayWeeks ? 'none' : '1px solid rgba(34,36,38,.1)'
-  };
-  var prevPageBtnStyle = {
-    cursor: hasPrevPage ? 'pointer' : 'auto'
-  };
-  var nextPageBtnStyle = {
-    cursor: hasNextPage ? 'pointer' : 'auto'
-  };
-  var headerTitleStyle = {
-    cursor: onHeaderClick ? 'pointer' : 'default'
-  };
-  return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__["Table"].Header, null, !lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](rangeRowContent) && react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_HeaderRange__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    content: rangeRowContent
-  }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__["Table"].Row, null, react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__["Table"].HeaderCell, {
-    style: cellStyle,
-    colSpan: "1"
-  }, react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__["Icon"], {
-    fitted: true,
-    style: prevPageBtnStyle,
-    disabled: !hasPrevPage,
-    onClick: hasPrevPage ? onPrevPageBtnClick : undefined,
-    name: "chevron left"
-  })), react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__["Table"].HeaderCell, {
-    onClick: onHeaderClick ? onHeaderClick : undefined,
-    style: cellStyle,
-    colSpan: (parseInt(width) - 2).toString()
-  }, react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("span", {
-    style: headerTitleStyle
-  }, title)), react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__["Table"].HeaderCell, {
-    style: cellStyle,
-    colSpan: "1"
-  }, react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__["Icon"], {
-    fitted: true,
-    style: nextPageBtnStyle,
-    disabled: !hasNextPage,
-    onClick: hasNextPage ? onNextPageBtnClick : undefined,
-    name: "chevron right"
-  }))), displayWeeks && react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_HeaderWeeks__WEBPACK_IMPORTED_MODULE_5__["default"], null));
+    var rangeRowContent = props.rangeRowContent, displayWeeks = props.displayWeeks, onNextPageBtnClick = props.onNextPageBtnClick, onPrevPageBtnClick = props.onPrevPageBtnClick, hasPrevPage = props.hasPrevPage, hasNextPage = props.hasNextPage, onHeaderClick = props.onHeaderClick, width = props.width, title = props.title;
+    var cellStyle = {
+        border: 'none',
+        borderBottom: displayWeeks ? 'none' : '1px solid rgba(34,36,38,.1)',
+    };
+    var prevPageBtnStyle = {
+        cursor: hasPrevPage ? 'pointer' : 'auto',
+    };
+    var nextPageBtnStyle = {
+        cursor: hasNextPage ? 'pointer' : 'auto',
+    };
+    var headerTitleStyle = {
+        cursor: onHeaderClick ? 'pointer' : 'default',
+    };
+    return (React.createElement(semantic_ui_react_1.Table.Header, null,
+        !_.isNil(rangeRowContent) && React.createElement(HeaderRange_1.default, { content: rangeRowContent }),
+        React.createElement(semantic_ui_react_1.Table.Row, null,
+            React.createElement(semantic_ui_react_1.Table.HeaderCell, { style: cellStyle, colSpan: '1' },
+                React.createElement(semantic_ui_react_1.Icon, { fitted: true, style: prevPageBtnStyle, disabled: !hasPrevPage, onClick: hasPrevPage ? onPrevPageBtnClick : undefined, name: 'chevron left' })),
+            React.createElement(semantic_ui_react_1.Table.HeaderCell, { onClick: onHeaderClick ? onHeaderClick : undefined, style: cellStyle, colSpan: (width - 2).toString() },
+                React.createElement("span", { style: headerTitleStyle }, title)),
+            React.createElement(semantic_ui_react_1.Table.HeaderCell, { style: cellStyle, colSpan: '1' },
+                React.createElement(semantic_ui_react_1.Icon, { fitted: true, style: nextPageBtnStyle, disabled: !hasNextPage, onClick: hasNextPage ? onNextPageBtnClick : undefined, name: 'chevron right' }))),
+        displayWeeks && React.createElement(HeaderWeeks_1.default, null)));
 }
+exports.default = Header;
 
-Header.handledProps = ["displayWeeks", "hasNextPage", "hasPrevPage", "onHeaderClick", "onNextPageBtnClick", "onPrevPageBtnClick", "rangeRowContent", "title", "width"];
-Header.propTypes = {
-  /** Header text content. */
-  title: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"].isRequired,
-
-  /** Called after click on next page button. */
-  onNextPageBtnClick: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"].isRequired,
-
-  /** Called after click on previous page button. */
-  onPrevPageBtnClick: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"].isRequired,
-
-  /** Whether to display previous page button as active or disabled. */
-  hasPrevPage: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"].isRequired,
-
-  /** Whether to display next page button as active or disabled. */
-  hasNextPage: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"].isRequired,
-
-  /** Whether to display weeks row or not. */
-  displayWeeks: prop_types__WEBPACK_IMPORTED_MODULE_1__["bool"].isRequired,
-
-  /** Header width. */
-  width: prop_types__WEBPACK_IMPORTED_MODULE_1__["oneOf"](['3', '4', '7']).isRequired,
-
-  /** Text content to display in dates-range row. */
-  rangeRowContent: prop_types__WEBPACK_IMPORTED_MODULE_1__["string"],
-
-  /** Called after click on calendar header. */
-  onHeaderClick: prop_types__WEBPACK_IMPORTED_MODULE_1__["func"]
-};
-/* harmony default export */ __webpack_exports__["default"] = (Header);
 
 /***/ }),
 
-/***/ "./src/views/CalendarHeader/HeaderRange.js":
-/*!*************************************************!*\
-  !*** ./src/views/CalendarHeader/HeaderRange.js ***!
-  \*************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/views/CalendarHeader/HeaderRange.tsx":
+/*!**************************************************!*\
+  !*** ./src/views/CalendarHeader/HeaderRange.tsx ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
 
-
-
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
 var cellStyle = {
-  border: 'none'
+    border: 'none',
 };
-
 function HeaderRange(props) {
-  var content = props.content;
-  return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_1__["Table"].Row, null, react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_1__["Table"].HeaderCell, {
-    style: cellStyle,
-    colSpan: "7"
-  }, content));
+    var content = props.content;
+    return (React.createElement(semantic_ui_react_1.Table.Row, null,
+        React.createElement(semantic_ui_react_1.Table.HeaderCell, { style: cellStyle, colSpan: '7' }, content)));
 }
+exports.default = HeaderRange;
 
-HeaderRange.handledProps = ["content"];
-HeaderRange.propTypes = {
-  /** Selected dates range. */
-  content: prop_types__WEBPACK_IMPORTED_MODULE_2__["string"].isRequired
-};
-/* harmony default export */ __webpack_exports__["default"] = (HeaderRange);
 
 /***/ }),
 
-/***/ "./src/views/CalendarHeader/HeaderWeeks.js":
-/*!*************************************************!*\
-  !*** ./src/views/CalendarHeader/HeaderWeeks.js ***!
-  \*************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/views/CalendarHeader/HeaderWeeks.tsx":
+/*!**************************************************!*\
+  !*** ./src/views/CalendarHeader/HeaderWeeks.tsx ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
 
-
-
+Object.defineProperty(exports, "__esModule", { value: true });
+var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
 /** Return array of week day names.
- * 
+ *
  * getWeekDays() --> ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Su']
  */
-
-var getWeekDays = function getWeekDays(moment) {
-  var weekDays = [];
-  var day = moment().startOf('week');
-
-  for (var i = 0; i < 7; i++) {
-    weekDays[i] = day.format('dd');
-    day.add(1, 'd');
-  }
-
-  return weekDays;
+var getWeekDays = function (m) {
+    var weekDays = [];
+    var day = m().startOf('week');
+    for (var i = 0; i < 7; i++) {
+        weekDays[i] = day.format('dd');
+        day.add(1, 'd');
+    }
+    return weekDays;
 };
-
 var cellStyle = {
-  border: 'none',
-  borderBottom: '1px solid rgba(34,36,38,.1)'
+    border: 'none',
+    borderBottom: '1px solid rgba(34,36,38,.1)',
 };
-
-var getWeekDayCells = function getWeekDayCells(moment) {
-  return getWeekDays(moment).map(function (weekDay) {
-    return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_1__["Table"].HeaderCell, {
-      key: weekDay,
-      style: cellStyle,
-      colSpan: "1"
-    }, weekDay);
-  });
-};
-
-getWeekDayCells.handledProps = [];
-
+var getWeekDayCells = function (m) { return getWeekDays(m).map(function (weekDay) { return (React.createElement(semantic_ui_react_1.Table.HeaderCell, { key: weekDay, style: cellStyle, colSpan: '1' }, weekDay)); }); };
 function HeaderWeeks() {
-  return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_1__["Table"].Row, null, getWeekDayCells(moment__WEBPACK_IMPORTED_MODULE_2__));
+    return (React.createElement(semantic_ui_react_1.Table.Row, null, getWeekDayCells(moment)));
 }
+exports.default = HeaderWeeks;
 
-HeaderWeeks.handledProps = [];
-/* harmony default export */ __webpack_exports__["default"] = (HeaderWeeks);
 
 /***/ }),
 
-/***/ "./src/views/DatesRangeView.js":
-/*!*************************************!*\
-  !*** ./src/views/DatesRangeView.js ***!
-  \*************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/views/DatesRangeView.tsx":
+/*!**************************************!*\
+  !*** ./src/views/DatesRangeView.tsx ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _Calendar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Calendar */ "./src/views/Calendar.js");
-/* harmony import */ var _CalendarHeader_Header__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CalendarHeader/Header */ "./src/views/CalendarHeader/Header.js");
-/* harmony import */ var _CalendarBody_Body__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.js");
-/* harmony import */ var _DayView__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./DayView */ "./src/views/DayView.js");
-/* harmony import */ var _BaseView__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./BaseView */ "./src/views/BaseView.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-
-
-
-var DAY_POSITIONS = lodash__WEBPACK_IMPORTED_MODULE_3__["range"](_DayView__WEBPACK_IMPORTED_MODULE_7__["WEEKS_TO_DISPLAY"] * 7);
-
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var BaseCalendarView_1 = __webpack_require__(/*! ./BaseCalendarView */ "./src/views/BaseCalendarView.ts");
+var Calendar_1 = __webpack_require__(/*! ./Calendar */ "./src/views/Calendar.tsx");
+var Body_1 = __webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.tsx");
+var Header_1 = __webpack_require__(/*! ./CalendarHeader/Header */ "./src/views/CalendarHeader/Header.tsx");
+var DayView_1 = __webpack_require__(/*! ./DayView */ "./src/views/DayView.tsx");
+var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
+var DAY_POSITIONS = _.range(DayView_1.WEEKS_TO_DISPLAY * 7);
 function getActive(start, end) {
-  if (lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](start) && lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](end)) return;
-
-  if (!lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](start) && lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](end)) {
-    return start;
-  }
-
-  if (!lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](start) && !lodash__WEBPACK_IMPORTED_MODULE_3__["isNil"](end)) {
-    return DAY_POSITIONS.slice(start, end + 1);
-  }
+    if (_.isNil(start) && _.isNil(end)) {
+        return;
+    }
+    if (!_.isNil(start) && _.isNil(end)) {
+        return start;
+    }
+    if (!_.isNil(start) && !_.isNil(end)) {
+        return DAY_POSITIONS.slice(start, end + 1);
+    }
 }
-
-var DatesRangeView =
-/*#__PURE__*/
-function (_BaseView) {
-  _inherits(DatesRangeView, _BaseView);
-
-  function DatesRangeView() {
-    _classCallCheck(this, DatesRangeView);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(DatesRangeView).apply(this, arguments));
-  }
-
-  _createClass(DatesRangeView, [{
-    key: "render",
-    value: function render() {
-      var _this = this;
-
-      var _this$props = this.props,
-          days = _this$props.days,
-          onNextPageBtnClick = _this$props.onNextPageBtnClick,
-          onPrevPageBtnClick = _this$props.onPrevPageBtnClick,
-          onDayClick = _this$props.onDayClick,
-          hasPrevPage = _this$props.hasPrevPage,
-          hasNextPage = _this$props.hasNextPage,
-          currentDate = _this$props.currentDate,
-          onHeaderClick = _this$props.onHeaderClick,
-          active = _this$props.active,
-          disabled = _this$props.disabled,
-          selectedRange = _this$props.selectedRange,
-          hovered = _this$props.hovered,
-          onCellHover = _this$props.onCellHover,
-          onMount = _this$props.onMount,
-          rest = _objectWithoutProperties(_this$props, ["days", "onNextPageBtnClick", "onPrevPageBtnClick", "onDayClick", "hasPrevPage", "hasNextPage", "currentDate", "onHeaderClick", "active", "disabled", "selectedRange", "hovered", "onCellHover", "onMount"]);
-
-      var start = active.start,
-          end = active.end;
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_Calendar__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({
-        ref: function ref(e) {
-          return _this.calendarNode = react_dom__WEBPACK_IMPORTED_MODULE_1__["findDOMNode"](e);
-        }
-      }, rest), react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_CalendarHeader_Header__WEBPACK_IMPORTED_MODULE_5__["default"], {
-        width: _DayView__WEBPACK_IMPORTED_MODULE_7__["DAY_CALENDAR_ROW_WIDTH"],
-        displayWeeks: true,
-        rangeRowContent: selectedRange,
-        onNextPageBtnClick: onNextPageBtnClick,
-        onPrevPageBtnClick: onPrevPageBtnClick,
-        hasNextPage: hasNextPage,
-        hasPrevPage: hasPrevPage,
-        title: currentDate,
-        onHeaderClick: onHeaderClick
-      }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_CalendarBody_Body__WEBPACK_IMPORTED_MODULE_6__["default"], {
-        width: _DayView__WEBPACK_IMPORTED_MODULE_7__["DAY_CALENDAR_ROW_WIDTH"],
-        data: days,
-        onCellClick: onDayClick,
-        onCellHover: onCellHover,
-        hovered: hovered,
-        active: getActive(start, end),
-        disabled: disabled
-      }));
+var DatesRangeView = /** @class */ (function (_super) {
+    __extends(DatesRangeView, _super);
+    function DatesRangeView() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-  }]);
-
-  return DatesRangeView;
-}(_BaseView__WEBPACK_IMPORTED_MODULE_8__["default"]);
-
-_defineProperty(DatesRangeView, "handledProps", ["active", "currentDate", "days", "disabled", "hasNextPage", "hasPrevPage", "hovered", "onCellHover", "onDayClick", "onHeaderClick", "onMount", "onNextPageBtnClick", "onPrevPageBtnClick", "selectedRange"]);
-
-DatesRangeView.propTypes = {
-  /** An array of dates to fill a calendar with. */
-  days: prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["string"]).isRequired,
-
-  /** Called after click on next page button. */
-  onNextPageBtnClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"].isRequired,
-
-  /** Called after click on previous page button. */
-  onPrevPageBtnClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"].isRequired,
-
-  /** Called after click on day. */
-  onDayClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"].isRequired,
-
-  /** Whether to display previous page button as active or disabled. */
-  hasPrevPage: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"].isRequired,
-
-  /** Whether to display next page button as active or disabled. */
-  hasNextPage: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"].isRequired,
-
-  /** Date that is displayed in calendar header. */
-  currentDate: prop_types__WEBPACK_IMPORTED_MODULE_2__["string"].isRequired,
-
-  /** Selected range that is displayed in calendar header. */
-  selectedRange: prop_types__WEBPACK_IMPORTED_MODULE_2__["string"].isRequired,
-
-  /** Start and end of a range of day positions to display as active. */
-  active: prop_types__WEBPACK_IMPORTED_MODULE_2__["shape"]({
-    start: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"],
-    end: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"]
-  }).isRequired,
-
-  /** Called on calendar cell hover. */
-  onCellHover: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Index of a month that should be displayed as hovered. */
-  hovered: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"],
-
-  /** Called after click on calendar header. */
-  onHeaderClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** An array of day positions to display as disabled. */
-  disabled: prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["number"]),
-  onMount: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"]
-};
-DatesRangeView.defaultProps = {
-  active: {
-    start: undefined,
-    end: undefined
-  }
-};
-/* harmony default export */ __webpack_exports__["default"] = (DatesRangeView);
-
-/***/ }),
-
-/***/ "./src/views/DayView.js":
-/*!******************************!*\
-  !*** ./src/views/DayView.js ***!
-  \******************************/
-/*! exports provided: DAY_CALENDAR_ROW_WIDTH, WEEKS_TO_DISPLAY, default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DAY_CALENDAR_ROW_WIDTH", function() { return DAY_CALENDAR_ROW_WIDTH; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WEEKS_TO_DISPLAY", function() { return WEEKS_TO_DISPLAY; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _Calendar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Calendar */ "./src/views/Calendar.js");
-/* harmony import */ var _CalendarHeader_Header__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CalendarHeader/Header */ "./src/views/CalendarHeader/Header.js");
-/* harmony import */ var _CalendarBody_Body__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.js");
-/* harmony import */ var _BaseView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./BaseView */ "./src/views/BaseView.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-var DAY_CALENDAR_ROW_WIDTH = '7';
-var WEEKS_TO_DISPLAY = 6;
-
-var DayView =
-/*#__PURE__*/
-function (_BaseView) {
-  _inherits(DayView, _BaseView);
-
-  function DayView() {
-    _classCallCheck(this, DayView);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(DayView).apply(this, arguments));
-  }
-
-  _createClass(DayView, [{
-    key: "render",
-    value: function render() {
-      var _this = this;
-
-      var _this$props = this.props,
-          days = _this$props.days,
-          onNextPageBtnClick = _this$props.onNextPageBtnClick,
-          onPrevPageBtnClick = _this$props.onPrevPageBtnClick,
-          onDayClick = _this$props.onDayClick,
-          hasNextPage = _this$props.hasNextPage,
-          hasPrevPage = _this$props.hasPrevPage,
-          currentDate = _this$props.currentDate,
-          onHeaderClick = _this$props.onHeaderClick,
-          disabled = _this$props.disabled,
-          active = _this$props.active,
-          hovered = _this$props.hovered,
-          onCellHover = _this$props.onCellHover,
-          hasHeader = _this$props.hasHeader,
-          onMount = _this$props.onMount,
-          rest = _objectWithoutProperties(_this$props, ["days", "onNextPageBtnClick", "onPrevPageBtnClick", "onDayClick", "hasNextPage", "hasPrevPage", "currentDate", "onHeaderClick", "disabled", "active", "hovered", "onCellHover", "hasHeader", "onMount"]);
-
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_Calendar__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({
-        ref: function ref(e) {
-          return _this.calendarNode = react_dom__WEBPACK_IMPORTED_MODULE_1__["findDOMNode"](e);
-        }
-      }, rest), react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_CalendarHeader_Header__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        width: DAY_CALENDAR_ROW_WIDTH,
-        displayWeeks: true,
-        onNextPageBtnClick: onNextPageBtnClick,
-        onPrevPageBtnClick: onPrevPageBtnClick,
-        hasNextPage: hasNextPage,
-        hasPrevPage: hasPrevPage,
-        title: currentDate,
-        onHeaderClick: onHeaderClick
-      }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_CalendarBody_Body__WEBPACK_IMPORTED_MODULE_5__["default"], {
-        width: DAY_CALENDAR_ROW_WIDTH,
-        data: days,
-        hovered: hovered,
-        onCellHover: onCellHover,
-        onCellClick: onDayClick,
-        active: active,
-        disabled: disabled
-      }));
-    }
-  }]);
-
-  return DayView;
-}(_BaseView__WEBPACK_IMPORTED_MODULE_6__["default"]);
-
-_defineProperty(DayView, "handledProps", ["active", "currentDate", "days", "disabled", "hasNextPage", "hasPrevPage", "hovered", "onCellHover", "onDayClick", "onHeaderClick", "onMount", "onNextPageBtnClick", "onPrevPageBtnClick"]);
-
-DayView.propTypes = {
-  /** An array of dates to fill a calendar with. */
-  days: prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["string"]).isRequired,
-
-  /** Called after click on next page button. */
-  onNextPageBtnClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"].isRequired,
-
-  /** Called after click on previous page button. */
-  onPrevPageBtnClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"].isRequired,
-
-  /** Called after click on day. */
-  onDayClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"].isRequired,
-
-  /** Whether to display previous page button as active or disabled. */
-  hasPrevPage: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"].isRequired,
-
-  /** Whether to display next page button as active or disabled. */
-  hasNextPage: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"].isRequired,
-
-  /** A date that is displayed in calendar header. */
-  currentDate: prop_types__WEBPACK_IMPORTED_MODULE_2__["string"].isRequired,
-
-  /** Called on calendar cell hover. */
-  onCellHover: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Index of a cell that should be displayed as hovered. */
-  hovered: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"],
-
-  /** Called after click on calendar header. */
-  onHeaderClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** An array of day positions to display as disabled. */
-  disabled: prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["number"]),
-
-  /** Position of a day to display as active. */
-  active: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"],
-  onMount: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"]
-};
-/* harmony default export */ __webpack_exports__["default"] = (DayView);
-
-/***/ }),
-
-/***/ "./src/views/HourView.js":
-/*!*******************************!*\
-  !*** ./src/views/HourView.js ***!
-  \*******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _Calendar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Calendar */ "./src/views/Calendar.js");
-/* harmony import */ var _CalendarHeader_Header__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CalendarHeader/Header */ "./src/views/CalendarHeader/Header.js");
-/* harmony import */ var _CalendarBody_Body__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.js");
-/* harmony import */ var _BaseView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./BaseView */ "./src/views/BaseView.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-var HOUR_CALENDAR_ROW_WIDTH = '4';
-
-var HourView =
-/*#__PURE__*/
-function (_BaseView) {
-  _inherits(HourView, _BaseView);
-
-  function HourView() {
-    _classCallCheck(this, HourView);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(HourView).apply(this, arguments));
-  }
-
-  _createClass(HourView, [{
-    key: "render",
-    value: function render() {
-      var _this = this;
-
-      var _this$props = this.props,
-          hours = _this$props.hours,
-          hasHeader = _this$props.hasHeader,
-          onHourClick = _this$props.onHourClick,
-          onNextPageBtnClick = _this$props.onNextPageBtnClick,
-          onPrevPageBtnClick = _this$props.onPrevPageBtnClick,
-          hasPrevPage = _this$props.hasPrevPage,
-          hasNextPage = _this$props.hasNextPage,
-          onHeaderClick = _this$props.onHeaderClick,
-          disabled = _this$props.disabled,
-          active = _this$props.active,
-          currentDate = _this$props.currentDate,
-          hovered = _this$props.hovered,
-          onCellHover = _this$props.onCellHover,
-          onMount = _this$props.onMount,
-          rest = _objectWithoutProperties(_this$props, ["hours", "hasHeader", "onHourClick", "onNextPageBtnClick", "onPrevPageBtnClick", "hasPrevPage", "hasNextPage", "onHeaderClick", "disabled", "active", "currentDate", "hovered", "onCellHover", "onMount"]);
-
-      var headerProps = {
-        onNextPageBtnClick: onNextPageBtnClick,
-        onPrevPageBtnClick: onPrevPageBtnClick,
-        hasPrevPage: hasPrevPage,
-        hasNextPage: hasNextPage,
-        onHeaderClick: onHeaderClick,
-        title: currentDate,
-        width: HOUR_CALENDAR_ROW_WIDTH,
-        displayWeeks: false
-      };
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_Calendar__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({
-        ref: function ref(e) {
-          return _this.calendarNode = react_dom__WEBPACK_IMPORTED_MODULE_1__["findDOMNode"](e);
-        }
-      }, rest), hasHeader && react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_CalendarHeader_Header__WEBPACK_IMPORTED_MODULE_4__["default"], headerProps), react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_CalendarBody_Body__WEBPACK_IMPORTED_MODULE_5__["default"], {
-        data: hours,
-        width: HOUR_CALENDAR_ROW_WIDTH,
-        onCellClick: onHourClick,
-        hovered: hovered,
-        onCellHover: onCellHover,
-        active: active,
-        disabled: disabled
-      }));
-    }
-  }]);
-
-  return HourView;
-}(_BaseView__WEBPACK_IMPORTED_MODULE_6__["default"]);
-
-_defineProperty(HourView, "handledProps", ["active", "currentDate", "disabled", "hasHeader", "hasNextPage", "hasPrevPage", "hours", "hovered", "onCellHover", "onHeaderClick", "onHourClick", "onMount", "onNextPageBtnClick", "onPrevPageBtnClick"]);
-
-HourView.propTypes = {
-  /** Array of hours to fill a calendar with. */
-  hours: prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["string"]).isRequired,
-
-  /** Wether to display header or not. */
-  hasHeader: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"].isRequired,
-
-  /** Called after click on hour. */
-  onHourClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"].isRequired,
-
-  /** Called on calendar cell hover. */
-  onCellHover: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Index of a cell that should be displayed as hovered. */
-  hovered: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"],
-
-  /** Called after click on next page button. */
-  onNextPageBtnClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Called after click on previous page button. */
-  onPrevPageBtnClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Whether to display previous page button as active or disabled. */
-  hasPrevPage: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-
-  /** Whether to display next page button as active or disabled. */
-  hasNextPage: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-
-  /** Called after click on calendar header. */
-  onHeaderClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Array of hour indexes to display as disabled. */
-  disabled: prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["number"]),
-
-  /** Hour index to display as active. */
-  active: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"],
-
-  /** Date that is displayed in calendar header. */
-  currentDate: prop_types__WEBPACK_IMPORTED_MODULE_2__["string"],
-  onMount: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"]
-};
-/* harmony default export */ __webpack_exports__["default"] = (HourView);
-
-/***/ }),
-
-/***/ "./src/views/InputView.js":
-/*!********************************!*\
-  !*** ./src/views/InputView.js ***!
-  \********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib */ "./src/lib/index.js");
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-var popupStyle = {
-  padding: '0',
-  filter: 'none' // prevents bluring popup when used inside Modal with dimmer="bluring" #28 #26
-
-};
-
-var FormInputWithRef =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(FormInputWithRef, _React$Component);
-
-  function FormInputWithRef() {
-    _classCallCheck(this, FormInputWithRef);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(FormInputWithRef).apply(this, arguments));
-  }
-
-  _createClass(FormInputWithRef, [{
-    key: "render",
-    value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_3__["Form"].Input, this.props);
-    }
-  }]);
-
-  return FormInputWithRef;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-_defineProperty(FormInputWithRef, "handledProps", []);
-
-var InputView =
-/*#__PURE__*/
-function (_React$Component2) {
-  _inherits(InputView, _React$Component2);
-
-  function InputView() {
-    _classCallCheck(this, InputView);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(InputView).apply(this, arguments));
-  }
-
-  _createClass(InputView, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this.props.onMount && this.props.onMount(this.inputNode);
-      this.initialInputNode = this.inputNode;
-    }
-  }, {
-    key: "componentDidUpdate",
-    value: function componentDidUpdate() {
-      // TODO: find actual root of the problem.
-      // Sometimes input node reference passed
-      // to this.props.onMount stales.
-      // this.inputNode referes to
-      // different DOM object than it was after first
-      // component render.
-      // InputView component doesn't unmount it just
-      // gets different underlying input node.
-      // In order to keep input node reference fresh
-      // we make this check.
-      if (this.inputNode !== this.initialInputNode) {
-        this.initialInputNode = this.inputNode;
-        this.props.onMount(this.inputNode);
-      }
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this = this;
-
-      var _this$props = this.props,
-          popupPosition = _this$props.popupPosition,
-          inline = _this$props.inline,
-          value = _this$props.value,
-          closeOnMouseLeave = _this$props.closeOnMouseLeave,
-          onChange = _this$props.onChange,
-          inlineLabel = _this$props.inlineLabel,
-          popupIsClosed = _this$props.popupIsClosed,
-          mountNode = _this$props.mountNode,
-          tabIndex = _this$props.tabIndex;
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_4__["getUnhandledProps"])(InputView, this.props);
-      var inputElement = react__WEBPACK_IMPORTED_MODULE_0__["createElement"](FormInputWithRef, _extends({}, rest, {
-        ref: function ref(e) {
-          var node = react_dom__WEBPACK_IMPORTED_MODULE_1__["findDOMNode"](e);
-          _this.inputNode = node && node.querySelector('input');
+    DatesRangeView.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, values = _a.values, onNextPageBtnClick = _a.onNextPageBtnClick, onPrevPageBtnClick = _a.onPrevPageBtnClick, onValueClick = _a.onValueClick, hasPrevPage = _a.hasPrevPage, hasNextPage = _a.hasNextPage, currentHeadingValue = _a.currentHeadingValue, onHeaderClick = _a.onHeaderClick, activeRange = _a.activeRange, disabledItemIndexes = _a.disabledItemIndexes, currentRangeHeadingValue = _a.currentRangeHeadingValue, hoveredItemIndex = _a.hoveredItemIndex, onCellHover = _a.onCellHover, onMount = _a.onMount, inline = _a.inline, rest = __rest(_a, ["values", "onNextPageBtnClick", "onPrevPageBtnClick", "onValueClick", "hasPrevPage", "hasNextPage", "currentHeadingValue", "onHeaderClick", "activeRange", "disabledItemIndexes", "currentRangeHeadingValue", "hoveredItemIndex", "onCellHover", "onMount", "inline"]);
+        var start = activeRange.start, end = activeRange.end;
+        return (React.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
+            React.createElement(Header_1.default, { width: DayView_1.DAY_CALENDAR_ROW_WIDTH, displayWeeks: true, rangeRowContent: currentRangeHeadingValue, onNextPageBtnClick: onNextPageBtnClick, onPrevPageBtnClick: onPrevPageBtnClick, hasNextPage: hasNextPage, hasPrevPage: hasPrevPage, title: currentHeadingValue, onHeaderClick: onHeaderClick }),
+            React.createElement(Body_1.default, { width: DayView_1.DAY_CALENDAR_ROW_WIDTH, data: values, onCellClick: onValueClick, onCellHover: onCellHover, hovered: hoveredItemIndex, active: getActive(start, end), disabled: disabledItemIndexes })));
+    };
+    DatesRangeView.defaultProps = {
+        active: {
+            start: undefined,
+            end: undefined,
         },
-        value: value,
-        tabIndex: tabIndex,
-        inline: inlineLabel,
-        onChange: onChange
-      }));
-      if (inline) return this.props.render({
-        tabIndex: tabIndex
-      });
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](semantic_ui_react__WEBPACK_IMPORTED_MODULE_3__["Popup"], {
-        position: popupPosition,
-        open: popupIsClosed ? false : undefined,
-        trigger: inputElement,
-        hoverable: closeOnMouseLeave,
-        flowing: true,
-        mountNode: mountNode,
-        style: popupStyle,
-        hideOnScroll: true,
-        on: "focus"
-      }, this.props.render({
-        tabIndex: -1
-      }));
-    }
-  }]);
+    };
+    return DatesRangeView;
+}(BaseCalendarView_1.default));
+exports.default = DatesRangeView;
 
-  return InputView;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-_defineProperty(InputView, "handledProps", ["children", "closeOnMouseLeave", "inline", "inlineLabel", "mountNode", "onChange", "onMount", "popupIsClosed", "popupPosition", "render", "tabIndex", "value"]);
-
-InputView.propTypes = {
-  render: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"].isRequired,
-
-  /** Whether to display inline picker or picker inside a popup. */
-  inline: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-
-  /** Where to display popup. */
-  popupPosition: prop_types__WEBPACK_IMPORTED_MODULE_2__["string"],
-
-  /** Currently selected value. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_2__["string"],
-
-  /** Whether to close a popup when cursor leaves it. */
-  closeOnMouseLeave: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-
-  /** Called after input field value has changed. */
-  onChange: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Picker. */
-  children: prop_types__WEBPACK_IMPORTED_MODULE_2__["node"],
-
-  /** A field can have its label next to instead of above it. */
-  inlineLabel: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-
-  /** Whether popup is closed. */
-  popupIsClosed: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-
-  /** The node where the picker should mount. */
-  mountNode: prop_types__WEBPACK_IMPORTED_MODULE_2__["any"],
-  tabIndex: prop_types__WEBPACK_IMPORTED_MODULE_2__["oneOfType"]([prop_types__WEBPACK_IMPORTED_MODULE_2__["string"], prop_types__WEBPACK_IMPORTED_MODULE_2__["number"]]),
-  onMount: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"]
-};
-InputView.defaultProps = {
-  inline: false,
-  closeOnMouseLeave: true,
-  tabIndex: '0'
-};
-/* harmony default export */ __webpack_exports__["default"] = (InputView);
 
 /***/ }),
 
-/***/ "./src/views/MinuteView.js":
-/*!*********************************!*\
-  !*** ./src/views/MinuteView.js ***!
-  \*********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _Calendar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Calendar */ "./src/views/Calendar.js");
-/* harmony import */ var _CalendarHeader_Header__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CalendarHeader/Header */ "./src/views/CalendarHeader/Header.js");
-/* harmony import */ var _CalendarBody_Body__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.js");
-/* harmony import */ var _BaseView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./BaseView */ "./src/views/BaseView.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-var MINUTE_CALENDAR_ROW_WIDTH = '3';
-
-var MinuteView =
-/*#__PURE__*/
-function (_BaseView) {
-  _inherits(MinuteView, _BaseView);
-
-  function MinuteView() {
-    _classCallCheck(this, MinuteView);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(MinuteView).apply(this, arguments));
-  }
-
-  _createClass(MinuteView, [{
-    key: "render",
-    value: function render() {
-      var _this = this;
-
-      var _this$props = this.props,
-          minutes = _this$props.minutes,
-          hasHeader = _this$props.hasHeader,
-          onMinuteClick = _this$props.onMinuteClick,
-          onNextPageBtnClick = _this$props.onNextPageBtnClick,
-          onPrevPageBtnClick = _this$props.onPrevPageBtnClick,
-          hasNextPage = _this$props.hasNextPage,
-          hasPrevPage = _this$props.hasPrevPage,
-          onHeaderClick = _this$props.onHeaderClick,
-          active = _this$props.active,
-          currentDate = _this$props.currentDate,
-          hovered = _this$props.hovered,
-          onCellHover = _this$props.onCellHover,
-          onMount = _this$props.onMount,
-          rest = _objectWithoutProperties(_this$props, ["minutes", "hasHeader", "onMinuteClick", "onNextPageBtnClick", "onPrevPageBtnClick", "hasNextPage", "hasPrevPage", "onHeaderClick", "active", "currentDate", "hovered", "onCellHover", "onMount"]);
-
-      var headerProps = {
-        onHeaderClick: onHeaderClick,
-        onNextPageBtnClick: onNextPageBtnClick,
-        onPrevPageBtnClick: onPrevPageBtnClick,
-        hasNextPage: hasNextPage,
-        hasPrevPage: hasPrevPage,
-        title: currentDate,
-        width: MINUTE_CALENDAR_ROW_WIDTH,
-        displayWeeks: false
-      };
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_Calendar__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({
-        ref: function ref(e) {
-          return _this.calendarNode = react_dom__WEBPACK_IMPORTED_MODULE_1__["findDOMNode"](e);
-        }
-      }, rest), hasHeader && react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_CalendarHeader_Header__WEBPACK_IMPORTED_MODULE_4__["default"], headerProps), react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_CalendarBody_Body__WEBPACK_IMPORTED_MODULE_5__["default"], {
-        width: MINUTE_CALENDAR_ROW_WIDTH,
-        data: minutes,
-        hovered: hovered,
-        onCellHover: onCellHover,
-        onCellClick: onMinuteClick,
-        active: active
-      }));
-    }
-  }]);
-
-  return MinuteView;
-}(_BaseView__WEBPACK_IMPORTED_MODULE_6__["default"]);
-
-_defineProperty(MinuteView, "handledProps", ["active", "currentDate", "hasHeader", "hasNextPage", "hasPrevPage", "hovered", "minutes", "onCellHover", "onHeaderClick", "onMinuteClick", "onMount", "onNextPageBtnClick", "onPrevPageBtnClick"]);
-
-MinuteView.propTypes = {
-  /** Array of minutes to fill a calendar with. */
-  minutes: prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["string"]).isRequired,
-
-  /** Wether to display header or not. */
-  hasHeader: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"].isRequired,
-
-  /** Called after click on minute. */
-  onMinuteClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"].isRequired,
-
-  /** Called on calendar cell hover. */
-  onCellHover: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Index of a cell that should be displayed as hovered. */
-  hovered: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"],
-
-  /** Called after click on next page button. */
-  onNextPageBtnClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Called after click on previous page button. */
-  onPrevPageBtnClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Whether to display previous page button as active or disabled. */
-  hasPrevPage: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-
-  /** Whether to display next page button as active or disabled. */
-  hasNextPage: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-
-  /** Called after click on calendar header. */
-  onHeaderClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Minute index to display as active. */
-  active: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"],
-
-  /** A date that is displayed in calendar header. */
-  currentDate: prop_types__WEBPACK_IMPORTED_MODULE_2__["string"],
-  onMount: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"]
-};
-/* harmony default export */ __webpack_exports__["default"] = (MinuteView);
-
-/***/ }),
-
-/***/ "./src/views/MonthView.js":
-/*!********************************!*\
-  !*** ./src/views/MonthView.js ***!
-  \********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _Calendar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Calendar */ "./src/views/Calendar.js");
-/* harmony import */ var _CalendarHeader_Header__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CalendarHeader/Header */ "./src/views/CalendarHeader/Header.js");
-/* harmony import */ var _CalendarBody_Body__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.js");
-/* harmony import */ var _BaseView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./BaseView */ "./src/views/BaseView.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-var MONTH_CALENDAR_ROW_WIDTH = '3';
-
-var MonthView =
-/*#__PURE__*/
-function (_BaseView) {
-  _inherits(MonthView, _BaseView);
-
-  function MonthView() {
-    _classCallCheck(this, MonthView);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(MonthView).apply(this, arguments));
-  }
-
-  _createClass(MonthView, [{
-    key: "render",
-    value: function render() {
-      var _this = this;
-
-      var _this$props = this.props,
-          months = _this$props.months,
-          hasHeader = _this$props.hasHeader,
-          onMonthClick = _this$props.onMonthClick,
-          onNextPageBtnClick = _this$props.onNextPageBtnClick,
-          onPrevPageBtnClick = _this$props.onPrevPageBtnClick,
-          hasPrevPage = _this$props.hasPrevPage,
-          hasNextPage = _this$props.hasNextPage,
-          onHeaderClick = _this$props.onHeaderClick,
-          disabled = _this$props.disabled,
-          active = _this$props.active,
-          currentYear = _this$props.currentYear,
-          onCellHover = _this$props.onCellHover,
-          hovered = _this$props.hovered,
-          onMount = _this$props.onMount,
-          rest = _objectWithoutProperties(_this$props, ["months", "hasHeader", "onMonthClick", "onNextPageBtnClick", "onPrevPageBtnClick", "hasPrevPage", "hasNextPage", "onHeaderClick", "disabled", "active", "currentYear", "onCellHover", "hovered", "onMount"]);
-
-      var headerProps = {
-        onNextPageBtnClick: onNextPageBtnClick,
-        onPrevPageBtnClick: onPrevPageBtnClick,
-        hasPrevPage: hasPrevPage,
-        hasNextPage: hasNextPage,
-        onHeaderClick: onHeaderClick,
-        title: currentYear,
-        displayWeeks: false,
-        width: MONTH_CALENDAR_ROW_WIDTH
-      };
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_Calendar__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({
-        ref: function ref(e) {
-          return _this.calendarNode = react_dom__WEBPACK_IMPORTED_MODULE_1__["findDOMNode"](e);
-        }
-      }, rest), hasHeader && react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_CalendarHeader_Header__WEBPACK_IMPORTED_MODULE_4__["default"], headerProps), react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_CalendarBody_Body__WEBPACK_IMPORTED_MODULE_5__["default"], {
-        width: MONTH_CALENDAR_ROW_WIDTH,
-        data: months,
-        onCellClick: onMonthClick,
-        onCellHover: onCellHover,
-        active: active,
-        hovered: hovered,
-        disabled: disabled
-      }));
-    }
-  }]);
-
-  return MonthView;
-}(_BaseView__WEBPACK_IMPORTED_MODULE_6__["default"]);
-
-_defineProperty(MonthView, "handledProps", ["active", "currentYear", "disabled", "hasHeader", "hasNextPage", "hasPrevPage", "hovered", "months", "onCellHover", "onHeaderClick", "onMonthClick", "onMount", "onNextPageBtnClick", "onPrevPageBtnClick"]);
-
-MonthView.propTypes = {
-  /** Array of months to fill a calendar with. */
-  months: prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["string"]).isRequired,
-
-  /** Wether to display header or not. */
-  hasHeader: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"].isRequired,
-
-  /** Called after click on month. */
-  onMonthClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"].isRequired,
-
-  /** Called on calendar cell hover. */
-  onCellHover: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Index of a month that should be displayed as hovered. */
-  hovered: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"],
-
-  /** Called after click on next page button. */
-  onNextPageBtnClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Called after click on previous page button. */
-  onPrevPageBtnClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Whether to display previous page button as active or disabled. */
-  hasPrevPage: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-
-  /** Whether to display next page button as active or disabled. */
-  hasNextPage: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"],
-
-  /** Called after click on calendar header. */
-  onHeaderClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** An array of month indexes to display as disabled. */
-  disabled: prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["number"]),
-
-  /** Index of a month that should be displayed as active. */
-  active: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"],
-
-  /** A year to display in header. */
-  currentYear: prop_types__WEBPACK_IMPORTED_MODULE_2__["string"],
-  onMount: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"]
-};
-/* harmony default export */ __webpack_exports__["default"] = (MonthView);
-
-/***/ }),
-
-/***/ "./src/views/YearView.js":
+/***/ "./src/views/DayView.tsx":
 /*!*******************************!*\
-  !*** ./src/views/YearView.js ***!
+  !*** ./src/views/DayView.tsx ***!
   \*******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _Calendar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Calendar */ "./src/views/Calendar.js");
-/* harmony import */ var _CalendarHeader_Header__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CalendarHeader/Header */ "./src/views/CalendarHeader/Header.js");
-/* harmony import */ var _CalendarBody_Body__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.js");
-/* harmony import */ var _BaseView__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./BaseView */ "./src/views/BaseView.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
-
-var YEAR_CALENDAR_ROW_WIDTH = '3';
-
-var YearView =
-/*#__PURE__*/
-function (_BaseView) {
-  _inherits(YearView, _BaseView);
-
-  function YearView() {
-    _classCallCheck(this, YearView);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(YearView).apply(this, arguments));
-  }
-
-  _createClass(YearView, [{
-    key: "render",
-    value: function render() {
-      var _this = this;
-
-      var _this$props = this.props,
-          years = _this$props.years,
-          onNextPageBtnClick = _this$props.onNextPageBtnClick,
-          onPrevPageBtnClick = _this$props.onPrevPageBtnClick,
-          onYearClick = _this$props.onYearClick,
-          hasNextPage = _this$props.hasNextPage,
-          hasPrevPage = _this$props.hasPrevPage,
-          onHeaderClick = _this$props.onHeaderClick,
-          disabled = _this$props.disabled,
-          active = _this$props.active,
-          hovered = _this$props.hovered,
-          onCellHover = _this$props.onCellHover,
-          onMount = _this$props.onMount,
-          rest = _objectWithoutProperties(_this$props, ["years", "onNextPageBtnClick", "onPrevPageBtnClick", "onYearClick", "hasNextPage", "hasPrevPage", "onHeaderClick", "disabled", "active", "hovered", "onCellHover", "onMount"]);
-
-      var headerTitle = "".concat(lodash__WEBPACK_IMPORTED_MODULE_3__["first"](years), " - ").concat(lodash__WEBPACK_IMPORTED_MODULE_3__["last"](years));
-      return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_Calendar__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({
-        ref: function ref(e) {
-          return _this.calendarNode = react_dom__WEBPACK_IMPORTED_MODULE_1__["findDOMNode"](e);
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
         }
-      }, rest), react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_CalendarHeader_Header__WEBPACK_IMPORTED_MODULE_5__["default"], {
-        title: headerTitle,
-        onNextPageBtnClick: onNextPageBtnClick,
-        onPrevPageBtnClick: onPrevPageBtnClick,
-        hasNextPage: hasNextPage,
-        hasPrevPage: hasPrevPage,
-        onHeaderClick: onHeaderClick,
-        width: YEAR_CALENDAR_ROW_WIDTH,
-        displayWeeks: false
-      }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_CalendarBody_Body__WEBPACK_IMPORTED_MODULE_6__["default"], {
-        width: YEAR_CALENDAR_ROW_WIDTH,
-        data: years,
-        hovered: hovered,
-        onCellHover: onCellHover,
-        onCellClick: onYearClick,
-        active: active,
-        disabled: disabled
-      }));
-    }
-  }]);
-
-  return YearView;
-}(_BaseView__WEBPACK_IMPORTED_MODULE_7__["default"]);
-
-_defineProperty(YearView, "handledProps", ["active", "disabled", "hasNextPage", "hasPrevPage", "hovered", "onCellHover", "onHeaderClick", "onMount", "onNextPageBtnClick", "onPrevPageBtnClick", "onYearClick", "years"]);
-
-YearView.propTypes = {
-  /** An array of years to fill a calendar with. */
-  years: prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["string"]).isRequired,
-
-  /** Called after click on next page button. */
-  onNextPageBtnClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"].isRequired,
-
-  /** Called after click on previous page button. */
-  onPrevPageBtnClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"].isRequired,
-
-  /** Called after click on year. */
-  onYearClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"].isRequired,
-
-  /** Whether to display previous page button as active or disabled. */
-  hasPrevPage: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"].isRequired,
-
-  /** Whether to display next page button as active or disabled. */
-  hasNextPage: prop_types__WEBPACK_IMPORTED_MODULE_2__["bool"].isRequired,
-
-  /** Called on calendar cell hover. */
-  onCellHover: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** Index of a cell that should be displayed as hovered. */
-  hovered: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"],
-
-  /** Called after click on calendar header. */
-  onHeaderClick: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"],
-
-  /** An array of numbers that represent indexes of years in `years` array that should be displayed as disabled. */
-  disabled: prop_types__WEBPACK_IMPORTED_MODULE_2__["arrayOf"](prop_types__WEBPACK_IMPORTED_MODULE_2__["number"]),
-
-  /** Index of a year in `years` array that should be displayed as active. */
-  active: prop_types__WEBPACK_IMPORTED_MODULE_2__["number"],
-  onMount: prop_types__WEBPACK_IMPORTED_MODULE_2__["func"]
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
-/* harmony default export */ __webpack_exports__["default"] = (YearView);
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var BaseCalendarView_1 = __webpack_require__(/*! ./BaseCalendarView */ "./src/views/BaseCalendarView.ts");
+var Calendar_1 = __webpack_require__(/*! ./Calendar */ "./src/views/Calendar.tsx");
+var Body_1 = __webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.tsx");
+var Header_1 = __webpack_require__(/*! ./CalendarHeader/Header */ "./src/views/CalendarHeader/Header.tsx");
+var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
+exports.DAY_CALENDAR_ROW_WIDTH = 7;
+exports.WEEKS_TO_DISPLAY = 6;
+var DayView = /** @class */ (function (_super) {
+    __extends(DayView, _super);
+    function DayView() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    DayView.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, values = _a.values, onNextPageBtnClick = _a.onNextPageBtnClick, onPrevPageBtnClick = _a.onPrevPageBtnClick, onValueClick = _a.onValueClick, hasNextPage = _a.hasNextPage, hasPrevPage = _a.hasPrevPage, currentHeadingValue = _a.currentHeadingValue, onHeaderClick = _a.onHeaderClick, disabledItemIndexes = _a.disabledItemIndexes, activeItemIndex = _a.activeItemIndex, hoveredItemIndex = _a.hoveredItemIndex, onCellHover = _a.onCellHover, onMount = _a.onMount, inline = _a.inline, rest = __rest(_a, ["values", "onNextPageBtnClick", "onPrevPageBtnClick", "onValueClick", "hasNextPage", "hasPrevPage", "currentHeadingValue", "onHeaderClick", "disabledItemIndexes", "activeItemIndex", "hoveredItemIndex", "onCellHover", "onMount", "inline"]);
+        return (React.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
+            React.createElement(Header_1.default, { width: exports.DAY_CALENDAR_ROW_WIDTH, displayWeeks: true, onNextPageBtnClick: onNextPageBtnClick, onPrevPageBtnClick: onPrevPageBtnClick, hasNextPage: hasNextPage, hasPrevPage: hasPrevPage, title: currentHeadingValue, onHeaderClick: onHeaderClick }),
+            React.createElement(Body_1.default, { width: exports.DAY_CALENDAR_ROW_WIDTH, data: values, hovered: hoveredItemIndex, onCellHover: onCellHover, onCellClick: onValueClick, active: activeItemIndex, disabled: disabledItemIndexes })));
+    };
+    return DayView;
+}(BaseCalendarView_1.default));
+exports.default = DayView;
+
+
+/***/ }),
+
+/***/ "./src/views/HourView.tsx":
+/*!********************************!*\
+  !*** ./src/views/HourView.tsx ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var BaseCalendarView_1 = __webpack_require__(/*! ./BaseCalendarView */ "./src/views/BaseCalendarView.ts");
+var Calendar_1 = __webpack_require__(/*! ./Calendar */ "./src/views/Calendar.tsx");
+var Body_1 = __webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.tsx");
+var Header_1 = __webpack_require__(/*! ./CalendarHeader/Header */ "./src/views/CalendarHeader/Header.tsx");
+var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
+var HOUR_CALENDAR_ROW_WIDTH = 4;
+var HourView = /** @class */ (function (_super) {
+    __extends(HourView, _super);
+    function HourView() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    HourView.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, values = _a.values, hasHeader = _a.hasHeader, onValueClick = _a.onValueClick, onNextPageBtnClick = _a.onNextPageBtnClick, onPrevPageBtnClick = _a.onPrevPageBtnClick, hasPrevPage = _a.hasPrevPage, hasNextPage = _a.hasNextPage, onHeaderClick = _a.onHeaderClick, disabledItemIndexes = _a.disabledItemIndexes, activeItemIndex = _a.activeItemIndex, currentHeadingValue = _a.currentHeadingValue, hoveredItemIndex = _a.hoveredItemIndex, onCellHover = _a.onCellHover, onMount = _a.onMount, inline = _a.inline, rest = __rest(_a, ["values", "hasHeader", "onValueClick", "onNextPageBtnClick", "onPrevPageBtnClick", "hasPrevPage", "hasNextPage", "onHeaderClick", "disabledItemIndexes", "activeItemIndex", "currentHeadingValue", "hoveredItemIndex", "onCellHover", "onMount", "inline"]);
+        var headerProps = {
+            onNextPageBtnClick: onNextPageBtnClick,
+            onPrevPageBtnClick: onPrevPageBtnClick,
+            hasPrevPage: hasPrevPage,
+            hasNextPage: hasNextPage,
+            onHeaderClick: onHeaderClick,
+            title: currentHeadingValue,
+            width: HOUR_CALENDAR_ROW_WIDTH,
+            displayWeeks: false,
+        };
+        return (React.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
+            hasHeader && React.createElement(Header_1.default, __assign({}, headerProps)),
+            React.createElement(Body_1.default, { data: values, width: HOUR_CALENDAR_ROW_WIDTH, onCellClick: onValueClick, hovered: hoveredItemIndex, onCellHover: onCellHover, active: activeItemIndex, disabled: disabledItemIndexes })));
+    };
+    return HourView;
+}(BaseCalendarView_1.default));
+exports.default = HourView;
+
+
+/***/ }),
+
+/***/ "./src/views/InputView.tsx":
+/*!*********************************!*\
+  !*** ./src/views/InputView.tsx ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
+var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
+var popupStyle = {
+    padding: '0',
+    filter: 'none',
+};
+var FormInputWithRef = /** @class */ (function (_super) {
+    __extends(FormInputWithRef, _super);
+    function FormInputWithRef() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    FormInputWithRef.prototype.render = function () {
+        var _a = this.props, value = _a.value, clearable = _a.clearable, icon = _a.icon, clearIcon = _a.clearIcon, onClear = _a.onClear, rest = __rest(_a, ["value", "clearable", "icon", "clearIcon", "onClear"]);
+        var ClearIcon = _.isString(clearIcon) ?
+            React.createElement(semantic_ui_react_1.Icon, { name: clearIcon, link: true, onClick: onClear }) :
+            React.createElement(clearIcon.type, __assign({}, clearIcon.props, { link: true, onClick: onClear }));
+        return (React.createElement(semantic_ui_react_1.Form.Input, __assign({}, rest, { value: value, icon: value && clearable ? ClearIcon : icon })));
+    };
+    return FormInputWithRef;
+}(React.Component));
+var InputView = /** @class */ (function (_super) {
+    __extends(InputView, _super);
+    function InputView() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    InputView.prototype.componentDidMount = function () {
+        if (this.props.onMount) {
+            this.props.onMount(this.inputNode);
+        }
+        this.initialInputNode = this.inputNode;
+    };
+    InputView.prototype.componentDidUpdate = function () {
+        // TODO: find actual root of the problem.
+        // Sometimes input node reference passed
+        // to this.props.onMount stales.
+        // this.inputNode referes to
+        // different DOM object than it was after first
+        // component render.
+        // InputView component doesn't unmount it just
+        // gets different underlying input node.
+        // In order to keep input node reference fresh
+        // we make this check.
+        if (this.inputNode !== this.initialInputNode) {
+            this.initialInputNode = this.inputNode;
+            this.props.onMount(this.inputNode);
+        }
+    };
+    InputView.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, render = _a.render, popupPosition = _a.popupPosition, inline = _a.inline, value = _a.value, closeOnMouseLeave = _a.closeOnMouseLeave, onChange = _a.onChange, onClear = _a.onClear, children = _a.children, inlineLabel = _a.inlineLabel, popupIsClosed = _a.popupIsClosed, mountNode = _a.mountNode, tabIndex = _a.tabIndex, onMount = _a.onMount, rest = __rest(_a, ["render", "popupPosition", "inline", "value", "closeOnMouseLeave", "onChange", "onClear", "children", "inlineLabel", "popupIsClosed", "mountNode", "tabIndex", "onMount"]);
+        var inputElement = (React.createElement(FormInputWithRef, __assign({}, rest, { ref: function (e) {
+                var node = lib_1.findHTMLElement(e);
+                _this.inputNode = node && node.querySelector('input');
+            }, value: value, tabIndex: tabIndex, inline: inlineLabel, onClear: function (e) { return (onClear || onChange)(e, __assign({}, rest, { value: '' })); }, onChange: onChange })));
+        if (inline) {
+            return render({
+                tabIndex: tabIndex,
+            });
+        }
+        return (React.createElement(semantic_ui_react_1.Popup, { position: popupPosition, open: popupIsClosed ? false : undefined, trigger: inputElement, hoverable: closeOnMouseLeave, flowing: true, mountNode: mountNode, style: popupStyle, hideOnScroll: true, on: 'focus' }, render({
+            tabIndex: -1,
+        })));
+    };
+    InputView.defaultProps = {
+        inline: false,
+        closeOnMouseLeave: true,
+        tabIndex: '0',
+        clearable: false,
+        icon: 'calendar',
+        clearIcon: 'remove',
+    };
+    return InputView;
+}(React.Component));
+exports.default = InputView;
+
+
+/***/ }),
+
+/***/ "./src/views/MinuteView.tsx":
+/*!**********************************!*\
+  !*** ./src/views/MinuteView.tsx ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var BaseCalendarView_1 = __webpack_require__(/*! ./BaseCalendarView */ "./src/views/BaseCalendarView.ts");
+var Calendar_1 = __webpack_require__(/*! ./Calendar */ "./src/views/Calendar.tsx");
+var Body_1 = __webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.tsx");
+var Header_1 = __webpack_require__(/*! ./CalendarHeader/Header */ "./src/views/CalendarHeader/Header.tsx");
+var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
+var MINUTE_CALENDAR_ROW_WIDTH = 3;
+var MinuteView = /** @class */ (function (_super) {
+    __extends(MinuteView, _super);
+    function MinuteView() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    MinuteView.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, values = _a.values, hasHeader = _a.hasHeader, onValueClick = _a.onValueClick, onNextPageBtnClick = _a.onNextPageBtnClick, onPrevPageBtnClick = _a.onPrevPageBtnClick, hasNextPage = _a.hasNextPage, hasPrevPage = _a.hasPrevPage, onHeaderClick = _a.onHeaderClick, activeItemIndex = _a.activeItemIndex, currentHeadingValue = _a.currentHeadingValue, hoveredItemIndex = _a.hoveredItemIndex, disabledItemIndexes = _a.disabledItemIndexes, onCellHover = _a.onCellHover, onMount = _a.onMount, inline = _a.inline, rest = __rest(_a, ["values", "hasHeader", "onValueClick", "onNextPageBtnClick", "onPrevPageBtnClick", "hasNextPage", "hasPrevPage", "onHeaderClick", "activeItemIndex", "currentHeadingValue", "hoveredItemIndex", "disabledItemIndexes", "onCellHover", "onMount", "inline"]);
+        var headerProps = {
+            onHeaderClick: onHeaderClick,
+            onNextPageBtnClick: onNextPageBtnClick,
+            onPrevPageBtnClick: onPrevPageBtnClick,
+            hasNextPage: hasNextPage,
+            hasPrevPage: hasPrevPage,
+            title: currentHeadingValue,
+            width: MINUTE_CALENDAR_ROW_WIDTH,
+            displayWeeks: false,
+        };
+        return (React.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
+            hasHeader && React.createElement(Header_1.default, __assign({}, headerProps)),
+            React.createElement(Body_1.default, { width: MINUTE_CALENDAR_ROW_WIDTH, data: values, hovered: hoveredItemIndex, onCellHover: onCellHover, onCellClick: onValueClick, active: activeItemIndex, disabled: disabledItemIndexes })));
+    };
+    return MinuteView;
+}(BaseCalendarView_1.default));
+exports.default = MinuteView;
+
+
+/***/ }),
+
+/***/ "./src/views/MonthView.tsx":
+/*!*********************************!*\
+  !*** ./src/views/MonthView.tsx ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var BaseCalendarView_1 = __webpack_require__(/*! ./BaseCalendarView */ "./src/views/BaseCalendarView.ts");
+var Calendar_1 = __webpack_require__(/*! ./Calendar */ "./src/views/Calendar.tsx");
+var Body_1 = __webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.tsx");
+var Header_1 = __webpack_require__(/*! ./CalendarHeader/Header */ "./src/views/CalendarHeader/Header.tsx");
+var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
+var MONTH_CALENDAR_ROW_WIDTH = 3;
+var MonthView = /** @class */ (function (_super) {
+    __extends(MonthView, _super);
+    function MonthView() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    MonthView.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, values = _a.values, hasHeader = _a.hasHeader, onValueClick = _a.onValueClick, onNextPageBtnClick = _a.onNextPageBtnClick, onPrevPageBtnClick = _a.onPrevPageBtnClick, hasPrevPage = _a.hasPrevPage, hasNextPage = _a.hasNextPage, onHeaderClick = _a.onHeaderClick, disabledItemIndexes = _a.disabledItemIndexes, activeItemIndex = _a.activeItemIndex, currentHeadingValue = _a.currentHeadingValue, onCellHover = _a.onCellHover, hoveredItemIndex = _a.hoveredItemIndex, onMount = _a.onMount, inline = _a.inline, rest = __rest(_a, ["values", "hasHeader", "onValueClick", "onNextPageBtnClick", "onPrevPageBtnClick", "hasPrevPage", "hasNextPage", "onHeaderClick", "disabledItemIndexes", "activeItemIndex", "currentHeadingValue", "onCellHover", "hoveredItemIndex", "onMount", "inline"]);
+        var headerProps = {
+            onNextPageBtnClick: onNextPageBtnClick,
+            onPrevPageBtnClick: onPrevPageBtnClick,
+            hasPrevPage: hasPrevPage,
+            hasNextPage: hasNextPage,
+            onHeaderClick: onHeaderClick,
+            title: currentHeadingValue,
+            displayWeeks: false,
+            width: MONTH_CALENDAR_ROW_WIDTH,
+        };
+        return (React.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
+            hasHeader && React.createElement(Header_1.default, __assign({}, headerProps)),
+            React.createElement(Body_1.default, { width: MONTH_CALENDAR_ROW_WIDTH, data: values, onCellClick: onValueClick, onCellHover: onCellHover, active: activeItemIndex, hovered: hoveredItemIndex, disabled: disabledItemIndexes })));
+    };
+    return MonthView;
+}(BaseCalendarView_1.default));
+exports.default = MonthView;
+
+
+/***/ }),
+
+/***/ "./src/views/YearView.tsx":
+/*!********************************!*\
+  !*** ./src/views/YearView.tsx ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var BaseCalendarView_1 = __webpack_require__(/*! ./BaseCalendarView */ "./src/views/BaseCalendarView.ts");
+var Calendar_1 = __webpack_require__(/*! ./Calendar */ "./src/views/Calendar.tsx");
+var Body_1 = __webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.tsx");
+var Header_1 = __webpack_require__(/*! ./CalendarHeader/Header */ "./src/views/CalendarHeader/Header.tsx");
+var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
+var YEAR_CALENDAR_ROW_WIDTH = 3;
+var YearView = /** @class */ (function (_super) {
+    __extends(YearView, _super);
+    function YearView() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    YearView.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, values = _a.values, onNextPageBtnClick = _a.onNextPageBtnClick, onPrevPageBtnClick = _a.onPrevPageBtnClick, onValueClick = _a.onValueClick, hasNextPage = _a.hasNextPage, hasPrevPage = _a.hasPrevPage, onHeaderClick = _a.onHeaderClick, disabledItemIndexes = _a.disabledItemIndexes, activeItemIndex = _a.activeItemIndex, hoveredItemIndex = _a.hoveredItemIndex, onCellHover = _a.onCellHover, onMount = _a.onMount, inline = _a.inline, rest = __rest(_a, ["values", "onNextPageBtnClick", "onPrevPageBtnClick", "onValueClick", "hasNextPage", "hasPrevPage", "onHeaderClick", "disabledItemIndexes", "activeItemIndex", "hoveredItemIndex", "onCellHover", "onMount", "inline"]);
+        var headerTitle = _.first(values) + " - " + _.last(values);
+        return (React.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
+            React.createElement(Header_1.default, { title: headerTitle, onNextPageBtnClick: onNextPageBtnClick, onPrevPageBtnClick: onPrevPageBtnClick, hasNextPage: hasNextPage, hasPrevPage: hasPrevPage, onHeaderClick: onHeaderClick, width: YEAR_CALENDAR_ROW_WIDTH, displayWeeks: false }),
+            React.createElement(Body_1.default, { width: YEAR_CALENDAR_ROW_WIDTH, data: values, hovered: hoveredItemIndex, onCellHover: onCellHover, onCellClick: onValueClick, active: activeItemIndex, disabled: disabledItemIndexes })));
+    };
+    return YearView;
+}(BaseCalendarView_1.default));
+exports.default = YearView;
+
 
 /***/ })
 
