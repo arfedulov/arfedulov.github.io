@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "157f17df74d1797e3a1b";
+/******/ 	var hotCurrentHash = "748d0819809b1783219b";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -70055,16 +70055,15 @@ var DateTimeInput = /** @class */ (function (_super) {
             closePopup: this.closePopup,
             onChange: this.handleSelect,
             onHeaderClick: this.switchToPrevMode,
-            initializeWith: parse_1.buildValue(value, initialDate, localization, dateFormat),
-            value: parse_1.buildValue(value, null, localization, dateFormat, null),
-            minDate: parse_1.parseValue(minDate, dateFormat, localization),
-            maxDate: parse_1.parseValue(maxDate, dateFormat, localization),
-            marked: parse_1.parseArrayOrValue(marked, dateFormat, localization),
-            markColor: markColor,
+            initializeWith: parse_1.buildValue(value, initialDate, localization, dateTimeFormat),
+            value: parse_1.buildValue(value, null, localization, dateTimeFormat, null),
+            minDate: parse_1.parseValue(minDate, dateTimeFormat, localization),
+            maxDate: parse_1.parseValue(maxDate, dateTimeFormat, localization),
             localization: localization,
         };
-        var disableParsed = parse_1.parseArrayOrValue(disable, dateFormat, localization);
+        var disableParsed = parse_1.parseArrayOrValue(disable, dateTimeFormat, localization);
         var mode = this.state.mode;
+        var markedParsed = parse_1.parseArrayOrValue(marked, dateTimeFormat, localization);
         if (mode === 'year') {
             return (react_1.default.createElement(YearPicker_1.default, __assign({}, pickerProps, { disable: shared_1.getDisabledYears(disableParsed) })));
         }
@@ -70072,7 +70071,7 @@ var DateTimeInput = /** @class */ (function (_super) {
             return (react_1.default.createElement(MonthPicker_1.default, __assign({}, pickerProps, { hasHeader: true, disable: shared_1.getDisabledMonths(disableParsed) })));
         }
         if (mode === 'day') {
-            return (react_1.default.createElement(DayPicker_1.default, __assign({}, pickerProps, { disable: disableParsed })));
+            return (react_1.default.createElement(DayPicker_1.default, __assign({}, pickerProps, { marked: markedParsed, markColor: markColor, disable: disableParsed })));
         }
         if (mode === 'hour') {
             return (react_1.default.createElement(HourPicker_1.default, __assign({ timeFormat: this.props.timeFormat, hasHeader: true }, pickerProps, { disable: disableParsed })));
