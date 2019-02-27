@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "50f88e640325f1525bda";
+/******/ 	var hotCurrentHash = "ec6b55fabf0eb4c2f99d";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -70471,7 +70471,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var isBoolean_1 = __importDefault(__webpack_require__(/*! lodash/isBoolean */ "./node_modules/lodash/isBoolean.js"));
 var isNil_1 = __importDefault(__webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js"));
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
@@ -70605,8 +70604,8 @@ var DateInput = /** @class */ (function (_super) {
     }
     DateInput.prototype.render = function () {
         var _this = this;
-        var _a = this.props, value = _a.value, icon = _a.icon, dateFormat = _a.dateFormat, initialDate = _a.initialDate, disable = _a.disable, enable = _a.enable, maxDate = _a.maxDate, minDate = _a.minDate, preserveViewMode = _a.preserveViewMode, startMode = _a.startMode, closable = _a.closable, markColor = _a.markColor, marked = _a.marked, localization = _a.localization, onChange = _a.onChange, rest = __rest(_a, ["value", "icon", "dateFormat", "initialDate", "disable", "enable", "maxDate", "minDate", "preserveViewMode", "startMode", "closable", "markColor", "marked", "localization", "onChange"]);
-        return (react_1.default.createElement(InputView_1.default, __assign({ closePopup: this.closePopup, openPopup: this.openPopup, popupIsClosed: this.state.popupIsClosed, onMount: this.onInputViewMount, icon: isBoolean_1.default(icon) && !icon ? undefined : icon, onFocus: this.onFocus, onChange: this.onInputValueChange }, rest, { renderPicker: function () { return _this.getPicker(); }, value: parse_1.dateValueToString(value, dateFormat, localization) })));
+        var _a = this.props, value = _a.value, dateFormat = _a.dateFormat, initialDate = _a.initialDate, disable = _a.disable, enable = _a.enable, maxDate = _a.maxDate, minDate = _a.minDate, preserveViewMode = _a.preserveViewMode, startMode = _a.startMode, closable = _a.closable, markColor = _a.markColor, marked = _a.marked, localization = _a.localization, onChange = _a.onChange, rest = __rest(_a, ["value", "dateFormat", "initialDate", "disable", "enable", "maxDate", "minDate", "preserveViewMode", "startMode", "closable", "markColor", "marked", "localization", "onChange"]);
+        return (react_1.default.createElement(InputView_1.default, __assign({ closePopup: this.closePopup, openPopup: this.openPopup, popupIsClosed: this.state.popupIsClosed, onMount: this.onInputViewMount, onFocus: this.onFocus, onChange: this.onInputValueChange }, rest, { renderPicker: function () { return _this.getPicker(); }, value: parse_1.dateValueToString(value, dateFormat, localization) })));
     };
     DateInput.prototype.parseInternalValue = function () {
         /*
@@ -70699,6 +70698,8 @@ var DateInput = /** @class */ (function (_super) {
         markColor: prop_types_1.default.string,
         /** Moment date localization. */
         localization: prop_types_1.default.string,
+        icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
+        iconPosition: prop_types_1.default.oneOf(['left', 'right']),
     };
     return DateInput;
 }(BaseInput_1.default));
@@ -70753,7 +70754,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var isBoolean_1 = __importDefault(__webpack_require__(/*! lodash/isBoolean */ "./node_modules/lodash/isBoolean.js"));
 var isNil_1 = __importDefault(__webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js"));
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
@@ -70870,8 +70870,8 @@ var DateTimeInput = /** @class */ (function (_super) {
     }
     DateTimeInput.prototype.render = function () {
         var _this = this;
-        var _a = this.props, value = _a.value, dateTimeFormat = _a.dateTimeFormat, dateFormat = _a.dateFormat, timeFormat = _a.timeFormat, initialDate = _a.initialDate, disable = _a.disable, maxDate = _a.maxDate, minDate = _a.minDate, preserveViewMode = _a.preserveViewMode, startMode = _a.startMode, divider = _a.divider, closable = _a.closable, icon = _a.icon, markColor = _a.markColor, marked = _a.marked, localization = _a.localization, onChange = _a.onChange, rest = __rest(_a, ["value", "dateTimeFormat", "dateFormat", "timeFormat", "initialDate", "disable", "maxDate", "minDate", "preserveViewMode", "startMode", "divider", "closable", "icon", "markColor", "marked", "localization", "onChange"]);
-        return (react_1.default.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, icon: isBoolean_1.default(icon) && !icon ? undefined : icon, closePopup: this.closePopup, openPopup: this.openPopup, onFocus: this.onFocus, onMount: this.onInputViewMount, onChange: this.onInputValueChange }, rest, { value: parse_1.dateValueToString(value, dateFormat, localization), renderPicker: function () { return _this.getPicker(); } })));
+        var _a = this.props, value = _a.value, dateTimeFormat = _a.dateTimeFormat, dateFormat = _a.dateFormat, timeFormat = _a.timeFormat, initialDate = _a.initialDate, disable = _a.disable, maxDate = _a.maxDate, minDate = _a.minDate, preserveViewMode = _a.preserveViewMode, startMode = _a.startMode, divider = _a.divider, closable = _a.closable, markColor = _a.markColor, marked = _a.marked, localization = _a.localization, onChange = _a.onChange, rest = __rest(_a, ["value", "dateTimeFormat", "dateFormat", "timeFormat", "initialDate", "disable", "maxDate", "minDate", "preserveViewMode", "startMode", "divider", "closable", "markColor", "marked", "localization", "onChange"]);
+        return (react_1.default.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, closePopup: this.closePopup, openPopup: this.openPopup, onFocus: this.onFocus, onMount: this.onInputViewMount, onChange: this.onInputValueChange }, rest, { value: parse_1.dateValueToString(value, dateFormat, localization), renderPicker: function () { return _this.getPicker(); } })));
     };
     DateTimeInput.prototype.parseInternalValue = function () {
         /*
@@ -71006,6 +71006,8 @@ var DateTimeInput = /** @class */ (function (_super) {
         markColor: prop_types_1.default.string,
         /** Moment date localization. */
         localization: prop_types_1.default.string,
+        icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
+        iconPosition: prop_types_1.default.oneOf(['left', 'right']),
     };
     return DateTimeInput;
 }(BaseInput_1.default));
@@ -71060,7 +71062,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var isBoolean_1 = __importDefault(__webpack_require__(/*! lodash/isBoolean */ "./node_modules/lodash/isBoolean.js"));
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
 var prop_types_1 = __importDefault(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
@@ -71102,8 +71103,8 @@ var DatesRangeInput = /** @class */ (function (_super) {
         return _this;
     }
     DatesRangeInput.prototype.render = function () {
-        var _a = this.props, value = _a.value, icon = _a.icon, dateFormat = _a.dateFormat, initialDate = _a.initialDate, maxDate = _a.maxDate, minDate = _a.minDate, closable = _a.closable, marked = _a.marked, markColor = _a.markColor, localization = _a.localization, rest = __rest(_a, ["value", "icon", "dateFormat", "initialDate", "maxDate", "minDate", "closable", "marked", "markColor", "localization"]);
-        return (react_1.default.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, icon: isBoolean_1.default(icon) && !icon ? undefined : icon }, rest, { value: value, onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup, renderPicker: this.getPicker })));
+        var _a = this.props, value = _a.value, dateFormat = _a.dateFormat, initialDate = _a.initialDate, maxDate = _a.maxDate, minDate = _a.minDate, closable = _a.closable, marked = _a.marked, markColor = _a.markColor, localization = _a.localization, rest = __rest(_a, ["value", "dateFormat", "initialDate", "maxDate", "minDate", "closable", "marked", "markColor", "localization"]);
+        return (react_1.default.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed }, rest, { value: value, onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup, renderPicker: this.getPicker })));
     };
     /**
      * Component responsibility:
@@ -71161,6 +71162,8 @@ var DatesRangeInput = /** @class */ (function (_super) {
         markColor: prop_types_1.default.string,
         /** Moment date localization. */
         localization: prop_types_1.default.string,
+        icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
+        iconPosition: prop_types_1.default.oneOf(['left', 'right']),
     };
     return DatesRangeInput;
 }(BaseInput_1.default));
@@ -71308,6 +71311,8 @@ var MonthInput = /** @class */ (function (_super) {
         animation: prop_types_1.default.string,
         /** Moment date localization. */
         localization: prop_types_1.default.string,
+        icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
+        iconPosition: prop_types_1.default.oneOf(['left', 'right']),
     };
     return MonthInput;
 }(BaseInput_1.default));
@@ -71362,7 +71367,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var isBoolean_1 = __importDefault(__webpack_require__(/*! lodash/isBoolean */ "./node_modules/lodash/isBoolean.js"));
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
 var prop_types_1 = __importDefault(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
@@ -71403,8 +71407,8 @@ var MonthRangeInput = /** @class */ (function (_super) {
         return _this;
     }
     MonthRangeInput.prototype.render = function () {
-        var _a = this.props, value = _a.value, icon = _a.icon, dateFormat = _a.dateFormat, initialDate = _a.initialDate, maxDate = _a.maxDate, minDate = _a.minDate, closable = _a.closable, localization = _a.localization, rest = __rest(_a, ["value", "icon", "dateFormat", "initialDate", "maxDate", "minDate", "closable", "localization"]);
-        return (react_1.default.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, icon: isBoolean_1.default(icon) && !icon ? undefined : icon }, rest, { value: value, onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup, renderPicker: this.getPicker })));
+        var _a = this.props, value = _a.value, dateFormat = _a.dateFormat, initialDate = _a.initialDate, maxDate = _a.maxDate, minDate = _a.minDate, closable = _a.closable, localization = _a.localization, rest = __rest(_a, ["value", "dateFormat", "initialDate", "maxDate", "minDate", "closable", "localization"]);
+        return (react_1.default.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed }, rest, { value: value, onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup, renderPicker: this.getPicker })));
     };
     MonthRangeInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { dateFormat: 'MM-YYYY', icon: 'calendar' });
     MonthRangeInput.propTypes = {
@@ -71449,6 +71453,8 @@ var MonthRangeInput = /** @class */ (function (_super) {
         animation: prop_types_1.default.string,
         /** Moment date localization. */
         localization: prop_types_1.default.string,
+        icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
+        iconPosition: prop_types_1.default.oneOf(['left', 'right']),
     };
     return MonthRangeInput;
 }(BaseInput_1.default));
@@ -71624,6 +71630,8 @@ var TimeInput = /** @class */ (function (_super) {
         animation: prop_types_1.default.string,
         /** Moment date localization. */
         localization: prop_types_1.default.string,
+        icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
+        iconPosition: prop_types_1.default.oneOf(['left', 'right']),
     };
     return TimeInput;
 }(BaseInput_1.default));
@@ -71769,6 +71777,8 @@ var YearInput = /** @class */ (function (_super) {
         animation: prop_types_1.default.string,
         /** Moment date localization. */
         localization: prop_types_1.default.string,
+        icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
+        iconPosition: prop_types_1.default.oneOf(['left', 'right']),
     };
     return YearInput;
 }(BaseInput_1.default));
@@ -73095,14 +73105,24 @@ function getDisabledDays(disable, maxDate, minDate, currentDate, daysOnPage, ena
     return sortBy_1.default(uniq_1.default(disabledDays).filter(function (day) { return !isNil_1.default(day); }));
 }
 exports.getDisabledDays = getDisabledDays;
-/** Return day positions that shoud be displayed as marked. */
+/** Return day positions that should be displayed as marked. */
 function getMarkedDays(marked, currentDate, daysOnPage) {
     if (marked.length === 0) {
         return [];
     }
     var allDates = buildDays(currentDate, daysOnPage);
-    var allDatesNumb = allDates.map(function (date) { return parseInt(date, 10); });
     var activeDayPositions = getDefaultEnabledDayPositions(allDates, currentDate);
+    var allDatesNumb = allDates.map(function (date) { return parseInt(date, 10); });
+    /*
+     * The following will clear all dates before the 1st of the current month.
+     * This is to prevent marking days before the 1st, that shouldn't be marked.
+     * If the incorrect dates are marked, instead of the legitimate ones, the legitimate dates
+     * will not be marked at all.
+    */
+    var fillTo = allDatesNumb.indexOf(1);
+    for (var i = 0; i < fillTo; i++) {
+        allDatesNumb[i] = 0;
+    }
     var markedIndexes = marked
         .filter(function (date) { return date.isSame(currentDate, 'month'); })
         .map(function (date) { return date.date(); })
@@ -74757,7 +74777,7 @@ var FormInputWithRef = /** @class */ (function (_super) {
         var ClearIcon = isString_1.default(clearIcon) ?
             react_1.default.createElement(semantic_ui_react_1.Icon, { name: clearIcon, link: true, onClick: onClear }) :
             react_1.default.createElement(clearIcon.type, __assign({}, clearIcon.props, { link: true, onClick: onClear }));
-        return (react_1.default.createElement(semantic_ui_react_1.Form.Input, __assign({ onFocus: onFocus, onBlur: onBlur, onClick: onFocus, onMouseEnter: onMouseEnter }, rest),
+        return (react_1.default.createElement(semantic_ui_react_1.Form.Input, __assign({ onFocus: onFocus, onBlur: onBlur, onClick: onFocus, onMouseEnter: onMouseEnter, icon: true }, rest),
             value && clearable ?
                 ClearIcon
                 :
@@ -74778,7 +74798,7 @@ var InputView = /** @class */ (function (_super) {
     }
     InputView.prototype.render = function () {
         var _this = this;
-        var _a = this.props, renderPicker = _a.renderPicker, popupPosition = _a.popupPosition, inline = _a.inline, value = _a.value, closeOnMouseLeave = _a.closeOnMouseLeave, onChange = _a.onChange, onClear = _a.onClear, children = _a.children, inlineLabel = _a.inlineLabel, popupIsClosed = _a.popupIsClosed, mountNode = _a.mountNode, tabIndex = _a.tabIndex, onMount = _a.onMount, closePopup = _a.closePopup, openPopup = _a.openPopup, animation = _a.animation, duration = _a.duration, pickerWidth = _a.pickerWidth, pickerStyle = _a.pickerStyle, rest = __rest(_a, ["renderPicker", "popupPosition", "inline", "value", "closeOnMouseLeave", "onChange", "onClear", "children", "inlineLabel", "popupIsClosed", "mountNode", "tabIndex", "onMount", "closePopup", "openPopup", "animation", "duration", "pickerWidth", "pickerStyle"]);
+        var _a = this.props, renderPicker = _a.renderPicker, popupPosition = _a.popupPosition, inline = _a.inline, value = _a.value, closeOnMouseLeave = _a.closeOnMouseLeave, onChange = _a.onChange, onClear = _a.onClear, children = _a.children, inlineLabel = _a.inlineLabel, popupIsClosed = _a.popupIsClosed, mountNode = _a.mountNode, tabIndex = _a.tabIndex, onMount = _a.onMount, closePopup = _a.closePopup, openPopup = _a.openPopup, animation = _a.animation, duration = _a.duration, pickerWidth = _a.pickerWidth, pickerStyle = _a.pickerStyle, iconPosition = _a.iconPosition, icon = _a.icon, rest = __rest(_a, ["renderPicker", "popupPosition", "inline", "value", "closeOnMouseLeave", "onChange", "onClear", "children", "inlineLabel", "popupIsClosed", "mountNode", "tabIndex", "onMount", "closePopup", "openPopup", "animation", "duration", "pickerWidth", "pickerStyle", "iconPosition", "icon"]);
         var onBlur = function (e) {
             if (e.relatedTarget !== _this.popupNode && e.relatedTarget !== _this.inputNode) {
                 closePopup();
@@ -74803,14 +74823,14 @@ var InputView = /** @class */ (function (_super) {
                 }
             }
         };
-        var inputElement = (react_1.default.createElement(FormInputWithRef, __assign({}, rest, { innerRef: function (e) { _this.inputNode = e; onMount(e); }, value: value, tabIndex: tabIndex, inline: inlineLabel, onClear: function (e) { return (onClear || onChange)(e, __assign({}, rest, { value: '' })); }, onFocus: function (e) {
+        var inputElement = (react_1.default.createElement(FormInputWithRef, __assign({}, rest, { icon: icon, iconPosition: icon && iconPosition !== 'right' ? iconPosition : undefined, innerRef: function (e) { _this.inputNode = e; onMount(e); }, value: value, tabIndex: tabIndex, inline: inlineLabel, onClear: function (e) { return (onClear || onChange)(e, __assign({}, rest, { value: '' })); }, onFocus: function (e) {
                 invoke_1.default(_this.props, 'onFocus', e, _this.props);
                 openPopup();
             }, onBlur: onBlur, onMouseEnter: onMouseEnter, onChange: onChange })));
         if (inline) {
             return renderPicker();
         }
-        return (react_1.default.createElement("div", null,
+        return (react_1.default.createElement(react_1.default.Fragment, null,
             inputElement,
             react_1.default.createElement(semantic_ui_react_1.Transition, { unmountOnHide: true, mountOnShow: true, visible: !popupIsClosed, animation: animation, duration: duration, onComplete: function () {
                     if (popupIsClosed) {
@@ -74838,10 +74858,10 @@ var InputView = /** @class */ (function (_super) {
         closeOnMouseLeave: true,
         tabIndex: '0',
         clearable: false,
-        icon: 'calendar',
         clearIcon: 'remove',
         animation: 'scale',
         duration: 200,
+        iconPosition: 'right',
     };
     return InputView;
 }(react_1.default.Component));
