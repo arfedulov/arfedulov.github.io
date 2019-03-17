@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "ec6b55fabf0eb4c2f99d";
+/******/ 	var hotCurrentHash = "7f82fe319c18483c2008";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -70367,6 +70367,9 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -70375,8 +70378,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 var BaseInput = /** @class */ (function (_super) {
     __extends(BaseInput, _super);
     function BaseInput() {
@@ -70416,7 +70419,7 @@ var BaseInput = /** @class */ (function (_super) {
     }
     BaseInput.defaultProps = {
         inline: false,
-        localization: moment.locale(),
+        localization: moment_1.default.locale(),
     };
     return BaseInput;
 }(React.Component));
@@ -71076,10 +71079,10 @@ var DatesRangeInput = /** @class */ (function (_super) {
     function DatesRangeInput(props) {
         var _this = _super.call(this, props) || this;
         _this.getPicker = function () {
-            var _a = _this.props, value = _a.value, dateFormat = _a.dateFormat, markColor = _a.markColor, marked = _a.marked, initialDate = _a.initialDate, localization = _a.localization, minDate = _a.minDate, maxDate = _a.maxDate, tabIndex = _a.tabIndex, pickerWidth = _a.pickerWidth, pickerStyle = _a.pickerStyle;
+            var _a = _this.props, value = _a.value, dateFormat = _a.dateFormat, markColor = _a.markColor, marked = _a.marked, initialDate = _a.initialDate, localization = _a.localization, minDate = _a.minDate, maxDate = _a.maxDate, tabIndex = _a.tabIndex, pickerWidth = _a.pickerWidth, pickerStyle = _a.pickerStyle, allowSameEndDate = _a.allowSameEndDate;
             var _b = parse_1.parseDatesRange(value, dateFormat), start = _b.start, end = _b.end;
             var markedParsed = parse_1.parseArrayOrValue(marked, dateFormat, localization);
-            return (react_1.default.createElement(DatesRangePicker_1.default, { isPickerInFocus: _this.isPickerInFocus, isTriggerInFocus: _this.isTriggerInFocus, inline: _this.props.inline, onCalendarViewMount: _this.onCalendarViewMount, closePopup: _this.closePopup, onChange: _this.handleSelect, dateFormat: dateFormat, initializeWith: parse_1.buildValue(start, initialDate, localization, dateFormat), start: start, end: end, marked: markedParsed, markColor: markColor, minDate: parse_1.parseValue(minDate, dateFormat, localization), maxDate: parse_1.parseValue(maxDate, dateFormat, localization), localization: localization, onHeaderClick: function () { return undefined; }, tabIndex: tabIndex, pickerWidth: pickerWidth, pickerStyle: pickerStyle }));
+            return (react_1.default.createElement(DatesRangePicker_1.default, { isPickerInFocus: _this.isPickerInFocus, isTriggerInFocus: _this.isTriggerInFocus, inline: _this.props.inline, onCalendarViewMount: _this.onCalendarViewMount, closePopup: _this.closePopup, onChange: _this.handleSelect, dateFormat: dateFormat, initializeWith: parse_1.buildValue(start, initialDate, localization, dateFormat), start: start, end: end, marked: markedParsed, markColor: markColor, minDate: parse_1.parseValue(minDate, dateFormat, localization), maxDate: parse_1.parseValue(maxDate, dateFormat, localization), localization: localization, onHeaderClick: function () { return undefined; }, tabIndex: tabIndex, pickerWidth: pickerWidth, pickerStyle: pickerStyle, allowSameEndDate: allowSameEndDate }));
         };
         _this.handleSelect = function (e, _a) {
             var value = _a.value;
@@ -71103,7 +71106,7 @@ var DatesRangeInput = /** @class */ (function (_super) {
         return _this;
     }
     DatesRangeInput.prototype.render = function () {
-        var _a = this.props, value = _a.value, dateFormat = _a.dateFormat, initialDate = _a.initialDate, maxDate = _a.maxDate, minDate = _a.minDate, closable = _a.closable, marked = _a.marked, markColor = _a.markColor, localization = _a.localization, rest = __rest(_a, ["value", "dateFormat", "initialDate", "maxDate", "minDate", "closable", "marked", "markColor", "localization"]);
+        var _a = this.props, value = _a.value, dateFormat = _a.dateFormat, initialDate = _a.initialDate, maxDate = _a.maxDate, minDate = _a.minDate, closable = _a.closable, marked = _a.marked, markColor = _a.markColor, localization = _a.localization, allowSameEndDate = _a.allowSameEndDate, rest = __rest(_a, ["value", "dateFormat", "initialDate", "maxDate", "minDate", "closable", "marked", "markColor", "localization", "allowSameEndDate"]);
         return (react_1.default.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed }, rest, { value: value, onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup, renderPicker: this.getPicker })));
     };
     /**
@@ -71164,6 +71167,7 @@ var DatesRangeInput = /** @class */ (function (_super) {
         localization: prop_types_1.default.string,
         icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
         iconPosition: prop_types_1.default.oneOf(['left', 'right']),
+        allowSameEndDate: prop_types_1.default.bool,
     };
     return DatesRangeInput;
 }(BaseInput_1.default));
@@ -72097,6 +72101,30 @@ exports.default = {
 
 /***/ }),
 
+/***/ "./src/lib/checkIE.ts":
+/*!****************************!*\
+  !*** ./src/lib/checkIE.ts ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/** Return true if run on Internet Explorer. */
+var checkIE = function () {
+    if (navigator.appName === 'Microsoft Internet Explorer'
+        || !!(navigator.userAgent.match(/Trident/)
+            || navigator.userAgent.match(/rv:11/))) {
+        return true;
+    }
+    return false;
+};
+exports.default = checkIE;
+
+
+/***/ }),
+
 /***/ "./src/lib/findHTMLElement.ts":
 /*!************************************!*\
   !*** ./src/lib/findHTMLElement.ts ***!
@@ -72635,7 +72663,7 @@ var DatesRangePicker = /** @class */ (function (_super) {
         _this.handleChange = function (e, _a) {
             var itemPosition = _a.itemPosition;
             // call `onChange` with value: { start: moment, end: moment }
-            var _b = _this.props, start = _b.start, end = _b.end, localization = _b.localization;
+            var _b = _this.props, start = _b.start, end = _b.end, localization = _b.localization, allowSameEndDate = _b.allowSameEndDate;
             var data = __assign({}, _this.props, { value: {} });
             var firstOnPage = parseInt(_this.buildCalendarValues()[0], 10);
             if (isNil_1.default(start) && isNil_1.default(end)) {
@@ -72643,7 +72671,7 @@ var DatesRangePicker = /** @class */ (function (_super) {
             }
             else if (!isNil_1.default(start) && isNil_1.default(end)) {
                 var selectedDate = buildMoment(_this.state.date, firstOnPage, itemPosition, localization);
-                if (selectedDate.isAfter(start, 'date')) {
+                if (selectedDate.isAfter(start, 'date') || (allowSameEndDate && selectedDate.isSame(start, 'date'))) {
                     data.value = {
                         start: start,
                         end: selectedDate,
@@ -72672,7 +72700,7 @@ var DatesRangePicker = /** @class */ (function (_super) {
         return _this;
     }
     DatesRangePicker.prototype.render = function () {
-        var _a = this.props, onChange = _a.onChange, value = _a.value, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, dateFormat = _a.dateFormat, start = _a.start, end = _a.end, minDate = _a.minDate, maxDate = _a.maxDate, marked = _a.marked, markColor = _a.markColor, localization = _a.localization, rest = __rest(_a, ["onChange", "value", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "dateFormat", "start", "end", "minDate", "maxDate", "marked", "markColor", "localization"]);
+        var _a = this.props, onChange = _a.onChange, value = _a.value, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, dateFormat = _a.dateFormat, start = _a.start, end = _a.end, minDate = _a.minDate, maxDate = _a.maxDate, marked = _a.marked, markColor = _a.markColor, localization = _a.localization, allowSameEndDate = _a.allowSameEndDate, rest = __rest(_a, ["onChange", "value", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "dateFormat", "start", "end", "minDate", "maxDate", "marked", "markColor", "localization", "allowSameEndDate"]);
         return (react_1.default.createElement(DatesRangeView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onCellHover: this.onHoveredCellPositionChange, hoveredItemIndex: this.state.hoveredCellPosition, onValueClick: this.handleChange, inline: this.props.inline, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), onBlur: this.handleBlur, onMount: this.props.onCalendarViewMount, currentHeadingValue: this.getCurrentDate(), currentRangeHeadingValue: this.getSelectedRange(), activeRange: this.getActiveCellsPositions(), markedItemIndexes: this.getMarkedPositions(), markColor: markColor, disabledItemIndexes: this.getDisabledPositions(), localization: localization })));
     };
     DatesRangePicker.prototype.getCurrentDate = function () {
@@ -74763,6 +74791,7 @@ var isString_1 = __importDefault(__webpack_require__(/*! lodash/isString */ "./n
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
+var checkIE_1 = __importDefault(__webpack_require__(/*! ../lib/checkIE */ "./src/lib/checkIE.ts"));
 var popupStyle = {
     padding: '0',
     filter: 'none',
@@ -74798,9 +74827,9 @@ var InputView = /** @class */ (function (_super) {
     }
     InputView.prototype.render = function () {
         var _this = this;
-        var _a = this.props, renderPicker = _a.renderPicker, popupPosition = _a.popupPosition, inline = _a.inline, value = _a.value, closeOnMouseLeave = _a.closeOnMouseLeave, onChange = _a.onChange, onClear = _a.onClear, children = _a.children, inlineLabel = _a.inlineLabel, popupIsClosed = _a.popupIsClosed, mountNode = _a.mountNode, tabIndex = _a.tabIndex, onMount = _a.onMount, closePopup = _a.closePopup, openPopup = _a.openPopup, animation = _a.animation, duration = _a.duration, pickerWidth = _a.pickerWidth, pickerStyle = _a.pickerStyle, iconPosition = _a.iconPosition, icon = _a.icon, rest = __rest(_a, ["renderPicker", "popupPosition", "inline", "value", "closeOnMouseLeave", "onChange", "onClear", "children", "inlineLabel", "popupIsClosed", "mountNode", "tabIndex", "onMount", "closePopup", "openPopup", "animation", "duration", "pickerWidth", "pickerStyle", "iconPosition", "icon"]);
+        var _a = this.props, renderPicker = _a.renderPicker, popupPosition = _a.popupPosition, inline = _a.inline, value = _a.value, closeOnMouseLeave = _a.closeOnMouseLeave, onChange = _a.onChange, onClear = _a.onClear, children = _a.children, inlineLabel = _a.inlineLabel, popupIsClosed = _a.popupIsClosed, mountNode = _a.mountNode, tabIndex = _a.tabIndex, onMount = _a.onMount, closePopup = _a.closePopup, openPopup = _a.openPopup, animation = _a.animation, duration = _a.duration, pickerWidth = _a.pickerWidth, pickerStyle = _a.pickerStyle, iconPosition = _a.iconPosition, icon = _a.icon, readOnly = _a.readOnly, rest = __rest(_a, ["renderPicker", "popupPosition", "inline", "value", "closeOnMouseLeave", "onChange", "onClear", "children", "inlineLabel", "popupIsClosed", "mountNode", "tabIndex", "onMount", "closePopup", "openPopup", "animation", "duration", "pickerWidth", "pickerStyle", "iconPosition", "icon", "readOnly"]);
         var onBlur = function (e) {
-            if (e.relatedTarget !== _this.popupNode && e.relatedTarget !== _this.inputNode) {
+            if (e.relatedTarget !== _this.popupNode && e.relatedTarget !== _this.inputNode && !checkIE_1.default()) {
                 closePopup();
             }
         };
@@ -74823,7 +74852,7 @@ var InputView = /** @class */ (function (_super) {
                 }
             }
         };
-        var inputElement = (react_1.default.createElement(FormInputWithRef, __assign({}, rest, { icon: icon, iconPosition: icon && iconPosition !== 'right' ? iconPosition : undefined, innerRef: function (e) { _this.inputNode = e; onMount(e); }, value: value, tabIndex: tabIndex, inline: inlineLabel, onClear: function (e) { return (onClear || onChange)(e, __assign({}, rest, { value: '' })); }, onFocus: function (e) {
+        var inputElement = (react_1.default.createElement(FormInputWithRef, __assign({}, rest, { readOnly: readOnly, icon: icon, iconPosition: icon && iconPosition !== 'right' ? iconPosition : undefined, innerRef: function (e) { _this.inputNode = e; onMount(e); }, value: value, tabIndex: tabIndex, inline: inlineLabel, onClear: function (e) { return (onClear || onChange)(e, __assign({}, rest, { value: '' })); }, onFocus: function (e) {
                 invoke_1.default(_this.props, 'onFocus', e, _this.props);
                 openPopup();
             }, onBlur: onBlur, onMouseEnter: onMouseEnter, onChange: onChange })));
@@ -74832,20 +74861,22 @@ var InputView = /** @class */ (function (_super) {
         }
         return (react_1.default.createElement(react_1.default.Fragment, null,
             inputElement,
-            react_1.default.createElement(semantic_ui_react_1.Transition, { unmountOnHide: true, mountOnShow: true, visible: !popupIsClosed, animation: animation, duration: duration, onComplete: function () {
-                    if (popupIsClosed) {
-                        _this.unsetScrollListener();
-                        // TODO: for some reason sometimes transition component
-                        // doesn't hide even though `popupIsClosed === true`
-                        // To hide it we need to rerender component
-                        _this.forceUpdate();
-                    }
-                    else {
-                        _this.setScrollListener();
-                    }
-                } },
-                react_1.default.createElement(semantic_ui_react_1.Popup, { position: popupPosition, open: true, hoverable: closeOnMouseLeave, flowing: true, style: popupStyle, context: this.inputNode, on: 'hover', mountNode: mountNode },
-                    react_1.default.createElement("div", { onBlur: onBlur, onMouseLeave: onMouseLeave, onMouseEnter: onMouseEnter, style: { outline: 'none' }, tabIndex: 0, ref: function (ref) { return _this.popupNode = ref; } }, renderPicker())))));
+            !readOnly
+                &&
+                    react_1.default.createElement(semantic_ui_react_1.Transition, { unmountOnHide: true, mountOnShow: true, visible: !popupIsClosed, animation: animation, duration: duration, onComplete: function () {
+                            if (popupIsClosed) {
+                                _this.unsetScrollListener();
+                                // TODO: for some reason sometimes transition component
+                                // doesn't hide even though `popupIsClosed === true`
+                                // To hide it we need to rerender component
+                                _this.forceUpdate();
+                            }
+                            else {
+                                _this.setScrollListener();
+                            }
+                        } },
+                        react_1.default.createElement(semantic_ui_react_1.Popup, { position: popupPosition, open: true, hoverable: closeOnMouseLeave, flowing: true, style: popupStyle, context: this.inputNode, on: 'hover', mountNode: mountNode },
+                            react_1.default.createElement("div", { onBlur: onBlur, onMouseLeave: onMouseLeave, onMouseEnter: onMouseEnter, style: { outline: 'none' }, tabIndex: 0, ref: function (ref) { return _this.popupNode = ref; } }, renderPicker())))));
     };
     InputView.prototype.setScrollListener = function () {
         window.addEventListener('scroll', this.scrollListener);
