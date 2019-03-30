@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "7f82fe319c18483c2008";
+/******/ 	var hotCurrentHash = "de05686ee80d5af35ea9";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -815,9 +815,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -826,12 +823,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
+// import 'moment/locale/ru';
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var ReactDOM = __importStar(__webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js"));
 var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
 var inputs_1 = __webpack_require__(/*! ../src/inputs */ "./src/inputs/index.ts");
-moment_1.default.locale('en');
 var App = /** @class */ (function (_super) {
     __extends(App, _super);
     function App(props) {
@@ -864,8 +860,8 @@ var DateTimeForm = /** @class */ (function (_super) {
     function DateTimeForm(props) {
         var _this = _super.call(this, props) || this;
         _this.handleChange = function (event, _a) {
-            var name = _a.name, value = _a.value;
             var _b;
+            var name = _a.name, value = _a.value;
             if (_this.state.hasOwnProperty(name)) {
                 _this.setState((_b = {}, _b[name] = value, _b));
             }
@@ -908,8 +904,8 @@ var DateTimeFormInline = /** @class */ (function (_super) {
     function DateTimeFormInline(props) {
         var _this = _super.call(this, props) || this;
         _this.handleChange = function (event, _a) {
-            var name = _a.name, value = _a.value;
             var _b;
+            var name = _a.name, value = _a.value;
             if (_this.state.hasOwnProperty(name)) {
                 _this.setState((_b = {}, _b[name] = value, _b));
             }
@@ -1521,6 +1517,20 @@ var PropTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types
 
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
+function _typeof(obj) {
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    _typeof = function (obj) {
+      return typeof obj;
+    };
+  } else {
+    _typeof = function (obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -1719,6 +1729,17 @@ function normalizeHandlers(handlers) {
   return Array.isArray(handlers) ? handlers : [handlers];
 }
 /**
+ * Asserts that the passed value is React.RefObject
+ *
+ * @see https://github.com/facebook/react/blob/v16.8.2/packages/react-reconciler/src/ReactFiberCommitWork.js#L665
+ */
+
+
+var isRefObject = function isRefObject(ref // eslint-disable-next-line
+) {
+  return ref !== null && _typeof(ref) === 'object' && ref.hasOwnProperty('current');
+};
+/**
  * Normalizes `target` for EventStack, because `target` can be passed as `boolean` or `string`.
  *
  * @see https://jsperf.com/suir-normalize-target
@@ -1728,6 +1749,7 @@ function normalizeHandlers(handlers) {
 function normalizeTarget(target) {
   if (target === 'document') return document;
   if (target === 'window') return window;
+  if (isRefObject(target)) return target.current || document;
   return target || document;
 }
 
@@ -2037,7 +2059,9 @@ EventStack$1.propTypes = {
   /** A DOM element on which we will subscribe. */
   target: PropTypes.oneOfType([PropTypes.oneOf(['document', 'window']), // Heads up!
   // This condition for SSR safety.
-  PropTypes.instanceOf(env.canUseDOM ? HTMLElement : Object)])
+  PropTypes.instanceOf(env.canUseDOM ? HTMLElement : Object), PropTypes.shape({
+    current: PropTypes.object
+  })])
 };
 exports.instance = instance;
 exports.default = EventStack$1;
@@ -2264,35 +2288,41 @@ var keyboardKey = {
 
   /**
    * Get the `keyCode` or `which` value from a keyboard event or `key` name.
-   * @param {string|object} name A keyboard event like object or `key` name.
-   * @param {string} [name.key] If object, it must have one of these keys.
-   * @param {string} [name.keyCode] If object, it must have one of these keys.
-   * @param {string} [name.which] If object, it must have one of these keys.
+   * @param {string|object} eventOrKey A keyboard event-like object or `key` name.
+   * @param {string} [eventOrKey.key] If object, it must have one of these keys.
+   * @param {string} [eventOrKey.keyCode] If object, it must have one of these keys.
+   * @param {string} [eventOrKey.which] If object, it must have one of these keys.
    * @returns {*}
    */
-  getCode: function getCode(name) {
-    if (isObject(name)) {
-      return name.keyCode || name.which || this[name.key];
+  getCode: function getCode(eventOrKey) {
+    if (isObject(eventOrKey)) {
+      return eventOrKey.keyCode || eventOrKey.which || this[eventOrKey.key];
     }
 
-    return this[name];
+    return this[eventOrKey];
   },
 
   /**
    * Get the key name from a keyboard event, `keyCode`, or `which` value.
-   * @param {number|object} code A keyboard event like object or key name.
-   * @param {number} [code.keyCode] If object, it must have one of these keys.
-   * @param {number} [code.which] If object, it must have one of these keys.
-   * @param {number} [code.shiftKey] If object, it must have one of these keys.
+   * @param {number|object} eventOrCode A keyboard event-like object or key code.
+   * @param {number} [eventOrCode.key] If object with a `key` name, it will be returned.
+   * @param {number} [eventOrCode.keyCode] If object, it must have one of these keys.
+   * @param {number} [eventOrCode.which] If object, it must have one of these keys.
+   * @param {number} [eventOrCode.shiftKey] If object, it must have one of these keys.
    * @returns {*}
    */
-  getKey: function getKey(code) {
-    var isEvent = isObject(code);
-    var name = codes[isEvent ? code.keyCode || code.which : code];
+  getKey: function getKey(eventOrCode) {
+    var isEvent = isObject(eventOrCode); // handle events with a `key` already defined
+
+    if (isEvent && eventOrCode.key) {
+      return eventOrCode.key;
+    }
+
+    var name = codes[isEvent ? eventOrCode.keyCode || eventOrCode.which : eventOrCode];
 
     if (Array.isArray(name)) {
       if (isEvent) {
-        name = name[code.shiftKey ? 1 : 0];
+        name = name[eventOrCode.shiftKey ? 1 : 0];
       } else {
         name = name[0];
       }
@@ -16388,6 +16418,52 @@ module.exports = round;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/set.js":
+/*!************************************!*\
+  !*** ./node_modules/lodash/set.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseSet = __webpack_require__(/*! ./_baseSet */ "./node_modules/lodash/_baseSet.js");
+/**
+ * Sets the value at `path` of `object`. If a portion of `path` doesn't exist,
+ * it's created. Arrays are created for missing index properties while objects
+ * are created for all other missing properties. Use `_.setWith` to customize
+ * `path` creation.
+ *
+ * **Note:** This method mutates `object`.
+ *
+ * @static
+ * @memberOf _
+ * @since 3.7.0
+ * @category Object
+ * @param {Object} object The object to modify.
+ * @param {Array|string} path The path of the property to set.
+ * @param {*} value The value to set.
+ * @returns {Object} Returns `object`.
+ * @example
+ *
+ * var object = { 'a': [{ 'b': { 'c': 3 } }] };
+ *
+ * _.set(object, 'a[0].b.c', 4);
+ * console.log(object.a[0].b.c);
+ * // => 4
+ *
+ * _.set(object, ['x', '0', 'y', 'z'], 5);
+ * console.log(object.x[0].y.z);
+ * // => 5
+ */
+
+
+function set(object, path, value) {
+  return object == null ? object : baseSet(object, path, value);
+}
+
+module.exports = set;
+
+/***/ }),
+
 /***/ "./node_modules/lodash/size.js":
 /*!*************************************!*\
   !*** ./node_modules/lodash/size.js ***!
@@ -17911,6 +17987,8 @@ var map = {
 	"./dv.js": "./node_modules/moment/locale/dv.js",
 	"./el": "./node_modules/moment/locale/el.js",
 	"./el.js": "./node_modules/moment/locale/el.js",
+	"./en-SG": "./node_modules/moment/locale/en-SG.js",
+	"./en-SG.js": "./node_modules/moment/locale/en-SG.js",
 	"./en-au": "./node_modules/moment/locale/en-au.js",
 	"./en-au.js": "./node_modules/moment/locale/en-au.js",
 	"./en-ca": "./node_modules/moment/locale/en-ca.js",
@@ -17949,6 +18027,8 @@ var map = {
 	"./fr.js": "./node_modules/moment/locale/fr.js",
 	"./fy": "./node_modules/moment/locale/fy.js",
 	"./fy.js": "./node_modules/moment/locale/fy.js",
+	"./ga": "./node_modules/moment/locale/ga.js",
+	"./ga.js": "./node_modules/moment/locale/ga.js",
 	"./gd": "./node_modules/moment/locale/gd.js",
 	"./gd.js": "./node_modules/moment/locale/gd.js",
 	"./gl": "./node_modules/moment/locale/gl.js",
@@ -17972,6 +18052,8 @@ var map = {
 	"./is": "./node_modules/moment/locale/is.js",
 	"./is.js": "./node_modules/moment/locale/is.js",
 	"./it": "./node_modules/moment/locale/it.js",
+	"./it-ch": "./node_modules/moment/locale/it-ch.js",
+	"./it-ch.js": "./node_modules/moment/locale/it-ch.js",
 	"./it.js": "./node_modules/moment/locale/it.js",
 	"./ja": "./node_modules/moment/locale/ja.js",
 	"./ja.js": "./node_modules/moment/locale/ja.js",
@@ -18115,13 +18197,12 @@ function webpackContext(req) {
 	return __webpack_require__(id);
 }
 function webpackContextResolve(req) {
-	var id = map[req];
-	if(!(id + 1)) { // check for number or string
+	if(!__webpack_require__.o(map, req)) {
 		var e = new Error("Cannot find module '" + req + "'");
 		e.code = 'MODULE_NOT_FOUND';
 		throw e;
 	}
-	return id;
+	return map[req];
 }
 webpackContext.keys = function webpackContextKeys() {
 	return Object.keys(map);
@@ -19924,6 +20005,10 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
   var months = 'leden_únor_březen_duben_květen_červen_červenec_srpen_září_říjen_listopad_prosinec'.split('_'),
       monthsShort = 'led_úno_bře_dub_kvě_čvn_čvc_srp_zář_říj_lis_pro'.split('_');
+  var monthsParse = [/^led/i, /^úno/i, /^bře/i, /^dub/i, /^kvě/i, /^(čvn|červen$|června)/i, /^(čvc|červenec|července)/i, /^srp/i, /^zář/i, /^říj/i, /^lis/i, /^pro/i]; // NOTE: 'červen' is substring of 'červenec'; therefore 'červenec' must precede 'červen' in the regex to be fully matched.
+  // Otherwise parser matches '1. červenec' as '1. červen' + 'ec'.
+
+  var monthsRegex = /^(leden|únor|březen|duben|květen|červenec|července|červen|června|srpen|září|říjen|listopad|prosinec|led|úno|bře|dub|kvě|čvn|čvc|srp|zář|říj|lis|pro)/i;
 
   function plural(n) {
     return n > 1 && n < 5 && ~~(n / 10) !== 1;
@@ -20022,37 +20107,15 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   var cs = moment.defineLocale('cs', {
     months: months,
     monthsShort: monthsShort,
-    monthsParse: function (months, monthsShort) {
-      var i,
-          _monthsParse = [];
-
-      for (i = 0; i < 12; i++) {
-        // use custom parser to solve problem with July (červenec)
-        _monthsParse[i] = new RegExp('^' + months[i] + '$|^' + monthsShort[i] + '$', 'i');
-      }
-
-      return _monthsParse;
-    }(months, monthsShort),
-    shortMonthsParse: function (monthsShort) {
-      var i,
-          _shortMonthsParse = [];
-
-      for (i = 0; i < 12; i++) {
-        _shortMonthsParse[i] = new RegExp('^' + monthsShort[i] + '$', 'i');
-      }
-
-      return _shortMonthsParse;
-    }(monthsShort),
-    longMonthsParse: function (months) {
-      var i,
-          _longMonthsParse = [];
-
-      for (i = 0; i < 12; i++) {
-        _longMonthsParse[i] = new RegExp('^' + months[i] + '$', 'i');
-      }
-
-      return _longMonthsParse;
-    }(months),
+    monthsRegex: monthsRegex,
+    monthsShortRegex: monthsRegex,
+    // NOTE: 'červen' is substring of 'červenec'; therefore 'červenec' must precede 'červen' in the regex to be fully matched.
+    // Otherwise parser matches '1. červenec' as '1. červen' + 'ec'.
+    monthsStrictRegex: /^(leden|ledna|února|únor|březen|března|duben|dubna|květen|května|červenec|července|červen|června|srpen|srpna|září|říjen|října|listopadu|listopad|prosinec|prosince)/i,
+    monthsShortStrictRegex: /^(led|úno|bře|dub|kvě|čvn|čvc|srp|zář|říj|lis|pro)/i,
+    monthsParse: monthsParse,
+    longMonthsParse: monthsParse,
+    shortMonthsParse: monthsParse,
     weekdays: 'neděle_pondělí_úterý_středa_čtvrtek_pátek_sobota'.split('_'),
     weekdaysShort: 'ne_po_út_st_čt_pá_so'.split('_'),
     weekdaysMin: 'ne_po_út_st_čt_pá_so'.split('_'),
@@ -20812,6 +20875,77 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 /***/ }),
 
+/***/ "./node_modules/moment/locale/en-SG.js":
+/*!*********************************************!*\
+  !*** ./node_modules/moment/locale/en-SG.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+//! moment.js locale configuration
+;
+
+(function (global, factory) {
+   true ? factory(__webpack_require__(/*! ../moment */ "./node_modules/moment/moment.js")) : undefined;
+})(this, function (moment) {
+  'use strict';
+
+  var enSG = moment.defineLocale('en-SG', {
+    months: 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_'),
+    monthsShort: 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_'),
+    weekdays: 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_'),
+    weekdaysShort: 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_'),
+    weekdaysMin: 'Su_Mo_Tu_We_Th_Fr_Sa'.split('_'),
+    longDateFormat: {
+      LT: 'HH:mm',
+      LTS: 'HH:mm:ss',
+      L: 'DD/MM/YYYY',
+      LL: 'D MMMM YYYY',
+      LLL: 'D MMMM YYYY HH:mm',
+      LLLL: 'dddd, D MMMM YYYY HH:mm'
+    },
+    calendar: {
+      sameDay: '[Today at] LT',
+      nextDay: '[Tomorrow at] LT',
+      nextWeek: 'dddd [at] LT',
+      lastDay: '[Yesterday at] LT',
+      lastWeek: '[Last] dddd [at] LT',
+      sameElse: 'L'
+    },
+    relativeTime: {
+      future: 'in %s',
+      past: '%s ago',
+      s: 'a few seconds',
+      ss: '%d seconds',
+      m: 'a minute',
+      mm: '%d minutes',
+      h: 'an hour',
+      hh: '%d hours',
+      d: 'a day',
+      dd: '%d days',
+      M: 'a month',
+      MM: '%d months',
+      y: 'a year',
+      yy: '%d years'
+    },
+    dayOfMonthOrdinalParse: /\d{1,2}(st|nd|rd|th)/,
+    ordinal: function (number) {
+      var b = number % 10,
+          output = ~~(number % 100 / 10) === 1 ? 'th' : b === 1 ? 'st' : b === 2 ? 'nd' : b === 3 ? 'rd' : 'th';
+      return number + output;
+    },
+    week: {
+      dow: 1,
+      // Monday is the first day of the week.
+      doy: 4 // The week that contains Jan 4th is the first week of the year.
+
+    }
+  });
+  return enSG;
+});
+
+/***/ }),
+
 /***/ "./node_modules/moment/locale/en-au.js":
 /*!*********************************************!*\
   !*** ./node_modules/moment/locale/en-au.js ***!
@@ -21043,7 +21177,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     longDateFormat: {
       LT: 'HH:mm',
       LTS: 'HH:mm:ss',
-      L: 'DD-MM-YYYY',
+      L: 'DD/MM/YYYY',
       LL: 'D MMMM YYYY',
       LLL: 'D MMMM YYYY HH:mm',
       LLLL: 'dddd D MMMM YYYY HH:mm'
@@ -21418,6 +21552,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
   var monthsShortDot = 'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split('_'),
       monthsShort = 'ene_feb_mar_abr_may_jun_jul_ago_sep_oct_nov_dic'.split('_');
+  var monthsParse = [/^ene/i, /^feb/i, /^mar/i, /^abr/i, /^may/i, /^jun/i, /^jul/i, /^ago/i, /^sep/i, /^oct/i, /^nov/i, /^dic/i];
+  var monthsRegex = /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
   var esUs = moment.defineLocale('es-us', {
     months: 'enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre'.split('_'),
     monthsShort: function (m, format) {
@@ -21429,7 +21565,13 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         return monthsShortDot[m.month()];
       }
     },
-    monthsParseExact: true,
+    monthsRegex: monthsRegex,
+    monthsShortRegex: monthsRegex,
+    monthsStrictRegex: /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
+    monthsShortStrictRegex: /^(ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i,
+    monthsParse: monthsParse,
+    longMonthsParse: monthsParse,
+    shortMonthsParse: monthsParse,
     weekdays: 'domingo_lunes_martes_miércoles_jueves_viernes_sábado'.split('_'),
     weekdaysShort: 'dom._lun._mar._mié._jue._vie._sáb.'.split('_'),
     weekdaysMin: 'do_lu_ma_mi_ju_vi_sá'.split('_'),
@@ -21438,9 +21580,9 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
       LT: 'h:mm A',
       LTS: 'h:mm:ss A',
       L: 'MM/DD/YYYY',
-      LL: 'MMMM [de] D [de] YYYY',
-      LLL: 'MMMM [de] D [de] YYYY h:mm A',
-      LLLL: 'dddd, MMMM [de] D [de] YYYY h:mm A'
+      LL: 'D [de] MMMM [de] YYYY',
+      LLL: 'D [de] MMMM [de] YYYY h:mm A',
+      LLLL: 'dddd, D [de] MMMM [de] YYYY h:mm A'
     },
     calendar: {
       sameDay: function () {
@@ -22032,13 +22174,13 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
       past: '%s síðani',
       s: 'fá sekund',
       ss: '%d sekundir',
-      m: 'ein minutt',
+      m: 'ein minuttur',
       mm: '%d minuttir',
       h: 'ein tími',
       hh: '%d tímar',
       d: 'ein dagur',
       dd: '%d dagar',
-      M: 'ein mánaði',
+      M: 'ein mánaður',
       MM: '%d mánaðir',
       y: 'eitt ár',
       yy: '%d ár'
@@ -22392,6 +22534,82 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 /***/ }),
 
+/***/ "./node_modules/moment/locale/ga.js":
+/*!******************************************!*\
+  !*** ./node_modules/moment/locale/ga.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+//! moment.js locale configuration
+;
+
+(function (global, factory) {
+   true ? factory(__webpack_require__(/*! ../moment */ "./node_modules/moment/moment.js")) : undefined;
+})(this, function (moment) {
+  'use strict';
+
+  var months = ['Eanáir', 'Feabhra', 'Márta', 'Aibreán', 'Bealtaine', 'Méitheamh', 'Iúil', 'Lúnasa', 'Meán Fómhair', 'Deaireadh Fómhair', 'Samhain', 'Nollaig'];
+  var monthsShort = ['Eaná', 'Feab', 'Márt', 'Aibr', 'Beal', 'Méit', 'Iúil', 'Lúna', 'Meán', 'Deai', 'Samh', 'Noll'];
+  var weekdays = ['Dé Domhnaigh', 'Dé Luain', 'Dé Máirt', 'Dé Céadaoin', 'Déardaoin', 'Dé hAoine', 'Dé Satharn'];
+  var weekdaysShort = ['Dom', 'Lua', 'Mái', 'Céa', 'Déa', 'hAo', 'Sat'];
+  var weekdaysMin = ['Do', 'Lu', 'Má', 'Ce', 'Dé', 'hA', 'Sa'];
+  var ga = moment.defineLocale('ga', {
+    months: months,
+    monthsShort: monthsShort,
+    monthsParseExact: true,
+    weekdays: weekdays,
+    weekdaysShort: weekdaysShort,
+    weekdaysMin: weekdaysMin,
+    longDateFormat: {
+      LT: 'HH:mm',
+      LTS: 'HH:mm:ss',
+      L: 'DD/MM/YYYY',
+      LL: 'D MMMM YYYY',
+      LLL: 'D MMMM YYYY HH:mm',
+      LLLL: 'dddd, D MMMM YYYY HH:mm'
+    },
+    calendar: {
+      sameDay: '[Inniu ag] LT',
+      nextDay: '[Amárach ag] LT',
+      nextWeek: 'dddd [ag] LT',
+      lastDay: '[Inné aig] LT',
+      lastWeek: 'dddd [seo caite] [ag] LT',
+      sameElse: 'L'
+    },
+    relativeTime: {
+      future: 'i %s',
+      past: '%s ó shin',
+      s: 'cúpla soicind',
+      ss: '%d soicind',
+      m: 'nóiméad',
+      mm: '%d nóiméad',
+      h: 'uair an chloig',
+      hh: '%d uair an chloig',
+      d: 'lá',
+      dd: '%d lá',
+      M: 'mí',
+      MM: '%d mí',
+      y: 'bliain',
+      yy: '%d bliain'
+    },
+    dayOfMonthOrdinalParse: /\d{1,2}(d|na|mh)/,
+    ordinal: function (number) {
+      var output = number === 1 ? 'd' : number % 10 === 2 ? 'na' : 'mh';
+      return number + output;
+    },
+    week: {
+      dow: 1,
+      // Monday is the first day of the week.
+      doy: 4 // The week that contains Jan 4th is the first week of the year.
+
+    }
+  });
+  return ga;
+});
+
+/***/ }),
+
 /***/ "./node_modules/moment/locale/gd.js":
 /*!******************************************!*\
   !*** ./node_modules/moment/locale/gd.js ***!
@@ -22574,8 +22792,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
       'ss': [number + ' secondanim', number + ' second'],
       'm': ['eka mintan', 'ek minute'],
       'mm': [number + ' mintanim', number + ' mintam'],
-      'h': ['eka horan', 'ek hor'],
-      'hh': [number + ' horanim', number + ' horam'],
+      'h': ['eka voran', 'ek vor'],
+      'hh': [number + ' voranim', number + ' voram'],
       'd': ['eka disan', 'ek dis'],
       'dd': [number + ' disanim', number + ' dis'],
       'M': ['eka mhoinean', 'ek mhoino'],
@@ -23721,6 +23939,83 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 /***/ }),
 
+/***/ "./node_modules/moment/locale/it-ch.js":
+/*!*********************************************!*\
+  !*** ./node_modules/moment/locale/it-ch.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+//! moment.js locale configuration
+;
+
+(function (global, factory) {
+   true ? factory(__webpack_require__(/*! ../moment */ "./node_modules/moment/moment.js")) : undefined;
+})(this, function (moment) {
+  'use strict';
+
+  var itCh = moment.defineLocale('it-ch', {
+    months: 'gennaio_febbraio_marzo_aprile_maggio_giugno_luglio_agosto_settembre_ottobre_novembre_dicembre'.split('_'),
+    monthsShort: 'gen_feb_mar_apr_mag_giu_lug_ago_set_ott_nov_dic'.split('_'),
+    weekdays: 'domenica_lunedì_martedì_mercoledì_giovedì_venerdì_sabato'.split('_'),
+    weekdaysShort: 'dom_lun_mar_mer_gio_ven_sab'.split('_'),
+    weekdaysMin: 'do_lu_ma_me_gi_ve_sa'.split('_'),
+    longDateFormat: {
+      LT: 'HH:mm',
+      LTS: 'HH:mm:ss',
+      L: 'DD.MM.YYYY',
+      LL: 'D MMMM YYYY',
+      LLL: 'D MMMM YYYY HH:mm',
+      LLLL: 'dddd D MMMM YYYY HH:mm'
+    },
+    calendar: {
+      sameDay: '[Oggi alle] LT',
+      nextDay: '[Domani alle] LT',
+      nextWeek: 'dddd [alle] LT',
+      lastDay: '[Ieri alle] LT',
+      lastWeek: function () {
+        switch (this.day()) {
+          case 0:
+            return '[la scorsa] dddd [alle] LT';
+
+          default:
+            return '[lo scorso] dddd [alle] LT';
+        }
+      },
+      sameElse: 'L'
+    },
+    relativeTime: {
+      future: function (s) {
+        return (/^[0-9].+$/.test(s) ? 'tra' : 'in') + ' ' + s;
+      },
+      past: '%s fa',
+      s: 'alcuni secondi',
+      ss: '%d secondi',
+      m: 'un minuto',
+      mm: '%d minuti',
+      h: 'un\'ora',
+      hh: '%d ore',
+      d: 'un giorno',
+      dd: '%d giorni',
+      M: 'un mese',
+      MM: '%d mesi',
+      y: 'un anno',
+      yy: '%d anni'
+    },
+    dayOfMonthOrdinalParse: /\d{1,2}º/,
+    ordinal: '%dº',
+    week: {
+      dow: 1,
+      // Monday is the first day of the week.
+      doy: 4 // The week that contains Jan 4th is the first week of the year.
+
+    }
+  });
+  return itCh;
+});
+
+/***/ }),
+
 /***/ "./node_modules/moment/locale/it.js":
 /*!******************************************!*\
   !*** ./node_modules/moment/locale/it.js ***!
@@ -23814,7 +24109,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   'use strict';
 
   var ja = moment.defineLocale('ja', {
-    months: '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),
+    months: '一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月'.split('_'),
     monthsShort: '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),
     weekdays: '日曜日_月曜日_火曜日_水曜日_木曜日_金曜日_土曜日'.split('_'),
     weekdaysShort: '日_月_火_水_木_金_土'.split('_'),
@@ -26995,8 +27290,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   'use strict';
 
   var ptBr = moment.defineLocale('pt-br', {
-    months: 'janeiro_fevereiro_março_abril_maio_junho_julho_agosto_setembro_outubro_novembro_dezembro'.split('_'),
-    monthsShort: 'jan_fev_mar_abr_mai_jun_jul_ago_set_out_nov_dez'.split('_'),
+    months: 'Janeiro_Fevereiro_Março_Abril_Maio_Junho_Julho_Agosto_Setembro_Outubro_Novembro_Dezembro'.split('_'),
+    monthsShort: 'Jan_Fev_Mar_Abr_Mai_Jun_Jul_Ago_Set_Out_Nov_Dez'.split('_'),
     weekdays: 'Domingo_Segunda-feira_Terça-feira_Quarta-feira_Quinta-feira_Sexta-feira_Sábado'.split('_'),
     weekdaysShort: 'Dom_Seg_Ter_Qua_Qui_Sex_Sáb'.split('_'),
     weekdaysMin: 'Do_2ª_3ª_4ª_5ª_6ª_Sá'.split('_'),
@@ -27060,8 +27355,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   'use strict';
 
   var pt = moment.defineLocale('pt', {
-    months: 'janeiro_fevereiro_março_abril_maio_junho_julho_agosto_setembro_outubro_novembro_dezembro'.split('_'),
-    monthsShort: 'jan_fev_mar_abr_mai_jun_jul_ago_set_out_nov_dez'.split('_'),
+    months: 'Janeiro_Fevereiro_Março_Abril_Maio_Junho_Julho_Agosto_Setembro_Outubro_Novembro_Dezembro'.split('_'),
+    monthsShort: 'Jan_Fev_Mar_Abr_Mai_Jun_Jul_Ago_Set_Out_Nov_Dez'.split('_'),
     weekdays: 'Domingo_Segunda-feira_Terça-feira_Quarta-feira_Quinta-feira_Sexta-feira_Sábado'.split('_'),
     weekdaysShort: 'Dom_Seg_Ter_Qua_Qui_Sex_Sáb'.split('_'),
     weekdaysMin: 'Do_2ª_3ª_4ª_5ª_6ª_Sá'.split('_'),
@@ -28718,8 +29013,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   'use strict';
 
   var te = moment.defineLocale('te', {
-    months: 'జనవరి_ఫిబ్రవరి_మార్చి_ఏప్రిల్_మే_జూన్_జూలై_ఆగస్టు_సెప్టెంబర్_అక్టోబర్_నవంబర్_డిసెంబర్'.split('_'),
-    monthsShort: 'జన._ఫిబ్ర._మార్చి_ఏప్రి._మే_జూన్_జూలై_ఆగ._సెప్._అక్టో._నవ._డిసె.'.split('_'),
+    months: 'జనవరి_ఫిబ్రవరి_మార్చి_ఏప్రిల్_మే_జూన్_జులై_ఆగస్టు_సెప్టెంబర్_అక్టోబర్_నవంబర్_డిసెంబర్'.split('_'),
+    monthsShort: 'జన._ఫిబ్ర._మార్చి_ఏప్రి._మే_జూన్_జులై_ఆగ._సెప్._అక్టో._నవ._డిసె.'.split('_'),
     monthsParseExact: true,
     weekdays: 'ఆదివారం_సోమవారం_మంగళవారం_బుధవారం_గురువారం_శుక్రవారం_శనివారం'.split('_'),
     weekdaysShort: 'ఆది_సోమ_మంగళ_బుధ_గురు_శుక్ర_శని'.split('_'),
@@ -29758,6 +30053,10 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
       'accusative': 'неділю_понеділок_вівторок_середу_четвер_п’ятницю_суботу'.split('_'),
       'genitive': 'неділі_понеділка_вівторка_середи_четверга_п’ятниці_суботи'.split('_')
     };
+
+    if (m === true) {
+      return weekdays['nominative'].slice(1, 7).concat(weekdays['nominative'].slice(0, 1));
+    }
 
     if (!m) {
       return weekdays['nominative'];
@@ -31853,20 +32152,36 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   function createDate(y, m, d, h, M, s, ms) {
     // can't just apply() to create a date:
     // https://stackoverflow.com/q/181348
-    var date = new Date(y, m, d, h, M, s, ms); // the date constructor remaps years 0-99 to 1900-1999
+    var date; // the date constructor remaps years 0-99 to 1900-1999
 
-    if (y < 100 && y >= 0 && isFinite(date.getFullYear())) {
-      date.setFullYear(y);
+    if (y < 100 && y >= 0) {
+      // preserve leap years using a full 400 year cycle, then reset
+      date = new Date(y + 400, m, d, h, M, s, ms);
+
+      if (isFinite(date.getFullYear())) {
+        date.setFullYear(y);
+      }
+    } else {
+      date = new Date(y, m, d, h, M, s, ms);
     }
 
     return date;
   }
 
   function createUTCDate(y) {
-    var date = new Date(Date.UTC.apply(null, arguments)); // the Date.UTC function remaps years 0-99 to 1900-1999
+    var date; // the Date.UTC function remaps years 0-99 to 1900-1999
 
-    if (y < 100 && y >= 0 && isFinite(date.getUTCFullYear())) {
-      date.setUTCFullYear(y);
+    if (y < 100 && y >= 0) {
+      var args = Array.prototype.slice.call(arguments); // preserve leap years using a full 400 year cycle, then reset
+
+      args[0] = y + 400;
+      date = new Date(Date.UTC.apply(null, args));
+
+      if (isFinite(date.getUTCFullYear())) {
+        date.setUTCFullYear(y);
+      }
+    } else {
+      date = new Date(Date.UTC.apply(null, arguments));
     }
 
     return date;
@@ -32059,26 +32374,27 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   } // LOCALES
 
 
+  function shiftWeekdays(ws, n) {
+    return ws.slice(n, 7).concat(ws.slice(0, n));
+  }
+
   var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_');
 
   function localeWeekdays(m, format) {
-    if (!m) {
-      return isArray(this._weekdays) ? this._weekdays : this._weekdays['standalone'];
-    }
-
-    return isArray(this._weekdays) ? this._weekdays[m.day()] : this._weekdays[this._weekdays.isFormat.test(format) ? 'format' : 'standalone'][m.day()];
+    var weekdays = isArray(this._weekdays) ? this._weekdays : this._weekdays[m && m !== true && this._weekdays.isFormat.test(format) ? 'format' : 'standalone'];
+    return m === true ? shiftWeekdays(weekdays, this._week.dow) : m ? weekdays[m.day()] : weekdays;
   }
 
   var defaultLocaleWeekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_');
 
   function localeWeekdaysShort(m) {
-    return m ? this._weekdaysShort[m.day()] : this._weekdaysShort;
+    return m === true ? shiftWeekdays(this._weekdaysShort, this._week.dow) : m ? this._weekdaysShort[m.day()] : this._weekdaysShort;
   }
 
   var defaultLocaleWeekdaysMin = 'Su_Mo_Tu_We_Th_Fr_Sa'.split('_');
 
   function localeWeekdaysMin(m) {
-    return m ? this._weekdaysMin[m.day()] : this._weekdaysMin;
+    return m === true ? shiftWeekdays(this._weekdaysMin, this._week.dow) : m ? this._weekdaysMin[m.day()] : this._weekdaysMin;
   }
 
   function handleStrictParse$1(weekdayName, format, strict) {
@@ -33769,10 +34085,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   }
 
   function positiveMomentsDifference(base, other) {
-    var res = {
-      milliseconds: 0,
-      months: 0
-    };
+    var res = {};
     res.months = other.month() - base.month() + (other.year() - base.year()) * 12;
 
     if (base.clone().add(res.months, 'M').isAfter(other)) {
@@ -34157,74 +34470,149 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     return this._locale;
   }
 
+  var MS_PER_SECOND = 1000;
+  var MS_PER_MINUTE = 60 * MS_PER_SECOND;
+  var MS_PER_HOUR = 60 * MS_PER_MINUTE;
+  var MS_PER_400_YEARS = (365 * 400 + 97) * 24 * MS_PER_HOUR; // actual modulo - handles negative numbers (for dates before 1970):
+
+  function mod$1(dividend, divisor) {
+    return (dividend % divisor + divisor) % divisor;
+  }
+
+  function localStartOfDate(y, m, d) {
+    // the date constructor remaps years 0-99 to 1900-1999
+    if (y < 100 && y >= 0) {
+      // preserve leap years using a full 400 year cycle, then reset
+      return new Date(y + 400, m, d) - MS_PER_400_YEARS;
+    } else {
+      return new Date(y, m, d).valueOf();
+    }
+  }
+
+  function utcStartOfDate(y, m, d) {
+    // Date.UTC remaps years 0-99 to 1900-1999
+    if (y < 100 && y >= 0) {
+      // preserve leap years using a full 400 year cycle, then reset
+      return Date.UTC(y + 400, m, d) - MS_PER_400_YEARS;
+    } else {
+      return Date.UTC(y, m, d);
+    }
+  }
+
   function startOf(units) {
-    units = normalizeUnits(units); // the following switch intentionally omits break keywords
-    // to utilize falling through the cases.
+    var time;
+    units = normalizeUnits(units);
+
+    if (units === undefined || units === 'millisecond' || !this.isValid()) {
+      return this;
+    }
+
+    var startOfDate = this._isUTC ? utcStartOfDate : localStartOfDate;
 
     switch (units) {
       case 'year':
-        this.month(0);
-
-      /* falls through */
+        time = startOfDate(this.year(), 0, 1);
+        break;
 
       case 'quarter':
-      case 'month':
-        this.date(1);
+        time = startOfDate(this.year(), this.month() - this.month() % 3, 1);
+        break;
 
-      /* falls through */
+      case 'month':
+        time = startOfDate(this.year(), this.month(), 1);
+        break;
 
       case 'week':
+        time = startOfDate(this.year(), this.month(), this.date() - this.weekday());
+        break;
+
       case 'isoWeek':
+        time = startOfDate(this.year(), this.month(), this.date() - (this.isoWeekday() - 1));
+        break;
+
       case 'day':
       case 'date':
-        this.hours(0);
-
-      /* falls through */
+        time = startOfDate(this.year(), this.month(), this.date());
+        break;
 
       case 'hour':
-        this.minutes(0);
-
-      /* falls through */
+        time = this._d.valueOf();
+        time -= mod$1(time + (this._isUTC ? 0 : this.utcOffset() * MS_PER_MINUTE), MS_PER_HOUR);
+        break;
 
       case 'minute':
-        this.seconds(0);
-
-      /* falls through */
+        time = this._d.valueOf();
+        time -= mod$1(time, MS_PER_MINUTE);
+        break;
 
       case 'second':
-        this.milliseconds(0);
-    } // weeks are a special case
-
-
-    if (units === 'week') {
-      this.weekday(0);
+        time = this._d.valueOf();
+        time -= mod$1(time, MS_PER_SECOND);
+        break;
     }
 
-    if (units === 'isoWeek') {
-      this.isoWeekday(1);
-    } // quarters are also special
+    this._d.setTime(time);
 
-
-    if (units === 'quarter') {
-      this.month(Math.floor(this.month() / 3) * 3);
-    }
-
+    hooks.updateOffset(this, true);
     return this;
   }
 
   function endOf(units) {
+    var time;
     units = normalizeUnits(units);
 
-    if (units === undefined || units === 'millisecond') {
+    if (units === undefined || units === 'millisecond' || !this.isValid()) {
       return this;
-    } // 'date' is an alias for 'day', so it should be considered as such.
-
-
-    if (units === 'date') {
-      units = 'day';
     }
 
-    return this.startOf(units).add(1, units === 'isoWeek' ? 'week' : units).subtract(1, 'ms');
+    var startOfDate = this._isUTC ? utcStartOfDate : localStartOfDate;
+
+    switch (units) {
+      case 'year':
+        time = startOfDate(this.year() + 1, 0, 1) - 1;
+        break;
+
+      case 'quarter':
+        time = startOfDate(this.year(), this.month() - this.month() % 3 + 3, 1) - 1;
+        break;
+
+      case 'month':
+        time = startOfDate(this.year(), this.month() + 1, 1) - 1;
+        break;
+
+      case 'week':
+        time = startOfDate(this.year(), this.month(), this.date() - this.weekday() + 7) - 1;
+        break;
+
+      case 'isoWeek':
+        time = startOfDate(this.year(), this.month(), this.date() - (this.isoWeekday() - 1) + 7) - 1;
+        break;
+
+      case 'day':
+      case 'date':
+        time = startOfDate(this.year(), this.month(), this.date() + 1) - 1;
+        break;
+
+      case 'hour':
+        time = this._d.valueOf();
+        time += MS_PER_HOUR - mod$1(time + (this._isUTC ? 0 : this.utcOffset() * MS_PER_MINUTE), MS_PER_HOUR) - 1;
+        break;
+
+      case 'minute':
+        time = this._d.valueOf();
+        time += MS_PER_MINUTE - mod$1(time, MS_PER_MINUTE) - 1;
+        break;
+
+      case 'second':
+        time = this._d.valueOf();
+        time += MS_PER_SECOND - mod$1(time, MS_PER_SECOND) - 1;
+        break;
+    }
+
+    this._d.setTime(time);
+
+    hooks.updateOffset(this, true);
+    return this;
   }
 
   function valueOf() {
@@ -34827,10 +35215,20 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     var milliseconds = this._milliseconds;
     units = normalizeUnits(units);
 
-    if (units === 'month' || units === 'year') {
+    if (units === 'month' || units === 'quarter' || units === 'year') {
       days = this._days + milliseconds / 864e5;
       months = this._months + daysToMonths(days);
-      return units === 'month' ? months : months / 12;
+
+      switch (units) {
+        case 'month':
+          return months;
+
+        case 'quarter':
+          return months / 3;
+
+        case 'year':
+          return months / 12;
+      }
     } else {
       // handle milliseconds separately because of floating point math errors (issue #1867)
       days = this._days + Math.round(monthsToDays(this._months));
@@ -34883,6 +35281,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   var asDays = makeAs('d');
   var asWeeks = makeAs('w');
   var asMonths = makeAs('M');
+  var asQuarters = makeAs('Q');
   var asYears = makeAs('y');
 
   function clone$1() {
@@ -35060,6 +35459,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   proto$2.asDays = asDays;
   proto$2.asWeeks = asWeeks;
   proto$2.asMonths = asMonths;
+  proto$2.asQuarters = asQuarters;
   proto$2.asYears = asYears;
   proto$2.valueOf = valueOf$1;
   proto$2._bubble = bubble;
@@ -35095,7 +35495,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     config._d = new Date(toInt(input));
   }); // Side effect imports
 
-  hooks.version = '2.23.0';
+  hooks.version = '2.24.0';
   setHookCallback(createLocal);
   hooks.fn = proto;
   hooks.min = min;
@@ -35279,6 +35679,7 @@ if (true) {
   var ReactPropTypesSecret = __webpack_require__(/*! ./lib/ReactPropTypesSecret */ "./node_modules/prop-types/lib/ReactPropTypesSecret.js");
 
   var loggedTypeFailures = {};
+  var has = Function.call.bind(Object.prototype.hasOwnProperty);
 
   printWarning = function (text) {
     var message = 'Warning: ' + text;
@@ -35311,7 +35712,7 @@ if (true) {
 function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
   if (true) {
     for (var typeSpecName in typeSpecs) {
-      if (typeSpecs.hasOwnProperty(typeSpecName)) {
+      if (has(typeSpecs, typeSpecName)) {
         var error; // Prop type validation may throw. In case they do, we don't want to
         // fail the render phase where it didn't fail before. So we log it.
         // After these have been cleaned up, we'll let them throw.
@@ -35345,6 +35746,18 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
     }
   }
 }
+/**
+ * Resets warning cache when testing.
+ *
+ * @private
+ */
+
+
+checkPropTypes.resetWarningCache = function () {
+  if (true) {
+    loggedTypeFailures = {};
+  }
+};
 
 module.exports = checkPropTypes;
 
@@ -35366,11 +35779,15 @@ module.exports = checkPropTypes;
  */
 
 
+var ReactIs = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js");
+
 var assign = __webpack_require__(/*! object-assign */ "./node_modules/object-assign/index.js");
 
 var ReactPropTypesSecret = __webpack_require__(/*! ./lib/ReactPropTypesSecret */ "./node_modules/prop-types/lib/ReactPropTypesSecret.js");
 
 var checkPropTypes = __webpack_require__(/*! ./checkPropTypes */ "./node_modules/prop-types/checkPropTypes.js");
+
+var has = Function.call.bind(Object.prototype.hasOwnProperty);
 
 var printWarning = function () {};
 
@@ -35484,6 +35901,7 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
     any: createAnyTypeChecker(),
     arrayOf: createArrayOfTypeChecker,
     element: createElementTypeChecker(),
+    elementType: createElementTypeTypeChecker(),
     instanceOf: createInstanceTypeChecker,
     node: createNodeChecker(),
     objectOf: createObjectOfTypeChecker,
@@ -35643,6 +36061,21 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
     return createChainableTypeChecker(validate);
   }
 
+  function createElementTypeTypeChecker() {
+    function validate(props, propName, componentName, location, propFullName) {
+      var propValue = props[propName];
+
+      if (!ReactIs.isValidElementType(propValue)) {
+        var propType = getPropType(propValue);
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected a single ReactElement type.'));
+      }
+
+      return null;
+    }
+
+    return createChainableTypeChecker(validate);
+  }
+
   function createInstanceTypeChecker(expectedClass) {
     function validate(props, propName, componentName, location, propFullName) {
       if (!(props[propName] instanceof expectedClass)) {
@@ -35659,7 +36092,14 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
 
   function createEnumTypeChecker(expectedValues) {
     if (!Array.isArray(expectedValues)) {
-       true ? printWarning('Invalid argument supplied to oneOf, expected an instance of array.') : undefined;
+      if (true) {
+        if (arguments.length > 1) {
+          printWarning('Invalid arguments supplied to oneOf, expected an array, got ' + arguments.length + ' arguments. ' + 'A common mistake is to write oneOf(x, y, z) instead of oneOf([x, y, z]).');
+        } else {
+          printWarning('Invalid argument supplied to oneOf, expected an array.');
+        }
+      }
+
       return emptyFunctionThatReturnsNull;
     }
 
@@ -35672,8 +36112,16 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
         }
       }
 
-      var valuesString = JSON.stringify(expectedValues);
-      return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of value `' + propValue + '` ' + ('supplied to `' + componentName + '`, expected one of ' + valuesString + '.'));
+      var valuesString = JSON.stringify(expectedValues, function replacer(key, value) {
+        var type = getPreciseType(value);
+
+        if (type === 'symbol') {
+          return String(value);
+        }
+
+        return value;
+      });
+      return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of value `' + String(propValue) + '` ' + ('supplied to `' + componentName + '`, expected one of ' + valuesString + '.'));
     }
 
     return createChainableTypeChecker(validate);
@@ -35693,7 +36141,7 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
       }
 
       for (var key in propValue) {
-        if (propValue.hasOwnProperty(key)) {
+        if (has(propValue, key)) {
           var error = typeChecker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
 
           if (error instanceof Error) {
@@ -35870,6 +36318,11 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
     // Native Symbol.
     if (propType === 'symbol') {
       return true;
+    } // falsy value can't be a Symbol
+
+
+    if (!propValue) {
+      return false;
     } // 19.4.3.5 Symbol.prototype[@@toStringTag] === 'Symbol'
 
 
@@ -35957,6 +36410,7 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
   }
 
   ReactPropTypes.checkPropTypes = checkPropTypes;
+  ReactPropTypes.resetWarningCache = checkPropTypes.resetWarningCache;
   ReactPropTypes.PropTypes = ReactPropTypes;
   return ReactPropTypes;
 };
@@ -35977,16 +36431,12 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
  * LICENSE file in the root directory of this source tree.
  */
 if (true) {
-  var REACT_ELEMENT_TYPE = typeof Symbol === 'function' && Symbol.for && Symbol.for('react.element') || 0xeac7;
-
-  var isValidElement = function (object) {
-    return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
-  }; // By explicitly using `prop-types` you are opting into new development behavior.
+  var ReactIs = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js"); // By explicitly using `prop-types` you are opting into new development behavior.
   // http://fb.me/prop-types-in-prod
 
 
   var throwOnDirectAccess = true;
-  module.exports = __webpack_require__(/*! ./factoryWithTypeCheckers */ "./node_modules/prop-types/factoryWithTypeCheckers.js")(isValidElement, throwOnDirectAccess);
+  module.exports = __webpack_require__(/*! ./factoryWithTypeCheckers */ "./node_modules/prop-types/factoryWithTypeCheckers.js")(ReactIs.isElement, throwOnDirectAccess);
 } else {}
 
 /***/ }),
@@ -36020,7 +36470,7 @@ module.exports = ReactPropTypesSecret;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v16.7.0
+/** @license React v16.8.6
  * react-dom.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -36046,7 +36496,7 @@ throw error;}}// Relying on the `invariant()` implementation lets us
 // invokeGuardedCallback uses a try-catch, all user exceptions are treated
 // like caught exceptions, and the DevTools won't pause unless the developer
 // takes the extra step of enabling pause on caught exceptions. This is
-// untintuitive, though, because even though React has caught the error, from
+// unintuitive, though, because even though React has caught the error, from
 // the developer's perspective, the error is uncaught.
 //
 // To preserve the expected "Pause on exceptions" behavior, we don't use a
@@ -36302,7 +36752,7 @@ var processingEventQueue=eventQueue;eventQueue=null;if(!processingEventQueue){re
 rethrowCaughtError();}function runExtractedEventsInBatch(topLevelType,targetInst,nativeEvent,nativeEventTarget){var events=extractEvents(topLevelType,targetInst,nativeEvent,nativeEventTarget);runEventsInBatch(events);}var FunctionComponent=0;var ClassComponent=1;var IndeterminateComponent=2;// Before we know whether it is function or class
 var HostRoot=3;// Root of a host tree. Could be nested inside another node.
 var HostPortal=4;// A subtree. Could be an entry point to a different renderer.
-var HostComponent=5;var HostText=6;var Fragment=7;var Mode=8;var ContextConsumer=9;var ContextProvider=10;var ForwardRef=11;var Profiler=12;var SuspenseComponent=13;var MemoComponent=14;var SimpleMemoComponent=15;var LazyComponent=16;var IncompleteClassComponent=17;var randomKey=Math.random().toString(36).slice(2);var internalInstanceKey='__reactInternalInstance$'+randomKey;var internalEventHandlersKey='__reactEventHandlers$'+randomKey;function precacheFiberNode(hostInst,node){node[internalInstanceKey]=hostInst;}/**
+var HostComponent=5;var HostText=6;var Fragment=7;var Mode=8;var ContextConsumer=9;var ContextProvider=10;var ForwardRef=11;var Profiler=12;var SuspenseComponent=13;var MemoComponent=14;var SimpleMemoComponent=15;var LazyComponent=16;var IncompleteClassComponent=17;var DehydratedSuspenseComponent=18;var randomKey=Math.random().toString(36).slice(2);var internalInstanceKey='__reactInternalInstance$'+randomKey;var internalEventHandlersKey='__reactEventHandlers$'+randomKey;function precacheFiberNode(hostInst,node){node[internalInstanceKey]=hostInst;}/**
  * Given a DOM node, return the closest ReactDOMComponent or
  * ReactDOMTextComponent instance ancestor.
  */function getClosestInstanceFromNode(node){if(node[internalInstanceKey]){return node[internalInstanceKey];}while(!node[internalInstanceKey]){if(node.parentNode){node=node.parentNode;}else{// Top of the tree. This node must not be part of a React tree (or is
@@ -36667,7 +37117,10 @@ if(node.hasOwnProperty(valueField)||typeof descriptor==='undefined'||typeof desc
 Object.defineProperty(node,valueField,{enumerable:descriptor.enumerable});var tracker={getValue:function(){return currentValue;},setValue:function(value){currentValue=''+value;},stopTracking:function(){detachTracker(node);delete node[valueField];}};return tracker;}function track(node){if(getTracker(node)){return;}// TODO: Once it's just Fiber we can move this to node._wrapperState
 node._valueTracker=trackValueOnNode(node);}function updateValueIfChanged(node){if(!node){return false;}var tracker=getTracker(node);// if there is no tracker at this point it's unlikely
 // that trying again will succeed
-if(!tracker){return true;}var lastValue=tracker.getValue();var nextValue=getValueFromNode(node);if(nextValue!==lastValue){tracker.setValue(nextValue);return true;}return false;}var ReactSharedInternals=React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;var BEFORE_SLASH_RE=/^(.*)[\\\/]/;var describeComponentFrame=function(name,source,ownerName){var sourceInfo='';if(source){var path=source.fileName;var fileName=path.replace(BEFORE_SLASH_RE,'');{// In DEV, include code for a common special case:
+if(!tracker){return true;}var lastValue=tracker.getValue();var nextValue=getValueFromNode(node);if(nextValue!==lastValue){tracker.setValue(nextValue);return true;}return false;}var ReactSharedInternals=React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;// Prevent newer renderers from RTE when used with older react package versions.
+// Current owner and dispatcher used to share the same ref,
+// but PR #14548 split them out to better support the react-debug-tools package.
+if(!ReactSharedInternals.hasOwnProperty('ReactCurrentDispatcher')){ReactSharedInternals.ReactCurrentDispatcher={current:null};}var BEFORE_SLASH_RE=/^(.*)[\\\/]/;var describeComponentFrame=function(name,source,ownerName){var sourceInfo='';if(source){var path=source.fileName;var fileName=path.replace(BEFORE_SLASH_RE,'');{// In DEV, include code for a common special case:
 // prefer "folder/index.js" instead of just "index.js".
 if(/^index\./.test(fileName)){var match=path.match(BEFORE_SLASH_RE);if(match){var pathBeforeSlash=match[1];if(pathBeforeSlash){var folderName=pathBeforeSlash.replace(BEFORE_SLASH_RE,'');fileName=folderName+'/'+fileName;}}}}sourceInfo=' (at '+fileName+':'+source.lineNumber+')';}else if(ownerName){sourceInfo=' (created by '+ownerName+')';}return'\n    in '+(name||'Unknown')+sourceInfo;};// The Symbol used to tag the ReactElement-like types. If there is no native Symbol
 // nor polyfill, then a plain number is used for performance.
@@ -36767,12 +37220,13 @@ attributeName,null);}// attributeNamespace
 ['xlink:actuate','xlink:arcrole','xlink:href','xlink:role','xlink:show','xlink:title','xlink:type'].forEach(function(attributeName){var name=attributeName.replace(CAMELIZE,capitalize);properties[name]=new PropertyInfoRecord(name,STRING,false,// mustUseProperty
 attributeName,'http://www.w3.org/1999/xlink');});// String SVG attributes with the xml namespace.
 ['xml:base','xml:lang','xml:space'].forEach(function(attributeName){var name=attributeName.replace(CAMELIZE,capitalize);properties[name]=new PropertyInfoRecord(name,STRING,false,// mustUseProperty
-attributeName,'http://www.w3.org/XML/1998/namespace');});// Special case: this attribute exists both in HTML and SVG.
-// Its "tabindex" attribute name is case-sensitive in SVG so we can't just use
-// its React `tabIndex` name, like we do for attributes that exist only in HTML.
-properties.tabIndex=new PropertyInfoRecord('tabIndex',STRING,false,// mustUseProperty
-'tabindex',// attributeName
-null);/**
+attributeName,'http://www.w3.org/XML/1998/namespace');});// These attribute exists both in HTML and SVG.
+// The attribute name is case-sensitive in SVG so we can't just use
+// the React name like we do for attributes that exist only in HTML.
+['tabIndex','crossOrigin'].forEach(function(attributeName){properties[attributeName]=new PropertyInfoRecord(attributeName,STRING,false,// mustUseProperty
+attributeName.toLowerCase(),// attributeName
+null);}// attributeNamespace
+);/**
  * Get the value for a property on a node. Only used in DEV for SSR validation.
  * The "expected" argument is used as a hint of what the expected value is.
  * Some properties have multiple equivalent values.
@@ -36807,7 +37261,7 @@ function toString(value){return''+value;}function getToStringValue(value){switch
 return'';}}var ReactDebugCurrentFrame$1=null;var ReactControlledValuePropTypes={checkPropTypes:null};{ReactDebugCurrentFrame$1=ReactSharedInternals.ReactDebugCurrentFrame;var hasReadOnlyValue={button:true,checkbox:true,image:true,hidden:true,radio:true,reset:true,submit:true};var propTypes={value:function(props,propName,componentName){if(hasReadOnlyValue[props.type]||props.onChange||props.readOnly||props.disabled||props[propName]==null){return null;}return new Error('You provided a `value` prop to a form field without an '+'`onChange` handler. This will render a read-only field. If '+'the field should be mutable use `defaultValue`. Otherwise, '+'set either `onChange` or `readOnly`.');},checked:function(props,propName,componentName){if(props.onChange||props.readOnly||props.disabled||props[propName]==null){return null;}return new Error('You provided a `checked` prop to a form field without an '+'`onChange` handler. This will render a read-only field. If '+'the field should be mutable use `defaultChecked`. Otherwise, '+'set either `onChange` or `readOnly`.');}};/**
    * Provide a linked `value` attribute for controlled forms. You should not use
    * this outside of the ReactDOM controlled form components.
-   */ReactControlledValuePropTypes.checkPropTypes=function(tagName,props){checkPropTypes(propTypes,props,'prop',tagName,ReactDebugCurrentFrame$1.getStackAddendum);};}var enableUserTimingAPI=true;var enableHooks=false;// Helps identify side effects in begin-phase lifecycle hooks and setState reducers:
+   */ReactControlledValuePropTypes.checkPropTypes=function(tagName,props){checkPropTypes(propTypes,props,'prop',tagName,ReactDebugCurrentFrame$1.getStackAddendum);};}var enableUserTimingAPI=true;// Helps identify side effects in begin-phase lifecycle hooks and setState reducers:
 var debugRenderPhaseSideEffects=false;// In some cases, StrictMode should also double-render lifecycles.
 // This can be confusing for tests though,
 // And it can be bad for performance in production.
@@ -36818,7 +37272,7 @@ var replayFailedUnitOfWorkWithInvokeGuardedCallback=true;// Warn about deprecate
 var warnAboutDeprecatedLifecycles=false;// Gather advanced timing metrics for Profiler subtrees.
 var enableProfilerTimer=true;// Trace which interactions trigger each commit.
 var enableSchedulerTracing=true;// Only used in www builds.
-// TODO: true? Here it might just be false.
+var enableSuspenseServerRenderer=false;// TODO: true? Here it might just be false.
 // Only used in www builds.
 // Only used in www builds.
 // React Fire: prevent the value and checked attributes from syncing
@@ -37027,15 +37481,11 @@ return null;}var win=void 0;if(nativeEventTarget.window===nativeEventTarget){// 
 win=nativeEventTarget;}else{// TODO: Figure out why `ownerDocument` is sometimes undefined in IE8.
 var doc=nativeEventTarget.ownerDocument;if(doc){win=doc.defaultView||doc.parentWindow;}else{win=window;}}var from=void 0;var to=void 0;if(isOutEvent){from=targetInst;var related=nativeEvent.relatedTarget||nativeEvent.toElement;to=related?getClosestInstanceFromNode(related):null;}else{// Moving to a node from outside the window.
 from=null;to=targetInst;}if(from===to){// Nothing pertains to our managed components.
-return null;}var eventInterface=void 0,leaveEventType=void 0,enterEventType=void 0,eventTypePrefix=void 0;if(topLevelType===TOP_MOUSE_OUT||topLevelType===TOP_MOUSE_OVER){eventInterface=SyntheticMouseEvent;leaveEventType=eventTypes$2.mouseLeave;enterEventType=eventTypes$2.mouseEnter;eventTypePrefix='mouse';}else if(topLevelType===TOP_POINTER_OUT||topLevelType===TOP_POINTER_OVER){eventInterface=SyntheticPointerEvent;leaveEventType=eventTypes$2.pointerLeave;enterEventType=eventTypes$2.pointerEnter;eventTypePrefix='pointer';}var fromNode=from==null?win:getNodeFromInstance$1(from);var toNode=to==null?win:getNodeFromInstance$1(to);var leave=eventInterface.getPooled(leaveEventType,from,nativeEvent,nativeEventTarget);leave.type=eventTypePrefix+'leave';leave.target=fromNode;leave.relatedTarget=toNode;var enter=eventInterface.getPooled(enterEventType,to,nativeEvent,nativeEventTarget);enter.type=eventTypePrefix+'enter';enter.target=toNode;enter.relatedTarget=fromNode;accumulateEnterLeaveDispatches(leave,enter,from,to);return[leave,enter];}};/*eslint-disable no-self-compare */var hasOwnProperty$1=Object.prototype.hasOwnProperty;/**
+return null;}var eventInterface=void 0,leaveEventType=void 0,enterEventType=void 0,eventTypePrefix=void 0;if(topLevelType===TOP_MOUSE_OUT||topLevelType===TOP_MOUSE_OVER){eventInterface=SyntheticMouseEvent;leaveEventType=eventTypes$2.mouseLeave;enterEventType=eventTypes$2.mouseEnter;eventTypePrefix='mouse';}else if(topLevelType===TOP_POINTER_OUT||topLevelType===TOP_POINTER_OVER){eventInterface=SyntheticPointerEvent;leaveEventType=eventTypes$2.pointerLeave;enterEventType=eventTypes$2.pointerEnter;eventTypePrefix='pointer';}var fromNode=from==null?win:getNodeFromInstance$1(from);var toNode=to==null?win:getNodeFromInstance$1(to);var leave=eventInterface.getPooled(leaveEventType,from,nativeEvent,nativeEventTarget);leave.type=eventTypePrefix+'leave';leave.target=fromNode;leave.relatedTarget=toNode;var enter=eventInterface.getPooled(enterEventType,to,nativeEvent,nativeEventTarget);enter.type=eventTypePrefix+'enter';enter.target=toNode;enter.relatedTarget=fromNode;accumulateEnterLeaveDispatches(leave,enter,from,to);return[leave,enter];}};/**
  * inlined Object.is polyfill to avoid requiring consumers ship their own
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
- */function is(x,y){// SameValue algorithm
-if(x===y){// Steps 1-5, 7-10
-// Steps 6.b-6.e: +0 != -0
-// Added the nonzero y check to make Flow happy, but it is redundant
-return x!==0||y!==0||1/x===1/y;}else{// Step 6.a: NaN == NaN
-return x!==x&&y!==y;}}/**
+ */function is(x,y){return x===y&&(x!==0||1/x===1/y)||x!==x&&y!==y// eslint-disable-line no-self-compare
+;}var hasOwnProperty$1=Object.prototype.hasOwnProperty;/**
  * Performs equality by iterating through keys on an object and returning false
  * when any key has values which are not strictly equal between the arguments.
  * Returns true when the values of all keys are strictly equal.
@@ -37381,9 +37831,14 @@ return null;}return{start:start,end:end};}/**
 // fails when pasting 100+ items)
 if(!win.getSelection){return;}var selection=win.getSelection();var length=node.textContent.length;var start=Math.min(offsets.start,length);var end=offsets.end===undefined?start:Math.min(offsets.end,length);// IE 11 uses modern selection, but doesn't support the extend method.
 // Flip backward selections, so we can set with a single range.
-if(!selection.extend&&start>end){var temp=end;end=start;start=temp;}var startMarker=getNodeForCharacterOffset(node,start);var endMarker=getNodeForCharacterOffset(node,end);if(startMarker&&endMarker){if(selection.rangeCount===1&&selection.anchorNode===startMarker.node&&selection.anchorOffset===startMarker.offset&&selection.focusNode===endMarker.node&&selection.focusOffset===endMarker.offset){return;}var range=doc.createRange();range.setStart(startMarker.node,startMarker.offset);selection.removeAllRanges();if(start>end){selection.addRange(range);selection.extend(endMarker.node,endMarker.offset);}else{range.setEnd(endMarker.node,endMarker.offset);selection.addRange(range);}}}function isTextNode(node){return node&&node.nodeType===TEXT_NODE;}function containsNode(outerNode,innerNode){if(!outerNode||!innerNode){return false;}else if(outerNode===innerNode){return true;}else if(isTextNode(outerNode)){return false;}else if(isTextNode(innerNode)){return containsNode(outerNode,innerNode.parentNode);}else if('contains'in outerNode){return outerNode.contains(innerNode);}else if(outerNode.compareDocumentPosition){return!!(outerNode.compareDocumentPosition(innerNode)&16);}else{return false;}}function isInDocument(node){return node&&node.ownerDocument&&containsNode(node.ownerDocument.documentElement,node);}function getActiveElementDeep(){var win=window;var element=getActiveElement();while(element instanceof win.HTMLIFrameElement){// Accessing the contentDocument of a HTMLIframeElement can cause the browser
-// to throw, e.g. if it has a cross-origin src attribute
-try{win=element.contentDocument.defaultView;}catch(e){return element;}element=getActiveElement(win.document);}return element;}/**
+if(!selection.extend&&start>end){var temp=end;end=start;start=temp;}var startMarker=getNodeForCharacterOffset(node,start);var endMarker=getNodeForCharacterOffset(node,end);if(startMarker&&endMarker){if(selection.rangeCount===1&&selection.anchorNode===startMarker.node&&selection.anchorOffset===startMarker.offset&&selection.focusNode===endMarker.node&&selection.focusOffset===endMarker.offset){return;}var range=doc.createRange();range.setStart(startMarker.node,startMarker.offset);selection.removeAllRanges();if(start>end){selection.addRange(range);selection.extend(endMarker.node,endMarker.offset);}else{range.setEnd(endMarker.node,endMarker.offset);selection.addRange(range);}}}function isTextNode(node){return node&&node.nodeType===TEXT_NODE;}function containsNode(outerNode,innerNode){if(!outerNode||!innerNode){return false;}else if(outerNode===innerNode){return true;}else if(isTextNode(outerNode)){return false;}else if(isTextNode(innerNode)){return containsNode(outerNode,innerNode.parentNode);}else if('contains'in outerNode){return outerNode.contains(innerNode);}else if(outerNode.compareDocumentPosition){return!!(outerNode.compareDocumentPosition(innerNode)&16);}else{return false;}}function isInDocument(node){return node&&node.ownerDocument&&containsNode(node.ownerDocument.documentElement,node);}function isSameOriginFrame(iframe){try{// Accessing the contentDocument of a HTMLIframeElement can cause the browser
+// to throw, e.g. if it has a cross-origin src attribute.
+// Safari will show an error in the console when the access results in "Blocked a frame with origin". e.g:
+// iframe.contentDocument.defaultView;
+// A safety way is to access one of the cross origin properties: Window or Location
+// Which might result in "SecurityError" DOM Exception and it is compatible to Safari.
+// https://html.spec.whatwg.org/multipage/browsers.html#integration-with-idl
+return typeof iframe.contentWindow.location.href==='string';}catch(err){return false;}}function getActiveElementDeep(){var win=window;var element=getActiveElement();while(element instanceof win.HTMLIFrameElement){if(isSameOriginFrame(element)){win=element.contentWindow;}else{return element;}element=getActiveElement(win.document);}return element;}/**
  * @ReactInputSelection: React input selection module. Based on Selection.js,
  * but modified to be suitable for react and has a couple of bug fixes (doesn't
  * assume buttons have range selections allowed).
@@ -37750,12 +38205,19 @@ var firstChild=div.firstChild;domElement=div.removeChild(firstChild);}else if(ty
 domElement=ownerDocument.createElement(type,{is:props.is});}else{// Separate else branch instead of using `props.is || undefined` above because of a Firefox bug.
 // See discussion in https://github.com/facebook/react/pull/6896
 // and discussion in https://bugzilla.mozilla.org/show_bug.cgi?id=1276240
-domElement=ownerDocument.createElement(type);// Normally attributes are assigned in `setInitialDOMProperties`, however the `multiple`
-// attribute on `select`s needs to be added before `option`s are inserted. This prevents
-// a bug where the `select` does not scroll to the correct option because singular
-// `select` elements automatically pick the first item.
+domElement=ownerDocument.createElement(type);// Normally attributes are assigned in `setInitialDOMProperties`, however the `multiple` and `size`
+// attributes on `select`s needs to be added before `option`s are inserted.
+// This prevents:
+// - a bug where the `select` does not scroll to the correct option because singular
+//  `select` elements automatically pick the first item #13222
+// - a bug where the `select` set the first item as selected despite the `size` attribute #14239
 // See https://github.com/facebook/react/issues/13222
-if(type==='select'&&props.multiple){var node=domElement;node.multiple=true;}}}else{domElement=ownerDocument.createElementNS(namespaceURI,type);}{if(namespaceURI===HTML_NAMESPACE){if(!isCustomComponentTag&&Object.prototype.toString.call(domElement)==='[object HTMLUnknownElement]'&&!Object.prototype.hasOwnProperty.call(warnedUnknownTags,type)){warnedUnknownTags[type]=true;warning$1(false,'The tag <%s> is unrecognized in this browser. '+'If you meant to render a React component, start its name with '+'an uppercase letter.',type);}}}return domElement;}function createTextNode(text,rootContainerElement){return getOwnerDocumentFromRootContainer(rootContainerElement).createTextNode(text);}function setInitialProperties(domElement,tag,rawProps,rootContainerElement){var isCustomComponentTag=isCustomComponent(tag,rawProps);{validatePropertiesInDevelopment(tag,rawProps);if(isCustomComponentTag&&!didWarnShadyDOM&&domElement.shadyRoot){warning$1(false,'%s is using shady DOM. Using shady DOM with React can '+'cause things to break subtly.',getCurrentFiberOwnerNameInDevOrNull()||'A component');didWarnShadyDOM=true;}}// TODO: Make sure that we check isMounted before firing any of these events.
+// and https://github.com/facebook/react/issues/14239
+if(type==='select'){var node=domElement;if(props.multiple){node.multiple=true;}else if(props.size){// Setting a size greater than 1 causes a select to behave like `multiple=true`, where
+// it is possible that no option is selected.
+//
+// This is only necessary when a select in "single selection mode".
+node.size=props.size;}}}}else{domElement=ownerDocument.createElementNS(namespaceURI,type);}{if(namespaceURI===HTML_NAMESPACE){if(!isCustomComponentTag&&Object.prototype.toString.call(domElement)==='[object HTMLUnknownElement]'&&!Object.prototype.hasOwnProperty.call(warnedUnknownTags,type)){warnedUnknownTags[type]=true;warning$1(false,'The tag <%s> is unrecognized in this browser. '+'If you meant to render a React component, start its name with '+'an uppercase letter.',type);}}}return domElement;}function createTextNode(text,rootContainerElement){return getOwnerDocumentFromRootContainer(rootContainerElement).createTextNode(text);}function setInitialProperties(domElement,tag,rawProps,rootContainerElement){var isCustomComponentTag=isCustomComponent(tag,rawProps);{validatePropertiesInDevelopment(tag,rawProps);if(isCustomComponentTag&&!didWarnShadyDOM&&domElement.shadyRoot){warning$1(false,'%s is using shady DOM. Using shady DOM with React can '+'cause things to break subtly.',getCurrentFiberOwnerNameInDevOrNull()||'A component');didWarnShadyDOM=true;}}// TODO: Make sure that we check isMounted before firing any of these events.
 var props=void 0;switch(tag){case'iframe':case'object':trapBubbledEvent(TOP_LOAD,domElement);props=rawProps;break;case'video':case'audio':// Create listener for each media event
 for(var i=0;i<mediaEventTypes.length;i++){trapBubbledEvent(mediaEventTypes[i],domElement);}props=rawProps;break;case'source':trapBubbledEvent(TOP_ERROR,domElement);props=rawProps;break;case'img':case'image':case'link':trapBubbledEvent(TOP_ERROR,domElement);trapBubbledEvent(TOP_LOAD,domElement);props=rawProps;break;case'form':trapBubbledEvent(TOP_RESET,domElement);trapBubbledEvent(TOP_SUBMIT,domElement);props=rawProps;break;case'details':trapBubbledEvent(TOP_TOGGLE,domElement);props=rawProps;break;case'input':initWrapperState(domElement,rawProps);props=getHostProps(domElement,rawProps);trapBubbledEvent(TOP_INVALID,domElement);// For controlled components we always need to ensure we're listening
 // to onChange. Even if there is no listener.
@@ -37909,11 +38371,11 @@ return parentTag==null;}return true;};/**
 return ancestorInfo.aTagInScope;case'nobr':return ancestorInfo.nobrTagInScope;}return null;};var didWarn={};validateDOMNesting=function(childTag,childText,ancestorInfo){ancestorInfo=ancestorInfo||emptyAncestorInfo;var parentInfo=ancestorInfo.current;var parentTag=parentInfo&&parentInfo.tag;if(childText!=null){!(childTag==null)?warningWithoutStack$1(false,'validateDOMNesting: when childText is passed, childTag should be null'):void 0;childTag='#text';}var invalidParent=isTagValidWithParent(childTag,parentTag)?null:parentInfo;var invalidAncestor=invalidParent?null:findInvalidAncestorForTag(childTag,ancestorInfo);var invalidParentOrAncestor=invalidParent||invalidAncestor;if(!invalidParentOrAncestor){return;}var ancestorTag=invalidParentOrAncestor.tag;var addendum=getCurrentFiberStackInDev();var warnKey=!!invalidParent+'|'+childTag+'|'+ancestorTag+'|'+addendum;if(didWarn[warnKey]){return;}didWarn[warnKey]=true;var tagDisplayName=childTag;var whitespaceInfo='';if(childTag==='#text'){if(/\S/.test(childText)){tagDisplayName='Text nodes';}else{tagDisplayName='Whitespace text nodes';whitespaceInfo=" Make sure you don't have any extra whitespace between tags on "+'each line of your source code.';}}else{tagDisplayName='<'+childTag+'>';}if(invalidParent){var info='';if(ancestorTag==='table'&&childTag==='tr'){info+=' Add a <tbody> to your code to match the DOM tree generated by '+'the browser.';}warningWithoutStack$1(false,'validateDOMNesting(...): %s cannot appear as a child of <%s>.%s%s%s',tagDisplayName,ancestorTag,whitespaceInfo,info,addendum);}else{warningWithoutStack$1(false,'validateDOMNesting(...): %s cannot appear as a descendant of '+'<%s>.%s',tagDisplayName,ancestorTag,addendum);}};}// Renderers that don't support persistence
 // can re-export everything from this module.
 function shim(){invariant(false,'The current renderer does not support persistence. This error is likely caused by a bug in React. Please file an issue.');}// Persistence (when unsupported)
-var supportsPersistence=false;var cloneInstance=shim;var createContainerChildSet=shim;var appendChildToContainerChildSet=shim;var finalizeContainerChildren=shim;var replaceContainerChildren=shim;var cloneHiddenInstance=shim;var cloneUnhiddenInstance=shim;var createHiddenTextInstance=shim;var SUPPRESS_HYDRATION_WARNING=void 0;{SUPPRESS_HYDRATION_WARNING='suppressHydrationWarning';}var STYLE='style';var eventsEnabled=null;var selectionInformation=null;function shouldAutoFocusHostComponent(type,props){switch(type){case'button':case'input':case'select':case'textarea':return!!props.autoFocus;}return false;}function getRootHostContext(rootContainerInstance){var type=void 0;var namespace=void 0;var nodeType=rootContainerInstance.nodeType;switch(nodeType){case DOCUMENT_NODE:case DOCUMENT_FRAGMENT_NODE:{type=nodeType===DOCUMENT_NODE?'#document':'#fragment';var root=rootContainerInstance.documentElement;namespace=root?root.namespaceURI:getChildNamespace(null,'');break;}default:{var container=nodeType===COMMENT_NODE?rootContainerInstance.parentNode:rootContainerInstance;var ownNamespace=container.namespaceURI||null;type=container.tagName;namespace=getChildNamespace(ownNamespace,type);break;}}{var validatedTag=type.toLowerCase();var _ancestorInfo=updatedAncestorInfo(null,validatedTag);return{namespace:namespace,ancestorInfo:_ancestorInfo};}return namespace;}function getChildHostContext(parentHostContext,type,rootContainerInstance){{var parentHostContextDev=parentHostContext;var _namespace=getChildNamespace(parentHostContextDev.namespace,type);var _ancestorInfo2=updatedAncestorInfo(parentHostContextDev.ancestorInfo,type);return{namespace:_namespace,ancestorInfo:_ancestorInfo2};}var parentNamespace=parentHostContext;return getChildNamespace(parentNamespace,type);}function getPublicInstance(instance){return instance;}function prepareForCommit(containerInfo){eventsEnabled=isEnabled();selectionInformation=getSelectionInformation();setEnabled(false);}function resetAfterCommit(containerInfo){restoreSelection(selectionInformation);selectionInformation=null;setEnabled(eventsEnabled);eventsEnabled=null;}function createInstance(type,props,rootContainerInstance,hostContext,internalInstanceHandle){var parentNamespace=void 0;{// TODO: take namespace into account when validating.
+var supportsPersistence=false;var cloneInstance=shim;var createContainerChildSet=shim;var appendChildToContainerChildSet=shim;var finalizeContainerChildren=shim;var replaceContainerChildren=shim;var cloneHiddenInstance=shim;var cloneUnhiddenInstance=shim;var createHiddenTextInstance=shim;var SUPPRESS_HYDRATION_WARNING=void 0;{SUPPRESS_HYDRATION_WARNING='suppressHydrationWarning';}var SUSPENSE_START_DATA='$';var SUSPENSE_END_DATA='/$';var STYLE='style';var eventsEnabled=null;var selectionInformation=null;function shouldAutoFocusHostComponent(type,props){switch(type){case'button':case'input':case'select':case'textarea':return!!props.autoFocus;}return false;}function getRootHostContext(rootContainerInstance){var type=void 0;var namespace=void 0;var nodeType=rootContainerInstance.nodeType;switch(nodeType){case DOCUMENT_NODE:case DOCUMENT_FRAGMENT_NODE:{type=nodeType===DOCUMENT_NODE?'#document':'#fragment';var root=rootContainerInstance.documentElement;namespace=root?root.namespaceURI:getChildNamespace(null,'');break;}default:{var container=nodeType===COMMENT_NODE?rootContainerInstance.parentNode:rootContainerInstance;var ownNamespace=container.namespaceURI||null;type=container.tagName;namespace=getChildNamespace(ownNamespace,type);break;}}{var validatedTag=type.toLowerCase();var _ancestorInfo=updatedAncestorInfo(null,validatedTag);return{namespace:namespace,ancestorInfo:_ancestorInfo};}return namespace;}function getChildHostContext(parentHostContext,type,rootContainerInstance){{var parentHostContextDev=parentHostContext;var _namespace=getChildNamespace(parentHostContextDev.namespace,type);var _ancestorInfo2=updatedAncestorInfo(parentHostContextDev.ancestorInfo,type);return{namespace:_namespace,ancestorInfo:_ancestorInfo2};}var parentNamespace=parentHostContext;return getChildNamespace(parentNamespace,type);}function getPublicInstance(instance){return instance;}function prepareForCommit(containerInfo){eventsEnabled=isEnabled();selectionInformation=getSelectionInformation();setEnabled(false);}function resetAfterCommit(containerInfo){restoreSelection(selectionInformation);selectionInformation=null;setEnabled(eventsEnabled);eventsEnabled=null;}function createInstance(type,props,rootContainerInstance,hostContext,internalInstanceHandle){var parentNamespace=void 0;{// TODO: take namespace into account when validating.
 var hostContextDev=hostContext;validateDOMNesting(type,null,hostContextDev.ancestorInfo);if(typeof props.children==='string'||typeof props.children==='number'){var string=''+props.children;var ownAncestorInfo=updatedAncestorInfo(hostContextDev.ancestorInfo,type);validateDOMNesting(null,string,ownAncestorInfo);}parentNamespace=hostContextDev.namespace;}var domElement=createElement(type,props,rootContainerInstance,parentNamespace);precacheFiberNode(internalInstanceHandle,domElement);updateFiberProps(domElement,props);return domElement;}function appendInitialChild(parentInstance,child){parentInstance.appendChild(child);}function finalizeInitialChildren(domElement,type,props,rootContainerInstance,hostContext){setInitialProperties(domElement,type,props,rootContainerInstance);return shouldAutoFocusHostComponent(type,props);}function prepareUpdate(domElement,type,oldProps,newProps,rootContainerInstance,hostContext){{var hostContextDev=hostContext;if(typeof newProps.children!==typeof oldProps.children&&(typeof newProps.children==='string'||typeof newProps.children==='number')){var string=''+newProps.children;var ownAncestorInfo=updatedAncestorInfo(hostContextDev.ancestorInfo,type);validateDOMNesting(null,string,ownAncestorInfo);}}return diffProperties(domElement,type,oldProps,newProps,rootContainerInstance);}function shouldSetTextContent(type,props){return type==='textarea'||type==='option'||type==='noscript'||typeof props.children==='string'||typeof props.children==='number'||typeof props.dangerouslySetInnerHTML==='object'&&props.dangerouslySetInnerHTML!==null&&props.dangerouslySetInnerHTML.__html!=null;}function shouldDeprioritizeSubtree(type,props){return!!props.hidden;}function createTextInstance(text,rootContainerInstance,hostContext,internalInstanceHandle){{var hostContextDev=hostContext;validateDOMNesting(null,text,hostContextDev.ancestorInfo);}var textNode=createTextNode(text,rootContainerInstance);precacheFiberNode(internalInstanceHandle,textNode);return textNode;}var isPrimaryRenderer=true;// This initialization code may run even on server environments
 // if a component just imports ReactDOM (e.g. for findDOMNode).
 // Some environments might not have setTimeout or clearTimeout.
-var scheduleTimeout=typeof setTimeout==='function'?setTimeout:undefined;var cancelTimeout=typeof clearTimeout==='function'?clearTimeout:undefined;var noTimeout=-1;// -------------------
+var scheduleTimeout=typeof setTimeout==='function'?setTimeout:undefined;var cancelTimeout=typeof clearTimeout==='function'?clearTimeout:undefined;var noTimeout=-1;var schedulePassiveEffects=scheduler.unstable_scheduleCallback;var cancelPassiveEffects=scheduler.unstable_cancelCallback;// -------------------
 //     Mutation
 // -------------------
 var supportsMutation=true;function commitMount(domElement,type,newProps,internalInstanceHandle){// Despite the naming that might imply otherwise, this method only
@@ -37934,7 +38396,12 @@ updateProperties(domElement,updatePayload,type,oldProps,newProps);}function rese
 // defined.
 // https://github.com/facebook/react/issues/11918
 var reactRootContainer=container._reactRootContainer;if((reactRootContainer===null||reactRootContainer===undefined)&&parentNode.onclick===null){// TODO: This cast may not be sound for SVG, MathML or custom elements.
-trapClickOnNonInteractiveElement(parentNode);}}function insertBefore(parentInstance,child,beforeChild){parentInstance.insertBefore(child,beforeChild);}function insertInContainerBefore(container,child,beforeChild){if(container.nodeType===COMMENT_NODE){container.parentNode.insertBefore(child,beforeChild);}else{container.insertBefore(child,beforeChild);}}function removeChild(parentInstance,child){parentInstance.removeChild(child);}function removeChildFromContainer(container,child){if(container.nodeType===COMMENT_NODE){container.parentNode.removeChild(child);}else{container.removeChild(child);}}function hideInstance(instance){// TODO: Does this work for all element types? What about MathML? Should we
+trapClickOnNonInteractiveElement(parentNode);}}function insertBefore(parentInstance,child,beforeChild){parentInstance.insertBefore(child,beforeChild);}function insertInContainerBefore(container,child,beforeChild){if(container.nodeType===COMMENT_NODE){container.parentNode.insertBefore(child,beforeChild);}else{container.insertBefore(child,beforeChild);}}function removeChild(parentInstance,child){parentInstance.removeChild(child);}function removeChildFromContainer(container,child){if(container.nodeType===COMMENT_NODE){container.parentNode.removeChild(child);}else{container.removeChild(child);}}function clearSuspenseBoundary(parentInstance,suspenseInstance){var node=suspenseInstance;// Delete all nodes within this suspense boundary.
+// There might be nested nodes so we need to keep track of how
+// deep we are and only break out when we're back on top.
+var depth=0;do{var nextNode=node.nextSibling;parentInstance.removeChild(node);if(nextNode&&nextNode.nodeType===COMMENT_NODE){var data=nextNode.data;if(data===SUSPENSE_END_DATA){if(depth===0){parentInstance.removeChild(nextNode);return;}else{depth--;}}else if(data===SUSPENSE_START_DATA){depth++;}}node=nextNode;}while(node);// TODO: Warn, we didn't find the end comment boundary.
+}function clearSuspenseBoundaryFromContainer(container,suspenseInstance){if(container.nodeType===COMMENT_NODE){clearSuspenseBoundary(container.parentNode,suspenseInstance);}else if(container.nodeType===ELEMENT_NODE){clearSuspenseBoundary(container,suspenseInstance);}else{// Document nodes should never contain suspense boundaries.
+}}function hideInstance(instance){// TODO: Does this work for all element types? What about MathML? Should we
 // pass host context to this method?
 instance=instance;instance.style.display='none';}function hideTextInstance(textInstance){textInstance.nodeValue='';}function unhideInstance(instance,props){instance=instance;var styleProp=props[STYLE];var display=styleProp!==undefined&&styleProp!==null&&styleProp.hasOwnProperty('display')?styleProp.display:null;instance.style.display=dangerousStyleValue('display',display);}function unhideTextInstance(textInstance,text){textInstance.nodeValue=text;}// -------------------
 //     Hydration
@@ -37942,11 +38409,20 @@ instance=instance;instance.style.display='none';}function hideTextInstance(textI
 var supportsHydration=true;function canHydrateInstance(instance,type,props){if(instance.nodeType!==ELEMENT_NODE||type.toLowerCase()!==instance.nodeName.toLowerCase()){return null;}// This has now been refined to an element node.
 return instance;}function canHydrateTextInstance(instance,text){if(text===''||instance.nodeType!==TEXT_NODE){// Empty strings are not parsed by HTML so there won't be a correct match here.
 return null;}// This has now been refined to a text node.
+return instance;}function canHydrateSuspenseInstance(instance){if(instance.nodeType!==COMMENT_NODE){// Empty strings are not parsed by HTML so there won't be a correct match here.
+return null;}// This has now been refined to a suspense node.
 return instance;}function getNextHydratableSibling(instance){var node=instance.nextSibling;// Skip non-hydratable nodes.
-while(node&&node.nodeType!==ELEMENT_NODE&&node.nodeType!==TEXT_NODE){node=node.nextSibling;}return node;}function getFirstHydratableChild(parentInstance){var next=parentInstance.firstChild;// Skip non-hydratable nodes.
-while(next&&next.nodeType!==ELEMENT_NODE&&next.nodeType!==TEXT_NODE){next=next.nextSibling;}return next;}function hydrateInstance(instance,type,props,rootContainerInstance,hostContext,internalInstanceHandle){precacheFiberNode(internalInstanceHandle,instance);// TODO: Possibly defer this until the commit phase where all the events
+while(node&&node.nodeType!==ELEMENT_NODE&&node.nodeType!==TEXT_NODE&&(!enableSuspenseServerRenderer||node.nodeType!==COMMENT_NODE||node.data!==SUSPENSE_START_DATA)){node=node.nextSibling;}return node;}function getFirstHydratableChild(parentInstance){var next=parentInstance.firstChild;// Skip non-hydratable nodes.
+while(next&&next.nodeType!==ELEMENT_NODE&&next.nodeType!==TEXT_NODE&&(!enableSuspenseServerRenderer||next.nodeType!==COMMENT_NODE||next.data!==SUSPENSE_START_DATA)){next=next.nextSibling;}return next;}function hydrateInstance(instance,type,props,rootContainerInstance,hostContext,internalInstanceHandle){precacheFiberNode(internalInstanceHandle,instance);// TODO: Possibly defer this until the commit phase where all the events
 // get attached.
-updateFiberProps(instance,props);var parentNamespace=void 0;{var hostContextDev=hostContext;parentNamespace=hostContextDev.namespace;}return diffHydratedProperties(instance,type,props,parentNamespace,rootContainerInstance);}function hydrateTextInstance(textInstance,text,internalInstanceHandle){precacheFiberNode(internalInstanceHandle,textInstance);return diffHydratedText(textInstance,text);}function didNotMatchHydratedContainerTextInstance(parentContainer,textInstance,text){{warnForUnmatchedText(textInstance,text);}}function didNotMatchHydratedTextInstance(parentType,parentProps,parentInstance,textInstance,text){if( true&&parentProps[SUPPRESS_HYDRATION_WARNING]!==true){warnForUnmatchedText(textInstance,text);}}function didNotHydrateContainerInstance(parentContainer,instance){{if(instance.nodeType===ELEMENT_NODE){warnForDeletedHydratableElement(parentContainer,instance);}else{warnForDeletedHydratableText(parentContainer,instance);}}}function didNotHydrateInstance(parentType,parentProps,parentInstance,instance){if( true&&parentProps[SUPPRESS_HYDRATION_WARNING]!==true){if(instance.nodeType===ELEMENT_NODE){warnForDeletedHydratableElement(parentInstance,instance);}else{warnForDeletedHydratableText(parentInstance,instance);}}}function didNotFindHydratableContainerInstance(parentContainer,type,props){{warnForInsertedHydratedElement(parentContainer,type,props);}}function didNotFindHydratableContainerTextInstance(parentContainer,text){{warnForInsertedHydratedText(parentContainer,text);}}function didNotFindHydratableInstance(parentType,parentProps,parentInstance,type,props){if( true&&parentProps[SUPPRESS_HYDRATION_WARNING]!==true){warnForInsertedHydratedElement(parentInstance,type,props);}}function didNotFindHydratableTextInstance(parentType,parentProps,parentInstance,text){if( true&&parentProps[SUPPRESS_HYDRATION_WARNING]!==true){warnForInsertedHydratedText(parentInstance,text);}}// Prefix measurements so that it's possible to filter them.
+updateFiberProps(instance,props);var parentNamespace=void 0;{var hostContextDev=hostContext;parentNamespace=hostContextDev.namespace;}return diffHydratedProperties(instance,type,props,parentNamespace,rootContainerInstance);}function hydrateTextInstance(textInstance,text,internalInstanceHandle){precacheFiberNode(internalInstanceHandle,textInstance);return diffHydratedText(textInstance,text);}function getNextHydratableInstanceAfterSuspenseInstance(suspenseInstance){var node=suspenseInstance.nextSibling;// Skip past all nodes within this suspense boundary.
+// There might be nested nodes so we need to keep track of how
+// deep we are and only break out when we're back on top.
+var depth=0;while(node){if(node.nodeType===COMMENT_NODE){var data=node.data;if(data===SUSPENSE_END_DATA){if(depth===0){return getNextHydratableSibling(node);}else{depth--;}}else if(data===SUSPENSE_START_DATA){depth++;}}node=node.nextSibling;}// TODO: Warn, we didn't find the end comment boundary.
+return null;}function didNotMatchHydratedContainerTextInstance(parentContainer,textInstance,text){{warnForUnmatchedText(textInstance,text);}}function didNotMatchHydratedTextInstance(parentType,parentProps,parentInstance,textInstance,text){if( true&&parentProps[SUPPRESS_HYDRATION_WARNING]!==true){warnForUnmatchedText(textInstance,text);}}function didNotHydrateContainerInstance(parentContainer,instance){{if(instance.nodeType===ELEMENT_NODE){warnForDeletedHydratableElement(parentContainer,instance);}else if(instance.nodeType===COMMENT_NODE){// TODO: warnForDeletedHydratableSuspenseBoundary
+}else{warnForDeletedHydratableText(parentContainer,instance);}}}function didNotHydrateInstance(parentType,parentProps,parentInstance,instance){if( true&&parentProps[SUPPRESS_HYDRATION_WARNING]!==true){if(instance.nodeType===ELEMENT_NODE){warnForDeletedHydratableElement(parentInstance,instance);}else if(instance.nodeType===COMMENT_NODE){// TODO: warnForDeletedHydratableSuspenseBoundary
+}else{warnForDeletedHydratableText(parentInstance,instance);}}}function didNotFindHydratableContainerInstance(parentContainer,type,props){{warnForInsertedHydratedElement(parentContainer,type,props);}}function didNotFindHydratableContainerTextInstance(parentContainer,text){{warnForInsertedHydratedText(parentContainer,text);}}function didNotFindHydratableInstance(parentType,parentProps,parentInstance,type,props){if( true&&parentProps[SUPPRESS_HYDRATION_WARNING]!==true){warnForInsertedHydratedElement(parentInstance,type,props);}}function didNotFindHydratableTextInstance(parentType,parentProps,parentInstance,text){if( true&&parentProps[SUPPRESS_HYDRATION_WARNING]!==true){warnForInsertedHydratedText(parentInstance,text);}}function didNotFindHydratableSuspenseInstance(parentType,parentProps,parentInstance){if( true&&parentProps[SUPPRESS_HYDRATION_WARNING]!==true){// TODO: warnForInsertedHydratedSuspense(parentInstance);
+}}// Prefix measurements so that it's possible to filter them.
 // Longer prefixes are hard to read in DevTools.
 var reactEmoji='\u269B';var warningEmoji='\u26D4';var supportsUserTiming=typeof performance!=='undefined'&&typeof performance.mark==='function'&&typeof performance.clearMarks==='function'&&typeof performance.measure==='function'&&typeof performance.clearMeasures==='function';// Keep track of current fiber so that we know the path to unwind on pause.
 // TODO: this looks the same as nextUnitOfWork in scheduler. Can we unify them?
@@ -37978,7 +38454,7 @@ currentFiber=fiber;if(!beginFiberMark(fiber,null)){return;}fiber._debugIsCurrent
 // Otherwise flamechart will be deep even for small updates.
 fiber._debugIsCurrentlyTiming=false;clearFiberMark(fiber,null);}}function stopWorkTimer(fiber){if(enableUserTimingAPI){if(!supportsUserTiming||shouldIgnoreFiber(fiber)){return;}// If we pause, its parent is the fiber to unwind from.
 currentFiber=fiber.return;if(!fiber._debugIsCurrentlyTiming){return;}fiber._debugIsCurrentlyTiming=false;endFiberMark(fiber,null,null);}}function stopFailedWorkTimer(fiber){if(enableUserTimingAPI){if(!supportsUserTiming||shouldIgnoreFiber(fiber)){return;}// If we pause, its parent is the fiber to unwind from.
-currentFiber=fiber.return;if(!fiber._debugIsCurrentlyTiming){return;}fiber._debugIsCurrentlyTiming=false;var warning=fiber.tag===SuspenseComponent?'Rendering was suspended':'An error was thrown inside this error boundary';endFiberMark(fiber,null,warning);}}function startPhaseTimer(fiber,phase){if(enableUserTimingAPI){if(!supportsUserTiming){return;}clearPendingPhaseMeasurement();if(!beginFiberMark(fiber,phase)){return;}currentPhaseFiber=fiber;currentPhase=phase;}}function stopPhaseTimer(){if(enableUserTimingAPI){if(!supportsUserTiming){return;}if(currentPhase!==null&&currentPhaseFiber!==null){var warning=hasScheduledUpdateInCurrentPhase?'Scheduled a cascading update':null;endFiberMark(currentPhaseFiber,currentPhase,warning);}currentPhase=null;currentPhaseFiber=null;}}function startWorkLoopTimer(nextUnitOfWork){if(enableUserTimingAPI){currentFiber=nextUnitOfWork;if(!supportsUserTiming){return;}commitCountInCurrentWorkLoop=0;// This is top level call.
+currentFiber=fiber.return;if(!fiber._debugIsCurrentlyTiming){return;}fiber._debugIsCurrentlyTiming=false;var warning=fiber.tag===SuspenseComponent||fiber.tag===DehydratedSuspenseComponent?'Rendering was suspended':'An error was thrown inside this error boundary';endFiberMark(fiber,null,warning);}}function startPhaseTimer(fiber,phase){if(enableUserTimingAPI){if(!supportsUserTiming){return;}clearPendingPhaseMeasurement();if(!beginFiberMark(fiber,phase)){return;}currentPhaseFiber=fiber;currentPhase=phase;}}function stopPhaseTimer(){if(enableUserTimingAPI){if(!supportsUserTiming){return;}if(currentPhase!==null&&currentPhaseFiber!==null){var warning=hasScheduledUpdateInCurrentPhase?'Scheduled a cascading update':null;endFiberMark(currentPhaseFiber,currentPhase,warning);}currentPhase=null;currentPhaseFiber=null;}}function startWorkLoopTimer(nextUnitOfWork){if(enableUserTimingAPI){currentFiber=nextUnitOfWork;if(!supportsUserTiming){return;}commitCountInCurrentWorkLoop=0;// This is top level call.
 // Any other measurements are performed within.
 beginMark('(React Tree Reconciliation)');// Resume any measurements that were in progress during the last loop.
 resumeTimers();}}function stopWorkLoopTimer(interruptedBy,didCompleteRoot){if(enableUserTimingAPI){if(!supportsUserTiming){return;}var warning=null;if(interruptedBy!==null){if(interruptedBy.tag===HostRoot){warning='A top-level update interrupted the previous render';}else{var componentName=getComponentName(interruptedBy.type)||'Unknown';warning='An update to '+componentName+' interrupted the previous render';}}else if(commitCountInCurrentWorkLoop>1){warning='There were cascading updates';}commitCountInCurrentWorkLoop=0;var label=didCompleteRoot?'(React Tree Reconciliation: Completed Root)':'(React Tree Reconciliation: Yielded)';// Pause any measurements until the next loop.
@@ -38048,7 +38524,7 @@ hasBadMapPolyfill=true;}}// A Fiber is work on a Component that needs to be done
 // be more than one per component.
 var debugCounter=void 0;{debugCounter=1;}function FiberNode(tag,pendingProps,key,mode){// Instance
 this.tag=tag;this.key=key;this.elementType=null;this.type=null;this.stateNode=null;// Fiber
-this.return=null;this.child=null;this.sibling=null;this.index=0;this.ref=null;this.pendingProps=pendingProps;this.memoizedProps=null;this.updateQueue=null;this.memoizedState=null;this.firstContextDependency=null;this.mode=mode;// Effects
+this.return=null;this.child=null;this.sibling=null;this.index=0;this.ref=null;this.pendingProps=pendingProps;this.memoizedProps=null;this.updateQueue=null;this.memoizedState=null;this.contextDependencies=null;this.mode=mode;// Effects
 this.effectTag=NoEffect;this.nextEffect=null;this.firstEffect=null;this.lastEffect=null;this.expirationTime=NoWork;this.childExpirationTime=NoWork;this.alternate=null;if(enableProfilerTimer){// Note: The following is done to avoid a v8 performance cliff.
 //
 // Initializing the fields below to smis and later updating them with
@@ -38064,7 +38540,7 @@ this.effectTag=NoEffect;this.nextEffect=null;this.firstEffect=null;this.lastEffe
 this.actualDuration=Number.NaN;this.actualStartTime=Number.NaN;this.selfBaseDuration=Number.NaN;this.treeBaseDuration=Number.NaN;// It's okay to replace the initial doubles with smis after initialization.
 // This won't trigger the performance cliff mentioned above,
 // and it simplifies other profiler code (including DevTools).
-this.actualDuration=0;this.actualStartTime=-1;this.selfBaseDuration=0;this.treeBaseDuration=0;}{this._debugID=debugCounter++;this._debugSource=null;this._debugOwner=null;this._debugIsCurrentlyTiming=false;if(!hasBadMapPolyfill&&typeof Object.preventExtensions==='function'){Object.preventExtensions(this);}}}// This is a constructor function, rather than a POJO constructor, still
+this.actualDuration=0;this.actualStartTime=-1;this.selfBaseDuration=0;this.treeBaseDuration=0;}{this._debugID=debugCounter++;this._debugSource=null;this._debugOwner=null;this._debugIsCurrentlyTiming=false;this._debugHookTypes=null;if(!hasBadMapPolyfill&&typeof Object.preventExtensions==='function'){Object.preventExtensions(this);}}}// This is a constructor function, rather than a POJO constructor, still
 // please ensure we do the following:
 // 1) Nobody should add any instance methods on this. Instance methods can be
 //    more difficult to predict when they get optimized and they are almost
@@ -38085,14 +38561,14 @@ function createWorkInProgress(current,pendingProps,expirationTime){var workInPro
 // extra objects for things that are never updated. It also allow us to
 // reclaim the extra memory if needed.
 workInProgress=createFiber(current.tag,pendingProps,current.key,current.mode);workInProgress.elementType=current.elementType;workInProgress.type=current.type;workInProgress.stateNode=current.stateNode;{// DEV-only fields
-workInProgress._debugID=current._debugID;workInProgress._debugSource=current._debugSource;workInProgress._debugOwner=current._debugOwner;}workInProgress.alternate=current;current.alternate=workInProgress;}else{workInProgress.pendingProps=pendingProps;// We already have an alternate.
+workInProgress._debugID=current._debugID;workInProgress._debugSource=current._debugSource;workInProgress._debugOwner=current._debugOwner;workInProgress._debugHookTypes=current._debugHookTypes;}workInProgress.alternate=current;current.alternate=workInProgress;}else{workInProgress.pendingProps=pendingProps;// We already have an alternate.
 // Reset the effect tag.
 workInProgress.effectTag=NoEffect;// The effect list is no longer valid.
 workInProgress.nextEffect=null;workInProgress.firstEffect=null;workInProgress.lastEffect=null;if(enableProfilerTimer){// We intentionally reset, rather than copy, actualDuration & actualStartTime.
 // This prevents time from endlessly accumulating in new commits.
 // This has the downside of resetting values for different priority renders,
 // But works for yielding (the common case) and should support resuming.
-workInProgress.actualDuration=0;workInProgress.actualStartTime=-1;}}workInProgress.childExpirationTime=current.childExpirationTime;workInProgress.expirationTime=current.expirationTime;workInProgress.child=current.child;workInProgress.memoizedProps=current.memoizedProps;workInProgress.memoizedState=current.memoizedState;workInProgress.updateQueue=current.updateQueue;workInProgress.firstContextDependency=current.firstContextDependency;// These will be overridden during the parent's reconciliation
+workInProgress.actualDuration=0;workInProgress.actualStartTime=-1;}}workInProgress.childExpirationTime=current.childExpirationTime;workInProgress.expirationTime=current.expirationTime;workInProgress.child=current.child;workInProgress.memoizedProps=current.memoizedProps;workInProgress.memoizedState=current.memoizedState;workInProgress.updateQueue=current.updateQueue;workInProgress.contextDependencies=current.contextDependencies;// These will be overridden during the parent's reconciliation
 workInProgress.sibling=current.sibling;workInProgress.index=current.index;workInProgress.ref=current.ref;if(enableProfilerTimer){workInProgress.selfBaseDuration=current.selfBaseDuration;workInProgress.treeBaseDuration=current.treeBaseDuration;}return workInProgress;}function createHostRootFiber(isConcurrent){var mode=isConcurrent?ConcurrentMode|StrictMode:NoContext;if(enableProfilerTimer&&isDevToolsPresent){// Always collect profile timings when DevTools are present.
 // This enables DevTools to start capturing timing at any point–
 // Without some nodes in the tree having empty base times.
@@ -38112,7 +38588,7 @@ target=createFiber(IndeterminateComponent,null,null,NoContext);}// This is inten
 // the hottest path, and Object.assign() was too slow:
 // https://github.com/facebook/react/issues/12502
 // This code is DEV-only so size is not a concern.
-target.tag=source.tag;target.key=source.key;target.elementType=source.elementType;target.type=source.type;target.stateNode=source.stateNode;target.return=source.return;target.child=source.child;target.sibling=source.sibling;target.index=source.index;target.ref=source.ref;target.pendingProps=source.pendingProps;target.memoizedProps=source.memoizedProps;target.updateQueue=source.updateQueue;target.memoizedState=source.memoizedState;target.firstContextDependency=source.firstContextDependency;target.mode=source.mode;target.effectTag=source.effectTag;target.nextEffect=source.nextEffect;target.firstEffect=source.firstEffect;target.lastEffect=source.lastEffect;target.expirationTime=source.expirationTime;target.childExpirationTime=source.childExpirationTime;target.alternate=source.alternate;if(enableProfilerTimer){target.actualDuration=source.actualDuration;target.actualStartTime=source.actualStartTime;target.selfBaseDuration=source.selfBaseDuration;target.treeBaseDuration=source.treeBaseDuration;}target._debugID=source._debugID;target._debugSource=source._debugSource;target._debugOwner=source._debugOwner;target._debugIsCurrentlyTiming=source._debugIsCurrentlyTiming;return target;}// TODO: This should be lifted into the renderer.
+target.tag=source.tag;target.key=source.key;target.elementType=source.elementType;target.type=source.type;target.stateNode=source.stateNode;target.return=source.return;target.child=source.child;target.sibling=source.sibling;target.index=source.index;target.ref=source.ref;target.pendingProps=source.pendingProps;target.memoizedProps=source.memoizedProps;target.updateQueue=source.updateQueue;target.memoizedState=source.memoizedState;target.contextDependencies=source.contextDependencies;target.mode=source.mode;target.effectTag=source.effectTag;target.nextEffect=source.nextEffect;target.firstEffect=source.firstEffect;target.lastEffect=source.lastEffect;target.expirationTime=source.expirationTime;target.childExpirationTime=source.childExpirationTime;target.alternate=source.alternate;if(enableProfilerTimer){target.actualDuration=source.actualDuration;target.actualStartTime=source.actualStartTime;target.selfBaseDuration=source.selfBaseDuration;target.treeBaseDuration=source.treeBaseDuration;}target._debugID=source._debugID;target._debugSource=source._debugSource;target._debugOwner=source._debugOwner;target._debugIsCurrentlyTiming=source._debugIsCurrentlyTiming;target._debugHookTypes=source._debugHookTypes;return target;}// TODO: This should be lifted into the renderer.
 // The following attributes are only used by interaction tracing builds.
 // They enable interactions to be associated with their async work,
 // And expose interaction metadata to the React DevTools Profiler plugin.
@@ -38144,7 +38620,7 @@ return root;}/**
 // This error was thrown as a convenience so that you can use this stack
 // to find the callsite that caused this warning to fire.
 throw new Error(message);}catch(x){}};lowPriorityWarning=function(condition,format){if(format===undefined){throw new Error('`lowPriorityWarning(condition, format, ...args)` requires a warning '+'message argument');}if(!condition){for(var _len2=arguments.length,args=Array(_len2>2?_len2-2:0),_key2=2;_key2<_len2;_key2++){args[_key2-2]=arguments[_key2];}printWarning.apply(undefined,[format].concat(args));}};}var lowPriorityWarning$1=lowPriorityWarning;var ReactStrictModeWarnings={discardPendingWarnings:function(){},flushPendingDeprecationWarnings:function(){},flushPendingUnsafeLifecycleWarnings:function(){},recordDeprecationWarnings:function(fiber,instance){},recordUnsafeLifecycleWarnings:function(fiber,instance){},recordLegacyContextWarning:function(fiber,instance){},flushLegacyContextWarning:function(){}};{var LIFECYCLE_SUGGESTIONS={UNSAFE_componentWillMount:'componentDidMount',UNSAFE_componentWillReceiveProps:'static getDerivedStateFromProps',UNSAFE_componentWillUpdate:'componentDidUpdate'};var pendingComponentWillMountWarnings=[];var pendingComponentWillReceivePropsWarnings=[];var pendingComponentWillUpdateWarnings=[];var pendingUnsafeLifecycleWarnings=new Map();var pendingLegacyContextWarning=new Map();// Tracks components we have already warned about.
-var didWarnAboutDeprecatedLifecycles=new Set();var didWarnAboutUnsafeLifecycles=new Set();var didWarnAboutLegacyContext=new Set();var setToSortedString=function(set){var array=[];set.forEach(function(value){array.push(value);});return array.sort().join(', ');};ReactStrictModeWarnings.discardPendingWarnings=function(){pendingComponentWillMountWarnings=[];pendingComponentWillReceivePropsWarnings=[];pendingComponentWillUpdateWarnings=[];pendingUnsafeLifecycleWarnings=new Map();pendingLegacyContextWarning=new Map();};ReactStrictModeWarnings.flushPendingUnsafeLifecycleWarnings=function(){pendingUnsafeLifecycleWarnings.forEach(function(lifecycleWarningsMap,strictRoot){var lifecyclesWarningMesages=[];Object.keys(lifecycleWarningsMap).forEach(function(lifecycle){var lifecycleWarnings=lifecycleWarningsMap[lifecycle];if(lifecycleWarnings.length>0){var componentNames=new Set();lifecycleWarnings.forEach(function(fiber){componentNames.add(getComponentName(fiber.type)||'Component');didWarnAboutUnsafeLifecycles.add(fiber.type);});var formatted=lifecycle.replace('UNSAFE_','');var suggestion=LIFECYCLE_SUGGESTIONS[lifecycle];var sortedComponentNames=setToSortedString(componentNames);lifecyclesWarningMesages.push(formatted+': Please update the following components to use '+(suggestion+' instead: '+sortedComponentNames));}});if(lifecyclesWarningMesages.length>0){var strictRootComponentStack=getStackByFiberInDevAndProd(strictRoot);warningWithoutStack$1(false,'Unsafe lifecycle methods were found within a strict-mode tree:%s'+'\n\n%s'+'\n\nLearn more about this warning here:'+'\nhttps://fb.me/react-strict-mode-warnings',strictRootComponentStack,lifecyclesWarningMesages.join('\n\n'));}});pendingUnsafeLifecycleWarnings=new Map();};var findStrictRoot=function(fiber){var maybeStrictRoot=null;var node=fiber;while(node!==null){if(node.mode&StrictMode){maybeStrictRoot=node;}node=node.return;}return maybeStrictRoot;};ReactStrictModeWarnings.flushPendingDeprecationWarnings=function(){if(pendingComponentWillMountWarnings.length>0){var uniqueNames=new Set();pendingComponentWillMountWarnings.forEach(function(fiber){uniqueNames.add(getComponentName(fiber.type)||'Component');didWarnAboutDeprecatedLifecycles.add(fiber.type);});var sortedNames=setToSortedString(uniqueNames);lowPriorityWarning$1(false,'componentWillMount is deprecated and will be removed in the next major version. '+'Use componentDidMount instead. As a temporary workaround, '+'you can rename to UNSAFE_componentWillMount.'+'\n\nPlease update the following components: %s'+'\n\nLearn more about this warning here:'+'\nhttps://fb.me/react-async-component-lifecycle-hooks',sortedNames);pendingComponentWillMountWarnings=[];}if(pendingComponentWillReceivePropsWarnings.length>0){var _uniqueNames=new Set();pendingComponentWillReceivePropsWarnings.forEach(function(fiber){_uniqueNames.add(getComponentName(fiber.type)||'Component');didWarnAboutDeprecatedLifecycles.add(fiber.type);});var _sortedNames=setToSortedString(_uniqueNames);lowPriorityWarning$1(false,'componentWillReceiveProps is deprecated and will be removed in the next major version. '+'Use static getDerivedStateFromProps instead.'+'\n\nPlease update the following components: %s'+'\n\nLearn more about this warning here:'+'\nhttps://fb.me/react-async-component-lifecycle-hooks',_sortedNames);pendingComponentWillReceivePropsWarnings=[];}if(pendingComponentWillUpdateWarnings.length>0){var _uniqueNames2=new Set();pendingComponentWillUpdateWarnings.forEach(function(fiber){_uniqueNames2.add(getComponentName(fiber.type)||'Component');didWarnAboutDeprecatedLifecycles.add(fiber.type);});var _sortedNames2=setToSortedString(_uniqueNames2);lowPriorityWarning$1(false,'componentWillUpdate is deprecated and will be removed in the next major version. '+'Use componentDidUpdate instead. As a temporary workaround, '+'you can rename to UNSAFE_componentWillUpdate.'+'\n\nPlease update the following components: %s'+'\n\nLearn more about this warning here:'+'\nhttps://fb.me/react-async-component-lifecycle-hooks',_sortedNames2);pendingComponentWillUpdateWarnings=[];}};ReactStrictModeWarnings.recordDeprecationWarnings=function(fiber,instance){// Dedup strategy: Warn once per component.
+var didWarnAboutDeprecatedLifecycles=new Set();var didWarnAboutUnsafeLifecycles=new Set();var didWarnAboutLegacyContext=new Set();var setToSortedString=function(set){var array=[];set.forEach(function(value){array.push(value);});return array.sort().join(', ');};ReactStrictModeWarnings.discardPendingWarnings=function(){pendingComponentWillMountWarnings=[];pendingComponentWillReceivePropsWarnings=[];pendingComponentWillUpdateWarnings=[];pendingUnsafeLifecycleWarnings=new Map();pendingLegacyContextWarning=new Map();};ReactStrictModeWarnings.flushPendingUnsafeLifecycleWarnings=function(){pendingUnsafeLifecycleWarnings.forEach(function(lifecycleWarningsMap,strictRoot){var lifecyclesWarningMessages=[];Object.keys(lifecycleWarningsMap).forEach(function(lifecycle){var lifecycleWarnings=lifecycleWarningsMap[lifecycle];if(lifecycleWarnings.length>0){var componentNames=new Set();lifecycleWarnings.forEach(function(fiber){componentNames.add(getComponentName(fiber.type)||'Component');didWarnAboutUnsafeLifecycles.add(fiber.type);});var formatted=lifecycle.replace('UNSAFE_','');var suggestion=LIFECYCLE_SUGGESTIONS[lifecycle];var sortedComponentNames=setToSortedString(componentNames);lifecyclesWarningMessages.push(formatted+': Please update the following components to use '+(suggestion+' instead: '+sortedComponentNames));}});if(lifecyclesWarningMessages.length>0){var strictRootComponentStack=getStackByFiberInDevAndProd(strictRoot);warningWithoutStack$1(false,'Unsafe lifecycle methods were found within a strict-mode tree:%s'+'\n\n%s'+'\n\nLearn more about this warning here:'+'\nhttps://fb.me/react-strict-mode-warnings',strictRootComponentStack,lifecyclesWarningMessages.join('\n\n'));}});pendingUnsafeLifecycleWarnings=new Map();};var findStrictRoot=function(fiber){var maybeStrictRoot=null;var node=fiber;while(node!==null){if(node.mode&StrictMode){maybeStrictRoot=node;}node=node.return;}return maybeStrictRoot;};ReactStrictModeWarnings.flushPendingDeprecationWarnings=function(){if(pendingComponentWillMountWarnings.length>0){var uniqueNames=new Set();pendingComponentWillMountWarnings.forEach(function(fiber){uniqueNames.add(getComponentName(fiber.type)||'Component');didWarnAboutDeprecatedLifecycles.add(fiber.type);});var sortedNames=setToSortedString(uniqueNames);lowPriorityWarning$1(false,'componentWillMount is deprecated and will be removed in the next major version. '+'Use componentDidMount instead. As a temporary workaround, '+'you can rename to UNSAFE_componentWillMount.'+'\n\nPlease update the following components: %s'+'\n\nLearn more about this warning here:'+'\nhttps://fb.me/react-async-component-lifecycle-hooks',sortedNames);pendingComponentWillMountWarnings=[];}if(pendingComponentWillReceivePropsWarnings.length>0){var _uniqueNames=new Set();pendingComponentWillReceivePropsWarnings.forEach(function(fiber){_uniqueNames.add(getComponentName(fiber.type)||'Component');didWarnAboutDeprecatedLifecycles.add(fiber.type);});var _sortedNames=setToSortedString(_uniqueNames);lowPriorityWarning$1(false,'componentWillReceiveProps is deprecated and will be removed in the next major version. '+'Use static getDerivedStateFromProps instead.'+'\n\nPlease update the following components: %s'+'\n\nLearn more about this warning here:'+'\nhttps://fb.me/react-async-component-lifecycle-hooks',_sortedNames);pendingComponentWillReceivePropsWarnings=[];}if(pendingComponentWillUpdateWarnings.length>0){var _uniqueNames2=new Set();pendingComponentWillUpdateWarnings.forEach(function(fiber){_uniqueNames2.add(getComponentName(fiber.type)||'Component');didWarnAboutDeprecatedLifecycles.add(fiber.type);});var _sortedNames2=setToSortedString(_uniqueNames2);lowPriorityWarning$1(false,'componentWillUpdate is deprecated and will be removed in the next major version. '+'Use componentDidUpdate instead. As a temporary workaround, '+'you can rename to UNSAFE_componentWillUpdate.'+'\n\nPlease update the following components: %s'+'\n\nLearn more about this warning here:'+'\nhttps://fb.me/react-async-component-lifecycle-hooks',_sortedNames2);pendingComponentWillUpdateWarnings=[];}};ReactStrictModeWarnings.recordDeprecationWarnings=function(fiber,instance){// Dedup strategy: Warn once per component.
 if(didWarnAboutDeprecatedLifecycles.has(fiber.type)){return;}// Don't warn about react-lifecycles-compat polyfilled components.
 if(typeof instance.componentWillMount==='function'&&instance.componentWillMount.__suppressDeprecationWarning!==true){pendingComponentWillMountWarnings.push(fiber);}if(typeof instance.componentWillReceiveProps==='function'&&instance.componentWillReceiveProps.__suppressDeprecationWarning!==true){pendingComponentWillReceivePropsWarnings.push(fiber);}if(typeof instance.componentWillUpdate==='function'&&instance.componentWillUpdate.__suppressDeprecationWarning!==true){pendingComponentWillUpdateWarnings.push(fiber);}};ReactStrictModeWarnings.recordUnsafeLifecycleWarnings=function(fiber,instance){var strictRoot=findStrictRoot(fiber);if(strictRoot===null){warningWithoutStack$1(false,'Expected to find a StrictMode component in a strict mode tree. '+'This error is likely caused by a bug in React. Please file an issue.');return;}// Dedup strategy: Warn once per component.
 // This is difficult to track any other way since component names
@@ -38206,13 +38682,743 @@ if(nextExpirationTimeToWorkOn===NoWork&&(completedExpirationTime===NoWork||lates
 // committed next. Let's start rendering it again, so that if it times out,
 // it's ready to commit.
 nextExpirationTimeToWorkOn=latestSuspendedTime;}var expirationTime=nextExpirationTimeToWorkOn;if(expirationTime!==NoWork&&earliestSuspendedTime>expirationTime){// Expire using the earliest known expiration time.
-expirationTime=earliestSuspendedTime;}root.nextExpirationTimeToWorkOn=nextExpirationTimeToWorkOn;root.expirationTime=expirationTime;}// UpdateQueue is a linked list of prioritized updates.
+expirationTime=earliestSuspendedTime;}root.nextExpirationTimeToWorkOn=nextExpirationTimeToWorkOn;root.expirationTime=expirationTime;}function resolveDefaultProps(Component,baseProps){if(Component&&Component.defaultProps){// Resolve default props. Taken from ReactElement
+var props=_assign({},baseProps);var defaultProps=Component.defaultProps;for(var propName in defaultProps){if(props[propName]===undefined){props[propName]=defaultProps[propName];}}return props;}return baseProps;}function readLazyComponentType(lazyComponent){var status=lazyComponent._status;var result=lazyComponent._result;switch(status){case Resolved:{var Component=result;return Component;}case Rejected:{var error=result;throw error;}case Pending:{var thenable=result;throw thenable;}default:{lazyComponent._status=Pending;var ctor=lazyComponent._ctor;var _thenable=ctor();_thenable.then(function(moduleObject){if(lazyComponent._status===Pending){var defaultExport=moduleObject.default;{if(defaultExport===undefined){warning$1(false,'lazy: Expected the result of a dynamic import() call. '+'Instead received: %s\n\nYour code should look like: \n  '+"const MyComponent = lazy(() => import('./MyComponent'))",moduleObject);}}lazyComponent._status=Resolved;lazyComponent._result=defaultExport;}},function(error){if(lazyComponent._status===Pending){lazyComponent._status=Rejected;lazyComponent._result=error;}});// Handle synchronous thenables.
+switch(lazyComponent._status){case Resolved:return lazyComponent._result;case Rejected:throw lazyComponent._result;}lazyComponent._result=_thenable;throw _thenable;}}}var fakeInternalInstance={};var isArray$1=Array.isArray;// React.Component uses a shared frozen object by default.
+// We'll use it to determine whether we need to initialize legacy refs.
+var emptyRefsObject=new React.Component().refs;var didWarnAboutStateAssignmentForComponent=void 0;var didWarnAboutUninitializedState=void 0;var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate=void 0;var didWarnAboutLegacyLifecyclesAndDerivedState=void 0;var didWarnAboutUndefinedDerivedState=void 0;var warnOnUndefinedDerivedState=void 0;var warnOnInvalidCallback$1=void 0;var didWarnAboutDirectlyAssigningPropsToState=void 0;var didWarnAboutContextTypeAndContextTypes=void 0;var didWarnAboutInvalidateContextType=void 0;{didWarnAboutStateAssignmentForComponent=new Set();didWarnAboutUninitializedState=new Set();didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate=new Set();didWarnAboutLegacyLifecyclesAndDerivedState=new Set();didWarnAboutDirectlyAssigningPropsToState=new Set();didWarnAboutUndefinedDerivedState=new Set();didWarnAboutContextTypeAndContextTypes=new Set();didWarnAboutInvalidateContextType=new Set();var didWarnOnInvalidCallback=new Set();warnOnInvalidCallback$1=function(callback,callerName){if(callback===null||typeof callback==='function'){return;}var key=callerName+'_'+callback;if(!didWarnOnInvalidCallback.has(key)){didWarnOnInvalidCallback.add(key);warningWithoutStack$1(false,'%s(...): Expected the last optional `callback` argument to be a '+'function. Instead received: %s.',callerName,callback);}};warnOnUndefinedDerivedState=function(type,partialState){if(partialState===undefined){var componentName=getComponentName(type)||'Component';if(!didWarnAboutUndefinedDerivedState.has(componentName)){didWarnAboutUndefinedDerivedState.add(componentName);warningWithoutStack$1(false,'%s.getDerivedStateFromProps(): A valid state object (or null) must be returned. '+'You have returned undefined.',componentName);}}};// This is so gross but it's at least non-critical and can be removed if
+// it causes problems. This is meant to give a nicer error message for
+// ReactDOM15.unstable_renderSubtreeIntoContainer(reactDOM16Component,
+// ...)) which otherwise throws a "_processChildContext is not a function"
+// exception.
+Object.defineProperty(fakeInternalInstance,'_processChildContext',{enumerable:false,value:function(){invariant(false,'_processChildContext is not available in React 16+. This likely means you have multiple copies of React and are attempting to nest a React 15 tree inside a React 16 tree using unstable_renderSubtreeIntoContainer, which isn\'t supported. Try to make sure you have only one copy of React (and ideally, switch to ReactDOM.createPortal).');}});Object.freeze(fakeInternalInstance);}function applyDerivedStateFromProps(workInProgress,ctor,getDerivedStateFromProps,nextProps){var prevState=workInProgress.memoizedState;{if(debugRenderPhaseSideEffects||debugRenderPhaseSideEffectsForStrictMode&&workInProgress.mode&StrictMode){// Invoke the function an extra time to help detect side-effects.
+getDerivedStateFromProps(nextProps,prevState);}}var partialState=getDerivedStateFromProps(nextProps,prevState);{warnOnUndefinedDerivedState(ctor,partialState);}// Merge the partial state and the previous state.
+var memoizedState=partialState===null||partialState===undefined?prevState:_assign({},prevState,partialState);workInProgress.memoizedState=memoizedState;// Once the update queue is empty, persist the derived state onto the
+// base state.
+var updateQueue=workInProgress.updateQueue;if(updateQueue!==null&&workInProgress.expirationTime===NoWork){updateQueue.baseState=memoizedState;}}var classComponentUpdater={isMounted:isMounted,enqueueSetState:function(inst,payload,callback){var fiber=get(inst);var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,fiber);var update=createUpdate(expirationTime);update.payload=payload;if(callback!==undefined&&callback!==null){{warnOnInvalidCallback$1(callback,'setState');}update.callback=callback;}flushPassiveEffects();enqueueUpdate(fiber,update);scheduleWork(fiber,expirationTime);},enqueueReplaceState:function(inst,payload,callback){var fiber=get(inst);var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,fiber);var update=createUpdate(expirationTime);update.tag=ReplaceState;update.payload=payload;if(callback!==undefined&&callback!==null){{warnOnInvalidCallback$1(callback,'replaceState');}update.callback=callback;}flushPassiveEffects();enqueueUpdate(fiber,update);scheduleWork(fiber,expirationTime);},enqueueForceUpdate:function(inst,callback){var fiber=get(inst);var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,fiber);var update=createUpdate(expirationTime);update.tag=ForceUpdate;if(callback!==undefined&&callback!==null){{warnOnInvalidCallback$1(callback,'forceUpdate');}update.callback=callback;}flushPassiveEffects();enqueueUpdate(fiber,update);scheduleWork(fiber,expirationTime);}};function checkShouldComponentUpdate(workInProgress,ctor,oldProps,newProps,oldState,newState,nextContext){var instance=workInProgress.stateNode;if(typeof instance.shouldComponentUpdate==='function'){startPhaseTimer(workInProgress,'shouldComponentUpdate');var shouldUpdate=instance.shouldComponentUpdate(newProps,newState,nextContext);stopPhaseTimer();{!(shouldUpdate!==undefined)?warningWithoutStack$1(false,'%s.shouldComponentUpdate(): Returned undefined instead of a '+'boolean value. Make sure to return true or false.',getComponentName(ctor)||'Component'):void 0;}return shouldUpdate;}if(ctor.prototype&&ctor.prototype.isPureReactComponent){return!shallowEqual(oldProps,newProps)||!shallowEqual(oldState,newState);}return true;}function checkClassInstance(workInProgress,ctor,newProps){var instance=workInProgress.stateNode;{var name=getComponentName(ctor)||'Component';var renderPresent=instance.render;if(!renderPresent){if(ctor.prototype&&typeof ctor.prototype.render==='function'){warningWithoutStack$1(false,'%s(...): No `render` method found on the returned component '+'instance: did you accidentally return an object from the constructor?',name);}else{warningWithoutStack$1(false,'%s(...): No `render` method found on the returned component '+'instance: you may have forgotten to define `render`.',name);}}var noGetInitialStateOnES6=!instance.getInitialState||instance.getInitialState.isReactClassApproved||instance.state;!noGetInitialStateOnES6?warningWithoutStack$1(false,'getInitialState was defined on %s, a plain JavaScript class. '+'This is only supported for classes created using React.createClass. '+'Did you mean to define a state property instead?',name):void 0;var noGetDefaultPropsOnES6=!instance.getDefaultProps||instance.getDefaultProps.isReactClassApproved;!noGetDefaultPropsOnES6?warningWithoutStack$1(false,'getDefaultProps was defined on %s, a plain JavaScript class. '+'This is only supported for classes created using React.createClass. '+'Use a static property to define defaultProps instead.',name):void 0;var noInstancePropTypes=!instance.propTypes;!noInstancePropTypes?warningWithoutStack$1(false,'propTypes was defined as an instance property on %s. Use a static '+'property to define propTypes instead.',name):void 0;var noInstanceContextType=!instance.contextType;!noInstanceContextType?warningWithoutStack$1(false,'contextType was defined as an instance property on %s. Use a static '+'property to define contextType instead.',name):void 0;var noInstanceContextTypes=!instance.contextTypes;!noInstanceContextTypes?warningWithoutStack$1(false,'contextTypes was defined as an instance property on %s. Use a static '+'property to define contextTypes instead.',name):void 0;if(ctor.contextType&&ctor.contextTypes&&!didWarnAboutContextTypeAndContextTypes.has(ctor)){didWarnAboutContextTypeAndContextTypes.add(ctor);warningWithoutStack$1(false,'%s declares both contextTypes and contextType static properties. '+'The legacy contextTypes property will be ignored.',name);}var noComponentShouldUpdate=typeof instance.componentShouldUpdate!=='function';!noComponentShouldUpdate?warningWithoutStack$1(false,'%s has a method called '+'componentShouldUpdate(). Did you mean shouldComponentUpdate()? '+'The name is phrased as a question because the function is '+'expected to return a value.',name):void 0;if(ctor.prototype&&ctor.prototype.isPureReactComponent&&typeof instance.shouldComponentUpdate!=='undefined'){warningWithoutStack$1(false,'%s has a method called shouldComponentUpdate(). '+'shouldComponentUpdate should not be used when extending React.PureComponent. '+'Please extend React.Component if shouldComponentUpdate is used.',getComponentName(ctor)||'A pure component');}var noComponentDidUnmount=typeof instance.componentDidUnmount!=='function';!noComponentDidUnmount?warningWithoutStack$1(false,'%s has a method called '+'componentDidUnmount(). But there is no such lifecycle method. '+'Did you mean componentWillUnmount()?',name):void 0;var noComponentDidReceiveProps=typeof instance.componentDidReceiveProps!=='function';!noComponentDidReceiveProps?warningWithoutStack$1(false,'%s has a method called '+'componentDidReceiveProps(). But there is no such lifecycle method. '+'If you meant to update the state in response to changing props, '+'use componentWillReceiveProps(). If you meant to fetch data or '+'run side-effects or mutations after React has updated the UI, use componentDidUpdate().',name):void 0;var noComponentWillRecieveProps=typeof instance.componentWillRecieveProps!=='function';!noComponentWillRecieveProps?warningWithoutStack$1(false,'%s has a method called '+'componentWillRecieveProps(). Did you mean componentWillReceiveProps()?',name):void 0;var noUnsafeComponentWillRecieveProps=typeof instance.UNSAFE_componentWillRecieveProps!=='function';!noUnsafeComponentWillRecieveProps?warningWithoutStack$1(false,'%s has a method called '+'UNSAFE_componentWillRecieveProps(). Did you mean UNSAFE_componentWillReceiveProps()?',name):void 0;var hasMutatedProps=instance.props!==newProps;!(instance.props===undefined||!hasMutatedProps)?warningWithoutStack$1(false,'%s(...): When calling super() in `%s`, make sure to pass '+"up the same props that your component's constructor was passed.",name,name):void 0;var noInstanceDefaultProps=!instance.defaultProps;!noInstanceDefaultProps?warningWithoutStack$1(false,'Setting defaultProps as an instance property on %s is not supported and will be ignored.'+' Instead, define defaultProps as a static property on %s.',name,name):void 0;if(typeof instance.getSnapshotBeforeUpdate==='function'&&typeof instance.componentDidUpdate!=='function'&&!didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate.has(ctor)){didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate.add(ctor);warningWithoutStack$1(false,'%s: getSnapshotBeforeUpdate() should be used with componentDidUpdate(). '+'This component defines getSnapshotBeforeUpdate() only.',getComponentName(ctor));}var noInstanceGetDerivedStateFromProps=typeof instance.getDerivedStateFromProps!=='function';!noInstanceGetDerivedStateFromProps?warningWithoutStack$1(false,'%s: getDerivedStateFromProps() is defined as an instance method '+'and will be ignored. Instead, declare it as a static method.',name):void 0;var noInstanceGetDerivedStateFromCatch=typeof instance.getDerivedStateFromError!=='function';!noInstanceGetDerivedStateFromCatch?warningWithoutStack$1(false,'%s: getDerivedStateFromError() is defined as an instance method '+'and will be ignored. Instead, declare it as a static method.',name):void 0;var noStaticGetSnapshotBeforeUpdate=typeof ctor.getSnapshotBeforeUpdate!=='function';!noStaticGetSnapshotBeforeUpdate?warningWithoutStack$1(false,'%s: getSnapshotBeforeUpdate() is defined as a static method '+'and will be ignored. Instead, declare it as an instance method.',name):void 0;var _state=instance.state;if(_state&&(typeof _state!=='object'||isArray$1(_state))){warningWithoutStack$1(false,'%s.state: must be set to an object or null',name);}if(typeof instance.getChildContext==='function'){!(typeof ctor.childContextTypes==='object')?warningWithoutStack$1(false,'%s.getChildContext(): childContextTypes must be defined in order to '+'use getChildContext().',name):void 0;}}}function adoptClassInstance(workInProgress,instance){instance.updater=classComponentUpdater;workInProgress.stateNode=instance;// The instance needs access to the fiber so that it can schedule updates
+set(instance,workInProgress);{instance._reactInternalInstance=fakeInternalInstance;}}function constructClassInstance(workInProgress,ctor,props,renderExpirationTime){var isLegacyContextConsumer=false;var unmaskedContext=emptyContextObject;var context=null;var contextType=ctor.contextType;{if('contextType'in ctor){var isValid=// Allow null for conditional declaration
+contextType===null||contextType!==undefined&&contextType.$$typeof===REACT_CONTEXT_TYPE&&contextType._context===undefined;// Not a <Context.Consumer>
+if(!isValid&&!didWarnAboutInvalidateContextType.has(ctor)){didWarnAboutInvalidateContextType.add(ctor);var addendum='';if(contextType===undefined){addendum=' However, it is set to undefined. '+'This can be caused by a typo or by mixing up named and default imports. '+'This can also happen due to a circular dependency, so '+'try moving the createContext() call to a separate file.';}else if(typeof contextType!=='object'){addendum=' However, it is set to a '+typeof contextType+'.';}else if(contextType.$$typeof===REACT_PROVIDER_TYPE){addendum=' Did you accidentally pass the Context.Provider instead?';}else if(contextType._context!==undefined){// <Context.Consumer>
+addendum=' Did you accidentally pass the Context.Consumer instead?';}else{addendum=' However, it is set to an object with keys {'+Object.keys(contextType).join(', ')+'}.';}warningWithoutStack$1(false,'%s defines an invalid contextType. '+'contextType should point to the Context object returned by React.createContext().%s',getComponentName(ctor)||'Component',addendum);}}}if(typeof contextType==='object'&&contextType!==null){context=readContext(contextType);}else{unmaskedContext=getUnmaskedContext(workInProgress,ctor,true);var contextTypes=ctor.contextTypes;isLegacyContextConsumer=contextTypes!==null&&contextTypes!==undefined;context=isLegacyContextConsumer?getMaskedContext(workInProgress,unmaskedContext):emptyContextObject;}// Instantiate twice to help detect side-effects.
+{if(debugRenderPhaseSideEffects||debugRenderPhaseSideEffectsForStrictMode&&workInProgress.mode&StrictMode){new ctor(props,context);// eslint-disable-line no-new
+}}var instance=new ctor(props,context);var state=workInProgress.memoizedState=instance.state!==null&&instance.state!==undefined?instance.state:null;adoptClassInstance(workInProgress,instance);{if(typeof ctor.getDerivedStateFromProps==='function'&&state===null){var componentName=getComponentName(ctor)||'Component';if(!didWarnAboutUninitializedState.has(componentName)){didWarnAboutUninitializedState.add(componentName);warningWithoutStack$1(false,'`%s` uses `getDerivedStateFromProps` but its initial state is '+'%s. This is not recommended. Instead, define the initial state by '+'assigning an object to `this.state` in the constructor of `%s`. '+'This ensures that `getDerivedStateFromProps` arguments have a consistent shape.',componentName,instance.state===null?'null':'undefined',componentName);}}// If new component APIs are defined, "unsafe" lifecycles won't be called.
+// Warn about these lifecycles if they are present.
+// Don't warn about react-lifecycles-compat polyfilled methods though.
+if(typeof ctor.getDerivedStateFromProps==='function'||typeof instance.getSnapshotBeforeUpdate==='function'){var foundWillMountName=null;var foundWillReceivePropsName=null;var foundWillUpdateName=null;if(typeof instance.componentWillMount==='function'&&instance.componentWillMount.__suppressDeprecationWarning!==true){foundWillMountName='componentWillMount';}else if(typeof instance.UNSAFE_componentWillMount==='function'){foundWillMountName='UNSAFE_componentWillMount';}if(typeof instance.componentWillReceiveProps==='function'&&instance.componentWillReceiveProps.__suppressDeprecationWarning!==true){foundWillReceivePropsName='componentWillReceiveProps';}else if(typeof instance.UNSAFE_componentWillReceiveProps==='function'){foundWillReceivePropsName='UNSAFE_componentWillReceiveProps';}if(typeof instance.componentWillUpdate==='function'&&instance.componentWillUpdate.__suppressDeprecationWarning!==true){foundWillUpdateName='componentWillUpdate';}else if(typeof instance.UNSAFE_componentWillUpdate==='function'){foundWillUpdateName='UNSAFE_componentWillUpdate';}if(foundWillMountName!==null||foundWillReceivePropsName!==null||foundWillUpdateName!==null){var _componentName=getComponentName(ctor)||'Component';var newApiName=typeof ctor.getDerivedStateFromProps==='function'?'getDerivedStateFromProps()':'getSnapshotBeforeUpdate()';if(!didWarnAboutLegacyLifecyclesAndDerivedState.has(_componentName)){didWarnAboutLegacyLifecyclesAndDerivedState.add(_componentName);warningWithoutStack$1(false,'Unsafe legacy lifecycles will not be called for components using new component APIs.\n\n'+'%s uses %s but also contains the following legacy lifecycles:%s%s%s\n\n'+'The above lifecycles should be removed. Learn more about this warning here:\n'+'https://fb.me/react-async-component-lifecycle-hooks',_componentName,newApiName,foundWillMountName!==null?'\n  '+foundWillMountName:'',foundWillReceivePropsName!==null?'\n  '+foundWillReceivePropsName:'',foundWillUpdateName!==null?'\n  '+foundWillUpdateName:'');}}}}// Cache unmasked context so we can avoid recreating masked context unless necessary.
+// ReactFiberContext usually updates this cache but can't for newly-created instances.
+if(isLegacyContextConsumer){cacheContext(workInProgress,unmaskedContext,context);}return instance;}function callComponentWillMount(workInProgress,instance){startPhaseTimer(workInProgress,'componentWillMount');var oldState=instance.state;if(typeof instance.componentWillMount==='function'){instance.componentWillMount();}if(typeof instance.UNSAFE_componentWillMount==='function'){instance.UNSAFE_componentWillMount();}stopPhaseTimer();if(oldState!==instance.state){{warningWithoutStack$1(false,'%s.componentWillMount(): Assigning directly to this.state is '+"deprecated (except inside a component's "+'constructor). Use setState instead.',getComponentName(workInProgress.type)||'Component');}classComponentUpdater.enqueueReplaceState(instance,instance.state,null);}}function callComponentWillReceiveProps(workInProgress,instance,newProps,nextContext){var oldState=instance.state;startPhaseTimer(workInProgress,'componentWillReceiveProps');if(typeof instance.componentWillReceiveProps==='function'){instance.componentWillReceiveProps(newProps,nextContext);}if(typeof instance.UNSAFE_componentWillReceiveProps==='function'){instance.UNSAFE_componentWillReceiveProps(newProps,nextContext);}stopPhaseTimer();if(instance.state!==oldState){{var componentName=getComponentName(workInProgress.type)||'Component';if(!didWarnAboutStateAssignmentForComponent.has(componentName)){didWarnAboutStateAssignmentForComponent.add(componentName);warningWithoutStack$1(false,'%s.componentWillReceiveProps(): Assigning directly to '+"this.state is deprecated (except inside a component's "+'constructor). Use setState instead.',componentName);}}classComponentUpdater.enqueueReplaceState(instance,instance.state,null);}}// Invokes the mount life-cycles on a previously never rendered instance.
+function mountClassInstance(workInProgress,ctor,newProps,renderExpirationTime){{checkClassInstance(workInProgress,ctor,newProps);}var instance=workInProgress.stateNode;instance.props=newProps;instance.state=workInProgress.memoizedState;instance.refs=emptyRefsObject;var contextType=ctor.contextType;if(typeof contextType==='object'&&contextType!==null){instance.context=readContext(contextType);}else{var unmaskedContext=getUnmaskedContext(workInProgress,ctor,true);instance.context=getMaskedContext(workInProgress,unmaskedContext);}{if(instance.state===newProps){var componentName=getComponentName(ctor)||'Component';if(!didWarnAboutDirectlyAssigningPropsToState.has(componentName)){didWarnAboutDirectlyAssigningPropsToState.add(componentName);warningWithoutStack$1(false,'%s: It is not recommended to assign props directly to state '+"because updates to props won't be reflected in state. "+'In most cases, it is better to use props directly.',componentName);}}if(workInProgress.mode&StrictMode){ReactStrictModeWarnings.recordUnsafeLifecycleWarnings(workInProgress,instance);ReactStrictModeWarnings.recordLegacyContextWarning(workInProgress,instance);}if(warnAboutDeprecatedLifecycles){ReactStrictModeWarnings.recordDeprecationWarnings(workInProgress,instance);}}var updateQueue=workInProgress.updateQueue;if(updateQueue!==null){processUpdateQueue(workInProgress,updateQueue,newProps,instance,renderExpirationTime);instance.state=workInProgress.memoizedState;}var getDerivedStateFromProps=ctor.getDerivedStateFromProps;if(typeof getDerivedStateFromProps==='function'){applyDerivedStateFromProps(workInProgress,ctor,getDerivedStateFromProps,newProps);instance.state=workInProgress.memoizedState;}// In order to support react-lifecycles-compat polyfilled components,
+// Unsafe lifecycles should not be invoked for components using the new APIs.
+if(typeof ctor.getDerivedStateFromProps!=='function'&&typeof instance.getSnapshotBeforeUpdate!=='function'&&(typeof instance.UNSAFE_componentWillMount==='function'||typeof instance.componentWillMount==='function')){callComponentWillMount(workInProgress,instance);// If we had additional state updates during this life-cycle, let's
+// process them now.
+updateQueue=workInProgress.updateQueue;if(updateQueue!==null){processUpdateQueue(workInProgress,updateQueue,newProps,instance,renderExpirationTime);instance.state=workInProgress.memoizedState;}}if(typeof instance.componentDidMount==='function'){workInProgress.effectTag|=Update;}}function resumeMountClassInstance(workInProgress,ctor,newProps,renderExpirationTime){var instance=workInProgress.stateNode;var oldProps=workInProgress.memoizedProps;instance.props=oldProps;var oldContext=instance.context;var contextType=ctor.contextType;var nextContext=void 0;if(typeof contextType==='object'&&contextType!==null){nextContext=readContext(contextType);}else{var nextLegacyUnmaskedContext=getUnmaskedContext(workInProgress,ctor,true);nextContext=getMaskedContext(workInProgress,nextLegacyUnmaskedContext);}var getDerivedStateFromProps=ctor.getDerivedStateFromProps;var hasNewLifecycles=typeof getDerivedStateFromProps==='function'||typeof instance.getSnapshotBeforeUpdate==='function';// Note: During these life-cycles, instance.props/instance.state are what
+// ever the previously attempted to render - not the "current". However,
+// during componentDidUpdate we pass the "current" props.
+// In order to support react-lifecycles-compat polyfilled components,
+// Unsafe lifecycles should not be invoked for components using the new APIs.
+if(!hasNewLifecycles&&(typeof instance.UNSAFE_componentWillReceiveProps==='function'||typeof instance.componentWillReceiveProps==='function')){if(oldProps!==newProps||oldContext!==nextContext){callComponentWillReceiveProps(workInProgress,instance,newProps,nextContext);}}resetHasForceUpdateBeforeProcessing();var oldState=workInProgress.memoizedState;var newState=instance.state=oldState;var updateQueue=workInProgress.updateQueue;if(updateQueue!==null){processUpdateQueue(workInProgress,updateQueue,newProps,instance,renderExpirationTime);newState=workInProgress.memoizedState;}if(oldProps===newProps&&oldState===newState&&!hasContextChanged()&&!checkHasForceUpdateAfterProcessing()){// If an update was already in progress, we should schedule an Update
+// effect even though we're bailing out, so that cWU/cDU are called.
+if(typeof instance.componentDidMount==='function'){workInProgress.effectTag|=Update;}return false;}if(typeof getDerivedStateFromProps==='function'){applyDerivedStateFromProps(workInProgress,ctor,getDerivedStateFromProps,newProps);newState=workInProgress.memoizedState;}var shouldUpdate=checkHasForceUpdateAfterProcessing()||checkShouldComponentUpdate(workInProgress,ctor,oldProps,newProps,oldState,newState,nextContext);if(shouldUpdate){// In order to support react-lifecycles-compat polyfilled components,
+// Unsafe lifecycles should not be invoked for components using the new APIs.
+if(!hasNewLifecycles&&(typeof instance.UNSAFE_componentWillMount==='function'||typeof instance.componentWillMount==='function')){startPhaseTimer(workInProgress,'componentWillMount');if(typeof instance.componentWillMount==='function'){instance.componentWillMount();}if(typeof instance.UNSAFE_componentWillMount==='function'){instance.UNSAFE_componentWillMount();}stopPhaseTimer();}if(typeof instance.componentDidMount==='function'){workInProgress.effectTag|=Update;}}else{// If an update was already in progress, we should schedule an Update
+// effect even though we're bailing out, so that cWU/cDU are called.
+if(typeof instance.componentDidMount==='function'){workInProgress.effectTag|=Update;}// If shouldComponentUpdate returned false, we should still update the
+// memoized state to indicate that this work can be reused.
+workInProgress.memoizedProps=newProps;workInProgress.memoizedState=newState;}// Update the existing instance's state, props, and context pointers even
+// if shouldComponentUpdate returns false.
+instance.props=newProps;instance.state=newState;instance.context=nextContext;return shouldUpdate;}// Invokes the update life-cycles and returns false if it shouldn't rerender.
+function updateClassInstance(current,workInProgress,ctor,newProps,renderExpirationTime){var instance=workInProgress.stateNode;var oldProps=workInProgress.memoizedProps;instance.props=workInProgress.type===workInProgress.elementType?oldProps:resolveDefaultProps(workInProgress.type,oldProps);var oldContext=instance.context;var contextType=ctor.contextType;var nextContext=void 0;if(typeof contextType==='object'&&contextType!==null){nextContext=readContext(contextType);}else{var nextUnmaskedContext=getUnmaskedContext(workInProgress,ctor,true);nextContext=getMaskedContext(workInProgress,nextUnmaskedContext);}var getDerivedStateFromProps=ctor.getDerivedStateFromProps;var hasNewLifecycles=typeof getDerivedStateFromProps==='function'||typeof instance.getSnapshotBeforeUpdate==='function';// Note: During these life-cycles, instance.props/instance.state are what
+// ever the previously attempted to render - not the "current". However,
+// during componentDidUpdate we pass the "current" props.
+// In order to support react-lifecycles-compat polyfilled components,
+// Unsafe lifecycles should not be invoked for components using the new APIs.
+if(!hasNewLifecycles&&(typeof instance.UNSAFE_componentWillReceiveProps==='function'||typeof instance.componentWillReceiveProps==='function')){if(oldProps!==newProps||oldContext!==nextContext){callComponentWillReceiveProps(workInProgress,instance,newProps,nextContext);}}resetHasForceUpdateBeforeProcessing();var oldState=workInProgress.memoizedState;var newState=instance.state=oldState;var updateQueue=workInProgress.updateQueue;if(updateQueue!==null){processUpdateQueue(workInProgress,updateQueue,newProps,instance,renderExpirationTime);newState=workInProgress.memoizedState;}if(oldProps===newProps&&oldState===newState&&!hasContextChanged()&&!checkHasForceUpdateAfterProcessing()){// If an update was already in progress, we should schedule an Update
+// effect even though we're bailing out, so that cWU/cDU are called.
+if(typeof instance.componentDidUpdate==='function'){if(oldProps!==current.memoizedProps||oldState!==current.memoizedState){workInProgress.effectTag|=Update;}}if(typeof instance.getSnapshotBeforeUpdate==='function'){if(oldProps!==current.memoizedProps||oldState!==current.memoizedState){workInProgress.effectTag|=Snapshot;}}return false;}if(typeof getDerivedStateFromProps==='function'){applyDerivedStateFromProps(workInProgress,ctor,getDerivedStateFromProps,newProps);newState=workInProgress.memoizedState;}var shouldUpdate=checkHasForceUpdateAfterProcessing()||checkShouldComponentUpdate(workInProgress,ctor,oldProps,newProps,oldState,newState,nextContext);if(shouldUpdate){// In order to support react-lifecycles-compat polyfilled components,
+// Unsafe lifecycles should not be invoked for components using the new APIs.
+if(!hasNewLifecycles&&(typeof instance.UNSAFE_componentWillUpdate==='function'||typeof instance.componentWillUpdate==='function')){startPhaseTimer(workInProgress,'componentWillUpdate');if(typeof instance.componentWillUpdate==='function'){instance.componentWillUpdate(newProps,newState,nextContext);}if(typeof instance.UNSAFE_componentWillUpdate==='function'){instance.UNSAFE_componentWillUpdate(newProps,newState,nextContext);}stopPhaseTimer();}if(typeof instance.componentDidUpdate==='function'){workInProgress.effectTag|=Update;}if(typeof instance.getSnapshotBeforeUpdate==='function'){workInProgress.effectTag|=Snapshot;}}else{// If an update was already in progress, we should schedule an Update
+// effect even though we're bailing out, so that cWU/cDU are called.
+if(typeof instance.componentDidUpdate==='function'){if(oldProps!==current.memoizedProps||oldState!==current.memoizedState){workInProgress.effectTag|=Update;}}if(typeof instance.getSnapshotBeforeUpdate==='function'){if(oldProps!==current.memoizedProps||oldState!==current.memoizedState){workInProgress.effectTag|=Snapshot;}}// If shouldComponentUpdate returned false, we should still update the
+// memoized props/state to indicate that this work can be reused.
+workInProgress.memoizedProps=newProps;workInProgress.memoizedState=newState;}// Update the existing instance's state, props, and context pointers even
+// if shouldComponentUpdate returns false.
+instance.props=newProps;instance.state=newState;instance.context=nextContext;return shouldUpdate;}var didWarnAboutMaps=void 0;var didWarnAboutGenerators=void 0;var didWarnAboutStringRefInStrictMode=void 0;var ownerHasKeyUseWarning=void 0;var ownerHasFunctionTypeWarning=void 0;var warnForMissingKey=function(child){};{didWarnAboutMaps=false;didWarnAboutGenerators=false;didWarnAboutStringRefInStrictMode={};/**
+   * Warn if there's no key explicitly set on dynamic arrays of children or
+   * object keys are not valid. This allows us to keep track of children between
+   * updates.
+   */ownerHasKeyUseWarning={};ownerHasFunctionTypeWarning={};warnForMissingKey=function(child){if(child===null||typeof child!=='object'){return;}if(!child._store||child._store.validated||child.key!=null){return;}!(typeof child._store==='object')?invariant(false,'React Component in warnForMissingKey should have a _store. This error is likely caused by a bug in React. Please file an issue.'):void 0;child._store.validated=true;var currentComponentErrorInfo='Each child in a list should have a unique '+'"key" prop. See https://fb.me/react-warning-keys for '+'more information.'+getCurrentFiberStackInDev();if(ownerHasKeyUseWarning[currentComponentErrorInfo]){return;}ownerHasKeyUseWarning[currentComponentErrorInfo]=true;warning$1(false,'Each child in a list should have a unique '+'"key" prop. See https://fb.me/react-warning-keys for '+'more information.');};}var isArray=Array.isArray;function coerceRef(returnFiber,current$$1,element){var mixedRef=element.ref;if(mixedRef!==null&&typeof mixedRef!=='function'&&typeof mixedRef!=='object'){{if(returnFiber.mode&StrictMode){var componentName=getComponentName(returnFiber.type)||'Component';if(!didWarnAboutStringRefInStrictMode[componentName]){warningWithoutStack$1(false,'A string ref, "%s", has been found within a strict mode tree. '+'String refs are a source of potential bugs and should be avoided. '+'We recommend using createRef() instead.'+'\n%s'+'\n\nLearn more about using refs safely here:'+'\nhttps://fb.me/react-strict-mode-string-ref',mixedRef,getStackByFiberInDevAndProd(returnFiber));didWarnAboutStringRefInStrictMode[componentName]=true;}}}if(element._owner){var owner=element._owner;var inst=void 0;if(owner){var ownerFiber=owner;!(ownerFiber.tag===ClassComponent)?invariant(false,'Function components cannot have refs. Did you mean to use React.forwardRef()?'):void 0;inst=ownerFiber.stateNode;}!inst?invariant(false,'Missing owner for string ref %s. This error is likely caused by a bug in React. Please file an issue.',mixedRef):void 0;var stringRef=''+mixedRef;// Check if previous string ref matches new string ref
+if(current$$1!==null&&current$$1.ref!==null&&typeof current$$1.ref==='function'&&current$$1.ref._stringRef===stringRef){return current$$1.ref;}var ref=function(value){var refs=inst.refs;if(refs===emptyRefsObject){// This is a lazy pooled frozen object, so we need to initialize.
+refs=inst.refs={};}if(value===null){delete refs[stringRef];}else{refs[stringRef]=value;}};ref._stringRef=stringRef;return ref;}else{!(typeof mixedRef==='string')?invariant(false,'Expected ref to be a function, a string, an object returned by React.createRef(), or null.'):void 0;!element._owner?invariant(false,'Element ref was specified as a string (%s) but no owner was set. This could happen for one of the following reasons:\n1. You may be adding a ref to a function component\n2. You may be adding a ref to a component that was not created inside a component\'s render method\n3. You have multiple copies of React loaded\nSee https://fb.me/react-refs-must-have-owner for more information.',mixedRef):void 0;}}return mixedRef;}function throwOnInvalidObjectType(returnFiber,newChild){if(returnFiber.type!=='textarea'){var addendum='';{addendum=' If you meant to render a collection of children, use an array '+'instead.'+getCurrentFiberStackInDev();}invariant(false,'Objects are not valid as a React child (found: %s).%s',Object.prototype.toString.call(newChild)==='[object Object]'?'object with keys {'+Object.keys(newChild).join(', ')+'}':newChild,addendum);}}function warnOnFunctionType(){var currentComponentErrorInfo='Functions are not valid as a React child. This may happen if '+'you return a Component instead of <Component /> from render. '+'Or maybe you meant to call this function rather than return it.'+getCurrentFiberStackInDev();if(ownerHasFunctionTypeWarning[currentComponentErrorInfo]){return;}ownerHasFunctionTypeWarning[currentComponentErrorInfo]=true;warning$1(false,'Functions are not valid as a React child. This may happen if '+'you return a Component instead of <Component /> from render. '+'Or maybe you meant to call this function rather than return it.');}// This wrapper function exists because I expect to clone the code in each path
+// to be able to optimize each path individually by branching early. This needs
+// a compiler or we can do it manually. Helpers that don't need this branching
+// live outside of this function.
+function ChildReconciler(shouldTrackSideEffects){function deleteChild(returnFiber,childToDelete){if(!shouldTrackSideEffects){// Noop.
+return;}// Deletions are added in reversed order so we add it to the front.
+// At this point, the return fiber's effect list is empty except for
+// deletions, so we can just append the deletion to the list. The remaining
+// effects aren't added until the complete phase. Once we implement
+// resuming, this may not be true.
+var last=returnFiber.lastEffect;if(last!==null){last.nextEffect=childToDelete;returnFiber.lastEffect=childToDelete;}else{returnFiber.firstEffect=returnFiber.lastEffect=childToDelete;}childToDelete.nextEffect=null;childToDelete.effectTag=Deletion;}function deleteRemainingChildren(returnFiber,currentFirstChild){if(!shouldTrackSideEffects){// Noop.
+return null;}// TODO: For the shouldClone case, this could be micro-optimized a bit by
+// assuming that after the first child we've already added everything.
+var childToDelete=currentFirstChild;while(childToDelete!==null){deleteChild(returnFiber,childToDelete);childToDelete=childToDelete.sibling;}return null;}function mapRemainingChildren(returnFiber,currentFirstChild){// Add the remaining children to a temporary map so that we can find them by
+// keys quickly. Implicit (null) keys get added to this set with their index
+var existingChildren=new Map();var existingChild=currentFirstChild;while(existingChild!==null){if(existingChild.key!==null){existingChildren.set(existingChild.key,existingChild);}else{existingChildren.set(existingChild.index,existingChild);}existingChild=existingChild.sibling;}return existingChildren;}function useFiber(fiber,pendingProps,expirationTime){// We currently set sibling to null and index to 0 here because it is easy
+// to forget to do before returning it. E.g. for the single child case.
+var clone=createWorkInProgress(fiber,pendingProps,expirationTime);clone.index=0;clone.sibling=null;return clone;}function placeChild(newFiber,lastPlacedIndex,newIndex){newFiber.index=newIndex;if(!shouldTrackSideEffects){// Noop.
+return lastPlacedIndex;}var current$$1=newFiber.alternate;if(current$$1!==null){var oldIndex=current$$1.index;if(oldIndex<lastPlacedIndex){// This is a move.
+newFiber.effectTag=Placement;return lastPlacedIndex;}else{// This item can stay in place.
+return oldIndex;}}else{// This is an insertion.
+newFiber.effectTag=Placement;return lastPlacedIndex;}}function placeSingleChild(newFiber){// This is simpler for the single child case. We only need to do a
+// placement for inserting new children.
+if(shouldTrackSideEffects&&newFiber.alternate===null){newFiber.effectTag=Placement;}return newFiber;}function updateTextNode(returnFiber,current$$1,textContent,expirationTime){if(current$$1===null||current$$1.tag!==HostText){// Insert
+var created=createFiberFromText(textContent,returnFiber.mode,expirationTime);created.return=returnFiber;return created;}else{// Update
+var existing=useFiber(current$$1,textContent,expirationTime);existing.return=returnFiber;return existing;}}function updateElement(returnFiber,current$$1,element,expirationTime){if(current$$1!==null&&current$$1.elementType===element.type){// Move based on index
+var existing=useFiber(current$$1,element.props,expirationTime);existing.ref=coerceRef(returnFiber,current$$1,element);existing.return=returnFiber;{existing._debugSource=element._source;existing._debugOwner=element._owner;}return existing;}else{// Insert
+var created=createFiberFromElement(element,returnFiber.mode,expirationTime);created.ref=coerceRef(returnFiber,current$$1,element);created.return=returnFiber;return created;}}function updatePortal(returnFiber,current$$1,portal,expirationTime){if(current$$1===null||current$$1.tag!==HostPortal||current$$1.stateNode.containerInfo!==portal.containerInfo||current$$1.stateNode.implementation!==portal.implementation){// Insert
+var created=createFiberFromPortal(portal,returnFiber.mode,expirationTime);created.return=returnFiber;return created;}else{// Update
+var existing=useFiber(current$$1,portal.children||[],expirationTime);existing.return=returnFiber;return existing;}}function updateFragment(returnFiber,current$$1,fragment,expirationTime,key){if(current$$1===null||current$$1.tag!==Fragment){// Insert
+var created=createFiberFromFragment(fragment,returnFiber.mode,expirationTime,key);created.return=returnFiber;return created;}else{// Update
+var existing=useFiber(current$$1,fragment,expirationTime);existing.return=returnFiber;return existing;}}function createChild(returnFiber,newChild,expirationTime){if(typeof newChild==='string'||typeof newChild==='number'){// Text nodes don't have keys. If the previous node is implicitly keyed
+// we can continue to replace it without aborting even if it is not a text
+// node.
+var created=createFiberFromText(''+newChild,returnFiber.mode,expirationTime);created.return=returnFiber;return created;}if(typeof newChild==='object'&&newChild!==null){switch(newChild.$$typeof){case REACT_ELEMENT_TYPE:{var _created=createFiberFromElement(newChild,returnFiber.mode,expirationTime);_created.ref=coerceRef(returnFiber,null,newChild);_created.return=returnFiber;return _created;}case REACT_PORTAL_TYPE:{var _created2=createFiberFromPortal(newChild,returnFiber.mode,expirationTime);_created2.return=returnFiber;return _created2;}}if(isArray(newChild)||getIteratorFn(newChild)){var _created3=createFiberFromFragment(newChild,returnFiber.mode,expirationTime,null);_created3.return=returnFiber;return _created3;}throwOnInvalidObjectType(returnFiber,newChild);}{if(typeof newChild==='function'){warnOnFunctionType();}}return null;}function updateSlot(returnFiber,oldFiber,newChild,expirationTime){// Update the fiber if the keys match, otherwise return null.
+var key=oldFiber!==null?oldFiber.key:null;if(typeof newChild==='string'||typeof newChild==='number'){// Text nodes don't have keys. If the previous node is implicitly keyed
+// we can continue to replace it without aborting even if it is not a text
+// node.
+if(key!==null){return null;}return updateTextNode(returnFiber,oldFiber,''+newChild,expirationTime);}if(typeof newChild==='object'&&newChild!==null){switch(newChild.$$typeof){case REACT_ELEMENT_TYPE:{if(newChild.key===key){if(newChild.type===REACT_FRAGMENT_TYPE){return updateFragment(returnFiber,oldFiber,newChild.props.children,expirationTime,key);}return updateElement(returnFiber,oldFiber,newChild,expirationTime);}else{return null;}}case REACT_PORTAL_TYPE:{if(newChild.key===key){return updatePortal(returnFiber,oldFiber,newChild,expirationTime);}else{return null;}}}if(isArray(newChild)||getIteratorFn(newChild)){if(key!==null){return null;}return updateFragment(returnFiber,oldFiber,newChild,expirationTime,null);}throwOnInvalidObjectType(returnFiber,newChild);}{if(typeof newChild==='function'){warnOnFunctionType();}}return null;}function updateFromMap(existingChildren,returnFiber,newIdx,newChild,expirationTime){if(typeof newChild==='string'||typeof newChild==='number'){// Text nodes don't have keys, so we neither have to check the old nor
+// new node for the key. If both are text nodes, they match.
+var matchedFiber=existingChildren.get(newIdx)||null;return updateTextNode(returnFiber,matchedFiber,''+newChild,expirationTime);}if(typeof newChild==='object'&&newChild!==null){switch(newChild.$$typeof){case REACT_ELEMENT_TYPE:{var _matchedFiber=existingChildren.get(newChild.key===null?newIdx:newChild.key)||null;if(newChild.type===REACT_FRAGMENT_TYPE){return updateFragment(returnFiber,_matchedFiber,newChild.props.children,expirationTime,newChild.key);}return updateElement(returnFiber,_matchedFiber,newChild,expirationTime);}case REACT_PORTAL_TYPE:{var _matchedFiber2=existingChildren.get(newChild.key===null?newIdx:newChild.key)||null;return updatePortal(returnFiber,_matchedFiber2,newChild,expirationTime);}}if(isArray(newChild)||getIteratorFn(newChild)){var _matchedFiber3=existingChildren.get(newIdx)||null;return updateFragment(returnFiber,_matchedFiber3,newChild,expirationTime,null);}throwOnInvalidObjectType(returnFiber,newChild);}{if(typeof newChild==='function'){warnOnFunctionType();}}return null;}/**
+   * Warns if there is a duplicate or missing key
+   */function warnOnInvalidKey(child,knownKeys){{if(typeof child!=='object'||child===null){return knownKeys;}switch(child.$$typeof){case REACT_ELEMENT_TYPE:case REACT_PORTAL_TYPE:warnForMissingKey(child);var key=child.key;if(typeof key!=='string'){break;}if(knownKeys===null){knownKeys=new Set();knownKeys.add(key);break;}if(!knownKeys.has(key)){knownKeys.add(key);break;}warning$1(false,'Encountered two children with the same key, `%s`. '+'Keys should be unique so that components maintain their identity '+'across updates. Non-unique keys may cause children to be '+'duplicated and/or omitted — the behavior is unsupported and '+'could change in a future version.',key);break;default:break;}}return knownKeys;}function reconcileChildrenArray(returnFiber,currentFirstChild,newChildren,expirationTime){// This algorithm can't optimize by searching from both ends since we
+// don't have backpointers on fibers. I'm trying to see how far we can get
+// with that model. If it ends up not being worth the tradeoffs, we can
+// add it later.
+// Even with a two ended optimization, we'd want to optimize for the case
+// where there are few changes and brute force the comparison instead of
+// going for the Map. It'd like to explore hitting that path first in
+// forward-only mode and only go for the Map once we notice that we need
+// lots of look ahead. This doesn't handle reversal as well as two ended
+// search but that's unusual. Besides, for the two ended optimization to
+// work on Iterables, we'd need to copy the whole set.
+// In this first iteration, we'll just live with hitting the bad case
+// (adding everything to a Map) in for every insert/move.
+// If you change this code, also update reconcileChildrenIterator() which
+// uses the same algorithm.
+{// First, validate keys.
+var knownKeys=null;for(var i=0;i<newChildren.length;i++){var child=newChildren[i];knownKeys=warnOnInvalidKey(child,knownKeys);}}var resultingFirstChild=null;var previousNewFiber=null;var oldFiber=currentFirstChild;var lastPlacedIndex=0;var newIdx=0;var nextOldFiber=null;for(;oldFiber!==null&&newIdx<newChildren.length;newIdx++){if(oldFiber.index>newIdx){nextOldFiber=oldFiber;oldFiber=null;}else{nextOldFiber=oldFiber.sibling;}var newFiber=updateSlot(returnFiber,oldFiber,newChildren[newIdx],expirationTime);if(newFiber===null){// TODO: This breaks on empty slots like null children. That's
+// unfortunate because it triggers the slow path all the time. We need
+// a better way to communicate whether this was a miss or null,
+// boolean, undefined, etc.
+if(oldFiber===null){oldFiber=nextOldFiber;}break;}if(shouldTrackSideEffects){if(oldFiber&&newFiber.alternate===null){// We matched the slot, but we didn't reuse the existing fiber, so we
+// need to delete the existing child.
+deleteChild(returnFiber,oldFiber);}}lastPlacedIndex=placeChild(newFiber,lastPlacedIndex,newIdx);if(previousNewFiber===null){// TODO: Move out of the loop. This only happens for the first run.
+resultingFirstChild=newFiber;}else{// TODO: Defer siblings if we're not at the right index for this slot.
+// I.e. if we had null values before, then we want to defer this
+// for each null value. However, we also don't want to call updateSlot
+// with the previous one.
+previousNewFiber.sibling=newFiber;}previousNewFiber=newFiber;oldFiber=nextOldFiber;}if(newIdx===newChildren.length){// We've reached the end of the new children. We can delete the rest.
+deleteRemainingChildren(returnFiber,oldFiber);return resultingFirstChild;}if(oldFiber===null){// If we don't have any more existing children we can choose a fast path
+// since the rest will all be insertions.
+for(;newIdx<newChildren.length;newIdx++){var _newFiber=createChild(returnFiber,newChildren[newIdx],expirationTime);if(!_newFiber){continue;}lastPlacedIndex=placeChild(_newFiber,lastPlacedIndex,newIdx);if(previousNewFiber===null){// TODO: Move out of the loop. This only happens for the first run.
+resultingFirstChild=_newFiber;}else{previousNewFiber.sibling=_newFiber;}previousNewFiber=_newFiber;}return resultingFirstChild;}// Add all children to a key map for quick lookups.
+var existingChildren=mapRemainingChildren(returnFiber,oldFiber);// Keep scanning and use the map to restore deleted items as moves.
+for(;newIdx<newChildren.length;newIdx++){var _newFiber2=updateFromMap(existingChildren,returnFiber,newIdx,newChildren[newIdx],expirationTime);if(_newFiber2){if(shouldTrackSideEffects){if(_newFiber2.alternate!==null){// The new fiber is a work in progress, but if there exists a
+// current, that means that we reused the fiber. We need to delete
+// it from the child list so that we don't add it to the deletion
+// list.
+existingChildren.delete(_newFiber2.key===null?newIdx:_newFiber2.key);}}lastPlacedIndex=placeChild(_newFiber2,lastPlacedIndex,newIdx);if(previousNewFiber===null){resultingFirstChild=_newFiber2;}else{previousNewFiber.sibling=_newFiber2;}previousNewFiber=_newFiber2;}}if(shouldTrackSideEffects){// Any existing children that weren't consumed above were deleted. We need
+// to add them to the deletion list.
+existingChildren.forEach(function(child){return deleteChild(returnFiber,child);});}return resultingFirstChild;}function reconcileChildrenIterator(returnFiber,currentFirstChild,newChildrenIterable,expirationTime){// This is the same implementation as reconcileChildrenArray(),
+// but using the iterator instead.
+var iteratorFn=getIteratorFn(newChildrenIterable);!(typeof iteratorFn==='function')?invariant(false,'An object is not an iterable. This error is likely caused by a bug in React. Please file an issue.'):void 0;{// We don't support rendering Generators because it's a mutation.
+// See https://github.com/facebook/react/issues/12995
+if(typeof Symbol==='function'&&// $FlowFixMe Flow doesn't know about toStringTag
+newChildrenIterable[Symbol.toStringTag]==='Generator'){!didWarnAboutGenerators?warning$1(false,'Using Generators as children is unsupported and will likely yield '+'unexpected results because enumerating a generator mutates it. '+'You may convert it to an array with `Array.from()` or the '+'`[...spread]` operator before rendering. Keep in mind '+'you might need to polyfill these features for older browsers.'):void 0;didWarnAboutGenerators=true;}// Warn about using Maps as children
+if(newChildrenIterable.entries===iteratorFn){!didWarnAboutMaps?warning$1(false,'Using Maps as children is unsupported and will likely yield '+'unexpected results. Convert it to a sequence/iterable of keyed '+'ReactElements instead.'):void 0;didWarnAboutMaps=true;}// First, validate keys.
+// We'll get a different iterator later for the main pass.
+var _newChildren=iteratorFn.call(newChildrenIterable);if(_newChildren){var knownKeys=null;var _step=_newChildren.next();for(;!_step.done;_step=_newChildren.next()){var child=_step.value;knownKeys=warnOnInvalidKey(child,knownKeys);}}}var newChildren=iteratorFn.call(newChildrenIterable);!(newChildren!=null)?invariant(false,'An iterable object provided no iterator.'):void 0;var resultingFirstChild=null;var previousNewFiber=null;var oldFiber=currentFirstChild;var lastPlacedIndex=0;var newIdx=0;var nextOldFiber=null;var step=newChildren.next();for(;oldFiber!==null&&!step.done;newIdx++,step=newChildren.next()){if(oldFiber.index>newIdx){nextOldFiber=oldFiber;oldFiber=null;}else{nextOldFiber=oldFiber.sibling;}var newFiber=updateSlot(returnFiber,oldFiber,step.value,expirationTime);if(newFiber===null){// TODO: This breaks on empty slots like null children. That's
+// unfortunate because it triggers the slow path all the time. We need
+// a better way to communicate whether this was a miss or null,
+// boolean, undefined, etc.
+if(!oldFiber){oldFiber=nextOldFiber;}break;}if(shouldTrackSideEffects){if(oldFiber&&newFiber.alternate===null){// We matched the slot, but we didn't reuse the existing fiber, so we
+// need to delete the existing child.
+deleteChild(returnFiber,oldFiber);}}lastPlacedIndex=placeChild(newFiber,lastPlacedIndex,newIdx);if(previousNewFiber===null){// TODO: Move out of the loop. This only happens for the first run.
+resultingFirstChild=newFiber;}else{// TODO: Defer siblings if we're not at the right index for this slot.
+// I.e. if we had null values before, then we want to defer this
+// for each null value. However, we also don't want to call updateSlot
+// with the previous one.
+previousNewFiber.sibling=newFiber;}previousNewFiber=newFiber;oldFiber=nextOldFiber;}if(step.done){// We've reached the end of the new children. We can delete the rest.
+deleteRemainingChildren(returnFiber,oldFiber);return resultingFirstChild;}if(oldFiber===null){// If we don't have any more existing children we can choose a fast path
+// since the rest will all be insertions.
+for(;!step.done;newIdx++,step=newChildren.next()){var _newFiber3=createChild(returnFiber,step.value,expirationTime);if(_newFiber3===null){continue;}lastPlacedIndex=placeChild(_newFiber3,lastPlacedIndex,newIdx);if(previousNewFiber===null){// TODO: Move out of the loop. This only happens for the first run.
+resultingFirstChild=_newFiber3;}else{previousNewFiber.sibling=_newFiber3;}previousNewFiber=_newFiber3;}return resultingFirstChild;}// Add all children to a key map for quick lookups.
+var existingChildren=mapRemainingChildren(returnFiber,oldFiber);// Keep scanning and use the map to restore deleted items as moves.
+for(;!step.done;newIdx++,step=newChildren.next()){var _newFiber4=updateFromMap(existingChildren,returnFiber,newIdx,step.value,expirationTime);if(_newFiber4!==null){if(shouldTrackSideEffects){if(_newFiber4.alternate!==null){// The new fiber is a work in progress, but if there exists a
+// current, that means that we reused the fiber. We need to delete
+// it from the child list so that we don't add it to the deletion
+// list.
+existingChildren.delete(_newFiber4.key===null?newIdx:_newFiber4.key);}}lastPlacedIndex=placeChild(_newFiber4,lastPlacedIndex,newIdx);if(previousNewFiber===null){resultingFirstChild=_newFiber4;}else{previousNewFiber.sibling=_newFiber4;}previousNewFiber=_newFiber4;}}if(shouldTrackSideEffects){// Any existing children that weren't consumed above were deleted. We need
+// to add them to the deletion list.
+existingChildren.forEach(function(child){return deleteChild(returnFiber,child);});}return resultingFirstChild;}function reconcileSingleTextNode(returnFiber,currentFirstChild,textContent,expirationTime){// There's no need to check for keys on text nodes since we don't have a
+// way to define them.
+if(currentFirstChild!==null&&currentFirstChild.tag===HostText){// We already have an existing node so let's just update it and delete
+// the rest.
+deleteRemainingChildren(returnFiber,currentFirstChild.sibling);var existing=useFiber(currentFirstChild,textContent,expirationTime);existing.return=returnFiber;return existing;}// The existing first child is not a text node so we need to create one
+// and delete the existing ones.
+deleteRemainingChildren(returnFiber,currentFirstChild);var created=createFiberFromText(textContent,returnFiber.mode,expirationTime);created.return=returnFiber;return created;}function reconcileSingleElement(returnFiber,currentFirstChild,element,expirationTime){var key=element.key;var child=currentFirstChild;while(child!==null){// TODO: If key === null and child.key === null, then this only applies to
+// the first item in the list.
+if(child.key===key){if(child.tag===Fragment?element.type===REACT_FRAGMENT_TYPE:child.elementType===element.type){deleteRemainingChildren(returnFiber,child.sibling);var existing=useFiber(child,element.type===REACT_FRAGMENT_TYPE?element.props.children:element.props,expirationTime);existing.ref=coerceRef(returnFiber,child,element);existing.return=returnFiber;{existing._debugSource=element._source;existing._debugOwner=element._owner;}return existing;}else{deleteRemainingChildren(returnFiber,child);break;}}else{deleteChild(returnFiber,child);}child=child.sibling;}if(element.type===REACT_FRAGMENT_TYPE){var created=createFiberFromFragment(element.props.children,returnFiber.mode,expirationTime,element.key);created.return=returnFiber;return created;}else{var _created4=createFiberFromElement(element,returnFiber.mode,expirationTime);_created4.ref=coerceRef(returnFiber,currentFirstChild,element);_created4.return=returnFiber;return _created4;}}function reconcileSinglePortal(returnFiber,currentFirstChild,portal,expirationTime){var key=portal.key;var child=currentFirstChild;while(child!==null){// TODO: If key === null and child.key === null, then this only applies to
+// the first item in the list.
+if(child.key===key){if(child.tag===HostPortal&&child.stateNode.containerInfo===portal.containerInfo&&child.stateNode.implementation===portal.implementation){deleteRemainingChildren(returnFiber,child.sibling);var existing=useFiber(child,portal.children||[],expirationTime);existing.return=returnFiber;return existing;}else{deleteRemainingChildren(returnFiber,child);break;}}else{deleteChild(returnFiber,child);}child=child.sibling;}var created=createFiberFromPortal(portal,returnFiber.mode,expirationTime);created.return=returnFiber;return created;}// This API will tag the children with the side-effect of the reconciliation
+// itself. They will be added to the side-effect list as we pass through the
+// children and the parent.
+function reconcileChildFibers(returnFiber,currentFirstChild,newChild,expirationTime){// This function is not recursive.
+// If the top level item is an array, we treat it as a set of children,
+// not as a fragment. Nested arrays on the other hand will be treated as
+// fragment nodes. Recursion happens at the normal flow.
+// Handle top level unkeyed fragments as if they were arrays.
+// This leads to an ambiguity between <>{[...]}</> and <>...</>.
+// We treat the ambiguous cases above the same.
+var isUnkeyedTopLevelFragment=typeof newChild==='object'&&newChild!==null&&newChild.type===REACT_FRAGMENT_TYPE&&newChild.key===null;if(isUnkeyedTopLevelFragment){newChild=newChild.props.children;}// Handle object types
+var isObject=typeof newChild==='object'&&newChild!==null;if(isObject){switch(newChild.$$typeof){case REACT_ELEMENT_TYPE:return placeSingleChild(reconcileSingleElement(returnFiber,currentFirstChild,newChild,expirationTime));case REACT_PORTAL_TYPE:return placeSingleChild(reconcileSinglePortal(returnFiber,currentFirstChild,newChild,expirationTime));}}if(typeof newChild==='string'||typeof newChild==='number'){return placeSingleChild(reconcileSingleTextNode(returnFiber,currentFirstChild,''+newChild,expirationTime));}if(isArray(newChild)){return reconcileChildrenArray(returnFiber,currentFirstChild,newChild,expirationTime);}if(getIteratorFn(newChild)){return reconcileChildrenIterator(returnFiber,currentFirstChild,newChild,expirationTime);}if(isObject){throwOnInvalidObjectType(returnFiber,newChild);}{if(typeof newChild==='function'){warnOnFunctionType();}}if(typeof newChild==='undefined'&&!isUnkeyedTopLevelFragment){// If the new child is undefined, and the return fiber is a composite
+// component, throw an error. If Fiber return types are disabled,
+// we already threw above.
+switch(returnFiber.tag){case ClassComponent:{{var instance=returnFiber.stateNode;if(instance.render._isMockFunction){// We allow auto-mocks to proceed as if they're returning null.
+break;}}}// Intentionally fall through to the next case, which handles both
+// functions and classes
+// eslint-disable-next-lined no-fallthrough
+case FunctionComponent:{var Component=returnFiber.type;invariant(false,'%s(...): Nothing was returned from render. This usually means a return statement is missing. Or, to render nothing, return null.',Component.displayName||Component.name||'Component');}}}// Remaining cases are all treated as empty.
+return deleteRemainingChildren(returnFiber,currentFirstChild);}return reconcileChildFibers;}var reconcileChildFibers=ChildReconciler(true);var mountChildFibers=ChildReconciler(false);function cloneChildFibers(current$$1,workInProgress){!(current$$1===null||workInProgress.child===current$$1.child)?invariant(false,'Resuming work not yet implemented.'):void 0;if(workInProgress.child===null){return;}var currentChild=workInProgress.child;var newChild=createWorkInProgress(currentChild,currentChild.pendingProps,currentChild.expirationTime);workInProgress.child=newChild;newChild.return=workInProgress;while(currentChild.sibling!==null){currentChild=currentChild.sibling;newChild=newChild.sibling=createWorkInProgress(currentChild,currentChild.pendingProps,currentChild.expirationTime);newChild.return=workInProgress;}newChild.sibling=null;}var NO_CONTEXT={};var contextStackCursor$1=createCursor(NO_CONTEXT);var contextFiberStackCursor=createCursor(NO_CONTEXT);var rootInstanceStackCursor=createCursor(NO_CONTEXT);function requiredContext(c){!(c!==NO_CONTEXT)?invariant(false,'Expected host context to exist. This error is likely caused by a bug in React. Please file an issue.'):void 0;return c;}function getRootHostContainer(){var rootInstance=requiredContext(rootInstanceStackCursor.current);return rootInstance;}function pushHostContainer(fiber,nextRootInstance){// Push current root instance onto the stack;
+// This allows us to reset root when portals are popped.
+push(rootInstanceStackCursor,nextRootInstance,fiber);// Track the context and the Fiber that provided it.
+// This enables us to pop only Fibers that provide unique contexts.
+push(contextFiberStackCursor,fiber,fiber);// Finally, we need to push the host context to the stack.
+// However, we can't just call getRootHostContext() and push it because
+// we'd have a different number of entries on the stack depending on
+// whether getRootHostContext() throws somewhere in renderer code or not.
+// So we push an empty value first. This lets us safely unwind on errors.
+push(contextStackCursor$1,NO_CONTEXT,fiber);var nextRootContext=getRootHostContext(nextRootInstance);// Now that we know this function doesn't throw, replace it.
+pop(contextStackCursor$1,fiber);push(contextStackCursor$1,nextRootContext,fiber);}function popHostContainer(fiber){pop(contextStackCursor$1,fiber);pop(contextFiberStackCursor,fiber);pop(rootInstanceStackCursor,fiber);}function getHostContext(){var context=requiredContext(contextStackCursor$1.current);return context;}function pushHostContext(fiber){var rootInstance=requiredContext(rootInstanceStackCursor.current);var context=requiredContext(contextStackCursor$1.current);var nextContext=getChildHostContext(context,fiber.type,rootInstance);// Don't push this Fiber's context unless it's unique.
+if(context===nextContext){return;}// Track the context and the Fiber that provided it.
+// This enables us to pop only Fibers that provide unique contexts.
+push(contextFiberStackCursor,fiber,fiber);push(contextStackCursor$1,nextContext,fiber);}function popHostContext(fiber){// Do not pop unless this Fiber provided the current context.
+// pushHostContext() only pushes Fibers that provide unique contexts.
+if(contextFiberStackCursor.current!==fiber){return;}pop(contextStackCursor$1,fiber);pop(contextFiberStackCursor,fiber);}var NoEffect$1=/*             */0;var UnmountSnapshot=/*      */2;var UnmountMutation=/*      */4;var MountMutation=/*        */8;var UnmountLayout=/*        */16;var MountLayout=/*          */32;var MountPassive=/*         */64;var UnmountPassive=/*       */128;var ReactCurrentDispatcher$1=ReactSharedInternals.ReactCurrentDispatcher;var didWarnAboutMismatchedHooksForComponent=void 0;{didWarnAboutMismatchedHooksForComponent=new Set();}// These are set right before calling the component.
+var renderExpirationTime=NoWork;// The work-in-progress fiber. I've named it differently to distinguish it from
+// the work-in-progress hook.
+var currentlyRenderingFiber$1=null;// Hooks are stored as a linked list on the fiber's memoizedState field. The
+// current hook list is the list that belongs to the current fiber. The
+// work-in-progress hook list is a new list that will be added to the
+// work-in-progress fiber.
+var currentHook=null;var nextCurrentHook=null;var firstWorkInProgressHook=null;var workInProgressHook=null;var nextWorkInProgressHook=null;var remainingExpirationTime=NoWork;var componentUpdateQueue=null;var sideEffectTag=0;// Updates scheduled during render will trigger an immediate re-render at the
+// end of the current pass. We can't store these updates on the normal queue,
+// because if the work is aborted, they should be discarded. Because this is
+// a relatively rare case, we also don't want to add an additional field to
+// either the hook or queue object types. So we store them in a lazily create
+// map of queue -> render-phase updates, which are discarded once the component
+// completes without re-rendering.
+// Whether an update was scheduled during the currently executing render pass.
+var didScheduleRenderPhaseUpdate=false;// Lazily created map of render-phase updates
+var renderPhaseUpdates=null;// Counter to prevent infinite loops.
+var numberOfReRenders=0;var RE_RENDER_LIMIT=25;// In DEV, this is the name of the currently executing primitive hook
+var currentHookNameInDev=null;// In DEV, this list ensures that hooks are called in the same order between renders.
+// The list stores the order of hooks used during the initial render (mount).
+// Subsequent renders (updates) reference this list.
+var hookTypesDev=null;var hookTypesUpdateIndexDev=-1;function mountHookTypesDev(){{var hookName=currentHookNameInDev;if(hookTypesDev===null){hookTypesDev=[hookName];}else{hookTypesDev.push(hookName);}}}function updateHookTypesDev(){{var hookName=currentHookNameInDev;if(hookTypesDev!==null){hookTypesUpdateIndexDev++;if(hookTypesDev[hookTypesUpdateIndexDev]!==hookName){warnOnHookMismatchInDev(hookName);}}}}function warnOnHookMismatchInDev(currentHookName){{var componentName=getComponentName(currentlyRenderingFiber$1.type);if(!didWarnAboutMismatchedHooksForComponent.has(componentName)){didWarnAboutMismatchedHooksForComponent.add(componentName);if(hookTypesDev!==null){var table='';var secondColumnStart=30;for(var i=0;i<=hookTypesUpdateIndexDev;i++){var oldHookName=hookTypesDev[i];var newHookName=i===hookTypesUpdateIndexDev?currentHookName:oldHookName;var row=i+1+'. '+oldHookName;// Extra space so second column lines up
+// lol @ IE not supporting String#repeat
+while(row.length<secondColumnStart){row+=' ';}row+=newHookName+'\n';table+=row;}warning$1(false,'React has detected a change in the order of Hooks called by %s. '+'This will lead to bugs and errors if not fixed. '+'For more information, read the Rules of Hooks: https://fb.me/rules-of-hooks\n\n'+'   Previous render            Next render\n'+'   ------------------------------------------------------\n'+'%s'+'   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n',componentName,table);}}}}function throwInvalidHookError(){invariant(false,'Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:\n1. You might have mismatching versions of React and the renderer (such as React DOM)\n2. You might be breaking the Rules of Hooks\n3. You might have more than one copy of React in the same app\nSee https://fb.me/react-invalid-hook-call for tips about how to debug and fix this problem.');}function areHookInputsEqual(nextDeps,prevDeps){if(prevDeps===null){{warning$1(false,'%s received a final argument during this render, but not during '+'the previous render. Even though the final argument is optional, '+'its type cannot change between renders.',currentHookNameInDev);}return false;}{// Don't bother comparing lengths in prod because these arrays should be
+// passed inline.
+if(nextDeps.length!==prevDeps.length){warning$1(false,'The final argument passed to %s changed size between renders. The '+'order and size of this array must remain constant.\n\n'+'Previous: %s\n'+'Incoming: %s',currentHookNameInDev,'['+nextDeps.join(', ')+']','['+prevDeps.join(', ')+']');}}for(var i=0;i<prevDeps.length&&i<nextDeps.length;i++){if(is(nextDeps[i],prevDeps[i])){continue;}return false;}return true;}function renderWithHooks(current,workInProgress,Component,props,refOrContext,nextRenderExpirationTime){renderExpirationTime=nextRenderExpirationTime;currentlyRenderingFiber$1=workInProgress;nextCurrentHook=current!==null?current.memoizedState:null;{hookTypesDev=current!==null?current._debugHookTypes:null;hookTypesUpdateIndexDev=-1;}// The following should have already been reset
+// currentHook = null;
+// workInProgressHook = null;
+// remainingExpirationTime = NoWork;
+// componentUpdateQueue = null;
+// didScheduleRenderPhaseUpdate = false;
+// renderPhaseUpdates = null;
+// numberOfReRenders = 0;
+// sideEffectTag = 0;
+// TODO Warn if no hooks are used at all during mount, then some are used during update.
+// Currently we will identify the update render as a mount because nextCurrentHook === null.
+// This is tricky because it's valid for certain types of components (e.g. React.lazy)
+// Using nextCurrentHook to differentiate between mount/update only works if at least one stateful hook is used.
+// Non-stateful hooks (e.g. context) don't get added to memoizedState,
+// so nextCurrentHook would be null during updates and mounts.
+{if(nextCurrentHook!==null){ReactCurrentDispatcher$1.current=HooksDispatcherOnUpdateInDEV;}else if(hookTypesDev!==null){// This dispatcher handles an edge case where a component is updating,
+// but no stateful hooks have been used.
+// We want to match the production code behavior (which will use HooksDispatcherOnMount),
+// but with the extra DEV validation to ensure hooks ordering hasn't changed.
+// This dispatcher does that.
+ReactCurrentDispatcher$1.current=HooksDispatcherOnMountWithHookTypesInDEV;}else{ReactCurrentDispatcher$1.current=HooksDispatcherOnMountInDEV;}}var children=Component(props,refOrContext);if(didScheduleRenderPhaseUpdate){do{didScheduleRenderPhaseUpdate=false;numberOfReRenders+=1;// Start over from the beginning of the list
+nextCurrentHook=current!==null?current.memoizedState:null;nextWorkInProgressHook=firstWorkInProgressHook;currentHook=null;workInProgressHook=null;componentUpdateQueue=null;{// Also validate hook order for cascading updates.
+hookTypesUpdateIndexDev=-1;}ReactCurrentDispatcher$1.current=HooksDispatcherOnUpdateInDEV;children=Component(props,refOrContext);}while(didScheduleRenderPhaseUpdate);renderPhaseUpdates=null;numberOfReRenders=0;}// We can assume the previous dispatcher is always this one, since we set it
+// at the beginning of the render phase and there's no re-entrancy.
+ReactCurrentDispatcher$1.current=ContextOnlyDispatcher;var renderedWork=currentlyRenderingFiber$1;renderedWork.memoizedState=firstWorkInProgressHook;renderedWork.expirationTime=remainingExpirationTime;renderedWork.updateQueue=componentUpdateQueue;renderedWork.effectTag|=sideEffectTag;{renderedWork._debugHookTypes=hookTypesDev;}// This check uses currentHook so that it works the same in DEV and prod bundles.
+// hookTypesDev could catch more cases (e.g. context) but only in DEV bundles.
+var didRenderTooFewHooks=currentHook!==null&&currentHook.next!==null;renderExpirationTime=NoWork;currentlyRenderingFiber$1=null;currentHook=null;nextCurrentHook=null;firstWorkInProgressHook=null;workInProgressHook=null;nextWorkInProgressHook=null;{currentHookNameInDev=null;hookTypesDev=null;hookTypesUpdateIndexDev=-1;}remainingExpirationTime=NoWork;componentUpdateQueue=null;sideEffectTag=0;// These were reset above
+// didScheduleRenderPhaseUpdate = false;
+// renderPhaseUpdates = null;
+// numberOfReRenders = 0;
+!!didRenderTooFewHooks?invariant(false,'Rendered fewer hooks than expected. This may be caused by an accidental early return statement.'):void 0;return children;}function bailoutHooks(current,workInProgress,expirationTime){workInProgress.updateQueue=current.updateQueue;workInProgress.effectTag&=~(Passive|Update);if(current.expirationTime<=expirationTime){current.expirationTime=NoWork;}}function resetHooks(){// We can assume the previous dispatcher is always this one, since we set it
+// at the beginning of the render phase and there's no re-entrancy.
+ReactCurrentDispatcher$1.current=ContextOnlyDispatcher;// This is used to reset the state of this module when a component throws.
+// It's also called inside mountIndeterminateComponent if we determine the
+// component is a module-style component.
+renderExpirationTime=NoWork;currentlyRenderingFiber$1=null;currentHook=null;nextCurrentHook=null;firstWorkInProgressHook=null;workInProgressHook=null;nextWorkInProgressHook=null;{hookTypesDev=null;hookTypesUpdateIndexDev=-1;currentHookNameInDev=null;}remainingExpirationTime=NoWork;componentUpdateQueue=null;sideEffectTag=0;didScheduleRenderPhaseUpdate=false;renderPhaseUpdates=null;numberOfReRenders=0;}function mountWorkInProgressHook(){var hook={memoizedState:null,baseState:null,queue:null,baseUpdate:null,next:null};if(workInProgressHook===null){// This is the first hook in the list
+firstWorkInProgressHook=workInProgressHook=hook;}else{// Append to the end of the list
+workInProgressHook=workInProgressHook.next=hook;}return workInProgressHook;}function updateWorkInProgressHook(){// This function is used both for updates and for re-renders triggered by a
+// render phase update. It assumes there is either a current hook we can
+// clone, or a work-in-progress hook from a previous render pass that we can
+// use as a base. When we reach the end of the base list, we must switch to
+// the dispatcher used for mounts.
+if(nextWorkInProgressHook!==null){// There's already a work-in-progress. Reuse it.
+workInProgressHook=nextWorkInProgressHook;nextWorkInProgressHook=workInProgressHook.next;currentHook=nextCurrentHook;nextCurrentHook=currentHook!==null?currentHook.next:null;}else{// Clone from the current hook.
+!(nextCurrentHook!==null)?invariant(false,'Rendered more hooks than during the previous render.'):void 0;currentHook=nextCurrentHook;var newHook={memoizedState:currentHook.memoizedState,baseState:currentHook.baseState,queue:currentHook.queue,baseUpdate:currentHook.baseUpdate,next:null};if(workInProgressHook===null){// This is the first hook in the list.
+workInProgressHook=firstWorkInProgressHook=newHook;}else{// Append to the end of the list.
+workInProgressHook=workInProgressHook.next=newHook;}nextCurrentHook=currentHook.next;}return workInProgressHook;}function createFunctionComponentUpdateQueue(){return{lastEffect:null};}function basicStateReducer(state,action){return typeof action==='function'?action(state):action;}function mountReducer(reducer,initialArg,init){var hook=mountWorkInProgressHook();var initialState=void 0;if(init!==undefined){initialState=init(initialArg);}else{initialState=initialArg;}hook.memoizedState=hook.baseState=initialState;var queue=hook.queue={last:null,dispatch:null,lastRenderedReducer:reducer,lastRenderedState:initialState};var dispatch=queue.dispatch=dispatchAction.bind(null,// Flow doesn't know this is non-null, but we do.
+currentlyRenderingFiber$1,queue);return[hook.memoizedState,dispatch];}function updateReducer(reducer,initialArg,init){var hook=updateWorkInProgressHook();var queue=hook.queue;!(queue!==null)?invariant(false,'Should have a queue. This is likely a bug in React. Please file an issue.'):void 0;queue.lastRenderedReducer=reducer;if(numberOfReRenders>0){// This is a re-render. Apply the new render phase updates to the previous
+var _dispatch=queue.dispatch;if(renderPhaseUpdates!==null){// Render phase updates are stored in a map of queue -> linked list
+var firstRenderPhaseUpdate=renderPhaseUpdates.get(queue);if(firstRenderPhaseUpdate!==undefined){renderPhaseUpdates.delete(queue);var newState=hook.memoizedState;var update=firstRenderPhaseUpdate;do{// Process this render phase update. We don't have to check the
+// priority because it will always be the same as the current
+// render's.
+var _action=update.action;newState=reducer(newState,_action);update=update.next;}while(update!==null);// Mark that the fiber performed work, but only if the new state is
+// different from the current state.
+if(!is(newState,hook.memoizedState)){markWorkInProgressReceivedUpdate();}hook.memoizedState=newState;// Don't persist the state accumlated from the render phase updates to
+// the base state unless the queue is empty.
+// TODO: Not sure if this is the desired semantics, but it's what we
+// do for gDSFP. I can't remember why.
+if(hook.baseUpdate===queue.last){hook.baseState=newState;}queue.lastRenderedState=newState;return[newState,_dispatch];}}return[hook.memoizedState,_dispatch];}// The last update in the entire queue
+var last=queue.last;// The last update that is part of the base state.
+var baseUpdate=hook.baseUpdate;var baseState=hook.baseState;// Find the first unprocessed update.
+var first=void 0;if(baseUpdate!==null){if(last!==null){// For the first update, the queue is a circular linked list where
+// `queue.last.next = queue.first`. Once the first update commits, and
+// the `baseUpdate` is no longer empty, we can unravel the list.
+last.next=null;}first=baseUpdate.next;}else{first=last!==null?last.next:null;}if(first!==null){var _newState=baseState;var newBaseState=null;var newBaseUpdate=null;var prevUpdate=baseUpdate;var _update=first;var didSkip=false;do{var updateExpirationTime=_update.expirationTime;if(updateExpirationTime<renderExpirationTime){// Priority is insufficient. Skip this update. If this is the first
+// skipped update, the previous update/state is the new base
+// update/state.
+if(!didSkip){didSkip=true;newBaseUpdate=prevUpdate;newBaseState=_newState;}// Update the remaining priority in the queue.
+if(updateExpirationTime>remainingExpirationTime){remainingExpirationTime=updateExpirationTime;}}else{// Process this update.
+if(_update.eagerReducer===reducer){// If this update was processed eagerly, and its reducer matches the
+// current reducer, we can use the eagerly computed state.
+_newState=_update.eagerState;}else{var _action2=_update.action;_newState=reducer(_newState,_action2);}}prevUpdate=_update;_update=_update.next;}while(_update!==null&&_update!==first);if(!didSkip){newBaseUpdate=prevUpdate;newBaseState=_newState;}// Mark that the fiber performed work, but only if the new state is
+// different from the current state.
+if(!is(_newState,hook.memoizedState)){markWorkInProgressReceivedUpdate();}hook.memoizedState=_newState;hook.baseUpdate=newBaseUpdate;hook.baseState=newBaseState;queue.lastRenderedState=_newState;}var dispatch=queue.dispatch;return[hook.memoizedState,dispatch];}function mountState(initialState){var hook=mountWorkInProgressHook();if(typeof initialState==='function'){initialState=initialState();}hook.memoizedState=hook.baseState=initialState;var queue=hook.queue={last:null,dispatch:null,lastRenderedReducer:basicStateReducer,lastRenderedState:initialState};var dispatch=queue.dispatch=dispatchAction.bind(null,// Flow doesn't know this is non-null, but we do.
+currentlyRenderingFiber$1,queue);return[hook.memoizedState,dispatch];}function updateState(initialState){return updateReducer(basicStateReducer,initialState);}function pushEffect(tag,create,destroy,deps){var effect={tag:tag,create:create,destroy:destroy,deps:deps,// Circular
+next:null};if(componentUpdateQueue===null){componentUpdateQueue=createFunctionComponentUpdateQueue();componentUpdateQueue.lastEffect=effect.next=effect;}else{var _lastEffect=componentUpdateQueue.lastEffect;if(_lastEffect===null){componentUpdateQueue.lastEffect=effect.next=effect;}else{var firstEffect=_lastEffect.next;_lastEffect.next=effect;effect.next=firstEffect;componentUpdateQueue.lastEffect=effect;}}return effect;}function mountRef(initialValue){var hook=mountWorkInProgressHook();var ref={current:initialValue};{Object.seal(ref);}hook.memoizedState=ref;return ref;}function updateRef(initialValue){var hook=updateWorkInProgressHook();return hook.memoizedState;}function mountEffectImpl(fiberEffectTag,hookEffectTag,create,deps){var hook=mountWorkInProgressHook();var nextDeps=deps===undefined?null:deps;sideEffectTag|=fiberEffectTag;hook.memoizedState=pushEffect(hookEffectTag,create,undefined,nextDeps);}function updateEffectImpl(fiberEffectTag,hookEffectTag,create,deps){var hook=updateWorkInProgressHook();var nextDeps=deps===undefined?null:deps;var destroy=undefined;if(currentHook!==null){var prevEffect=currentHook.memoizedState;destroy=prevEffect.destroy;if(nextDeps!==null){var prevDeps=prevEffect.deps;if(areHookInputsEqual(nextDeps,prevDeps)){pushEffect(NoEffect$1,create,destroy,nextDeps);return;}}}sideEffectTag|=fiberEffectTag;hook.memoizedState=pushEffect(hookEffectTag,create,destroy,nextDeps);}function mountEffect(create,deps){return mountEffectImpl(Update|Passive,UnmountPassive|MountPassive,create,deps);}function updateEffect(create,deps){return updateEffectImpl(Update|Passive,UnmountPassive|MountPassive,create,deps);}function mountLayoutEffect(create,deps){return mountEffectImpl(Update,UnmountMutation|MountLayout,create,deps);}function updateLayoutEffect(create,deps){return updateEffectImpl(Update,UnmountMutation|MountLayout,create,deps);}function imperativeHandleEffect(create,ref){if(typeof ref==='function'){var refCallback=ref;var _inst=create();refCallback(_inst);return function(){refCallback(null);};}else if(ref!==null&&ref!==undefined){var refObject=ref;{!refObject.hasOwnProperty('current')?warning$1(false,'Expected useImperativeHandle() first argument to either be a '+'ref callback or React.createRef() object. Instead received: %s.','an object with keys {'+Object.keys(refObject).join(', ')+'}'):void 0;}var _inst2=create();refObject.current=_inst2;return function(){refObject.current=null;};}}function mountImperativeHandle(ref,create,deps){{!(typeof create==='function')?warning$1(false,'Expected useImperativeHandle() second argument to be a function '+'that creates a handle. Instead received: %s.',create!==null?typeof create:'null'):void 0;}// TODO: If deps are provided, should we skip comparing the ref itself?
+var effectDeps=deps!==null&&deps!==undefined?deps.concat([ref]):null;return mountEffectImpl(Update,UnmountMutation|MountLayout,imperativeHandleEffect.bind(null,create,ref),effectDeps);}function updateImperativeHandle(ref,create,deps){{!(typeof create==='function')?warning$1(false,'Expected useImperativeHandle() second argument to be a function '+'that creates a handle. Instead received: %s.',create!==null?typeof create:'null'):void 0;}// TODO: If deps are provided, should we skip comparing the ref itself?
+var effectDeps=deps!==null&&deps!==undefined?deps.concat([ref]):null;return updateEffectImpl(Update,UnmountMutation|MountLayout,imperativeHandleEffect.bind(null,create,ref),effectDeps);}function mountDebugValue(value,formatterFn){// This hook is normally a no-op.
+// The react-debug-hooks package injects its own implementation
+// so that e.g. DevTools can display custom hook values.
+}var updateDebugValue=mountDebugValue;function mountCallback(callback,deps){var hook=mountWorkInProgressHook();var nextDeps=deps===undefined?null:deps;hook.memoizedState=[callback,nextDeps];return callback;}function updateCallback(callback,deps){var hook=updateWorkInProgressHook();var nextDeps=deps===undefined?null:deps;var prevState=hook.memoizedState;if(prevState!==null){if(nextDeps!==null){var prevDeps=prevState[1];if(areHookInputsEqual(nextDeps,prevDeps)){return prevState[0];}}}hook.memoizedState=[callback,nextDeps];return callback;}function mountMemo(nextCreate,deps){var hook=mountWorkInProgressHook();var nextDeps=deps===undefined?null:deps;var nextValue=nextCreate();hook.memoizedState=[nextValue,nextDeps];return nextValue;}function updateMemo(nextCreate,deps){var hook=updateWorkInProgressHook();var nextDeps=deps===undefined?null:deps;var prevState=hook.memoizedState;if(prevState!==null){// Assume these are defined. If they're not, areHookInputsEqual will warn.
+if(nextDeps!==null){var prevDeps=prevState[1];if(areHookInputsEqual(nextDeps,prevDeps)){return prevState[0];}}}var nextValue=nextCreate();hook.memoizedState=[nextValue,nextDeps];return nextValue;}// in a test-like environment, we want to warn if dispatchAction()
+// is called outside of a batchedUpdates/TestUtils.act(...) call.
+var shouldWarnForUnbatchedSetState=false;{// jest isn't a 'global', it's just exposed to tests via a wrapped function
+// further, this isn't a test file, so flow doesn't recognize the symbol. So...
+// $FlowExpectedError - because requirements don't give a damn about your type sigs.
+if('undefined'!==typeof jest){shouldWarnForUnbatchedSetState=true;}}function dispatchAction(fiber,queue,action){!(numberOfReRenders<RE_RENDER_LIMIT)?invariant(false,'Too many re-renders. React limits the number of renders to prevent an infinite loop.'):void 0;{!(arguments.length<=3)?warning$1(false,"State updates from the useState() and useReducer() Hooks don't support the "+'second callback argument. To execute a side effect after '+'rendering, declare it in the component body with useEffect().'):void 0;}var alternate=fiber.alternate;if(fiber===currentlyRenderingFiber$1||alternate!==null&&alternate===currentlyRenderingFiber$1){// This is a render phase update. Stash it in a lazily-created map of
+// queue -> linked list of updates. After this render pass, we'll restart
+// and apply the stashed updates on top of the work-in-progress hook.
+didScheduleRenderPhaseUpdate=true;var update={expirationTime:renderExpirationTime,action:action,eagerReducer:null,eagerState:null,next:null};if(renderPhaseUpdates===null){renderPhaseUpdates=new Map();}var firstRenderPhaseUpdate=renderPhaseUpdates.get(queue);if(firstRenderPhaseUpdate===undefined){renderPhaseUpdates.set(queue,update);}else{// Append the update to the end of the list.
+var lastRenderPhaseUpdate=firstRenderPhaseUpdate;while(lastRenderPhaseUpdate.next!==null){lastRenderPhaseUpdate=lastRenderPhaseUpdate.next;}lastRenderPhaseUpdate.next=update;}}else{flushPassiveEffects();var currentTime=requestCurrentTime();var _expirationTime=computeExpirationForFiber(currentTime,fiber);var _update2={expirationTime:_expirationTime,action:action,eagerReducer:null,eagerState:null,next:null};// Append the update to the end of the list.
+var _last=queue.last;if(_last===null){// This is the first update. Create a circular list.
+_update2.next=_update2;}else{var first=_last.next;if(first!==null){// Still circular.
+_update2.next=first;}_last.next=_update2;}queue.last=_update2;if(fiber.expirationTime===NoWork&&(alternate===null||alternate.expirationTime===NoWork)){// The queue is currently empty, which means we can eagerly compute the
+// next state before entering the render phase. If the new state is the
+// same as the current state, we may be able to bail out entirely.
+var _lastRenderedReducer=queue.lastRenderedReducer;if(_lastRenderedReducer!==null){var prevDispatcher=void 0;{prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnUpdateInDEV;}try{var currentState=queue.lastRenderedState;var _eagerState=_lastRenderedReducer(currentState,action);// Stash the eagerly computed state, and the reducer used to compute
+// it, on the update object. If the reducer hasn't changed by the
+// time we enter the render phase, then the eager state can be used
+// without calling the reducer again.
+_update2.eagerReducer=_lastRenderedReducer;_update2.eagerState=_eagerState;if(is(_eagerState,currentState)){// Fast path. We can bail out without scheduling React to re-render.
+// It's still possible that we'll need to rebase this update later,
+// if the component re-renders for a different reason and by that
+// time the reducer has changed.
+return;}}catch(error){// Suppress the error. It will throw again in the render phase.
+}finally{{ReactCurrentDispatcher$1.current=prevDispatcher;}}}}{if(shouldWarnForUnbatchedSetState===true){warnIfNotCurrentlyBatchingInDev(fiber);}}scheduleWork(fiber,_expirationTime);}}var ContextOnlyDispatcher={readContext:readContext,useCallback:throwInvalidHookError,useContext:throwInvalidHookError,useEffect:throwInvalidHookError,useImperativeHandle:throwInvalidHookError,useLayoutEffect:throwInvalidHookError,useMemo:throwInvalidHookError,useReducer:throwInvalidHookError,useRef:throwInvalidHookError,useState:throwInvalidHookError,useDebugValue:throwInvalidHookError};var HooksDispatcherOnMountInDEV=null;var HooksDispatcherOnMountWithHookTypesInDEV=null;var HooksDispatcherOnUpdateInDEV=null;var InvalidNestedHooksDispatcherOnMountInDEV=null;var InvalidNestedHooksDispatcherOnUpdateInDEV=null;{var warnInvalidContextAccess=function(){warning$1(false,'Context can only be read while React is rendering. '+'In classes, you can read it in the render method or getDerivedStateFromProps. '+'In function components, you can read it directly in the function body, but not '+'inside Hooks like useReducer() or useMemo().');};var warnInvalidHookAccess=function(){warning$1(false,'Do not call Hooks inside useEffect(...), useMemo(...), or other built-in Hooks. '+'You can only call Hooks at the top level of your React function. '+'For more information, see '+'https://fb.me/rules-of-hooks');};HooksDispatcherOnMountInDEV={readContext:function(context,observedBits){return readContext(context,observedBits);},useCallback:function(callback,deps){currentHookNameInDev='useCallback';mountHookTypesDev();return mountCallback(callback,deps);},useContext:function(context,observedBits){currentHookNameInDev='useContext';mountHookTypesDev();return readContext(context,observedBits);},useEffect:function(create,deps){currentHookNameInDev='useEffect';mountHookTypesDev();return mountEffect(create,deps);},useImperativeHandle:function(ref,create,deps){currentHookNameInDev='useImperativeHandle';mountHookTypesDev();return mountImperativeHandle(ref,create,deps);},useLayoutEffect:function(create,deps){currentHookNameInDev='useLayoutEffect';mountHookTypesDev();return mountLayoutEffect(create,deps);},useMemo:function(create,deps){currentHookNameInDev='useMemo';mountHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnMountInDEV;try{return mountMemo(create,deps);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useReducer:function(reducer,initialArg,init){currentHookNameInDev='useReducer';mountHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnMountInDEV;try{return mountReducer(reducer,initialArg,init);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useRef:function(initialValue){currentHookNameInDev='useRef';mountHookTypesDev();return mountRef(initialValue);},useState:function(initialState){currentHookNameInDev='useState';mountHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnMountInDEV;try{return mountState(initialState);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useDebugValue:function(value,formatterFn){currentHookNameInDev='useDebugValue';mountHookTypesDev();return mountDebugValue(value,formatterFn);}};HooksDispatcherOnMountWithHookTypesInDEV={readContext:function(context,observedBits){return readContext(context,observedBits);},useCallback:function(callback,deps){currentHookNameInDev='useCallback';updateHookTypesDev();return mountCallback(callback,deps);},useContext:function(context,observedBits){currentHookNameInDev='useContext';updateHookTypesDev();return readContext(context,observedBits);},useEffect:function(create,deps){currentHookNameInDev='useEffect';updateHookTypesDev();return mountEffect(create,deps);},useImperativeHandle:function(ref,create,deps){currentHookNameInDev='useImperativeHandle';updateHookTypesDev();return mountImperativeHandle(ref,create,deps);},useLayoutEffect:function(create,deps){currentHookNameInDev='useLayoutEffect';updateHookTypesDev();return mountLayoutEffect(create,deps);},useMemo:function(create,deps){currentHookNameInDev='useMemo';updateHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnMountInDEV;try{return mountMemo(create,deps);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useReducer:function(reducer,initialArg,init){currentHookNameInDev='useReducer';updateHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnMountInDEV;try{return mountReducer(reducer,initialArg,init);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useRef:function(initialValue){currentHookNameInDev='useRef';updateHookTypesDev();return mountRef(initialValue);},useState:function(initialState){currentHookNameInDev='useState';updateHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnMountInDEV;try{return mountState(initialState);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useDebugValue:function(value,formatterFn){currentHookNameInDev='useDebugValue';updateHookTypesDev();return mountDebugValue(value,formatterFn);}};HooksDispatcherOnUpdateInDEV={readContext:function(context,observedBits){return readContext(context,observedBits);},useCallback:function(callback,deps){currentHookNameInDev='useCallback';updateHookTypesDev();return updateCallback(callback,deps);},useContext:function(context,observedBits){currentHookNameInDev='useContext';updateHookTypesDev();return readContext(context,observedBits);},useEffect:function(create,deps){currentHookNameInDev='useEffect';updateHookTypesDev();return updateEffect(create,deps);},useImperativeHandle:function(ref,create,deps){currentHookNameInDev='useImperativeHandle';updateHookTypesDev();return updateImperativeHandle(ref,create,deps);},useLayoutEffect:function(create,deps){currentHookNameInDev='useLayoutEffect';updateHookTypesDev();return updateLayoutEffect(create,deps);},useMemo:function(create,deps){currentHookNameInDev='useMemo';updateHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnUpdateInDEV;try{return updateMemo(create,deps);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useReducer:function(reducer,initialArg,init){currentHookNameInDev='useReducer';updateHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnUpdateInDEV;try{return updateReducer(reducer,initialArg,init);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useRef:function(initialValue){currentHookNameInDev='useRef';updateHookTypesDev();return updateRef(initialValue);},useState:function(initialState){currentHookNameInDev='useState';updateHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnUpdateInDEV;try{return updateState(initialState);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useDebugValue:function(value,formatterFn){currentHookNameInDev='useDebugValue';updateHookTypesDev();return updateDebugValue(value,formatterFn);}};InvalidNestedHooksDispatcherOnMountInDEV={readContext:function(context,observedBits){warnInvalidContextAccess();return readContext(context,observedBits);},useCallback:function(callback,deps){currentHookNameInDev='useCallback';warnInvalidHookAccess();mountHookTypesDev();return mountCallback(callback,deps);},useContext:function(context,observedBits){currentHookNameInDev='useContext';warnInvalidHookAccess();mountHookTypesDev();return readContext(context,observedBits);},useEffect:function(create,deps){currentHookNameInDev='useEffect';warnInvalidHookAccess();mountHookTypesDev();return mountEffect(create,deps);},useImperativeHandle:function(ref,create,deps){currentHookNameInDev='useImperativeHandle';warnInvalidHookAccess();mountHookTypesDev();return mountImperativeHandle(ref,create,deps);},useLayoutEffect:function(create,deps){currentHookNameInDev='useLayoutEffect';warnInvalidHookAccess();mountHookTypesDev();return mountLayoutEffect(create,deps);},useMemo:function(create,deps){currentHookNameInDev='useMemo';warnInvalidHookAccess();mountHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnMountInDEV;try{return mountMemo(create,deps);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useReducer:function(reducer,initialArg,init){currentHookNameInDev='useReducer';warnInvalidHookAccess();mountHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnMountInDEV;try{return mountReducer(reducer,initialArg,init);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useRef:function(initialValue){currentHookNameInDev='useRef';warnInvalidHookAccess();mountHookTypesDev();return mountRef(initialValue);},useState:function(initialState){currentHookNameInDev='useState';warnInvalidHookAccess();mountHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnMountInDEV;try{return mountState(initialState);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useDebugValue:function(value,formatterFn){currentHookNameInDev='useDebugValue';warnInvalidHookAccess();mountHookTypesDev();return mountDebugValue(value,formatterFn);}};InvalidNestedHooksDispatcherOnUpdateInDEV={readContext:function(context,observedBits){warnInvalidContextAccess();return readContext(context,observedBits);},useCallback:function(callback,deps){currentHookNameInDev='useCallback';warnInvalidHookAccess();updateHookTypesDev();return updateCallback(callback,deps);},useContext:function(context,observedBits){currentHookNameInDev='useContext';warnInvalidHookAccess();updateHookTypesDev();return readContext(context,observedBits);},useEffect:function(create,deps){currentHookNameInDev='useEffect';warnInvalidHookAccess();updateHookTypesDev();return updateEffect(create,deps);},useImperativeHandle:function(ref,create,deps){currentHookNameInDev='useImperativeHandle';warnInvalidHookAccess();updateHookTypesDev();return updateImperativeHandle(ref,create,deps);},useLayoutEffect:function(create,deps){currentHookNameInDev='useLayoutEffect';warnInvalidHookAccess();updateHookTypesDev();return updateLayoutEffect(create,deps);},useMemo:function(create,deps){currentHookNameInDev='useMemo';warnInvalidHookAccess();updateHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnUpdateInDEV;try{return updateMemo(create,deps);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useReducer:function(reducer,initialArg,init){currentHookNameInDev='useReducer';warnInvalidHookAccess();updateHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnUpdateInDEV;try{return updateReducer(reducer,initialArg,init);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useRef:function(initialValue){currentHookNameInDev='useRef';warnInvalidHookAccess();updateHookTypesDev();return updateRef(initialValue);},useState:function(initialState){currentHookNameInDev='useState';warnInvalidHookAccess();updateHookTypesDev();var prevDispatcher=ReactCurrentDispatcher$1.current;ReactCurrentDispatcher$1.current=InvalidNestedHooksDispatcherOnUpdateInDEV;try{return updateState(initialState);}finally{ReactCurrentDispatcher$1.current=prevDispatcher;}},useDebugValue:function(value,formatterFn){currentHookNameInDev='useDebugValue';warnInvalidHookAccess();updateHookTypesDev();return updateDebugValue(value,formatterFn);}};}var commitTime=0;var profilerStartTime=-1;function getCommitTime(){return commitTime;}function recordCommitTime(){if(!enableProfilerTimer){return;}commitTime=scheduler.unstable_now();}function startProfilerTimer(fiber){if(!enableProfilerTimer){return;}profilerStartTime=scheduler.unstable_now();if(fiber.actualStartTime<0){fiber.actualStartTime=scheduler.unstable_now();}}function stopProfilerTimerIfRunning(fiber){if(!enableProfilerTimer){return;}profilerStartTime=-1;}function stopProfilerTimerIfRunningAndRecordDelta(fiber,overrideBaseTime){if(!enableProfilerTimer){return;}if(profilerStartTime>=0){var elapsedTime=scheduler.unstable_now()-profilerStartTime;fiber.actualDuration+=elapsedTime;if(overrideBaseTime){fiber.selfBaseDuration=elapsedTime;}profilerStartTime=-1;}}// The deepest Fiber on the stack involved in a hydration context.
+// This may have been an insertion or a hydration.
+var hydrationParentFiber=null;var nextHydratableInstance=null;var isHydrating=false;function enterHydrationState(fiber){if(!supportsHydration){return false;}var parentInstance=fiber.stateNode.containerInfo;nextHydratableInstance=getFirstHydratableChild(parentInstance);hydrationParentFiber=fiber;isHydrating=true;return true;}function reenterHydrationStateFromDehydratedSuspenseInstance(fiber){if(!supportsHydration){return false;}var suspenseInstance=fiber.stateNode;nextHydratableInstance=getNextHydratableSibling(suspenseInstance);popToNextHostParent(fiber);isHydrating=true;return true;}function deleteHydratableInstance(returnFiber,instance){{switch(returnFiber.tag){case HostRoot:didNotHydrateContainerInstance(returnFiber.stateNode.containerInfo,instance);break;case HostComponent:didNotHydrateInstance(returnFiber.type,returnFiber.memoizedProps,returnFiber.stateNode,instance);break;}}var childToDelete=createFiberFromHostInstanceForDeletion();childToDelete.stateNode=instance;childToDelete.return=returnFiber;childToDelete.effectTag=Deletion;// This might seem like it belongs on progressedFirstDeletion. However,
+// these children are not part of the reconciliation list of children.
+// Even if we abort and rereconcile the children, that will try to hydrate
+// again and the nodes are still in the host tree so these will be
+// recreated.
+if(returnFiber.lastEffect!==null){returnFiber.lastEffect.nextEffect=childToDelete;returnFiber.lastEffect=childToDelete;}else{returnFiber.firstEffect=returnFiber.lastEffect=childToDelete;}}function insertNonHydratedInstance(returnFiber,fiber){fiber.effectTag|=Placement;{switch(returnFiber.tag){case HostRoot:{var parentContainer=returnFiber.stateNode.containerInfo;switch(fiber.tag){case HostComponent:var type=fiber.type;var props=fiber.pendingProps;didNotFindHydratableContainerInstance(parentContainer,type,props);break;case HostText:var text=fiber.pendingProps;didNotFindHydratableContainerTextInstance(parentContainer,text);break;case SuspenseComponent:break;}break;}case HostComponent:{var parentType=returnFiber.type;var parentProps=returnFiber.memoizedProps;var parentInstance=returnFiber.stateNode;switch(fiber.tag){case HostComponent:var _type=fiber.type;var _props=fiber.pendingProps;didNotFindHydratableInstance(parentType,parentProps,parentInstance,_type,_props);break;case HostText:var _text=fiber.pendingProps;didNotFindHydratableTextInstance(parentType,parentProps,parentInstance,_text);break;case SuspenseComponent:didNotFindHydratableSuspenseInstance(parentType,parentProps,parentInstance);break;}break;}default:return;}}}function tryHydrate(fiber,nextInstance){switch(fiber.tag){case HostComponent:{var type=fiber.type;var props=fiber.pendingProps;var instance=canHydrateInstance(nextInstance,type,props);if(instance!==null){fiber.stateNode=instance;return true;}return false;}case HostText:{var text=fiber.pendingProps;var textInstance=canHydrateTextInstance(nextInstance,text);if(textInstance!==null){fiber.stateNode=textInstance;return true;}return false;}case SuspenseComponent:{if(enableSuspenseServerRenderer){var suspenseInstance=canHydrateSuspenseInstance(nextInstance);if(suspenseInstance!==null){// Downgrade the tag to a dehydrated component until we've hydrated it.
+fiber.tag=DehydratedSuspenseComponent;fiber.stateNode=suspenseInstance;return true;}}return false;}default:return false;}}function tryToClaimNextHydratableInstance(fiber){if(!isHydrating){return;}var nextInstance=nextHydratableInstance;if(!nextInstance){// Nothing to hydrate. Make it an insertion.
+insertNonHydratedInstance(hydrationParentFiber,fiber);isHydrating=false;hydrationParentFiber=fiber;return;}var firstAttemptedInstance=nextInstance;if(!tryHydrate(fiber,nextInstance)){// If we can't hydrate this instance let's try the next one.
+// We use this as a heuristic. It's based on intuition and not data so it
+// might be flawed or unnecessary.
+nextInstance=getNextHydratableSibling(firstAttemptedInstance);if(!nextInstance||!tryHydrate(fiber,nextInstance)){// Nothing to hydrate. Make it an insertion.
+insertNonHydratedInstance(hydrationParentFiber,fiber);isHydrating=false;hydrationParentFiber=fiber;return;}// We matched the next one, we'll now assume that the first one was
+// superfluous and we'll delete it. Since we can't eagerly delete it
+// we'll have to schedule a deletion. To do that, this node needs a dummy
+// fiber associated with it.
+deleteHydratableInstance(hydrationParentFiber,firstAttemptedInstance);}hydrationParentFiber=fiber;nextHydratableInstance=getFirstHydratableChild(nextInstance);}function prepareToHydrateHostInstance(fiber,rootContainerInstance,hostContext){if(!supportsHydration){invariant(false,'Expected prepareToHydrateHostInstance() to never be called. This error is likely caused by a bug in React. Please file an issue.');}var instance=fiber.stateNode;var updatePayload=hydrateInstance(instance,fiber.type,fiber.memoizedProps,rootContainerInstance,hostContext,fiber);// TODO: Type this specific to this type of component.
+fiber.updateQueue=updatePayload;// If the update payload indicates that there is a change or if there
+// is a new ref we mark this as an update.
+if(updatePayload!==null){return true;}return false;}function prepareToHydrateHostTextInstance(fiber){if(!supportsHydration){invariant(false,'Expected prepareToHydrateHostTextInstance() to never be called. This error is likely caused by a bug in React. Please file an issue.');}var textInstance=fiber.stateNode;var textContent=fiber.memoizedProps;var shouldUpdate=hydrateTextInstance(textInstance,textContent,fiber);{if(shouldUpdate){// We assume that prepareToHydrateHostTextInstance is called in a context where the
+// hydration parent is the parent host component of this host text.
+var returnFiber=hydrationParentFiber;if(returnFiber!==null){switch(returnFiber.tag){case HostRoot:{var parentContainer=returnFiber.stateNode.containerInfo;didNotMatchHydratedContainerTextInstance(parentContainer,textInstance,textContent);break;}case HostComponent:{var parentType=returnFiber.type;var parentProps=returnFiber.memoizedProps;var parentInstance=returnFiber.stateNode;didNotMatchHydratedTextInstance(parentType,parentProps,parentInstance,textInstance,textContent);break;}}}}}return shouldUpdate;}function skipPastDehydratedSuspenseInstance(fiber){if(!supportsHydration){invariant(false,'Expected skipPastDehydratedSuspenseInstance() to never be called. This error is likely caused by a bug in React. Please file an issue.');}var suspenseInstance=fiber.stateNode;!suspenseInstance?invariant(false,'Expected to have a hydrated suspense instance. This error is likely caused by a bug in React. Please file an issue.'):void 0;nextHydratableInstance=getNextHydratableInstanceAfterSuspenseInstance(suspenseInstance);}function popToNextHostParent(fiber){var parent=fiber.return;while(parent!==null&&parent.tag!==HostComponent&&parent.tag!==HostRoot&&parent.tag!==DehydratedSuspenseComponent){parent=parent.return;}hydrationParentFiber=parent;}function popHydrationState(fiber){if(!supportsHydration){return false;}if(fiber!==hydrationParentFiber){// We're deeper than the current hydration context, inside an inserted
+// tree.
+return false;}if(!isHydrating){// If we're not currently hydrating but we're in a hydration context, then
+// we were an insertion and now need to pop up reenter hydration of our
+// siblings.
+popToNextHostParent(fiber);isHydrating=true;return false;}var type=fiber.type;// If we have any remaining hydratable nodes, we need to delete them now.
+// We only do this deeper than head and body since they tend to have random
+// other nodes in them. We also ignore components with pure text content in
+// side of them.
+// TODO: Better heuristic.
+if(fiber.tag!==HostComponent||type!=='head'&&type!=='body'&&!shouldSetTextContent(type,fiber.memoizedProps)){var nextInstance=nextHydratableInstance;while(nextInstance){deleteHydratableInstance(fiber,nextInstance);nextInstance=getNextHydratableSibling(nextInstance);}}popToNextHostParent(fiber);nextHydratableInstance=hydrationParentFiber?getNextHydratableSibling(fiber.stateNode):null;return true;}function resetHydrationState(){if(!supportsHydration){return;}hydrationParentFiber=null;nextHydratableInstance=null;isHydrating=false;}var ReactCurrentOwner$3=ReactSharedInternals.ReactCurrentOwner;var didReceiveUpdate=false;var didWarnAboutBadClass=void 0;var didWarnAboutContextTypeOnFunctionComponent=void 0;var didWarnAboutGetDerivedStateOnFunctionComponent=void 0;var didWarnAboutFunctionRefs=void 0;var didWarnAboutReassigningProps=void 0;{didWarnAboutBadClass={};didWarnAboutContextTypeOnFunctionComponent={};didWarnAboutGetDerivedStateOnFunctionComponent={};didWarnAboutFunctionRefs={};didWarnAboutReassigningProps=false;}function reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime){if(current$$1===null){// If this is a fresh new component that hasn't been rendered yet, we
+// won't update its child set by applying minimal side-effects. Instead,
+// we will add them all to the child before it gets rendered. That means
+// we can optimize this reconciliation pass by not tracking side-effects.
+workInProgress.child=mountChildFibers(workInProgress,null,nextChildren,renderExpirationTime);}else{// If the current child is the same as the work in progress, it means that
+// we haven't yet started any work on these children. Therefore, we use
+// the clone algorithm to create a copy of all the current children.
+// If we had any progressed work already, that is invalid at this point so
+// let's throw it out.
+workInProgress.child=reconcileChildFibers(workInProgress,current$$1.child,nextChildren,renderExpirationTime);}}function forceUnmountCurrentAndReconcile(current$$1,workInProgress,nextChildren,renderExpirationTime){// This function is fork of reconcileChildren. It's used in cases where we
+// want to reconcile without matching against the existing set. This has the
+// effect of all current children being unmounted; even if the type and key
+// are the same, the old child is unmounted and a new child is created.
+//
+// To do this, we're going to go through the reconcile algorithm twice. In
+// the first pass, we schedule a deletion for all the current children by
+// passing null.
+workInProgress.child=reconcileChildFibers(workInProgress,current$$1.child,null,renderExpirationTime);// In the second pass, we mount the new children. The trick here is that we
+// pass null in place of where we usually pass the current child set. This has
+// the effect of remounting all children regardless of whether their their
+// identity matches.
+workInProgress.child=reconcileChildFibers(workInProgress,null,nextChildren,renderExpirationTime);}function updateForwardRef(current$$1,workInProgress,Component,nextProps,renderExpirationTime){// TODO: current can be non-null here even if the component
+// hasn't yet mounted. This happens after the first render suspends.
+// We'll need to figure out if this is fine or can cause issues.
+{if(workInProgress.type!==workInProgress.elementType){// Lazy component props can't be validated in createElement
+// because they're only guaranteed to be resolved here.
+var innerPropTypes=Component.propTypes;if(innerPropTypes){checkPropTypes(innerPropTypes,nextProps,// Resolved props
+'prop',getComponentName(Component),getCurrentFiberStackInDev);}}}var render=Component.render;var ref=workInProgress.ref;// The rest is a fork of updateFunctionComponent
+var nextChildren=void 0;prepareToReadContext(workInProgress,renderExpirationTime);{ReactCurrentOwner$3.current=workInProgress;setCurrentPhase('render');nextChildren=renderWithHooks(current$$1,workInProgress,render,nextProps,ref,renderExpirationTime);if(debugRenderPhaseSideEffects||debugRenderPhaseSideEffectsForStrictMode&&workInProgress.mode&StrictMode){// Only double-render components with Hooks
+if(workInProgress.memoizedState!==null){nextChildren=renderWithHooks(current$$1,workInProgress,render,nextProps,ref,renderExpirationTime);}}setCurrentPhase(null);}if(current$$1!==null&&!didReceiveUpdate){bailoutHooks(current$$1,workInProgress,renderExpirationTime);return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}// React DevTools reads this flag.
+workInProgress.effectTag|=PerformedWork;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateMemoComponent(current$$1,workInProgress,Component,nextProps,updateExpirationTime,renderExpirationTime){if(current$$1===null){var type=Component.type;if(isSimpleFunctionComponent(type)&&Component.compare===null&&// SimpleMemoComponent codepath doesn't resolve outer props either.
+Component.defaultProps===undefined){// If this is a plain function component without default props,
+// and with only the default shallow comparison, we upgrade it
+// to a SimpleMemoComponent to allow fast path updates.
+workInProgress.tag=SimpleMemoComponent;workInProgress.type=type;{validateFunctionComponentInDev(workInProgress,type);}return updateSimpleMemoComponent(current$$1,workInProgress,type,nextProps,updateExpirationTime,renderExpirationTime);}{var innerPropTypes=type.propTypes;if(innerPropTypes){// Inner memo component props aren't currently validated in createElement.
+// We could move it there, but we'd still need this for lazy code path.
+checkPropTypes(innerPropTypes,nextProps,// Resolved props
+'prop',getComponentName(type),getCurrentFiberStackInDev);}}var child=createFiberFromTypeAndProps(Component.type,null,nextProps,null,workInProgress.mode,renderExpirationTime);child.ref=workInProgress.ref;child.return=workInProgress;workInProgress.child=child;return child;}{var _type=Component.type;var _innerPropTypes=_type.propTypes;if(_innerPropTypes){// Inner memo component props aren't currently validated in createElement.
+// We could move it there, but we'd still need this for lazy code path.
+checkPropTypes(_innerPropTypes,nextProps,// Resolved props
+'prop',getComponentName(_type),getCurrentFiberStackInDev);}}var currentChild=current$$1.child;// This is always exactly one child
+if(updateExpirationTime<renderExpirationTime){// This will be the props with resolved defaultProps,
+// unlike current.memoizedProps which will be the unresolved ones.
+var prevProps=currentChild.memoizedProps;// Default to shallow comparison
+var compare=Component.compare;compare=compare!==null?compare:shallowEqual;if(compare(prevProps,nextProps)&&current$$1.ref===workInProgress.ref){return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}}// React DevTools reads this flag.
+workInProgress.effectTag|=PerformedWork;var newChild=createWorkInProgress(currentChild,nextProps,renderExpirationTime);newChild.ref=workInProgress.ref;newChild.return=workInProgress;workInProgress.child=newChild;return newChild;}function updateSimpleMemoComponent(current$$1,workInProgress,Component,nextProps,updateExpirationTime,renderExpirationTime){// TODO: current can be non-null here even if the component
+// hasn't yet mounted. This happens when the inner render suspends.
+// We'll need to figure out if this is fine or can cause issues.
+{if(workInProgress.type!==workInProgress.elementType){// Lazy component props can't be validated in createElement
+// because they're only guaranteed to be resolved here.
+var outerMemoType=workInProgress.elementType;if(outerMemoType.$$typeof===REACT_LAZY_TYPE){// We warn when you define propTypes on lazy()
+// so let's just skip over it to find memo() outer wrapper.
+// Inner props for memo are validated later.
+outerMemoType=refineResolvedLazyComponent(outerMemoType);}var outerPropTypes=outerMemoType&&outerMemoType.propTypes;if(outerPropTypes){checkPropTypes(outerPropTypes,nextProps,// Resolved (SimpleMemoComponent has no defaultProps)
+'prop',getComponentName(outerMemoType),getCurrentFiberStackInDev);}// Inner propTypes will be validated in the function component path.
+}}if(current$$1!==null){var prevProps=current$$1.memoizedProps;if(shallowEqual(prevProps,nextProps)&&current$$1.ref===workInProgress.ref){didReceiveUpdate=false;if(updateExpirationTime<renderExpirationTime){return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}}}return updateFunctionComponent(current$$1,workInProgress,Component,nextProps,renderExpirationTime);}function updateFragment(current$$1,workInProgress,renderExpirationTime){var nextChildren=workInProgress.pendingProps;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateMode(current$$1,workInProgress,renderExpirationTime){var nextChildren=workInProgress.pendingProps.children;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateProfiler(current$$1,workInProgress,renderExpirationTime){if(enableProfilerTimer){workInProgress.effectTag|=Update;}var nextProps=workInProgress.pendingProps;var nextChildren=nextProps.children;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function markRef(current$$1,workInProgress){var ref=workInProgress.ref;if(current$$1===null&&ref!==null||current$$1!==null&&current$$1.ref!==ref){// Schedule a Ref effect
+workInProgress.effectTag|=Ref;}}function updateFunctionComponent(current$$1,workInProgress,Component,nextProps,renderExpirationTime){{if(workInProgress.type!==workInProgress.elementType){// Lazy component props can't be validated in createElement
+// because they're only guaranteed to be resolved here.
+var innerPropTypes=Component.propTypes;if(innerPropTypes){checkPropTypes(innerPropTypes,nextProps,// Resolved props
+'prop',getComponentName(Component),getCurrentFiberStackInDev);}}}var unmaskedContext=getUnmaskedContext(workInProgress,Component,true);var context=getMaskedContext(workInProgress,unmaskedContext);var nextChildren=void 0;prepareToReadContext(workInProgress,renderExpirationTime);{ReactCurrentOwner$3.current=workInProgress;setCurrentPhase('render');nextChildren=renderWithHooks(current$$1,workInProgress,Component,nextProps,context,renderExpirationTime);if(debugRenderPhaseSideEffects||debugRenderPhaseSideEffectsForStrictMode&&workInProgress.mode&StrictMode){// Only double-render components with Hooks
+if(workInProgress.memoizedState!==null){nextChildren=renderWithHooks(current$$1,workInProgress,Component,nextProps,context,renderExpirationTime);}}setCurrentPhase(null);}if(current$$1!==null&&!didReceiveUpdate){bailoutHooks(current$$1,workInProgress,renderExpirationTime);return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}// React DevTools reads this flag.
+workInProgress.effectTag|=PerformedWork;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateClassComponent(current$$1,workInProgress,Component,nextProps,renderExpirationTime){{if(workInProgress.type!==workInProgress.elementType){// Lazy component props can't be validated in createElement
+// because they're only guaranteed to be resolved here.
+var innerPropTypes=Component.propTypes;if(innerPropTypes){checkPropTypes(innerPropTypes,nextProps,// Resolved props
+'prop',getComponentName(Component),getCurrentFiberStackInDev);}}}// Push context providers early to prevent context stack mismatches.
+// During mounting we don't know the child context yet as the instance doesn't exist.
+// We will invalidate the child context in finishClassComponent() right after rendering.
+var hasContext=void 0;if(isContextProvider(Component)){hasContext=true;pushContextProvider(workInProgress);}else{hasContext=false;}prepareToReadContext(workInProgress,renderExpirationTime);var instance=workInProgress.stateNode;var shouldUpdate=void 0;if(instance===null){if(current$$1!==null){// An class component without an instance only mounts if it suspended
+// inside a non- concurrent tree, in an inconsistent state. We want to
+// tree it like a new mount, even though an empty version of it already
+// committed. Disconnect the alternate pointers.
+current$$1.alternate=null;workInProgress.alternate=null;// Since this is conceptually a new fiber, schedule a Placement effect
+workInProgress.effectTag|=Placement;}// In the initial pass we might need to construct the instance.
+constructClassInstance(workInProgress,Component,nextProps,renderExpirationTime);mountClassInstance(workInProgress,Component,nextProps,renderExpirationTime);shouldUpdate=true;}else if(current$$1===null){// In a resume, we'll already have an instance we can reuse.
+shouldUpdate=resumeMountClassInstance(workInProgress,Component,nextProps,renderExpirationTime);}else{shouldUpdate=updateClassInstance(current$$1,workInProgress,Component,nextProps,renderExpirationTime);}var nextUnitOfWork=finishClassComponent(current$$1,workInProgress,Component,shouldUpdate,hasContext,renderExpirationTime);{var inst=workInProgress.stateNode;if(inst.props!==nextProps){!didWarnAboutReassigningProps?warning$1(false,'It looks like %s is reassigning its own `this.props` while rendering. '+'This is not supported and can lead to confusing bugs.',getComponentName(workInProgress.type)||'a component'):void 0;didWarnAboutReassigningProps=true;}}return nextUnitOfWork;}function finishClassComponent(current$$1,workInProgress,Component,shouldUpdate,hasContext,renderExpirationTime){// Refs should update even if shouldComponentUpdate returns false
+markRef(current$$1,workInProgress);var didCaptureError=(workInProgress.effectTag&DidCapture)!==NoEffect;if(!shouldUpdate&&!didCaptureError){// Context providers should defer to sCU for rendering
+if(hasContext){invalidateContextProvider(workInProgress,Component,false);}return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}var instance=workInProgress.stateNode;// Rerender
+ReactCurrentOwner$3.current=workInProgress;var nextChildren=void 0;if(didCaptureError&&typeof Component.getDerivedStateFromError!=='function'){// If we captured an error, but getDerivedStateFrom catch is not defined,
+// unmount all the children. componentDidCatch will schedule an update to
+// re-render a fallback. This is temporary until we migrate everyone to
+// the new API.
+// TODO: Warn in a future release.
+nextChildren=null;if(enableProfilerTimer){stopProfilerTimerIfRunning(workInProgress);}}else{{setCurrentPhase('render');nextChildren=instance.render();if(debugRenderPhaseSideEffects||debugRenderPhaseSideEffectsForStrictMode&&workInProgress.mode&StrictMode){instance.render();}setCurrentPhase(null);}}// React DevTools reads this flag.
+workInProgress.effectTag|=PerformedWork;if(current$$1!==null&&didCaptureError){// If we're recovering from an error, reconcile without reusing any of
+// the existing children. Conceptually, the normal children and the children
+// that are shown on error are two different sets, so we shouldn't reuse
+// normal children even if their identities match.
+forceUnmountCurrentAndReconcile(current$$1,workInProgress,nextChildren,renderExpirationTime);}else{reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);}// Memoize state using the values we just used to render.
+// TODO: Restructure so we never read values from the instance.
+workInProgress.memoizedState=instance.state;// The context might have changed so we need to recalculate it.
+if(hasContext){invalidateContextProvider(workInProgress,Component,true);}return workInProgress.child;}function pushHostRootContext(workInProgress){var root=workInProgress.stateNode;if(root.pendingContext){pushTopLevelContextObject(workInProgress,root.pendingContext,root.pendingContext!==root.context);}else if(root.context){// Should always be set
+pushTopLevelContextObject(workInProgress,root.context,false);}pushHostContainer(workInProgress,root.containerInfo);}function updateHostRoot(current$$1,workInProgress,renderExpirationTime){pushHostRootContext(workInProgress);var updateQueue=workInProgress.updateQueue;!(updateQueue!==null)?invariant(false,'If the root does not have an updateQueue, we should have already bailed out. This error is likely caused by a bug in React. Please file an issue.'):void 0;var nextProps=workInProgress.pendingProps;var prevState=workInProgress.memoizedState;var prevChildren=prevState!==null?prevState.element:null;processUpdateQueue(workInProgress,updateQueue,nextProps,null,renderExpirationTime);var nextState=workInProgress.memoizedState;// Caution: React DevTools currently depends on this property
+// being called "element".
+var nextChildren=nextState.element;if(nextChildren===prevChildren){// If the state is the same as before, that's a bailout because we had
+// no work that expires at this time.
+resetHydrationState();return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}var root=workInProgress.stateNode;if((current$$1===null||current$$1.child===null)&&root.hydrate&&enterHydrationState(workInProgress)){// If we don't have any current children this might be the first pass.
+// We always try to hydrate. If this isn't a hydration pass there won't
+// be any children to hydrate which is effectively the same thing as
+// not hydrating.
+// This is a bit of a hack. We track the host root as a placement to
+// know that we're currently in a mounting state. That way isMounted
+// works as expected. We must reset this before committing.
+// TODO: Delete this when we delete isMounted and findDOMNode.
+workInProgress.effectTag|=Placement;// Ensure that children mount into this root without tracking
+// side-effects. This ensures that we don't store Placement effects on
+// nodes that will be hydrated.
+workInProgress.child=mountChildFibers(workInProgress,null,nextChildren,renderExpirationTime);}else{// Otherwise reset hydration state in case we aborted and resumed another
+// root.
+reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);resetHydrationState();}return workInProgress.child;}function updateHostComponent(current$$1,workInProgress,renderExpirationTime){pushHostContext(workInProgress);if(current$$1===null){tryToClaimNextHydratableInstance(workInProgress);}var type=workInProgress.type;var nextProps=workInProgress.pendingProps;var prevProps=current$$1!==null?current$$1.memoizedProps:null;var nextChildren=nextProps.children;var isDirectTextChild=shouldSetTextContent(type,nextProps);if(isDirectTextChild){// We special case a direct text child of a host node. This is a common
+// case. We won't handle it as a reified child. We will instead handle
+// this in the host environment that also have access to this prop. That
+// avoids allocating another HostText fiber and traversing it.
+nextChildren=null;}else if(prevProps!==null&&shouldSetTextContent(type,prevProps)){// If we're switching from a direct text child to a normal child, or to
+// empty, we need to schedule the text content to be reset.
+workInProgress.effectTag|=ContentReset;}markRef(current$$1,workInProgress);// Check the host config to see if the children are offscreen/hidden.
+if(renderExpirationTime!==Never&&workInProgress.mode&ConcurrentMode&&shouldDeprioritizeSubtree(type,nextProps)){// Schedule this fiber to re-render at offscreen priority. Then bailout.
+workInProgress.expirationTime=workInProgress.childExpirationTime=Never;return null;}reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateHostText(current$$1,workInProgress){if(current$$1===null){tryToClaimNextHydratableInstance(workInProgress);}// Nothing to do here. This is terminal. We'll do the completion step
+// immediately after.
+return null;}function mountLazyComponent(_current,workInProgress,elementType,updateExpirationTime,renderExpirationTime){if(_current!==null){// An lazy component only mounts if it suspended inside a non-
+// concurrent tree, in an inconsistent state. We want to treat it like
+// a new mount, even though an empty version of it already committed.
+// Disconnect the alternate pointers.
+_current.alternate=null;workInProgress.alternate=null;// Since this is conceptually a new fiber, schedule a Placement effect
+workInProgress.effectTag|=Placement;}var props=workInProgress.pendingProps;// We can't start a User Timing measurement with correct label yet.
+// Cancel and resume right after we know the tag.
+cancelWorkTimer(workInProgress);var Component=readLazyComponentType(elementType);// Store the unwrapped component in the type.
+workInProgress.type=Component;var resolvedTag=workInProgress.tag=resolveLazyComponentTag(Component);startWorkTimer(workInProgress);var resolvedProps=resolveDefaultProps(Component,props);var child=void 0;switch(resolvedTag){case FunctionComponent:{{validateFunctionComponentInDev(workInProgress,Component);}child=updateFunctionComponent(null,workInProgress,Component,resolvedProps,renderExpirationTime);break;}case ClassComponent:{child=updateClassComponent(null,workInProgress,Component,resolvedProps,renderExpirationTime);break;}case ForwardRef:{child=updateForwardRef(null,workInProgress,Component,resolvedProps,renderExpirationTime);break;}case MemoComponent:{{if(workInProgress.type!==workInProgress.elementType){var outerPropTypes=Component.propTypes;if(outerPropTypes){checkPropTypes(outerPropTypes,resolvedProps,// Resolved for outer only
+'prop',getComponentName(Component),getCurrentFiberStackInDev);}}}child=updateMemoComponent(null,workInProgress,Component,resolveDefaultProps(Component.type,resolvedProps),// The inner type can have defaults too
+updateExpirationTime,renderExpirationTime);break;}default:{var hint='';{if(Component!==null&&typeof Component==='object'&&Component.$$typeof===REACT_LAZY_TYPE){hint=' Did you wrap a component in React.lazy() more than once?';}}// This message intentionally doesn't mention ForwardRef or MemoComponent
+// because the fact that it's a separate type of work is an
+// implementation detail.
+invariant(false,'Element type is invalid. Received a promise that resolves to: %s. Lazy element type must resolve to a class or function.%s',Component,hint);}}return child;}function mountIncompleteClassComponent(_current,workInProgress,Component,nextProps,renderExpirationTime){if(_current!==null){// An incomplete component only mounts if it suspended inside a non-
+// concurrent tree, in an inconsistent state. We want to treat it like
+// a new mount, even though an empty version of it already committed.
+// Disconnect the alternate pointers.
+_current.alternate=null;workInProgress.alternate=null;// Since this is conceptually a new fiber, schedule a Placement effect
+workInProgress.effectTag|=Placement;}// Promote the fiber to a class and try rendering again.
+workInProgress.tag=ClassComponent;// The rest of this function is a fork of `updateClassComponent`
+// Push context providers early to prevent context stack mismatches.
+// During mounting we don't know the child context yet as the instance doesn't exist.
+// We will invalidate the child context in finishClassComponent() right after rendering.
+var hasContext=void 0;if(isContextProvider(Component)){hasContext=true;pushContextProvider(workInProgress);}else{hasContext=false;}prepareToReadContext(workInProgress,renderExpirationTime);constructClassInstance(workInProgress,Component,nextProps,renderExpirationTime);mountClassInstance(workInProgress,Component,nextProps,renderExpirationTime);return finishClassComponent(null,workInProgress,Component,true,hasContext,renderExpirationTime);}function mountIndeterminateComponent(_current,workInProgress,Component,renderExpirationTime){if(_current!==null){// An indeterminate component only mounts if it suspended inside a non-
+// concurrent tree, in an inconsistent state. We want to treat it like
+// a new mount, even though an empty version of it already committed.
+// Disconnect the alternate pointers.
+_current.alternate=null;workInProgress.alternate=null;// Since this is conceptually a new fiber, schedule a Placement effect
+workInProgress.effectTag|=Placement;}var props=workInProgress.pendingProps;var unmaskedContext=getUnmaskedContext(workInProgress,Component,false);var context=getMaskedContext(workInProgress,unmaskedContext);prepareToReadContext(workInProgress,renderExpirationTime);var value=void 0;{if(Component.prototype&&typeof Component.prototype.render==='function'){var componentName=getComponentName(Component)||'Unknown';if(!didWarnAboutBadClass[componentName]){warningWithoutStack$1(false,"The <%s /> component appears to have a render method, but doesn't extend React.Component. "+'This is likely to cause errors. Change %s to extend React.Component instead.',componentName,componentName);didWarnAboutBadClass[componentName]=true;}}if(workInProgress.mode&StrictMode){ReactStrictModeWarnings.recordLegacyContextWarning(workInProgress,null);}ReactCurrentOwner$3.current=workInProgress;value=renderWithHooks(null,workInProgress,Component,props,context,renderExpirationTime);}// React DevTools reads this flag.
+workInProgress.effectTag|=PerformedWork;if(typeof value==='object'&&value!==null&&typeof value.render==='function'&&value.$$typeof===undefined){// Proceed under the assumption that this is a class instance
+workInProgress.tag=ClassComponent;// Throw out any hooks that were used.
+resetHooks();// Push context providers early to prevent context stack mismatches.
+// During mounting we don't know the child context yet as the instance doesn't exist.
+// We will invalidate the child context in finishClassComponent() right after rendering.
+var hasContext=false;if(isContextProvider(Component)){hasContext=true;pushContextProvider(workInProgress);}else{hasContext=false;}workInProgress.memoizedState=value.state!==null&&value.state!==undefined?value.state:null;var getDerivedStateFromProps=Component.getDerivedStateFromProps;if(typeof getDerivedStateFromProps==='function'){applyDerivedStateFromProps(workInProgress,Component,getDerivedStateFromProps,props);}adoptClassInstance(workInProgress,value);mountClassInstance(workInProgress,Component,props,renderExpirationTime);return finishClassComponent(null,workInProgress,Component,true,hasContext,renderExpirationTime);}else{// Proceed under the assumption that this is a function component
+workInProgress.tag=FunctionComponent;{if(debugRenderPhaseSideEffects||debugRenderPhaseSideEffectsForStrictMode&&workInProgress.mode&StrictMode){// Only double-render components with Hooks
+if(workInProgress.memoizedState!==null){value=renderWithHooks(null,workInProgress,Component,props,context,renderExpirationTime);}}}reconcileChildren(null,workInProgress,value,renderExpirationTime);{validateFunctionComponentInDev(workInProgress,Component);}return workInProgress.child;}}function validateFunctionComponentInDev(workInProgress,Component){if(Component){!!Component.childContextTypes?warningWithoutStack$1(false,'%s(...): childContextTypes cannot be defined on a function component.',Component.displayName||Component.name||'Component'):void 0;}if(workInProgress.ref!==null){var info='';var ownerName=getCurrentFiberOwnerNameInDevOrNull();if(ownerName){info+='\n\nCheck the render method of `'+ownerName+'`.';}var warningKey=ownerName||workInProgress._debugID||'';var debugSource=workInProgress._debugSource;if(debugSource){warningKey=debugSource.fileName+':'+debugSource.lineNumber;}if(!didWarnAboutFunctionRefs[warningKey]){didWarnAboutFunctionRefs[warningKey]=true;warning$1(false,'Function components cannot be given refs. '+'Attempts to access this ref will fail. '+'Did you mean to use React.forwardRef()?%s',info);}}if(typeof Component.getDerivedStateFromProps==='function'){var componentName=getComponentName(Component)||'Unknown';if(!didWarnAboutGetDerivedStateOnFunctionComponent[componentName]){warningWithoutStack$1(false,'%s: Function components do not support getDerivedStateFromProps.',componentName);didWarnAboutGetDerivedStateOnFunctionComponent[componentName]=true;}}if(typeof Component.contextType==='object'&&Component.contextType!==null){var _componentName=getComponentName(Component)||'Unknown';if(!didWarnAboutContextTypeOnFunctionComponent[_componentName]){warningWithoutStack$1(false,'%s: Function components do not support contextType.',_componentName);didWarnAboutContextTypeOnFunctionComponent[_componentName]=true;}}}function updateSuspenseComponent(current$$1,workInProgress,renderExpirationTime){var mode=workInProgress.mode;var nextProps=workInProgress.pendingProps;// We should attempt to render the primary children unless this boundary
+// already suspended during this render (`alreadyCaptured` is true).
+var nextState=workInProgress.memoizedState;var nextDidTimeout=void 0;if((workInProgress.effectTag&DidCapture)===NoEffect){// This is the first attempt.
+nextState=null;nextDidTimeout=false;}else{// Something in this boundary's subtree already suspended. Switch to
+// rendering the fallback children.
+nextState={timedOutAt:nextState!==null?nextState.timedOutAt:NoWork};nextDidTimeout=true;workInProgress.effectTag&=~DidCapture;}// This next part is a bit confusing. If the children timeout, we switch to
+// showing the fallback children in place of the "primary" children.
+// However, we don't want to delete the primary children because then their
+// state will be lost (both the React state and the host state, e.g.
+// uncontrolled form inputs). Instead we keep them mounted and hide them.
+// Both the fallback children AND the primary children are rendered at the
+// same time. Once the primary children are un-suspended, we can delete
+// the fallback children — don't need to preserve their state.
+//
+// The two sets of children are siblings in the host environment, but
+// semantically, for purposes of reconciliation, they are two separate sets.
+// So we store them using two fragment fibers.
+//
+// However, we want to avoid allocating extra fibers for every placeholder.
+// They're only necessary when the children time out, because that's the
+// only time when both sets are mounted.
+//
+// So, the extra fragment fibers are only used if the children time out.
+// Otherwise, we render the primary children directly. This requires some
+// custom reconciliation logic to preserve the state of the primary
+// children. It's essentially a very basic form of re-parenting.
+// `child` points to the child fiber. In the normal case, this is the first
+// fiber of the primary children set. In the timed-out case, it's a
+// a fragment fiber containing the primary children.
+var child=void 0;// `next` points to the next fiber React should render. In the normal case,
+// it's the same as `child`: the first fiber of the primary children set.
+// In the timed-out case, it's a fragment fiber containing the *fallback*
+// children -- we skip over the primary children entirely.
+var next=void 0;if(current$$1===null){if(enableSuspenseServerRenderer){// If we're currently hydrating, try to hydrate this boundary.
+// But only if this has a fallback.
+if(nextProps.fallback!==undefined){tryToClaimNextHydratableInstance(workInProgress);// This could've changed the tag if this was a dehydrated suspense component.
+if(workInProgress.tag===DehydratedSuspenseComponent){return updateDehydratedSuspenseComponent(null,workInProgress,renderExpirationTime);}}}// This is the initial mount. This branch is pretty simple because there's
+// no previous state that needs to be preserved.
+if(nextDidTimeout){// Mount separate fragments for primary and fallback children.
+var nextFallbackChildren=nextProps.fallback;var primaryChildFragment=createFiberFromFragment(null,mode,NoWork,null);if((workInProgress.mode&ConcurrentMode)===NoContext){// Outside of concurrent mode, we commit the effects from the
+var progressedState=workInProgress.memoizedState;var progressedPrimaryChild=progressedState!==null?workInProgress.child.child:workInProgress.child;primaryChildFragment.child=progressedPrimaryChild;}var fallbackChildFragment=createFiberFromFragment(nextFallbackChildren,mode,renderExpirationTime,null);primaryChildFragment.sibling=fallbackChildFragment;child=primaryChildFragment;// Skip the primary children, and continue working on the
+// fallback children.
+next=fallbackChildFragment;child.return=next.return=workInProgress;}else{// Mount the primary children without an intermediate fragment fiber.
+var nextPrimaryChildren=nextProps.children;child=next=mountChildFibers(workInProgress,null,nextPrimaryChildren,renderExpirationTime);}}else{// This is an update. This branch is more complicated because we need to
+// ensure the state of the primary children is preserved.
+var prevState=current$$1.memoizedState;var prevDidTimeout=prevState!==null;if(prevDidTimeout){// The current tree already timed out. That means each child set is
+var currentPrimaryChildFragment=current$$1.child;var currentFallbackChildFragment=currentPrimaryChildFragment.sibling;if(nextDidTimeout){// Still timed out. Reuse the current primary children by cloning
+// its fragment. We're going to skip over these entirely.
+var _nextFallbackChildren=nextProps.fallback;var _primaryChildFragment=createWorkInProgress(currentPrimaryChildFragment,currentPrimaryChildFragment.pendingProps,NoWork);if((workInProgress.mode&ConcurrentMode)===NoContext){// Outside of concurrent mode, we commit the effects from the
+var _progressedState=workInProgress.memoizedState;var _progressedPrimaryChild=_progressedState!==null?workInProgress.child.child:workInProgress.child;if(_progressedPrimaryChild!==currentPrimaryChildFragment.child){_primaryChildFragment.child=_progressedPrimaryChild;}}// Because primaryChildFragment is a new fiber that we're inserting as the
+// parent of a new tree, we need to set its treeBaseDuration.
+if(enableProfilerTimer&&workInProgress.mode&ProfileMode){// treeBaseDuration is the sum of all the child tree base durations.
+var treeBaseDuration=0;var hiddenChild=_primaryChildFragment.child;while(hiddenChild!==null){treeBaseDuration+=hiddenChild.treeBaseDuration;hiddenChild=hiddenChild.sibling;}_primaryChildFragment.treeBaseDuration=treeBaseDuration;}// Clone the fallback child fragment, too. These we'll continue
+// working on.
+var _fallbackChildFragment=_primaryChildFragment.sibling=createWorkInProgress(currentFallbackChildFragment,_nextFallbackChildren,currentFallbackChildFragment.expirationTime);child=_primaryChildFragment;_primaryChildFragment.childExpirationTime=NoWork;// Skip the primary children, and continue working on the
+// fallback children.
+next=_fallbackChildFragment;child.return=next.return=workInProgress;}else{// No longer suspended. Switch back to showing the primary children,
+// and remove the intermediate fragment fiber.
+var _nextPrimaryChildren=nextProps.children;var currentPrimaryChild=currentPrimaryChildFragment.child;var primaryChild=reconcileChildFibers(workInProgress,currentPrimaryChild,_nextPrimaryChildren,renderExpirationTime);// If this render doesn't suspend, we need to delete the fallback
+// children. Wait until the complete phase, after we've confirmed the
+// fallback is no longer needed.
+// TODO: Would it be better to store the fallback fragment on
+// the stateNode?
+// Continue rendering the children, like we normally do.
+child=next=primaryChild;}}else{// The current tree has not already timed out. That means the primary
+// children are not wrapped in a fragment fiber.
+var _currentPrimaryChild=current$$1.child;if(nextDidTimeout){// Timed out. Wrap the children in a fragment fiber to keep them
+// separate from the fallback children.
+var _nextFallbackChildren2=nextProps.fallback;var _primaryChildFragment2=createFiberFromFragment(// It shouldn't matter what the pending props are because we aren't
+// going to render this fragment.
+null,mode,NoWork,null);_primaryChildFragment2.child=_currentPrimaryChild;// Even though we're creating a new fiber, there are no new children,
+// because we're reusing an already mounted tree. So we don't need to
+// schedule a placement.
+// primaryChildFragment.effectTag |= Placement;
+if((workInProgress.mode&ConcurrentMode)===NoContext){// Outside of concurrent mode, we commit the effects from the
+var _progressedState2=workInProgress.memoizedState;var _progressedPrimaryChild2=_progressedState2!==null?workInProgress.child.child:workInProgress.child;_primaryChildFragment2.child=_progressedPrimaryChild2;}// Because primaryChildFragment is a new fiber that we're inserting as the
+// parent of a new tree, we need to set its treeBaseDuration.
+if(enableProfilerTimer&&workInProgress.mode&ProfileMode){// treeBaseDuration is the sum of all the child tree base durations.
+var _treeBaseDuration=0;var _hiddenChild=_primaryChildFragment2.child;while(_hiddenChild!==null){_treeBaseDuration+=_hiddenChild.treeBaseDuration;_hiddenChild=_hiddenChild.sibling;}_primaryChildFragment2.treeBaseDuration=_treeBaseDuration;}// Create a fragment from the fallback children, too.
+var _fallbackChildFragment2=_primaryChildFragment2.sibling=createFiberFromFragment(_nextFallbackChildren2,mode,renderExpirationTime,null);_fallbackChildFragment2.effectTag|=Placement;child=_primaryChildFragment2;_primaryChildFragment2.childExpirationTime=NoWork;// Skip the primary children, and continue working on the
+// fallback children.
+next=_fallbackChildFragment2;child.return=next.return=workInProgress;}else{// Still haven't timed out.  Continue rendering the children, like we
+// normally do.
+var _nextPrimaryChildren2=nextProps.children;next=child=reconcileChildFibers(workInProgress,_currentPrimaryChild,_nextPrimaryChildren2,renderExpirationTime);}}workInProgress.stateNode=current$$1.stateNode;}workInProgress.memoizedState=nextState;workInProgress.child=child;return next;}function updateDehydratedSuspenseComponent(current$$1,workInProgress,renderExpirationTime){if(current$$1===null){// During the first pass, we'll bail out and not drill into the children.
+// Instead, we'll leave the content in place and try to hydrate it later.
+workInProgress.expirationTime=Never;return null;}// We use childExpirationTime to indicate that a child might depend on context, so if
+// any context has changed, we need to treat is as if the input might have changed.
+var hasContextChanged$$1=current$$1.childExpirationTime>=renderExpirationTime;if(didReceiveUpdate||hasContextChanged$$1){// This boundary has changed since the first render. This means that we are now unable to
+// hydrate it. We might still be able to hydrate it using an earlier expiration time but
+// during this render we can't. Instead, we're going to delete the whole subtree and
+// instead inject a new real Suspense boundary to take its place, which may render content
+// or fallback. The real Suspense boundary will suspend for a while so we have some time
+// to ensure it can produce real content, but all state and pending events will be lost.
+// Detach from the current dehydrated boundary.
+current$$1.alternate=null;workInProgress.alternate=null;// Insert a deletion in the effect list.
+var returnFiber=workInProgress.return;!(returnFiber!==null)?invariant(false,'Suspense boundaries are never on the root. This is probably a bug in React.'):void 0;var last=returnFiber.lastEffect;if(last!==null){last.nextEffect=current$$1;returnFiber.lastEffect=current$$1;}else{returnFiber.firstEffect=returnFiber.lastEffect=current$$1;}current$$1.nextEffect=null;current$$1.effectTag=Deletion;// Upgrade this work in progress to a real Suspense component.
+workInProgress.tag=SuspenseComponent;workInProgress.stateNode=null;workInProgress.memoizedState=null;// This is now an insertion.
+workInProgress.effectTag|=Placement;// Retry as a real Suspense component.
+return updateSuspenseComponent(null,workInProgress,renderExpirationTime);}if((workInProgress.effectTag&DidCapture)===NoEffect){// This is the first attempt.
+reenterHydrationStateFromDehydratedSuspenseInstance(workInProgress);var nextProps=workInProgress.pendingProps;var nextChildren=nextProps.children;workInProgress.child=mountChildFibers(workInProgress,null,nextChildren,renderExpirationTime);return workInProgress.child;}else{// Something suspended. Leave the existing children in place.
+// TODO: In non-concurrent mode, should we commit the nodes we have hydrated so far?
+workInProgress.child=null;return null;}}function updatePortalComponent(current$$1,workInProgress,renderExpirationTime){pushHostContainer(workInProgress,workInProgress.stateNode.containerInfo);var nextChildren=workInProgress.pendingProps;if(current$$1===null){// Portals are special because we don't append the children during mount
+// but at commit. Therefore we need to track insertions which the normal
+// flow doesn't do during mount. This doesn't happen at the root because
+// the root always starts with a "current" with a null child.
+// TODO: Consider unifying this with how the root works.
+workInProgress.child=reconcileChildFibers(workInProgress,null,nextChildren,renderExpirationTime);}else{reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);}return workInProgress.child;}function updateContextProvider(current$$1,workInProgress,renderExpirationTime){var providerType=workInProgress.type;var context=providerType._context;var newProps=workInProgress.pendingProps;var oldProps=workInProgress.memoizedProps;var newValue=newProps.value;{var providerPropTypes=workInProgress.type.propTypes;if(providerPropTypes){checkPropTypes(providerPropTypes,newProps,'prop','Context.Provider',getCurrentFiberStackInDev);}}pushProvider(workInProgress,newValue);if(oldProps!==null){var oldValue=oldProps.value;var changedBits=calculateChangedBits(context,newValue,oldValue);if(changedBits===0){// No change. Bailout early if children are the same.
+if(oldProps.children===newProps.children&&!hasContextChanged()){return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}}else{// The context value changed. Search for matching consumers and schedule
+// them to update.
+propagateContextChange(workInProgress,context,changedBits,renderExpirationTime);}}var newChildren=newProps.children;reconcileChildren(current$$1,workInProgress,newChildren,renderExpirationTime);return workInProgress.child;}var hasWarnedAboutUsingContextAsConsumer=false;function updateContextConsumer(current$$1,workInProgress,renderExpirationTime){var context=workInProgress.type;// The logic below for Context differs depending on PROD or DEV mode. In
+// DEV mode, we create a separate object for Context.Consumer that acts
+// like a proxy to Context. This proxy object adds unnecessary code in PROD
+// so we use the old behaviour (Context.Consumer references Context) to
+// reduce size and overhead. The separate object references context via
+// a property called "_context", which also gives us the ability to check
+// in DEV mode if this property exists or not and warn if it does not.
+{if(context._context===undefined){// This may be because it's a Context (rather than a Consumer).
+// Or it may be because it's older React where they're the same thing.
+// We only want to warn if we're sure it's a new React.
+if(context!==context.Consumer){if(!hasWarnedAboutUsingContextAsConsumer){hasWarnedAboutUsingContextAsConsumer=true;warning$1(false,'Rendering <Context> directly is not supported and will be removed in '+'a future major release. Did you mean to render <Context.Consumer> instead?');}}}else{context=context._context;}}var newProps=workInProgress.pendingProps;var render=newProps.children;{!(typeof render==='function')?warningWithoutStack$1(false,'A context consumer was rendered with multiple children, or a child '+"that isn't a function. A context consumer expects a single child "+'that is a function. If you did pass a function, make sure there '+'is no trailing or leading whitespace around it.'):void 0;}prepareToReadContext(workInProgress,renderExpirationTime);var newValue=readContext(context,newProps.unstable_observedBits);var newChildren=void 0;{ReactCurrentOwner$3.current=workInProgress;setCurrentPhase('render');newChildren=render(newValue);setCurrentPhase(null);}// React DevTools reads this flag.
+workInProgress.effectTag|=PerformedWork;reconcileChildren(current$$1,workInProgress,newChildren,renderExpirationTime);return workInProgress.child;}function markWorkInProgressReceivedUpdate(){didReceiveUpdate=true;}function bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime){cancelWorkTimer(workInProgress);if(current$$1!==null){// Reuse previous context list
+workInProgress.contextDependencies=current$$1.contextDependencies;}if(enableProfilerTimer){// Don't update "base" render times for bailouts.
+stopProfilerTimerIfRunning(workInProgress);}// Check if the children have any pending work.
+var childExpirationTime=workInProgress.childExpirationTime;if(childExpirationTime<renderExpirationTime){// The children don't have any work either. We can skip them.
+// TODO: Once we add back resuming, we should check if the children are
+// a work-in-progress set. If so, we need to transfer their effects.
+return null;}else{// This fiber doesn't have work, but its subtree does. Clone the child
+// fibers and continue.
+cloneChildFibers(current$$1,workInProgress);return workInProgress.child;}}function beginWork(current$$1,workInProgress,renderExpirationTime){var updateExpirationTime=workInProgress.expirationTime;if(current$$1!==null){var oldProps=current$$1.memoizedProps;var newProps=workInProgress.pendingProps;if(oldProps!==newProps||hasContextChanged()){// If props or context changed, mark the fiber as having performed work.
+// This may be unset if the props are determined to be equal later (memo).
+didReceiveUpdate=true;}else if(updateExpirationTime<renderExpirationTime){didReceiveUpdate=false;// This fiber does not have any pending work. Bailout without entering
+// the begin phase. There's still some bookkeeping we that needs to be done
+// in this optimized path, mostly pushing stuff onto the stack.
+switch(workInProgress.tag){case HostRoot:pushHostRootContext(workInProgress);resetHydrationState();break;case HostComponent:pushHostContext(workInProgress);break;case ClassComponent:{var Component=workInProgress.type;if(isContextProvider(Component)){pushContextProvider(workInProgress);}break;}case HostPortal:pushHostContainer(workInProgress,workInProgress.stateNode.containerInfo);break;case ContextProvider:{var newValue=workInProgress.memoizedProps.value;pushProvider(workInProgress,newValue);break;}case Profiler:if(enableProfilerTimer){workInProgress.effectTag|=Update;}break;case SuspenseComponent:{var state=workInProgress.memoizedState;var didTimeout=state!==null;if(didTimeout){// If this boundary is currently timed out, we need to decide
+// whether to retry the primary children, or to skip over it and
+// go straight to the fallback. Check the priority of the primary
+var primaryChildFragment=workInProgress.child;var primaryChildExpirationTime=primaryChildFragment.childExpirationTime;if(primaryChildExpirationTime!==NoWork&&primaryChildExpirationTime>=renderExpirationTime){// The primary children have pending work. Use the normal path
+// to attempt to render the primary children again.
+return updateSuspenseComponent(current$$1,workInProgress,renderExpirationTime);}else{// The primary children do not have pending work with sufficient
+// priority. Bailout.
+var child=bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);if(child!==null){// The fallback children have pending work. Skip over the
+// primary children and work on the fallback.
+return child.sibling;}else{return null;}}}break;}case DehydratedSuspenseComponent:{if(enableSuspenseServerRenderer){// We know that this component will suspend again because if it has
+// been unsuspended it has committed as a regular Suspense component.
+// If it needs to be retried, it should have work scheduled on it.
+workInProgress.effectTag|=DidCapture;break;}}}return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}}else{didReceiveUpdate=false;}// Before entering the begin phase, clear the expiration time.
+workInProgress.expirationTime=NoWork;switch(workInProgress.tag){case IndeterminateComponent:{var elementType=workInProgress.elementType;return mountIndeterminateComponent(current$$1,workInProgress,elementType,renderExpirationTime);}case LazyComponent:{var _elementType=workInProgress.elementType;return mountLazyComponent(current$$1,workInProgress,_elementType,updateExpirationTime,renderExpirationTime);}case FunctionComponent:{var _Component=workInProgress.type;var unresolvedProps=workInProgress.pendingProps;var resolvedProps=workInProgress.elementType===_Component?unresolvedProps:resolveDefaultProps(_Component,unresolvedProps);return updateFunctionComponent(current$$1,workInProgress,_Component,resolvedProps,renderExpirationTime);}case ClassComponent:{var _Component2=workInProgress.type;var _unresolvedProps=workInProgress.pendingProps;var _resolvedProps=workInProgress.elementType===_Component2?_unresolvedProps:resolveDefaultProps(_Component2,_unresolvedProps);return updateClassComponent(current$$1,workInProgress,_Component2,_resolvedProps,renderExpirationTime);}case HostRoot:return updateHostRoot(current$$1,workInProgress,renderExpirationTime);case HostComponent:return updateHostComponent(current$$1,workInProgress,renderExpirationTime);case HostText:return updateHostText(current$$1,workInProgress);case SuspenseComponent:return updateSuspenseComponent(current$$1,workInProgress,renderExpirationTime);case HostPortal:return updatePortalComponent(current$$1,workInProgress,renderExpirationTime);case ForwardRef:{var type=workInProgress.type;var _unresolvedProps2=workInProgress.pendingProps;var _resolvedProps2=workInProgress.elementType===type?_unresolvedProps2:resolveDefaultProps(type,_unresolvedProps2);return updateForwardRef(current$$1,workInProgress,type,_resolvedProps2,renderExpirationTime);}case Fragment:return updateFragment(current$$1,workInProgress,renderExpirationTime);case Mode:return updateMode(current$$1,workInProgress,renderExpirationTime);case Profiler:return updateProfiler(current$$1,workInProgress,renderExpirationTime);case ContextProvider:return updateContextProvider(current$$1,workInProgress,renderExpirationTime);case ContextConsumer:return updateContextConsumer(current$$1,workInProgress,renderExpirationTime);case MemoComponent:{var _type2=workInProgress.type;var _unresolvedProps3=workInProgress.pendingProps;// Resolve outer props first, then resolve inner props.
+var _resolvedProps3=resolveDefaultProps(_type2,_unresolvedProps3);{if(workInProgress.type!==workInProgress.elementType){var outerPropTypes=_type2.propTypes;if(outerPropTypes){checkPropTypes(outerPropTypes,_resolvedProps3,// Resolved for outer only
+'prop',getComponentName(_type2),getCurrentFiberStackInDev);}}}_resolvedProps3=resolveDefaultProps(_type2.type,_resolvedProps3);return updateMemoComponent(current$$1,workInProgress,_type2,_resolvedProps3,updateExpirationTime,renderExpirationTime);}case SimpleMemoComponent:{return updateSimpleMemoComponent(current$$1,workInProgress,workInProgress.type,workInProgress.pendingProps,updateExpirationTime,renderExpirationTime);}case IncompleteClassComponent:{var _Component3=workInProgress.type;var _unresolvedProps4=workInProgress.pendingProps;var _resolvedProps4=workInProgress.elementType===_Component3?_unresolvedProps4:resolveDefaultProps(_Component3,_unresolvedProps4);return mountIncompleteClassComponent(current$$1,workInProgress,_Component3,_resolvedProps4,renderExpirationTime);}case DehydratedSuspenseComponent:{if(enableSuspenseServerRenderer){return updateDehydratedSuspenseComponent(current$$1,workInProgress,renderExpirationTime);}break;}}invariant(false,'Unknown unit of work tag. This error is likely caused by a bug in React. Please file an issue.');}var valueCursor=createCursor(null);var rendererSigil=void 0;{// Use this to detect multiple renderers using the same context
+rendererSigil={};}var currentlyRenderingFiber=null;var lastContextDependency=null;var lastContextWithAllBitsObserved=null;var isDisallowedContextReadInDEV=false;function resetContextDependences(){// This is called right before React yields execution, to ensure `readContext`
+// cannot be called outside the render phase.
+currentlyRenderingFiber=null;lastContextDependency=null;lastContextWithAllBitsObserved=null;{isDisallowedContextReadInDEV=false;}}function enterDisallowedContextReadInDEV(){{isDisallowedContextReadInDEV=true;}}function exitDisallowedContextReadInDEV(){{isDisallowedContextReadInDEV=false;}}function pushProvider(providerFiber,nextValue){var context=providerFiber.type._context;if(isPrimaryRenderer){push(valueCursor,context._currentValue,providerFiber);context._currentValue=nextValue;{!(context._currentRenderer===undefined||context._currentRenderer===null||context._currentRenderer===rendererSigil)?warningWithoutStack$1(false,'Detected multiple renderers concurrently rendering the '+'same context provider. This is currently unsupported.'):void 0;context._currentRenderer=rendererSigil;}}else{push(valueCursor,context._currentValue2,providerFiber);context._currentValue2=nextValue;{!(context._currentRenderer2===undefined||context._currentRenderer2===null||context._currentRenderer2===rendererSigil)?warningWithoutStack$1(false,'Detected multiple renderers concurrently rendering the '+'same context provider. This is currently unsupported.'):void 0;context._currentRenderer2=rendererSigil;}}}function popProvider(providerFiber){var currentValue=valueCursor.current;pop(valueCursor,providerFiber);var context=providerFiber.type._context;if(isPrimaryRenderer){context._currentValue=currentValue;}else{context._currentValue2=currentValue;}}function calculateChangedBits(context,newValue,oldValue){if(is(oldValue,newValue)){// No change
+return 0;}else{var changedBits=typeof context._calculateChangedBits==='function'?context._calculateChangedBits(oldValue,newValue):maxSigned31BitInt;{!((changedBits&maxSigned31BitInt)===changedBits)?warning$1(false,'calculateChangedBits: Expected the return value to be a '+'31-bit integer. Instead received: %s',changedBits):void 0;}return changedBits|0;}}function scheduleWorkOnParentPath(parent,renderExpirationTime){// Update the child expiration time of all the ancestors, including
+// the alternates.
+var node=parent;while(node!==null){var alternate=node.alternate;if(node.childExpirationTime<renderExpirationTime){node.childExpirationTime=renderExpirationTime;if(alternate!==null&&alternate.childExpirationTime<renderExpirationTime){alternate.childExpirationTime=renderExpirationTime;}}else if(alternate!==null&&alternate.childExpirationTime<renderExpirationTime){alternate.childExpirationTime=renderExpirationTime;}else{// Neither alternate was updated, which means the rest of the
+// ancestor path already has sufficient priority.
+break;}node=node.return;}}function propagateContextChange(workInProgress,context,changedBits,renderExpirationTime){var fiber=workInProgress.child;if(fiber!==null){// Set the return pointer of the child to the work-in-progress fiber.
+fiber.return=workInProgress;}while(fiber!==null){var nextFiber=void 0;// Visit this fiber.
+var list=fiber.contextDependencies;if(list!==null){nextFiber=fiber.child;var dependency=list.first;while(dependency!==null){// Check if the context matches.
+if(dependency.context===context&&(dependency.observedBits&changedBits)!==0){// Match! Schedule an update on this fiber.
+if(fiber.tag===ClassComponent){// Schedule a force update on the work-in-progress.
+var update=createUpdate(renderExpirationTime);update.tag=ForceUpdate;// TODO: Because we don't have a work-in-progress, this will add the
+// update to the current fiber, too, which means it will persist even if
+// this render is thrown away. Since it's a race condition, not sure it's
+// worth fixing.
+enqueueUpdate(fiber,update);}if(fiber.expirationTime<renderExpirationTime){fiber.expirationTime=renderExpirationTime;}var alternate=fiber.alternate;if(alternate!==null&&alternate.expirationTime<renderExpirationTime){alternate.expirationTime=renderExpirationTime;}scheduleWorkOnParentPath(fiber.return,renderExpirationTime);// Mark the expiration time on the list, too.
+if(list.expirationTime<renderExpirationTime){list.expirationTime=renderExpirationTime;}// Since we already found a match, we can stop traversing the
+// dependency list.
+break;}dependency=dependency.next;}}else if(fiber.tag===ContextProvider){// Don't scan deeper if this is a matching provider
+nextFiber=fiber.type===workInProgress.type?null:fiber.child;}else if(enableSuspenseServerRenderer&&fiber.tag===DehydratedSuspenseComponent){// If a dehydrated suspense component is in this subtree, we don't know
+// if it will have any context consumers in it. The best we can do is
+// mark it as having updates on its children.
+if(fiber.expirationTime<renderExpirationTime){fiber.expirationTime=renderExpirationTime;}var _alternate=fiber.alternate;if(_alternate!==null&&_alternate.expirationTime<renderExpirationTime){_alternate.expirationTime=renderExpirationTime;}// This is intentionally passing this fiber as the parent
+// because we want to schedule this fiber as having work
+// on its children. We'll use the childExpirationTime on
+// this fiber to indicate that a context has changed.
+scheduleWorkOnParentPath(fiber,renderExpirationTime);nextFiber=fiber.sibling;}else{// Traverse down.
+nextFiber=fiber.child;}if(nextFiber!==null){// Set the return pointer of the child to the work-in-progress fiber.
+nextFiber.return=fiber;}else{// No child. Traverse to next sibling.
+nextFiber=fiber;while(nextFiber!==null){if(nextFiber===workInProgress){// We're back to the root of this subtree. Exit.
+nextFiber=null;break;}var sibling=nextFiber.sibling;if(sibling!==null){// Set the return pointer of the sibling to the work-in-progress fiber.
+sibling.return=nextFiber.return;nextFiber=sibling;break;}// No more siblings. Traverse up.
+nextFiber=nextFiber.return;}}fiber=nextFiber;}}function prepareToReadContext(workInProgress,renderExpirationTime){currentlyRenderingFiber=workInProgress;lastContextDependency=null;lastContextWithAllBitsObserved=null;var currentDependencies=workInProgress.contextDependencies;if(currentDependencies!==null&&currentDependencies.expirationTime>=renderExpirationTime){// Context list has a pending update. Mark that this fiber performed work.
+markWorkInProgressReceivedUpdate();}// Reset the work-in-progress list
+workInProgress.contextDependencies=null;}function readContext(context,observedBits){{// This warning would fire if you read context inside a Hook like useMemo.
+// Unlike the class check below, it's not enforced in production for perf.
+!!isDisallowedContextReadInDEV?warning$1(false,'Context can only be read while React is rendering. '+'In classes, you can read it in the render method or getDerivedStateFromProps. '+'In function components, you can read it directly in the function body, but not '+'inside Hooks like useReducer() or useMemo().'):void 0;}if(lastContextWithAllBitsObserved===context){// Nothing to do. We already observe everything in this context.
+}else if(observedBits===false||observedBits===0){// Do not observe any updates.
+}else{var resolvedObservedBits=void 0;// Avoid deopting on observable arguments or heterogeneous types.
+if(typeof observedBits!=='number'||observedBits===maxSigned31BitInt){// Observe all updates.
+lastContextWithAllBitsObserved=context;resolvedObservedBits=maxSigned31BitInt;}else{resolvedObservedBits=observedBits;}var contextItem={context:context,observedBits:resolvedObservedBits,next:null};if(lastContextDependency===null){!(currentlyRenderingFiber!==null)?invariant(false,'Context can only be read while React is rendering. In classes, you can read it in the render method or getDerivedStateFromProps. In function components, you can read it directly in the function body, but not inside Hooks like useReducer() or useMemo().'):void 0;// This is the first dependency for this component. Create a new list.
+lastContextDependency=contextItem;currentlyRenderingFiber.contextDependencies={first:contextItem,expirationTime:NoWork};}else{// Append a new context item.
+lastContextDependency=lastContextDependency.next=contextItem;}}return isPrimaryRenderer?context._currentValue:context._currentValue2;}// UpdateQueue is a linked list of prioritized updates.
 //
 // Like fibers, update queues come in pairs: a current queue, which represents
-// the visible state of the screen, and a work-in-progress queue, which is
-// can be mutated and processed asynchronously before it is committed — a form
-// of double buffering. If a work-in-progress render is discarded before
-// finishing, we create a new work-in-progress by cloning the current queue.
+// the visible state of the screen, and a work-in-progress queue, which can be
+// mutated and processed asynchronously before it is committed — a form of
+// double buffering. If a work-in-progress render is discarded before finishing,
+// we create a new work-in-progress by cloning the current queue.
 //
 // Both queues share a persistent, singly-linked list structure. To schedule an
 // update, we append it to the end of both queues. Each queue maintains a
@@ -38314,10 +39520,10 @@ if(workInProgressQueue.lastCapturedUpdate===null){// This is the first render ph
 workInProgressQueue.firstCapturedUpdate=workInProgressQueue.lastCapturedUpdate=update;}else{workInProgressQueue.lastCapturedUpdate.next=update;workInProgressQueue.lastCapturedUpdate=update;}}function ensureWorkInProgressQueueIsAClone(workInProgress,queue){var current=workInProgress.alternate;if(current!==null){// If the work-in-progress queue is equal to the current queue,
 // we need to clone it first.
 if(queue===current.updateQueue){queue=workInProgress.updateQueue=cloneUpdateQueue(queue);}}return queue;}function getStateFromUpdate(workInProgress,queue,update,prevState,nextProps,instance){switch(update.tag){case ReplaceState:{var _payload=update.payload;if(typeof _payload==='function'){// Updater function
-{if(debugRenderPhaseSideEffects||debugRenderPhaseSideEffectsForStrictMode&&workInProgress.mode&StrictMode){_payload.call(instance,prevState,nextProps);}}return _payload.call(instance,prevState,nextProps);}// State object
+{enterDisallowedContextReadInDEV();if(debugRenderPhaseSideEffects||debugRenderPhaseSideEffectsForStrictMode&&workInProgress.mode&StrictMode){_payload.call(instance,prevState,nextProps);}}var nextState=_payload.call(instance,prevState,nextProps);{exitDisallowedContextReadInDEV();}return nextState;}// State object
 return _payload;}case CaptureUpdate:{workInProgress.effectTag=workInProgress.effectTag&~ShouldCapture|DidCapture;}// Intentional fallthrough
 case UpdateState:{var _payload2=update.payload;var partialState=void 0;if(typeof _payload2==='function'){// Updater function
-{if(debugRenderPhaseSideEffects||debugRenderPhaseSideEffectsForStrictMode&&workInProgress.mode&StrictMode){_payload2.call(instance,prevState,nextProps);}}partialState=_payload2.call(instance,prevState,nextProps);}else{// Partial state object
+{enterDisallowedContextReadInDEV();if(debugRenderPhaseSideEffects||debugRenderPhaseSideEffectsForStrictMode&&workInProgress.mode&StrictMode){_payload2.call(instance,prevState,nextProps);}}partialState=_payload2.call(instance,prevState,nextProps);{exitDisallowedContextReadInDEV();}}else{// Partial state object
 partialState=_payload2;}if(partialState===null||partialState===undefined){// Null and undefined are treated as no-ops.
 return prevState;}// Merge the partial state and the previous state.
 return _assign({},prevState,partialState);}case ForceUpdate:{hasForceUpdate=true;return prevState;}}return prevState;}function processUpdateQueue(workInProgress,queue,props,instance,renderExpirationTime){hasForceUpdate=false;queue=ensureWorkInProgressQueueIsAClone(workInProgress,queue);{currentlyProcessingQueue=queue;}// These values may change as we process the queue.
@@ -38362,655 +39568,7 @@ if(finishedQueue.lastUpdate!==null){finishedQueue.lastUpdate.next=finishedQueue.
 finishedQueue.firstCapturedUpdate=finishedQueue.lastCapturedUpdate=null;}// Commit the effects
 commitUpdateEffects(finishedQueue.firstEffect,instance);finishedQueue.firstEffect=finishedQueue.lastEffect=null;commitUpdateEffects(finishedQueue.firstCapturedEffect,instance);finishedQueue.firstCapturedEffect=finishedQueue.lastCapturedEffect=null;}function commitUpdateEffects(effect,instance){while(effect!==null){var _callback3=effect.callback;if(_callback3!==null){effect.callback=null;callCallback(_callback3,instance);}effect=effect.nextEffect;}}function createCapturedValue(value,source){// If the value is an error, call this function immediately after it is thrown
 // so the stack is accurate.
-return{value:value,source:source,stack:getStackByFiberInDevAndProd(source)};}var valueCursor=createCursor(null);var rendererSigil=void 0;{// Use this to detect multiple renderers using the same context
-rendererSigil={};}var currentlyRenderingFiber=null;var lastContextDependency=null;var lastContextWithAllBitsObserved=null;function resetContextDependences(){// This is called right before React yields execution, to ensure `readContext`
-// cannot be called outside the render phase.
-currentlyRenderingFiber=null;lastContextDependency=null;lastContextWithAllBitsObserved=null;}function pushProvider(providerFiber,nextValue){var context=providerFiber.type._context;if(isPrimaryRenderer){push(valueCursor,context._currentValue,providerFiber);context._currentValue=nextValue;{!(context._currentRenderer===undefined||context._currentRenderer===null||context._currentRenderer===rendererSigil)?warningWithoutStack$1(false,'Detected multiple renderers concurrently rendering the '+'same context provider. This is currently unsupported.'):void 0;context._currentRenderer=rendererSigil;}}else{push(valueCursor,context._currentValue2,providerFiber);context._currentValue2=nextValue;{!(context._currentRenderer2===undefined||context._currentRenderer2===null||context._currentRenderer2===rendererSigil)?warningWithoutStack$1(false,'Detected multiple renderers concurrently rendering the '+'same context provider. This is currently unsupported.'):void 0;context._currentRenderer2=rendererSigil;}}}function popProvider(providerFiber){var currentValue=valueCursor.current;pop(valueCursor,providerFiber);var context=providerFiber.type._context;if(isPrimaryRenderer){context._currentValue=currentValue;}else{context._currentValue2=currentValue;}}function calculateChangedBits(context,newValue,oldValue){// Use Object.is to compare the new context value to the old value. Inlined
-// Object.is polyfill.
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
-if(oldValue===newValue&&(oldValue!==0||1/oldValue===1/newValue)||oldValue!==oldValue&&newValue!==newValue// eslint-disable-line no-self-compare
-){// No change
-return 0;}else{var changedBits=typeof context._calculateChangedBits==='function'?context._calculateChangedBits(oldValue,newValue):maxSigned31BitInt;{!((changedBits&maxSigned31BitInt)===changedBits)?warning$1(false,'calculateChangedBits: Expected the return value to be a '+'31-bit integer. Instead received: %s',changedBits):void 0;}return changedBits|0;}}function propagateContextChange(workInProgress,context,changedBits,renderExpirationTime){var fiber=workInProgress.child;if(fiber!==null){// Set the return pointer of the child to the work-in-progress fiber.
-fiber.return=workInProgress;}while(fiber!==null){var nextFiber=void 0;// Visit this fiber.
-var dependency=fiber.firstContextDependency;if(dependency!==null){do{// Check if the context matches.
-if(dependency.context===context&&(dependency.observedBits&changedBits)!==0){// Match! Schedule an update on this fiber.
-if(fiber.tag===ClassComponent){// Schedule a force update on the work-in-progress.
-var update=createUpdate(renderExpirationTime);update.tag=ForceUpdate;// TODO: Because we don't have a work-in-progress, this will add the
-// update to the current fiber, too, which means it will persist even if
-// this render is thrown away. Since it's a race condition, not sure it's
-// worth fixing.
-enqueueUpdate(fiber,update);}if(fiber.expirationTime<renderExpirationTime){fiber.expirationTime=renderExpirationTime;}var alternate=fiber.alternate;if(alternate!==null&&alternate.expirationTime<renderExpirationTime){alternate.expirationTime=renderExpirationTime;}// Update the child expiration time of all the ancestors, including
-// the alternates.
-var node=fiber.return;while(node!==null){alternate=node.alternate;if(node.childExpirationTime<renderExpirationTime){node.childExpirationTime=renderExpirationTime;if(alternate!==null&&alternate.childExpirationTime<renderExpirationTime){alternate.childExpirationTime=renderExpirationTime;}}else if(alternate!==null&&alternate.childExpirationTime<renderExpirationTime){alternate.childExpirationTime=renderExpirationTime;}else{// Neither alternate was updated, which means the rest of the
-// ancestor path already has sufficient priority.
-break;}node=node.return;}}nextFiber=fiber.child;dependency=dependency.next;}while(dependency!==null);}else if(fiber.tag===ContextProvider){// Don't scan deeper if this is a matching provider
-nextFiber=fiber.type===workInProgress.type?null:fiber.child;}else{// Traverse down.
-nextFiber=fiber.child;}if(nextFiber!==null){// Set the return pointer of the child to the work-in-progress fiber.
-nextFiber.return=fiber;}else{// No child. Traverse to next sibling.
-nextFiber=fiber;while(nextFiber!==null){if(nextFiber===workInProgress){// We're back to the root of this subtree. Exit.
-nextFiber=null;break;}var sibling=nextFiber.sibling;if(sibling!==null){// Set the return pointer of the sibling to the work-in-progress fiber.
-sibling.return=nextFiber.return;nextFiber=sibling;break;}// No more siblings. Traverse up.
-nextFiber=nextFiber.return;}}fiber=nextFiber;}}function prepareToReadContext(workInProgress,renderExpirationTime){currentlyRenderingFiber=workInProgress;lastContextDependency=null;lastContextWithAllBitsObserved=null;// Reset the work-in-progress list
-workInProgress.firstContextDependency=null;}function readContext(context,observedBits){if(lastContextWithAllBitsObserved===context){// Nothing to do. We already observe everything in this context.
-}else if(observedBits===false||observedBits===0){// Do not observe any updates.
-}else{var resolvedObservedBits=void 0;// Avoid deopting on observable arguments or heterogeneous types.
-if(typeof observedBits!=='number'||observedBits===maxSigned31BitInt){// Observe all updates.
-lastContextWithAllBitsObserved=context;resolvedObservedBits=maxSigned31BitInt;}else{resolvedObservedBits=observedBits;}var contextItem={context:context,observedBits:resolvedObservedBits,next:null};if(lastContextDependency===null){!(currentlyRenderingFiber!==null)?invariant(false,'Context can only be read while React is rendering, e.g. inside the render method or getDerivedStateFromProps.'):void 0;// This is the first dependency in the list
-currentlyRenderingFiber.firstContextDependency=lastContextDependency=contextItem;}else{// Append a new context item.
-lastContextDependency=lastContextDependency.next=contextItem;}}return isPrimaryRenderer?context._currentValue:context._currentValue2;}var NoEffect$1=/*             */0;var UnmountSnapshot=/*      */2;var UnmountMutation=/*      */4;var MountMutation=/*        */8;var UnmountLayout=/*        */16;var MountLayout=/*          */32;var MountPassive=/*         */64;var UnmountPassive=/*       */128;function areHookInputsEqual(arr1,arr2){// Don't bother comparing lengths in prod because these arrays should be
-// passed inline.
-{!(arr1.length===arr2.length)?warning$1(false,'Detected a variable number of hook dependencies. The length of the '+'dependencies array should be constant between renders.\n\n'+'Previous: %s\n'+'Incoming: %s',arr1.join(', '),arr2.join(', ')):void 0;}for(var i=0;i<arr1.length;i++){// Inlined Object.is polyfill.
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
-var val1=arr1[i];var val2=arr2[i];if(val1===val2&&(val1!==0||1/val1===1/val2)||val1!==val1&&val2!==val2// eslint-disable-line no-self-compare
-){continue;}return false;}return true;}// These are set right before calling the component.
-var renderExpirationTime=NoWork;// The work-in-progress fiber. I've named it differently to distinguish it from
-// the work-in-progress hook.
-var currentlyRenderingFiber$1=null;// Hooks are stored as a linked list on the fiber's memoizedState field. The
-// current hook list is the list that belongs to the current fiber. The
-// work-in-progress hook list is a new list that will be added to the
-// work-in-progress fiber.
-var firstCurrentHook=null;var currentHook=null;var firstWorkInProgressHook=null;var workInProgressHook=null;var remainingExpirationTime=NoWork;var componentUpdateQueue=null;// Updates scheduled during render will trigger an immediate re-render at the
-// end of the current pass. We can't store these updates on the normal queue,
-// because if the work is aborted, they should be discarded. Because this is
-// a relatively rare case, we also don't want to add an additional field to
-// either the hook or queue object types. So we store them in a lazily create
-// map of queue -> render-phase updates, which are discarded once the component
-// completes without re-rendering.
-// Whether the work-in-progress hook is a re-rendered hook
-var isReRender=false;// Whether an update was scheduled during the currently executing render pass.
-var didScheduleRenderPhaseUpdate=false;// Lazily created map of render-phase updates
-var renderPhaseUpdates=null;// Counter to prevent infinite loops.
-var numberOfReRenders=0;var RE_RENDER_LIMIT=25;function resolveCurrentlyRenderingFiber(){!(currentlyRenderingFiber$1!==null)?invariant(false,'Hooks can only be called inside the body of a function component.'):void 0;return currentlyRenderingFiber$1;}function prepareToUseHooks(current,workInProgress,nextRenderExpirationTime){if(!enableHooks){return;}renderExpirationTime=nextRenderExpirationTime;currentlyRenderingFiber$1=workInProgress;firstCurrentHook=current!==null?current.memoizedState:null;// The following should have already been reset
-// currentHook = null;
-// workInProgressHook = null;
-// remainingExpirationTime = NoWork;
-// componentUpdateQueue = null;
-// isReRender = false;
-// didScheduleRenderPhaseUpdate = false;
-// renderPhaseUpdates = null;
-// numberOfReRenders = 0;
-}function finishHooks(Component,props,children,refOrContext){if(!enableHooks){return children;}// This must be called after every function component to prevent hooks from
-// being used in classes.
-while(didScheduleRenderPhaseUpdate){// Updates were scheduled during the render phase. They are stored in
-// the `renderPhaseUpdates` map. Call the component again, reusing the
-// work-in-progress hooks and applying the additional updates on top. Keep
-// restarting until no more updates are scheduled.
-didScheduleRenderPhaseUpdate=false;numberOfReRenders+=1;// Start over from the beginning of the list
-currentHook=null;workInProgressHook=null;componentUpdateQueue=null;children=Component(props,refOrContext);}renderPhaseUpdates=null;numberOfReRenders=0;var renderedWork=currentlyRenderingFiber$1;renderedWork.memoizedState=firstWorkInProgressHook;renderedWork.expirationTime=remainingExpirationTime;renderedWork.updateQueue=componentUpdateQueue;var didRenderTooFewHooks=currentHook!==null&&currentHook.next!==null;renderExpirationTime=NoWork;currentlyRenderingFiber$1=null;firstCurrentHook=null;currentHook=null;firstWorkInProgressHook=null;workInProgressHook=null;remainingExpirationTime=NoWork;componentUpdateQueue=null;// Always set during createWorkInProgress
-// isReRender = false;
-// These were reset above
-// didScheduleRenderPhaseUpdate = false;
-// renderPhaseUpdates = null;
-// numberOfReRenders = 0;
-!!didRenderTooFewHooks?invariant(false,'Rendered fewer hooks than expected. This may be caused by an accidental early return statement.'):void 0;return children;}function resetHooks(){if(!enableHooks){return;}// This is called instead of `finishHooks` if the component throws. It's also
-// called inside mountIndeterminateComponent if we determine the component
-// is a module-style component.
-renderExpirationTime=NoWork;currentlyRenderingFiber$1=null;firstCurrentHook=null;currentHook=null;firstWorkInProgressHook=null;workInProgressHook=null;remainingExpirationTime=NoWork;componentUpdateQueue=null;// Always set during createWorkInProgress
-// isReRender = false;
-didScheduleRenderPhaseUpdate=false;renderPhaseUpdates=null;numberOfReRenders=0;}function createHook(){return{memoizedState:null,baseState:null,queue:null,baseUpdate:null,next:null};}function cloneHook(hook){return{memoizedState:hook.memoizedState,baseState:hook.baseState,queue:hook.queue,baseUpdate:hook.baseUpdate,next:null};}function createWorkInProgressHook(){if(workInProgressHook===null){// This is the first hook in the list
-if(firstWorkInProgressHook===null){isReRender=false;currentHook=firstCurrentHook;if(currentHook===null){// This is a newly mounted hook
-workInProgressHook=createHook();}else{// Clone the current hook.
-workInProgressHook=cloneHook(currentHook);}firstWorkInProgressHook=workInProgressHook;}else{// There's already a work-in-progress. Reuse it.
-isReRender=true;currentHook=firstCurrentHook;workInProgressHook=firstWorkInProgressHook;}}else{if(workInProgressHook.next===null){isReRender=false;var hook=void 0;if(currentHook===null){// This is a newly mounted hook
-hook=createHook();}else{currentHook=currentHook.next;if(currentHook===null){// This is a newly mounted hook
-hook=createHook();}else{// Clone the current hook.
-hook=cloneHook(currentHook);}}// Append to the end of the list
-workInProgressHook=workInProgressHook.next=hook;}else{// There's already a work-in-progress. Reuse it.
-isReRender=true;workInProgressHook=workInProgressHook.next;currentHook=currentHook!==null?currentHook.next:null;}}return workInProgressHook;}function createFunctionComponentUpdateQueue(){return{lastEffect:null};}function basicStateReducer(state,action){return typeof action==='function'?action(state):action;}function useContext(context,observedBits){// Ensure we're in a function component (class components support only the
-// .unstable_read() form)
-resolveCurrentlyRenderingFiber();return readContext(context,observedBits);}function useState(initialState){return useReducer(basicStateReducer,// useReducer has a special case to support lazy useState initializers
-initialState);}function useReducer(reducer,initialState,initialAction){currentlyRenderingFiber$1=resolveCurrentlyRenderingFiber();workInProgressHook=createWorkInProgressHook();var queue=workInProgressHook.queue;if(queue!==null){// Already have a queue, so this is an update.
-if(isReRender){// This is a re-render. Apply the new render phase updates to the previous
-var _dispatch2=queue.dispatch;if(renderPhaseUpdates!==null){// Render phase updates are stored in a map of queue -> linked list
-var firstRenderPhaseUpdate=renderPhaseUpdates.get(queue);if(firstRenderPhaseUpdate!==undefined){renderPhaseUpdates.delete(queue);var newState=workInProgressHook.memoizedState;var update=firstRenderPhaseUpdate;do{// Process this render phase update. We don't have to check the
-// priority because it will always be the same as the current
-// render's.
-var _action=update.action;newState=reducer(newState,_action);update=update.next;}while(update!==null);workInProgressHook.memoizedState=newState;// Don't persist the state accumlated from the render phase updates to
-// the base state unless the queue is empty.
-// TODO: Not sure if this is the desired semantics, but it's what we
-// do for gDSFP. I can't remember why.
-if(workInProgressHook.baseUpdate===queue.last){workInProgressHook.baseState=newState;}return[newState,_dispatch2];}}return[workInProgressHook.memoizedState,_dispatch2];}// The last update in the entire queue
-var _last=queue.last;// The last update that is part of the base state.
-var _baseUpdate=workInProgressHook.baseUpdate;// Find the first unprocessed update.
-var first=void 0;if(_baseUpdate!==null){if(_last!==null){// For the first update, the queue is a circular linked list where
-// `queue.last.next = queue.first`. Once the first update commits, and
-// the `baseUpdate` is no longer empty, we can unravel the list.
-_last.next=null;}first=_baseUpdate.next;}else{first=_last!==null?_last.next:null;}if(first!==null){var _newState=workInProgressHook.baseState;var newBaseState=null;var newBaseUpdate=null;var prevUpdate=_baseUpdate;var _update=first;var didSkip=false;do{var updateExpirationTime=_update.expirationTime;if(updateExpirationTime<renderExpirationTime){// Priority is insufficient. Skip this update. If this is the first
-// skipped update, the previous update/state is the new base
-// update/state.
-if(!didSkip){didSkip=true;newBaseUpdate=prevUpdate;newBaseState=_newState;}// Update the remaining priority in the queue.
-if(updateExpirationTime>remainingExpirationTime){remainingExpirationTime=updateExpirationTime;}}else{// Process this update.
-var _action2=_update.action;_newState=reducer(_newState,_action2);}prevUpdate=_update;_update=_update.next;}while(_update!==null&&_update!==first);if(!didSkip){newBaseUpdate=prevUpdate;newBaseState=_newState;}workInProgressHook.memoizedState=_newState;workInProgressHook.baseUpdate=newBaseUpdate;workInProgressHook.baseState=newBaseState;}var _dispatch=queue.dispatch;return[workInProgressHook.memoizedState,_dispatch];}// There's no existing queue, so this is the initial render.
-if(reducer===basicStateReducer){// Special case for `useState`.
-if(typeof initialState==='function'){initialState=initialState();}}else if(initialAction!==undefined&&initialAction!==null){initialState=reducer(initialState,initialAction);}workInProgressHook.memoizedState=workInProgressHook.baseState=initialState;queue=workInProgressHook.queue={last:null,dispatch:null};var dispatch=queue.dispatch=dispatchAction.bind(null,currentlyRenderingFiber$1,queue);return[workInProgressHook.memoizedState,dispatch];}function pushEffect(tag,create,destroy,inputs){var effect={tag:tag,create:create,destroy:destroy,inputs:inputs,// Circular
-next:null};if(componentUpdateQueue===null){componentUpdateQueue=createFunctionComponentUpdateQueue();componentUpdateQueue.lastEffect=effect.next=effect;}else{var _lastEffect=componentUpdateQueue.lastEffect;if(_lastEffect===null){componentUpdateQueue.lastEffect=effect.next=effect;}else{var firstEffect=_lastEffect.next;_lastEffect.next=effect;effect.next=firstEffect;componentUpdateQueue.lastEffect=effect;}}return effect;}function useRef(initialValue){currentlyRenderingFiber$1=resolveCurrentlyRenderingFiber();workInProgressHook=createWorkInProgressHook();var ref=void 0;if(workInProgressHook.memoizedState===null){ref={current:initialValue};{Object.seal(ref);}workInProgressHook.memoizedState=ref;}else{ref=workInProgressHook.memoizedState;}return ref;}function useLayoutEffect(create,inputs){useEffectImpl(Update,UnmountMutation|MountLayout,create,inputs);}function useEffect(create,inputs){useEffectImpl(Update|Passive,UnmountPassive|MountPassive,create,inputs);}function useEffectImpl(fiberEffectTag,hookEffectTag,create,inputs){currentlyRenderingFiber$1=resolveCurrentlyRenderingFiber();workInProgressHook=createWorkInProgressHook();var nextInputs=inputs!==undefined&&inputs!==null?inputs:[create];var destroy=null;if(currentHook!==null){var prevEffect=currentHook.memoizedState;destroy=prevEffect.destroy;if(areHookInputsEqual(nextInputs,prevEffect.inputs)){pushEffect(NoEffect$1,create,destroy,nextInputs);return;}}currentlyRenderingFiber$1.effectTag|=fiberEffectTag;workInProgressHook.memoizedState=pushEffect(hookEffectTag,create,destroy,nextInputs);}function useImperativeMethods(ref,create,inputs){// TODO: If inputs are provided, should we skip comparing the ref itself?
-var nextInputs=inputs!==null&&inputs!==undefined?inputs.concat([ref]):[ref,create];// TODO: I've implemented this on top of useEffect because it's almost the
-// same thing, and it would require an equal amount of code. It doesn't seem
-// like a common enough use case to justify the additional size.
-useLayoutEffect(function(){if(typeof ref==='function'){var refCallback=ref;var _inst=create();refCallback(_inst);return function(){return refCallback(null);};}else if(ref!==null&&ref!==undefined){var refObject=ref;var _inst2=create();refObject.current=_inst2;return function(){refObject.current=null;};}},nextInputs);}function useCallback(callback,inputs){currentlyRenderingFiber$1=resolveCurrentlyRenderingFiber();workInProgressHook=createWorkInProgressHook();var nextInputs=inputs!==undefined&&inputs!==null?inputs:[callback];var prevState=workInProgressHook.memoizedState;if(prevState!==null){var prevInputs=prevState[1];if(areHookInputsEqual(nextInputs,prevInputs)){return prevState[0];}}workInProgressHook.memoizedState=[callback,nextInputs];return callback;}function useMemo(nextCreate,inputs){currentlyRenderingFiber$1=resolveCurrentlyRenderingFiber();workInProgressHook=createWorkInProgressHook();var nextInputs=inputs!==undefined&&inputs!==null?inputs:[nextCreate];var prevState=workInProgressHook.memoizedState;if(prevState!==null){var prevInputs=prevState[1];if(areHookInputsEqual(nextInputs,prevInputs)){return prevState[0];}}var nextValue=nextCreate();workInProgressHook.memoizedState=[nextValue,nextInputs];return nextValue;}function dispatchAction(fiber,queue,action){!(numberOfReRenders<RE_RENDER_LIMIT)?invariant(false,'Too many re-renders. React limits the number of renders to prevent an infinite loop.'):void 0;var alternate=fiber.alternate;if(fiber===currentlyRenderingFiber$1||alternate!==null&&alternate===currentlyRenderingFiber$1){// This is a render phase update. Stash it in a lazily-created map of
-// queue -> linked list of updates. After this render pass, we'll restart
-// and apply the stashed updates on top of the work-in-progress hook.
-didScheduleRenderPhaseUpdate=true;var update={expirationTime:renderExpirationTime,action:action,next:null};if(renderPhaseUpdates===null){renderPhaseUpdates=new Map();}var firstRenderPhaseUpdate=renderPhaseUpdates.get(queue);if(firstRenderPhaseUpdate===undefined){renderPhaseUpdates.set(queue,update);}else{// Append the update to the end of the list.
-var lastRenderPhaseUpdate=firstRenderPhaseUpdate;while(lastRenderPhaseUpdate.next!==null){lastRenderPhaseUpdate=lastRenderPhaseUpdate.next;}lastRenderPhaseUpdate.next=update;}}else{var currentTime=requestCurrentTime();var _expirationTime=computeExpirationForFiber(currentTime,fiber);var _update2={expirationTime:_expirationTime,action:action,next:null};flushPassiveEffects();// Append the update to the end of the list.
-var _last2=queue.last;if(_last2===null){// This is the first update. Create a circular list.
-_update2.next=_update2;}else{var first=_last2.next;if(first!==null){// Still circular.
-_update2.next=first;}_last2.next=_update2;}queue.last=_update2;scheduleWork(fiber,_expirationTime);}}var NO_CONTEXT={};var contextStackCursor$1=createCursor(NO_CONTEXT);var contextFiberStackCursor=createCursor(NO_CONTEXT);var rootInstanceStackCursor=createCursor(NO_CONTEXT);function requiredContext(c){!(c!==NO_CONTEXT)?invariant(false,'Expected host context to exist. This error is likely caused by a bug in React. Please file an issue.'):void 0;return c;}function getRootHostContainer(){var rootInstance=requiredContext(rootInstanceStackCursor.current);return rootInstance;}function pushHostContainer(fiber,nextRootInstance){// Push current root instance onto the stack;
-// This allows us to reset root when portals are popped.
-push(rootInstanceStackCursor,nextRootInstance,fiber);// Track the context and the Fiber that provided it.
-// This enables us to pop only Fibers that provide unique contexts.
-push(contextFiberStackCursor,fiber,fiber);// Finally, we need to push the host context to the stack.
-// However, we can't just call getRootHostContext() and push it because
-// we'd have a different number of entries on the stack depending on
-// whether getRootHostContext() throws somewhere in renderer code or not.
-// So we push an empty value first. This lets us safely unwind on errors.
-push(contextStackCursor$1,NO_CONTEXT,fiber);var nextRootContext=getRootHostContext(nextRootInstance);// Now that we know this function doesn't throw, replace it.
-pop(contextStackCursor$1,fiber);push(contextStackCursor$1,nextRootContext,fiber);}function popHostContainer(fiber){pop(contextStackCursor$1,fiber);pop(contextFiberStackCursor,fiber);pop(rootInstanceStackCursor,fiber);}function getHostContext(){var context=requiredContext(contextStackCursor$1.current);return context;}function pushHostContext(fiber){var rootInstance=requiredContext(rootInstanceStackCursor.current);var context=requiredContext(contextStackCursor$1.current);var nextContext=getChildHostContext(context,fiber.type,rootInstance);// Don't push this Fiber's context unless it's unique.
-if(context===nextContext){return;}// Track the context and the Fiber that provided it.
-// This enables us to pop only Fibers that provide unique contexts.
-push(contextFiberStackCursor,fiber,fiber);push(contextStackCursor$1,nextContext,fiber);}function popHostContext(fiber){// Do not pop unless this Fiber provided the current context.
-// pushHostContext() only pushes Fibers that provide unique contexts.
-if(contextFiberStackCursor.current!==fiber){return;}pop(contextStackCursor$1,fiber);pop(contextFiberStackCursor,fiber);}var commitTime=0;var profilerStartTime=-1;function getCommitTime(){return commitTime;}function recordCommitTime(){if(!enableProfilerTimer){return;}commitTime=scheduler.unstable_now();}function startProfilerTimer(fiber){if(!enableProfilerTimer){return;}profilerStartTime=scheduler.unstable_now();if(fiber.actualStartTime<0){fiber.actualStartTime=scheduler.unstable_now();}}function stopProfilerTimerIfRunning(fiber){if(!enableProfilerTimer){return;}profilerStartTime=-1;}function stopProfilerTimerIfRunningAndRecordDelta(fiber,overrideBaseTime){if(!enableProfilerTimer){return;}if(profilerStartTime>=0){var elapsedTime=scheduler.unstable_now()-profilerStartTime;fiber.actualDuration+=elapsedTime;if(overrideBaseTime){fiber.selfBaseDuration=elapsedTime;}profilerStartTime=-1;}}function resolveDefaultProps(Component,baseProps){if(Component&&Component.defaultProps){// Resolve default props. Taken from ReactElement
-var props=_assign({},baseProps);var defaultProps=Component.defaultProps;for(var propName in defaultProps){if(props[propName]===undefined){props[propName]=defaultProps[propName];}}return props;}return baseProps;}function readLazyComponentType(lazyComponent){var status=lazyComponent._status;var result=lazyComponent._result;switch(status){case Resolved:{var Component=result;return Component;}case Rejected:{var error=result;throw error;}case Pending:{var thenable=result;throw thenable;}default:{lazyComponent._status=Pending;var ctor=lazyComponent._ctor;var _thenable=ctor();_thenable.then(function(moduleObject){if(lazyComponent._status===Pending){var defaultExport=moduleObject.default;{if(defaultExport===undefined){warning$1(false,'lazy: Expected the result of a dynamic import() call. '+'Instead received: %s\n\nYour code should look like: \n  '+"const MyComponent = lazy(() => import('./MyComponent'))",moduleObject);}}lazyComponent._status=Resolved;lazyComponent._result=defaultExport;}},function(error){if(lazyComponent._status===Pending){lazyComponent._status=Rejected;lazyComponent._result=error;}});lazyComponent._result=_thenable;throw _thenable;}}}var ReactCurrentOwner$4=ReactSharedInternals.ReactCurrentOwner;function readContext$1(contextType){var dispatcher=ReactCurrentOwner$4.currentDispatcher;return dispatcher.readContext(contextType);}var fakeInternalInstance={};var isArray$1=Array.isArray;// React.Component uses a shared frozen object by default.
-// We'll use it to determine whether we need to initialize legacy refs.
-var emptyRefsObject=new React.Component().refs;var didWarnAboutStateAssignmentForComponent=void 0;var didWarnAboutUninitializedState=void 0;var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate=void 0;var didWarnAboutLegacyLifecyclesAndDerivedState=void 0;var didWarnAboutUndefinedDerivedState=void 0;var warnOnUndefinedDerivedState=void 0;var warnOnInvalidCallback$1=void 0;var didWarnAboutDirectlyAssigningPropsToState=void 0;var didWarnAboutContextTypeAndContextTypes=void 0;var didWarnAboutInvalidateContextType=void 0;{didWarnAboutStateAssignmentForComponent=new Set();didWarnAboutUninitializedState=new Set();didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate=new Set();didWarnAboutLegacyLifecyclesAndDerivedState=new Set();didWarnAboutDirectlyAssigningPropsToState=new Set();didWarnAboutUndefinedDerivedState=new Set();didWarnAboutContextTypeAndContextTypes=new Set();didWarnAboutInvalidateContextType=new Set();var didWarnOnInvalidCallback=new Set();warnOnInvalidCallback$1=function(callback,callerName){if(callback===null||typeof callback==='function'){return;}var key=callerName+'_'+callback;if(!didWarnOnInvalidCallback.has(key)){didWarnOnInvalidCallback.add(key);warningWithoutStack$1(false,'%s(...): Expected the last optional `callback` argument to be a '+'function. Instead received: %s.',callerName,callback);}};warnOnUndefinedDerivedState=function(type,partialState){if(partialState===undefined){var componentName=getComponentName(type)||'Component';if(!didWarnAboutUndefinedDerivedState.has(componentName)){didWarnAboutUndefinedDerivedState.add(componentName);warningWithoutStack$1(false,'%s.getDerivedStateFromProps(): A valid state object (or null) must be returned. '+'You have returned undefined.',componentName);}}};// This is so gross but it's at least non-critical and can be removed if
-// it causes problems. This is meant to give a nicer error message for
-// ReactDOM15.unstable_renderSubtreeIntoContainer(reactDOM16Component,
-// ...)) which otherwise throws a "_processChildContext is not a function"
-// exception.
-Object.defineProperty(fakeInternalInstance,'_processChildContext',{enumerable:false,value:function(){invariant(false,'_processChildContext is not available in React 16+. This likely means you have multiple copies of React and are attempting to nest a React 15 tree inside a React 16 tree using unstable_renderSubtreeIntoContainer, which isn\'t supported. Try to make sure you have only one copy of React (and ideally, switch to ReactDOM.createPortal).');}});Object.freeze(fakeInternalInstance);}function applyDerivedStateFromProps(workInProgress,ctor,getDerivedStateFromProps,nextProps){var prevState=workInProgress.memoizedState;{if(debugRenderPhaseSideEffects||debugRenderPhaseSideEffectsForStrictMode&&workInProgress.mode&StrictMode){// Invoke the function an extra time to help detect side-effects.
-getDerivedStateFromProps(nextProps,prevState);}}var partialState=getDerivedStateFromProps(nextProps,prevState);{warnOnUndefinedDerivedState(ctor,partialState);}// Merge the partial state and the previous state.
-var memoizedState=partialState===null||partialState===undefined?prevState:_assign({},prevState,partialState);workInProgress.memoizedState=memoizedState;// Once the update queue is empty, persist the derived state onto the
-// base state.
-var updateQueue=workInProgress.updateQueue;if(updateQueue!==null&&workInProgress.expirationTime===NoWork){updateQueue.baseState=memoizedState;}}var classComponentUpdater={isMounted:isMounted,enqueueSetState:function(inst,payload,callback){var fiber=get(inst);var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,fiber);var update=createUpdate(expirationTime);update.payload=payload;if(callback!==undefined&&callback!==null){{warnOnInvalidCallback$1(callback,'setState');}update.callback=callback;}flushPassiveEffects();enqueueUpdate(fiber,update);scheduleWork(fiber,expirationTime);},enqueueReplaceState:function(inst,payload,callback){var fiber=get(inst);var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,fiber);var update=createUpdate(expirationTime);update.tag=ReplaceState;update.payload=payload;if(callback!==undefined&&callback!==null){{warnOnInvalidCallback$1(callback,'replaceState');}update.callback=callback;}flushPassiveEffects();enqueueUpdate(fiber,update);scheduleWork(fiber,expirationTime);},enqueueForceUpdate:function(inst,callback){var fiber=get(inst);var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,fiber);var update=createUpdate(expirationTime);update.tag=ForceUpdate;if(callback!==undefined&&callback!==null){{warnOnInvalidCallback$1(callback,'forceUpdate');}update.callback=callback;}flushPassiveEffects();enqueueUpdate(fiber,update);scheduleWork(fiber,expirationTime);}};function checkShouldComponentUpdate(workInProgress,ctor,oldProps,newProps,oldState,newState,nextContext){var instance=workInProgress.stateNode;if(typeof instance.shouldComponentUpdate==='function'){startPhaseTimer(workInProgress,'shouldComponentUpdate');var shouldUpdate=instance.shouldComponentUpdate(newProps,newState,nextContext);stopPhaseTimer();{!(shouldUpdate!==undefined)?warningWithoutStack$1(false,'%s.shouldComponentUpdate(): Returned undefined instead of a '+'boolean value. Make sure to return true or false.',getComponentName(ctor)||'Component'):void 0;}return shouldUpdate;}if(ctor.prototype&&ctor.prototype.isPureReactComponent){return!shallowEqual(oldProps,newProps)||!shallowEqual(oldState,newState);}return true;}function checkClassInstance(workInProgress,ctor,newProps){var instance=workInProgress.stateNode;{var name=getComponentName(ctor)||'Component';var renderPresent=instance.render;if(!renderPresent){if(ctor.prototype&&typeof ctor.prototype.render==='function'){warningWithoutStack$1(false,'%s(...): No `render` method found on the returned component '+'instance: did you accidentally return an object from the constructor?',name);}else{warningWithoutStack$1(false,'%s(...): No `render` method found on the returned component '+'instance: you may have forgotten to define `render`.',name);}}var noGetInitialStateOnES6=!instance.getInitialState||instance.getInitialState.isReactClassApproved||instance.state;!noGetInitialStateOnES6?warningWithoutStack$1(false,'getInitialState was defined on %s, a plain JavaScript class. '+'This is only supported for classes created using React.createClass. '+'Did you mean to define a state property instead?',name):void 0;var noGetDefaultPropsOnES6=!instance.getDefaultProps||instance.getDefaultProps.isReactClassApproved;!noGetDefaultPropsOnES6?warningWithoutStack$1(false,'getDefaultProps was defined on %s, a plain JavaScript class. '+'This is only supported for classes created using React.createClass. '+'Use a static property to define defaultProps instead.',name):void 0;var noInstancePropTypes=!instance.propTypes;!noInstancePropTypes?warningWithoutStack$1(false,'propTypes was defined as an instance property on %s. Use a static '+'property to define propTypes instead.',name):void 0;var noInstanceContextType=!instance.contextType;!noInstanceContextType?warningWithoutStack$1(false,'contextType was defined as an instance property on %s. Use a static '+'property to define contextType instead.',name):void 0;var noInstanceContextTypes=!instance.contextTypes;!noInstanceContextTypes?warningWithoutStack$1(false,'contextTypes was defined as an instance property on %s. Use a static '+'property to define contextTypes instead.',name):void 0;if(ctor.contextType&&ctor.contextTypes&&!didWarnAboutContextTypeAndContextTypes.has(ctor)){didWarnAboutContextTypeAndContextTypes.add(ctor);warningWithoutStack$1(false,'%s declares both contextTypes and contextType static properties. '+'The legacy contextTypes property will be ignored.',name);}var noComponentShouldUpdate=typeof instance.componentShouldUpdate!=='function';!noComponentShouldUpdate?warningWithoutStack$1(false,'%s has a method called '+'componentShouldUpdate(). Did you mean shouldComponentUpdate()? '+'The name is phrased as a question because the function is '+'expected to return a value.',name):void 0;if(ctor.prototype&&ctor.prototype.isPureReactComponent&&typeof instance.shouldComponentUpdate!=='undefined'){warningWithoutStack$1(false,'%s has a method called shouldComponentUpdate(). '+'shouldComponentUpdate should not be used when extending React.PureComponent. '+'Please extend React.Component if shouldComponentUpdate is used.',getComponentName(ctor)||'A pure component');}var noComponentDidUnmount=typeof instance.componentDidUnmount!=='function';!noComponentDidUnmount?warningWithoutStack$1(false,'%s has a method called '+'componentDidUnmount(). But there is no such lifecycle method. '+'Did you mean componentWillUnmount()?',name):void 0;var noComponentDidReceiveProps=typeof instance.componentDidReceiveProps!=='function';!noComponentDidReceiveProps?warningWithoutStack$1(false,'%s has a method called '+'componentDidReceiveProps(). But there is no such lifecycle method. '+'If you meant to update the state in response to changing props, '+'use componentWillReceiveProps(). If you meant to fetch data or '+'run side-effects or mutations after React has updated the UI, use componentDidUpdate().',name):void 0;var noComponentWillRecieveProps=typeof instance.componentWillRecieveProps!=='function';!noComponentWillRecieveProps?warningWithoutStack$1(false,'%s has a method called '+'componentWillRecieveProps(). Did you mean componentWillReceiveProps()?',name):void 0;var noUnsafeComponentWillRecieveProps=typeof instance.UNSAFE_componentWillRecieveProps!=='function';!noUnsafeComponentWillRecieveProps?warningWithoutStack$1(false,'%s has a method called '+'UNSAFE_componentWillRecieveProps(). Did you mean UNSAFE_componentWillReceiveProps()?',name):void 0;var hasMutatedProps=instance.props!==newProps;!(instance.props===undefined||!hasMutatedProps)?warningWithoutStack$1(false,'%s(...): When calling super() in `%s`, make sure to pass '+"up the same props that your component's constructor was passed.",name,name):void 0;var noInstanceDefaultProps=!instance.defaultProps;!noInstanceDefaultProps?warningWithoutStack$1(false,'Setting defaultProps as an instance property on %s is not supported and will be ignored.'+' Instead, define defaultProps as a static property on %s.',name,name):void 0;if(typeof instance.getSnapshotBeforeUpdate==='function'&&typeof instance.componentDidUpdate!=='function'&&!didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate.has(ctor)){didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate.add(ctor);warningWithoutStack$1(false,'%s: getSnapshotBeforeUpdate() should be used with componentDidUpdate(). '+'This component defines getSnapshotBeforeUpdate() only.',getComponentName(ctor));}var noInstanceGetDerivedStateFromProps=typeof instance.getDerivedStateFromProps!=='function';!noInstanceGetDerivedStateFromProps?warningWithoutStack$1(false,'%s: getDerivedStateFromProps() is defined as an instance method '+'and will be ignored. Instead, declare it as a static method.',name):void 0;var noInstanceGetDerivedStateFromCatch=typeof instance.getDerivedStateFromError!=='function';!noInstanceGetDerivedStateFromCatch?warningWithoutStack$1(false,'%s: getDerivedStateFromError() is defined as an instance method '+'and will be ignored. Instead, declare it as a static method.',name):void 0;var noStaticGetSnapshotBeforeUpdate=typeof ctor.getSnapshotBeforeUpdate!=='function';!noStaticGetSnapshotBeforeUpdate?warningWithoutStack$1(false,'%s: getSnapshotBeforeUpdate() is defined as a static method '+'and will be ignored. Instead, declare it as an instance method.',name):void 0;var _state=instance.state;if(_state&&(typeof _state!=='object'||isArray$1(_state))){warningWithoutStack$1(false,'%s.state: must be set to an object or null',name);}if(typeof instance.getChildContext==='function'){!(typeof ctor.childContextTypes==='object')?warningWithoutStack$1(false,'%s.getChildContext(): childContextTypes must be defined in order to '+'use getChildContext().',name):void 0;}}}function adoptClassInstance(workInProgress,instance){instance.updater=classComponentUpdater;workInProgress.stateNode=instance;// The instance needs access to the fiber so that it can schedule updates
-set(instance,workInProgress);{instance._reactInternalInstance=fakeInternalInstance;}}function constructClassInstance(workInProgress,ctor,props,renderExpirationTime){var isLegacyContextConsumer=false;var unmaskedContext=emptyContextObject;var context=null;var contextType=ctor.contextType;if(typeof contextType==='object'&&contextType!==null){{if(contextType.$$typeof!==REACT_CONTEXT_TYPE&&!didWarnAboutInvalidateContextType.has(ctor)){didWarnAboutInvalidateContextType.add(ctor);warningWithoutStack$1(false,'%s defines an invalid contextType. '+'contextType should point to the Context object returned by React.createContext(). '+'Did you accidentally pass the Context.Provider instead?',getComponentName(ctor)||'Component');}}context=readContext$1(contextType);}else{unmaskedContext=getUnmaskedContext(workInProgress,ctor,true);var contextTypes=ctor.contextTypes;isLegacyContextConsumer=contextTypes!==null&&contextTypes!==undefined;context=isLegacyContextConsumer?getMaskedContext(workInProgress,unmaskedContext):emptyContextObject;}// Instantiate twice to help detect side-effects.
-{if(debugRenderPhaseSideEffects||debugRenderPhaseSideEffectsForStrictMode&&workInProgress.mode&StrictMode){new ctor(props,context);// eslint-disable-line no-new
-}}var instance=new ctor(props,context);var state=workInProgress.memoizedState=instance.state!==null&&instance.state!==undefined?instance.state:null;adoptClassInstance(workInProgress,instance);{if(typeof ctor.getDerivedStateFromProps==='function'&&state===null){var componentName=getComponentName(ctor)||'Component';if(!didWarnAboutUninitializedState.has(componentName)){didWarnAboutUninitializedState.add(componentName);warningWithoutStack$1(false,'`%s` uses `getDerivedStateFromProps` but its initial state is '+'%s. This is not recommended. Instead, define the initial state by '+'assigning an object to `this.state` in the constructor of `%s`. '+'This ensures that `getDerivedStateFromProps` arguments have a consistent shape.',componentName,instance.state===null?'null':'undefined',componentName);}}// If new component APIs are defined, "unsafe" lifecycles won't be called.
-// Warn about these lifecycles if they are present.
-// Don't warn about react-lifecycles-compat polyfilled methods though.
-if(typeof ctor.getDerivedStateFromProps==='function'||typeof instance.getSnapshotBeforeUpdate==='function'){var foundWillMountName=null;var foundWillReceivePropsName=null;var foundWillUpdateName=null;if(typeof instance.componentWillMount==='function'&&instance.componentWillMount.__suppressDeprecationWarning!==true){foundWillMountName='componentWillMount';}else if(typeof instance.UNSAFE_componentWillMount==='function'){foundWillMountName='UNSAFE_componentWillMount';}if(typeof instance.componentWillReceiveProps==='function'&&instance.componentWillReceiveProps.__suppressDeprecationWarning!==true){foundWillReceivePropsName='componentWillReceiveProps';}else if(typeof instance.UNSAFE_componentWillReceiveProps==='function'){foundWillReceivePropsName='UNSAFE_componentWillReceiveProps';}if(typeof instance.componentWillUpdate==='function'&&instance.componentWillUpdate.__suppressDeprecationWarning!==true){foundWillUpdateName='componentWillUpdate';}else if(typeof instance.UNSAFE_componentWillUpdate==='function'){foundWillUpdateName='UNSAFE_componentWillUpdate';}if(foundWillMountName!==null||foundWillReceivePropsName!==null||foundWillUpdateName!==null){var _componentName=getComponentName(ctor)||'Component';var newApiName=typeof ctor.getDerivedStateFromProps==='function'?'getDerivedStateFromProps()':'getSnapshotBeforeUpdate()';if(!didWarnAboutLegacyLifecyclesAndDerivedState.has(_componentName)){didWarnAboutLegacyLifecyclesAndDerivedState.add(_componentName);warningWithoutStack$1(false,'Unsafe legacy lifecycles will not be called for components using new component APIs.\n\n'+'%s uses %s but also contains the following legacy lifecycles:%s%s%s\n\n'+'The above lifecycles should be removed. Learn more about this warning here:\n'+'https://fb.me/react-async-component-lifecycle-hooks',_componentName,newApiName,foundWillMountName!==null?'\n  '+foundWillMountName:'',foundWillReceivePropsName!==null?'\n  '+foundWillReceivePropsName:'',foundWillUpdateName!==null?'\n  '+foundWillUpdateName:'');}}}}// Cache unmasked context so we can avoid recreating masked context unless necessary.
-// ReactFiberContext usually updates this cache but can't for newly-created instances.
-if(isLegacyContextConsumer){cacheContext(workInProgress,unmaskedContext,context);}return instance;}function callComponentWillMount(workInProgress,instance){startPhaseTimer(workInProgress,'componentWillMount');var oldState=instance.state;if(typeof instance.componentWillMount==='function'){instance.componentWillMount();}if(typeof instance.UNSAFE_componentWillMount==='function'){instance.UNSAFE_componentWillMount();}stopPhaseTimer();if(oldState!==instance.state){{warningWithoutStack$1(false,'%s.componentWillMount(): Assigning directly to this.state is '+"deprecated (except inside a component's "+'constructor). Use setState instead.',getComponentName(workInProgress.type)||'Component');}classComponentUpdater.enqueueReplaceState(instance,instance.state,null);}}function callComponentWillReceiveProps(workInProgress,instance,newProps,nextContext){var oldState=instance.state;startPhaseTimer(workInProgress,'componentWillReceiveProps');if(typeof instance.componentWillReceiveProps==='function'){instance.componentWillReceiveProps(newProps,nextContext);}if(typeof instance.UNSAFE_componentWillReceiveProps==='function'){instance.UNSAFE_componentWillReceiveProps(newProps,nextContext);}stopPhaseTimer();if(instance.state!==oldState){{var componentName=getComponentName(workInProgress.type)||'Component';if(!didWarnAboutStateAssignmentForComponent.has(componentName)){didWarnAboutStateAssignmentForComponent.add(componentName);warningWithoutStack$1(false,'%s.componentWillReceiveProps(): Assigning directly to '+"this.state is deprecated (except inside a component's "+'constructor). Use setState instead.',componentName);}}classComponentUpdater.enqueueReplaceState(instance,instance.state,null);}}// Invokes the mount life-cycles on a previously never rendered instance.
-function mountClassInstance(workInProgress,ctor,newProps,renderExpirationTime){{checkClassInstance(workInProgress,ctor,newProps);}var instance=workInProgress.stateNode;instance.props=newProps;instance.state=workInProgress.memoizedState;instance.refs=emptyRefsObject;var contextType=ctor.contextType;if(typeof contextType==='object'&&contextType!==null){instance.context=readContext$1(contextType);}else{var unmaskedContext=getUnmaskedContext(workInProgress,ctor,true);instance.context=getMaskedContext(workInProgress,unmaskedContext);}{if(instance.state===newProps){var componentName=getComponentName(ctor)||'Component';if(!didWarnAboutDirectlyAssigningPropsToState.has(componentName)){didWarnAboutDirectlyAssigningPropsToState.add(componentName);warningWithoutStack$1(false,'%s: It is not recommended to assign props directly to state '+"because updates to props won't be reflected in state. "+'In most cases, it is better to use props directly.',componentName);}}if(workInProgress.mode&StrictMode){ReactStrictModeWarnings.recordUnsafeLifecycleWarnings(workInProgress,instance);ReactStrictModeWarnings.recordLegacyContextWarning(workInProgress,instance);}if(warnAboutDeprecatedLifecycles){ReactStrictModeWarnings.recordDeprecationWarnings(workInProgress,instance);}}var updateQueue=workInProgress.updateQueue;if(updateQueue!==null){processUpdateQueue(workInProgress,updateQueue,newProps,instance,renderExpirationTime);instance.state=workInProgress.memoizedState;}var getDerivedStateFromProps=ctor.getDerivedStateFromProps;if(typeof getDerivedStateFromProps==='function'){applyDerivedStateFromProps(workInProgress,ctor,getDerivedStateFromProps,newProps);instance.state=workInProgress.memoizedState;}// In order to support react-lifecycles-compat polyfilled components,
-// Unsafe lifecycles should not be invoked for components using the new APIs.
-if(typeof ctor.getDerivedStateFromProps!=='function'&&typeof instance.getSnapshotBeforeUpdate!=='function'&&(typeof instance.UNSAFE_componentWillMount==='function'||typeof instance.componentWillMount==='function')){callComponentWillMount(workInProgress,instance);// If we had additional state updates during this life-cycle, let's
-// process them now.
-updateQueue=workInProgress.updateQueue;if(updateQueue!==null){processUpdateQueue(workInProgress,updateQueue,newProps,instance,renderExpirationTime);instance.state=workInProgress.memoizedState;}}if(typeof instance.componentDidMount==='function'){workInProgress.effectTag|=Update;}}function resumeMountClassInstance(workInProgress,ctor,newProps,renderExpirationTime){var instance=workInProgress.stateNode;var oldProps=workInProgress.memoizedProps;instance.props=oldProps;var oldContext=instance.context;var contextType=ctor.contextType;var nextContext=void 0;if(typeof contextType==='object'&&contextType!==null){nextContext=readContext$1(contextType);}else{var nextLegacyUnmaskedContext=getUnmaskedContext(workInProgress,ctor,true);nextContext=getMaskedContext(workInProgress,nextLegacyUnmaskedContext);}var getDerivedStateFromProps=ctor.getDerivedStateFromProps;var hasNewLifecycles=typeof getDerivedStateFromProps==='function'||typeof instance.getSnapshotBeforeUpdate==='function';// Note: During these life-cycles, instance.props/instance.state are what
-// ever the previously attempted to render - not the "current". However,
-// during componentDidUpdate we pass the "current" props.
-// In order to support react-lifecycles-compat polyfilled components,
-// Unsafe lifecycles should not be invoked for components using the new APIs.
-if(!hasNewLifecycles&&(typeof instance.UNSAFE_componentWillReceiveProps==='function'||typeof instance.componentWillReceiveProps==='function')){if(oldProps!==newProps||oldContext!==nextContext){callComponentWillReceiveProps(workInProgress,instance,newProps,nextContext);}}resetHasForceUpdateBeforeProcessing();var oldState=workInProgress.memoizedState;var newState=instance.state=oldState;var updateQueue=workInProgress.updateQueue;if(updateQueue!==null){processUpdateQueue(workInProgress,updateQueue,newProps,instance,renderExpirationTime);newState=workInProgress.memoizedState;}if(oldProps===newProps&&oldState===newState&&!hasContextChanged()&&!checkHasForceUpdateAfterProcessing()){// If an update was already in progress, we should schedule an Update
-// effect even though we're bailing out, so that cWU/cDU are called.
-if(typeof instance.componentDidMount==='function'){workInProgress.effectTag|=Update;}return false;}if(typeof getDerivedStateFromProps==='function'){applyDerivedStateFromProps(workInProgress,ctor,getDerivedStateFromProps,newProps);newState=workInProgress.memoizedState;}var shouldUpdate=checkHasForceUpdateAfterProcessing()||checkShouldComponentUpdate(workInProgress,ctor,oldProps,newProps,oldState,newState,nextContext);if(shouldUpdate){// In order to support react-lifecycles-compat polyfilled components,
-// Unsafe lifecycles should not be invoked for components using the new APIs.
-if(!hasNewLifecycles&&(typeof instance.UNSAFE_componentWillMount==='function'||typeof instance.componentWillMount==='function')){startPhaseTimer(workInProgress,'componentWillMount');if(typeof instance.componentWillMount==='function'){instance.componentWillMount();}if(typeof instance.UNSAFE_componentWillMount==='function'){instance.UNSAFE_componentWillMount();}stopPhaseTimer();}if(typeof instance.componentDidMount==='function'){workInProgress.effectTag|=Update;}}else{// If an update was already in progress, we should schedule an Update
-// effect even though we're bailing out, so that cWU/cDU are called.
-if(typeof instance.componentDidMount==='function'){workInProgress.effectTag|=Update;}// If shouldComponentUpdate returned false, we should still update the
-// memoized state to indicate that this work can be reused.
-workInProgress.memoizedProps=newProps;workInProgress.memoizedState=newState;}// Update the existing instance's state, props, and context pointers even
-// if shouldComponentUpdate returns false.
-instance.props=newProps;instance.state=newState;instance.context=nextContext;return shouldUpdate;}// Invokes the update life-cycles and returns false if it shouldn't rerender.
-function updateClassInstance(current,workInProgress,ctor,newProps,renderExpirationTime){var instance=workInProgress.stateNode;var oldProps=workInProgress.memoizedProps;instance.props=workInProgress.type===workInProgress.elementType?oldProps:resolveDefaultProps(workInProgress.type,oldProps);var oldContext=instance.context;var contextType=ctor.contextType;var nextContext=void 0;if(typeof contextType==='object'&&contextType!==null){nextContext=readContext$1(contextType);}else{var nextUnmaskedContext=getUnmaskedContext(workInProgress,ctor,true);nextContext=getMaskedContext(workInProgress,nextUnmaskedContext);}var getDerivedStateFromProps=ctor.getDerivedStateFromProps;var hasNewLifecycles=typeof getDerivedStateFromProps==='function'||typeof instance.getSnapshotBeforeUpdate==='function';// Note: During these life-cycles, instance.props/instance.state are what
-// ever the previously attempted to render - not the "current". However,
-// during componentDidUpdate we pass the "current" props.
-// In order to support react-lifecycles-compat polyfilled components,
-// Unsafe lifecycles should not be invoked for components using the new APIs.
-if(!hasNewLifecycles&&(typeof instance.UNSAFE_componentWillReceiveProps==='function'||typeof instance.componentWillReceiveProps==='function')){if(oldProps!==newProps||oldContext!==nextContext){callComponentWillReceiveProps(workInProgress,instance,newProps,nextContext);}}resetHasForceUpdateBeforeProcessing();var oldState=workInProgress.memoizedState;var newState=instance.state=oldState;var updateQueue=workInProgress.updateQueue;if(updateQueue!==null){processUpdateQueue(workInProgress,updateQueue,newProps,instance,renderExpirationTime);newState=workInProgress.memoizedState;}if(oldProps===newProps&&oldState===newState&&!hasContextChanged()&&!checkHasForceUpdateAfterProcessing()){// If an update was already in progress, we should schedule an Update
-// effect even though we're bailing out, so that cWU/cDU are called.
-if(typeof instance.componentDidUpdate==='function'){if(oldProps!==current.memoizedProps||oldState!==current.memoizedState){workInProgress.effectTag|=Update;}}if(typeof instance.getSnapshotBeforeUpdate==='function'){if(oldProps!==current.memoizedProps||oldState!==current.memoizedState){workInProgress.effectTag|=Snapshot;}}return false;}if(typeof getDerivedStateFromProps==='function'){applyDerivedStateFromProps(workInProgress,ctor,getDerivedStateFromProps,newProps);newState=workInProgress.memoizedState;}var shouldUpdate=checkHasForceUpdateAfterProcessing()||checkShouldComponentUpdate(workInProgress,ctor,oldProps,newProps,oldState,newState,nextContext);if(shouldUpdate){// In order to support react-lifecycles-compat polyfilled components,
-// Unsafe lifecycles should not be invoked for components using the new APIs.
-if(!hasNewLifecycles&&(typeof instance.UNSAFE_componentWillUpdate==='function'||typeof instance.componentWillUpdate==='function')){startPhaseTimer(workInProgress,'componentWillUpdate');if(typeof instance.componentWillUpdate==='function'){instance.componentWillUpdate(newProps,newState,nextContext);}if(typeof instance.UNSAFE_componentWillUpdate==='function'){instance.UNSAFE_componentWillUpdate(newProps,newState,nextContext);}stopPhaseTimer();}if(typeof instance.componentDidUpdate==='function'){workInProgress.effectTag|=Update;}if(typeof instance.getSnapshotBeforeUpdate==='function'){workInProgress.effectTag|=Snapshot;}}else{// If an update was already in progress, we should schedule an Update
-// effect even though we're bailing out, so that cWU/cDU are called.
-if(typeof instance.componentDidUpdate==='function'){if(oldProps!==current.memoizedProps||oldState!==current.memoizedState){workInProgress.effectTag|=Update;}}if(typeof instance.getSnapshotBeforeUpdate==='function'){if(oldProps!==current.memoizedProps||oldState!==current.memoizedState){workInProgress.effectTag|=Snapshot;}}// If shouldComponentUpdate returned false, we should still update the
-// memoized props/state to indicate that this work can be reused.
-workInProgress.memoizedProps=newProps;workInProgress.memoizedState=newState;}// Update the existing instance's state, props, and context pointers even
-// if shouldComponentUpdate returns false.
-instance.props=newProps;instance.state=newState;instance.context=nextContext;return shouldUpdate;}var didWarnAboutMaps=void 0;var didWarnAboutGenerators=void 0;var didWarnAboutStringRefInStrictMode=void 0;var ownerHasKeyUseWarning=void 0;var ownerHasFunctionTypeWarning=void 0;var warnForMissingKey=function(child){};{didWarnAboutMaps=false;didWarnAboutGenerators=false;didWarnAboutStringRefInStrictMode={};/**
-   * Warn if there's no key explicitly set on dynamic arrays of children or
-   * object keys are not valid. This allows us to keep track of children between
-   * updates.
-   */ownerHasKeyUseWarning={};ownerHasFunctionTypeWarning={};warnForMissingKey=function(child){if(child===null||typeof child!=='object'){return;}if(!child._store||child._store.validated||child.key!=null){return;}!(typeof child._store==='object')?invariant(false,'React Component in warnForMissingKey should have a _store. This error is likely caused by a bug in React. Please file an issue.'):void 0;child._store.validated=true;var currentComponentErrorInfo='Each child in an array or iterator should have a unique '+'"key" prop. See https://fb.me/react-warning-keys for '+'more information.'+getCurrentFiberStackInDev();if(ownerHasKeyUseWarning[currentComponentErrorInfo]){return;}ownerHasKeyUseWarning[currentComponentErrorInfo]=true;warning$1(false,'Each child in an array or iterator should have a unique '+'"key" prop. See https://fb.me/react-warning-keys for '+'more information.');};}var isArray=Array.isArray;function coerceRef(returnFiber,current$$1,element){var mixedRef=element.ref;if(mixedRef!==null&&typeof mixedRef!=='function'&&typeof mixedRef!=='object'){{if(returnFiber.mode&StrictMode){var componentName=getComponentName(returnFiber.type)||'Component';if(!didWarnAboutStringRefInStrictMode[componentName]){warningWithoutStack$1(false,'A string ref, "%s", has been found within a strict mode tree. '+'String refs are a source of potential bugs and should be avoided. '+'We recommend using createRef() instead.'+'\n%s'+'\n\nLearn more about using refs safely here:'+'\nhttps://fb.me/react-strict-mode-string-ref',mixedRef,getStackByFiberInDevAndProd(returnFiber));didWarnAboutStringRefInStrictMode[componentName]=true;}}}if(element._owner){var owner=element._owner;var inst=void 0;if(owner){var ownerFiber=owner;!(ownerFiber.tag===ClassComponent)?invariant(false,'Function components cannot have refs.'):void 0;inst=ownerFiber.stateNode;}!inst?invariant(false,'Missing owner for string ref %s. This error is likely caused by a bug in React. Please file an issue.',mixedRef):void 0;var stringRef=''+mixedRef;// Check if previous string ref matches new string ref
-if(current$$1!==null&&current$$1.ref!==null&&typeof current$$1.ref==='function'&&current$$1.ref._stringRef===stringRef){return current$$1.ref;}var ref=function(value){var refs=inst.refs;if(refs===emptyRefsObject){// This is a lazy pooled frozen object, so we need to initialize.
-refs=inst.refs={};}if(value===null){delete refs[stringRef];}else{refs[stringRef]=value;}};ref._stringRef=stringRef;return ref;}else{!(typeof mixedRef==='string')?invariant(false,'Expected ref to be a function, a string, an object returned by React.createRef(), or null.'):void 0;!element._owner?invariant(false,'Element ref was specified as a string (%s) but no owner was set. This could happen for one of the following reasons:\n1. You may be adding a ref to a function component\n2. You may be adding a ref to a component that was not created inside a component\'s render method\n3. You have multiple copies of React loaded\nSee https://fb.me/react-refs-must-have-owner for more information.',mixedRef):void 0;}}return mixedRef;}function throwOnInvalidObjectType(returnFiber,newChild){if(returnFiber.type!=='textarea'){var addendum='';{addendum=' If you meant to render a collection of children, use an array '+'instead.'+getCurrentFiberStackInDev();}invariant(false,'Objects are not valid as a React child (found: %s).%s',Object.prototype.toString.call(newChild)==='[object Object]'?'object with keys {'+Object.keys(newChild).join(', ')+'}':newChild,addendum);}}function warnOnFunctionType(){var currentComponentErrorInfo='Functions are not valid as a React child. This may happen if '+'you return a Component instead of <Component /> from render. '+'Or maybe you meant to call this function rather than return it.'+getCurrentFiberStackInDev();if(ownerHasFunctionTypeWarning[currentComponentErrorInfo]){return;}ownerHasFunctionTypeWarning[currentComponentErrorInfo]=true;warning$1(false,'Functions are not valid as a React child. This may happen if '+'you return a Component instead of <Component /> from render. '+'Or maybe you meant to call this function rather than return it.');}// This wrapper function exists because I expect to clone the code in each path
-// to be able to optimize each path individually by branching early. This needs
-// a compiler or we can do it manually. Helpers that don't need this branching
-// live outside of this function.
-function ChildReconciler(shouldTrackSideEffects){function deleteChild(returnFiber,childToDelete){if(!shouldTrackSideEffects){// Noop.
-return;}// Deletions are added in reversed order so we add it to the front.
-// At this point, the return fiber's effect list is empty except for
-// deletions, so we can just append the deletion to the list. The remaining
-// effects aren't added until the complete phase. Once we implement
-// resuming, this may not be true.
-var last=returnFiber.lastEffect;if(last!==null){last.nextEffect=childToDelete;returnFiber.lastEffect=childToDelete;}else{returnFiber.firstEffect=returnFiber.lastEffect=childToDelete;}childToDelete.nextEffect=null;childToDelete.effectTag=Deletion;}function deleteRemainingChildren(returnFiber,currentFirstChild){if(!shouldTrackSideEffects){// Noop.
-return null;}// TODO: For the shouldClone case, this could be micro-optimized a bit by
-// assuming that after the first child we've already added everything.
-var childToDelete=currentFirstChild;while(childToDelete!==null){deleteChild(returnFiber,childToDelete);childToDelete=childToDelete.sibling;}return null;}function mapRemainingChildren(returnFiber,currentFirstChild){// Add the remaining children to a temporary map so that we can find them by
-// keys quickly. Implicit (null) keys get added to this set with their index
-var existingChildren=new Map();var existingChild=currentFirstChild;while(existingChild!==null){if(existingChild.key!==null){existingChildren.set(existingChild.key,existingChild);}else{existingChildren.set(existingChild.index,existingChild);}existingChild=existingChild.sibling;}return existingChildren;}function useFiber(fiber,pendingProps,expirationTime){// We currently set sibling to null and index to 0 here because it is easy
-// to forget to do before returning it. E.g. for the single child case.
-var clone=createWorkInProgress(fiber,pendingProps,expirationTime);clone.index=0;clone.sibling=null;return clone;}function placeChild(newFiber,lastPlacedIndex,newIndex){newFiber.index=newIndex;if(!shouldTrackSideEffects){// Noop.
-return lastPlacedIndex;}var current$$1=newFiber.alternate;if(current$$1!==null){var oldIndex=current$$1.index;if(oldIndex<lastPlacedIndex){// This is a move.
-newFiber.effectTag=Placement;return lastPlacedIndex;}else{// This item can stay in place.
-return oldIndex;}}else{// This is an insertion.
-newFiber.effectTag=Placement;return lastPlacedIndex;}}function placeSingleChild(newFiber){// This is simpler for the single child case. We only need to do a
-// placement for inserting new children.
-if(shouldTrackSideEffects&&newFiber.alternate===null){newFiber.effectTag=Placement;}return newFiber;}function updateTextNode(returnFiber,current$$1,textContent,expirationTime){if(current$$1===null||current$$1.tag!==HostText){// Insert
-var created=createFiberFromText(textContent,returnFiber.mode,expirationTime);created.return=returnFiber;return created;}else{// Update
-var existing=useFiber(current$$1,textContent,expirationTime);existing.return=returnFiber;return existing;}}function updateElement(returnFiber,current$$1,element,expirationTime){if(current$$1!==null&&current$$1.elementType===element.type){// Move based on index
-var existing=useFiber(current$$1,element.props,expirationTime);existing.ref=coerceRef(returnFiber,current$$1,element);existing.return=returnFiber;{existing._debugSource=element._source;existing._debugOwner=element._owner;}return existing;}else{// Insert
-var created=createFiberFromElement(element,returnFiber.mode,expirationTime);created.ref=coerceRef(returnFiber,current$$1,element);created.return=returnFiber;return created;}}function updatePortal(returnFiber,current$$1,portal,expirationTime){if(current$$1===null||current$$1.tag!==HostPortal||current$$1.stateNode.containerInfo!==portal.containerInfo||current$$1.stateNode.implementation!==portal.implementation){// Insert
-var created=createFiberFromPortal(portal,returnFiber.mode,expirationTime);created.return=returnFiber;return created;}else{// Update
-var existing=useFiber(current$$1,portal.children||[],expirationTime);existing.return=returnFiber;return existing;}}function updateFragment(returnFiber,current$$1,fragment,expirationTime,key){if(current$$1===null||current$$1.tag!==Fragment){// Insert
-var created=createFiberFromFragment(fragment,returnFiber.mode,expirationTime,key);created.return=returnFiber;return created;}else{// Update
-var existing=useFiber(current$$1,fragment,expirationTime);existing.return=returnFiber;return existing;}}function createChild(returnFiber,newChild,expirationTime){if(typeof newChild==='string'||typeof newChild==='number'){// Text nodes don't have keys. If the previous node is implicitly keyed
-// we can continue to replace it without aborting even if it is not a text
-// node.
-var created=createFiberFromText(''+newChild,returnFiber.mode,expirationTime);created.return=returnFiber;return created;}if(typeof newChild==='object'&&newChild!==null){switch(newChild.$$typeof){case REACT_ELEMENT_TYPE:{var _created=createFiberFromElement(newChild,returnFiber.mode,expirationTime);_created.ref=coerceRef(returnFiber,null,newChild);_created.return=returnFiber;return _created;}case REACT_PORTAL_TYPE:{var _created2=createFiberFromPortal(newChild,returnFiber.mode,expirationTime);_created2.return=returnFiber;return _created2;}}if(isArray(newChild)||getIteratorFn(newChild)){var _created3=createFiberFromFragment(newChild,returnFiber.mode,expirationTime,null);_created3.return=returnFiber;return _created3;}throwOnInvalidObjectType(returnFiber,newChild);}{if(typeof newChild==='function'){warnOnFunctionType();}}return null;}function updateSlot(returnFiber,oldFiber,newChild,expirationTime){// Update the fiber if the keys match, otherwise return null.
-var key=oldFiber!==null?oldFiber.key:null;if(typeof newChild==='string'||typeof newChild==='number'){// Text nodes don't have keys. If the previous node is implicitly keyed
-// we can continue to replace it without aborting even if it is not a text
-// node.
-if(key!==null){return null;}return updateTextNode(returnFiber,oldFiber,''+newChild,expirationTime);}if(typeof newChild==='object'&&newChild!==null){switch(newChild.$$typeof){case REACT_ELEMENT_TYPE:{if(newChild.key===key){if(newChild.type===REACT_FRAGMENT_TYPE){return updateFragment(returnFiber,oldFiber,newChild.props.children,expirationTime,key);}return updateElement(returnFiber,oldFiber,newChild,expirationTime);}else{return null;}}case REACT_PORTAL_TYPE:{if(newChild.key===key){return updatePortal(returnFiber,oldFiber,newChild,expirationTime);}else{return null;}}}if(isArray(newChild)||getIteratorFn(newChild)){if(key!==null){return null;}return updateFragment(returnFiber,oldFiber,newChild,expirationTime,null);}throwOnInvalidObjectType(returnFiber,newChild);}{if(typeof newChild==='function'){warnOnFunctionType();}}return null;}function updateFromMap(existingChildren,returnFiber,newIdx,newChild,expirationTime){if(typeof newChild==='string'||typeof newChild==='number'){// Text nodes don't have keys, so we neither have to check the old nor
-// new node for the key. If both are text nodes, they match.
-var matchedFiber=existingChildren.get(newIdx)||null;return updateTextNode(returnFiber,matchedFiber,''+newChild,expirationTime);}if(typeof newChild==='object'&&newChild!==null){switch(newChild.$$typeof){case REACT_ELEMENT_TYPE:{var _matchedFiber=existingChildren.get(newChild.key===null?newIdx:newChild.key)||null;if(newChild.type===REACT_FRAGMENT_TYPE){return updateFragment(returnFiber,_matchedFiber,newChild.props.children,expirationTime,newChild.key);}return updateElement(returnFiber,_matchedFiber,newChild,expirationTime);}case REACT_PORTAL_TYPE:{var _matchedFiber2=existingChildren.get(newChild.key===null?newIdx:newChild.key)||null;return updatePortal(returnFiber,_matchedFiber2,newChild,expirationTime);}}if(isArray(newChild)||getIteratorFn(newChild)){var _matchedFiber3=existingChildren.get(newIdx)||null;return updateFragment(returnFiber,_matchedFiber3,newChild,expirationTime,null);}throwOnInvalidObjectType(returnFiber,newChild);}{if(typeof newChild==='function'){warnOnFunctionType();}}return null;}/**
-   * Warns if there is a duplicate or missing key
-   */function warnOnInvalidKey(child,knownKeys){{if(typeof child!=='object'||child===null){return knownKeys;}switch(child.$$typeof){case REACT_ELEMENT_TYPE:case REACT_PORTAL_TYPE:warnForMissingKey(child);var key=child.key;if(typeof key!=='string'){break;}if(knownKeys===null){knownKeys=new Set();knownKeys.add(key);break;}if(!knownKeys.has(key)){knownKeys.add(key);break;}warning$1(false,'Encountered two children with the same key, `%s`. '+'Keys should be unique so that components maintain their identity '+'across updates. Non-unique keys may cause children to be '+'duplicated and/or omitted — the behavior is unsupported and '+'could change in a future version.',key);break;default:break;}}return knownKeys;}function reconcileChildrenArray(returnFiber,currentFirstChild,newChildren,expirationTime){// This algorithm can't optimize by searching from boths ends since we
-// don't have backpointers on fibers. I'm trying to see how far we can get
-// with that model. If it ends up not being worth the tradeoffs, we can
-// add it later.
-// Even with a two ended optimization, we'd want to optimize for the case
-// where there are few changes and brute force the comparison instead of
-// going for the Map. It'd like to explore hitting that path first in
-// forward-only mode and only go for the Map once we notice that we need
-// lots of look ahead. This doesn't handle reversal as well as two ended
-// search but that's unusual. Besides, for the two ended optimization to
-// work on Iterables, we'd need to copy the whole set.
-// In this first iteration, we'll just live with hitting the bad case
-// (adding everything to a Map) in for every insert/move.
-// If you change this code, also update reconcileChildrenIterator() which
-// uses the same algorithm.
-{// First, validate keys.
-var knownKeys=null;for(var i=0;i<newChildren.length;i++){var child=newChildren[i];knownKeys=warnOnInvalidKey(child,knownKeys);}}var resultingFirstChild=null;var previousNewFiber=null;var oldFiber=currentFirstChild;var lastPlacedIndex=0;var newIdx=0;var nextOldFiber=null;for(;oldFiber!==null&&newIdx<newChildren.length;newIdx++){if(oldFiber.index>newIdx){nextOldFiber=oldFiber;oldFiber=null;}else{nextOldFiber=oldFiber.sibling;}var newFiber=updateSlot(returnFiber,oldFiber,newChildren[newIdx],expirationTime);if(newFiber===null){// TODO: This breaks on empty slots like null children. That's
-// unfortunate because it triggers the slow path all the time. We need
-// a better way to communicate whether this was a miss or null,
-// boolean, undefined, etc.
-if(oldFiber===null){oldFiber=nextOldFiber;}break;}if(shouldTrackSideEffects){if(oldFiber&&newFiber.alternate===null){// We matched the slot, but we didn't reuse the existing fiber, so we
-// need to delete the existing child.
-deleteChild(returnFiber,oldFiber);}}lastPlacedIndex=placeChild(newFiber,lastPlacedIndex,newIdx);if(previousNewFiber===null){// TODO: Move out of the loop. This only happens for the first run.
-resultingFirstChild=newFiber;}else{// TODO: Defer siblings if we're not at the right index for this slot.
-// I.e. if we had null values before, then we want to defer this
-// for each null value. However, we also don't want to call updateSlot
-// with the previous one.
-previousNewFiber.sibling=newFiber;}previousNewFiber=newFiber;oldFiber=nextOldFiber;}if(newIdx===newChildren.length){// We've reached the end of the new children. We can delete the rest.
-deleteRemainingChildren(returnFiber,oldFiber);return resultingFirstChild;}if(oldFiber===null){// If we don't have any more existing children we can choose a fast path
-// since the rest will all be insertions.
-for(;newIdx<newChildren.length;newIdx++){var _newFiber=createChild(returnFiber,newChildren[newIdx],expirationTime);if(!_newFiber){continue;}lastPlacedIndex=placeChild(_newFiber,lastPlacedIndex,newIdx);if(previousNewFiber===null){// TODO: Move out of the loop. This only happens for the first run.
-resultingFirstChild=_newFiber;}else{previousNewFiber.sibling=_newFiber;}previousNewFiber=_newFiber;}return resultingFirstChild;}// Add all children to a key map for quick lookups.
-var existingChildren=mapRemainingChildren(returnFiber,oldFiber);// Keep scanning and use the map to restore deleted items as moves.
-for(;newIdx<newChildren.length;newIdx++){var _newFiber2=updateFromMap(existingChildren,returnFiber,newIdx,newChildren[newIdx],expirationTime);if(_newFiber2){if(shouldTrackSideEffects){if(_newFiber2.alternate!==null){// The new fiber is a work in progress, but if there exists a
-// current, that means that we reused the fiber. We need to delete
-// it from the child list so that we don't add it to the deletion
-// list.
-existingChildren.delete(_newFiber2.key===null?newIdx:_newFiber2.key);}}lastPlacedIndex=placeChild(_newFiber2,lastPlacedIndex,newIdx);if(previousNewFiber===null){resultingFirstChild=_newFiber2;}else{previousNewFiber.sibling=_newFiber2;}previousNewFiber=_newFiber2;}}if(shouldTrackSideEffects){// Any existing children that weren't consumed above were deleted. We need
-// to add them to the deletion list.
-existingChildren.forEach(function(child){return deleteChild(returnFiber,child);});}return resultingFirstChild;}function reconcileChildrenIterator(returnFiber,currentFirstChild,newChildrenIterable,expirationTime){// This is the same implementation as reconcileChildrenArray(),
-// but using the iterator instead.
-var iteratorFn=getIteratorFn(newChildrenIterable);!(typeof iteratorFn==='function')?invariant(false,'An object is not an iterable. This error is likely caused by a bug in React. Please file an issue.'):void 0;{// We don't support rendering Generators because it's a mutation.
-// See https://github.com/facebook/react/issues/12995
-if(typeof Symbol==='function'&&// $FlowFixMe Flow doesn't know about toStringTag
-newChildrenIterable[Symbol.toStringTag]==='Generator'){!didWarnAboutGenerators?warning$1(false,'Using Generators as children is unsupported and will likely yield '+'unexpected results because enumerating a generator mutates it. '+'You may convert it to an array with `Array.from()` or the '+'`[...spread]` operator before rendering. Keep in mind '+'you might need to polyfill these features for older browsers.'):void 0;didWarnAboutGenerators=true;}// Warn about using Maps as children
-if(newChildrenIterable.entries===iteratorFn){!didWarnAboutMaps?warning$1(false,'Using Maps as children is unsupported and will likely yield '+'unexpected results. Convert it to a sequence/iterable of keyed '+'ReactElements instead.'):void 0;didWarnAboutMaps=true;}// First, validate keys.
-// We'll get a different iterator later for the main pass.
-var _newChildren=iteratorFn.call(newChildrenIterable);if(_newChildren){var knownKeys=null;var _step=_newChildren.next();for(;!_step.done;_step=_newChildren.next()){var child=_step.value;knownKeys=warnOnInvalidKey(child,knownKeys);}}}var newChildren=iteratorFn.call(newChildrenIterable);!(newChildren!=null)?invariant(false,'An iterable object provided no iterator.'):void 0;var resultingFirstChild=null;var previousNewFiber=null;var oldFiber=currentFirstChild;var lastPlacedIndex=0;var newIdx=0;var nextOldFiber=null;var step=newChildren.next();for(;oldFiber!==null&&!step.done;newIdx++,step=newChildren.next()){if(oldFiber.index>newIdx){nextOldFiber=oldFiber;oldFiber=null;}else{nextOldFiber=oldFiber.sibling;}var newFiber=updateSlot(returnFiber,oldFiber,step.value,expirationTime);if(newFiber===null){// TODO: This breaks on empty slots like null children. That's
-// unfortunate because it triggers the slow path all the time. We need
-// a better way to communicate whether this was a miss or null,
-// boolean, undefined, etc.
-if(!oldFiber){oldFiber=nextOldFiber;}break;}if(shouldTrackSideEffects){if(oldFiber&&newFiber.alternate===null){// We matched the slot, but we didn't reuse the existing fiber, so we
-// need to delete the existing child.
-deleteChild(returnFiber,oldFiber);}}lastPlacedIndex=placeChild(newFiber,lastPlacedIndex,newIdx);if(previousNewFiber===null){// TODO: Move out of the loop. This only happens for the first run.
-resultingFirstChild=newFiber;}else{// TODO: Defer siblings if we're not at the right index for this slot.
-// I.e. if we had null values before, then we want to defer this
-// for each null value. However, we also don't want to call updateSlot
-// with the previous one.
-previousNewFiber.sibling=newFiber;}previousNewFiber=newFiber;oldFiber=nextOldFiber;}if(step.done){// We've reached the end of the new children. We can delete the rest.
-deleteRemainingChildren(returnFiber,oldFiber);return resultingFirstChild;}if(oldFiber===null){// If we don't have any more existing children we can choose a fast path
-// since the rest will all be insertions.
-for(;!step.done;newIdx++,step=newChildren.next()){var _newFiber3=createChild(returnFiber,step.value,expirationTime);if(_newFiber3===null){continue;}lastPlacedIndex=placeChild(_newFiber3,lastPlacedIndex,newIdx);if(previousNewFiber===null){// TODO: Move out of the loop. This only happens for the first run.
-resultingFirstChild=_newFiber3;}else{previousNewFiber.sibling=_newFiber3;}previousNewFiber=_newFiber3;}return resultingFirstChild;}// Add all children to a key map for quick lookups.
-var existingChildren=mapRemainingChildren(returnFiber,oldFiber);// Keep scanning and use the map to restore deleted items as moves.
-for(;!step.done;newIdx++,step=newChildren.next()){var _newFiber4=updateFromMap(existingChildren,returnFiber,newIdx,step.value,expirationTime);if(_newFiber4!==null){if(shouldTrackSideEffects){if(_newFiber4.alternate!==null){// The new fiber is a work in progress, but if there exists a
-// current, that means that we reused the fiber. We need to delete
-// it from the child list so that we don't add it to the deletion
-// list.
-existingChildren.delete(_newFiber4.key===null?newIdx:_newFiber4.key);}}lastPlacedIndex=placeChild(_newFiber4,lastPlacedIndex,newIdx);if(previousNewFiber===null){resultingFirstChild=_newFiber4;}else{previousNewFiber.sibling=_newFiber4;}previousNewFiber=_newFiber4;}}if(shouldTrackSideEffects){// Any existing children that weren't consumed above were deleted. We need
-// to add them to the deletion list.
-existingChildren.forEach(function(child){return deleteChild(returnFiber,child);});}return resultingFirstChild;}function reconcileSingleTextNode(returnFiber,currentFirstChild,textContent,expirationTime){// There's no need to check for keys on text nodes since we don't have a
-// way to define them.
-if(currentFirstChild!==null&&currentFirstChild.tag===HostText){// We already have an existing node so let's just update it and delete
-// the rest.
-deleteRemainingChildren(returnFiber,currentFirstChild.sibling);var existing=useFiber(currentFirstChild,textContent,expirationTime);existing.return=returnFiber;return existing;}// The existing first child is not a text node so we need to create one
-// and delete the existing ones.
-deleteRemainingChildren(returnFiber,currentFirstChild);var created=createFiberFromText(textContent,returnFiber.mode,expirationTime);created.return=returnFiber;return created;}function reconcileSingleElement(returnFiber,currentFirstChild,element,expirationTime){var key=element.key;var child=currentFirstChild;while(child!==null){// TODO: If key === null and child.key === null, then this only applies to
-// the first item in the list.
-if(child.key===key){if(child.tag===Fragment?element.type===REACT_FRAGMENT_TYPE:child.elementType===element.type){deleteRemainingChildren(returnFiber,child.sibling);var existing=useFiber(child,element.type===REACT_FRAGMENT_TYPE?element.props.children:element.props,expirationTime);existing.ref=coerceRef(returnFiber,child,element);existing.return=returnFiber;{existing._debugSource=element._source;existing._debugOwner=element._owner;}return existing;}else{deleteRemainingChildren(returnFiber,child);break;}}else{deleteChild(returnFiber,child);}child=child.sibling;}if(element.type===REACT_FRAGMENT_TYPE){var created=createFiberFromFragment(element.props.children,returnFiber.mode,expirationTime,element.key);created.return=returnFiber;return created;}else{var _created4=createFiberFromElement(element,returnFiber.mode,expirationTime);_created4.ref=coerceRef(returnFiber,currentFirstChild,element);_created4.return=returnFiber;return _created4;}}function reconcileSinglePortal(returnFiber,currentFirstChild,portal,expirationTime){var key=portal.key;var child=currentFirstChild;while(child!==null){// TODO: If key === null and child.key === null, then this only applies to
-// the first item in the list.
-if(child.key===key){if(child.tag===HostPortal&&child.stateNode.containerInfo===portal.containerInfo&&child.stateNode.implementation===portal.implementation){deleteRemainingChildren(returnFiber,child.sibling);var existing=useFiber(child,portal.children||[],expirationTime);existing.return=returnFiber;return existing;}else{deleteRemainingChildren(returnFiber,child);break;}}else{deleteChild(returnFiber,child);}child=child.sibling;}var created=createFiberFromPortal(portal,returnFiber.mode,expirationTime);created.return=returnFiber;return created;}// This API will tag the children with the side-effect of the reconciliation
-// itself. They will be added to the side-effect list as we pass through the
-// children and the parent.
-function reconcileChildFibers(returnFiber,currentFirstChild,newChild,expirationTime){// This function is not recursive.
-// If the top level item is an array, we treat it as a set of children,
-// not as a fragment. Nested arrays on the other hand will be treated as
-// fragment nodes. Recursion happens at the normal flow.
-// Handle top level unkeyed fragments as if they were arrays.
-// This leads to an ambiguity between <>{[...]}</> and <>...</>.
-// We treat the ambiguous cases above the same.
-var isUnkeyedTopLevelFragment=typeof newChild==='object'&&newChild!==null&&newChild.type===REACT_FRAGMENT_TYPE&&newChild.key===null;if(isUnkeyedTopLevelFragment){newChild=newChild.props.children;}// Handle object types
-var isObject=typeof newChild==='object'&&newChild!==null;if(isObject){switch(newChild.$$typeof){case REACT_ELEMENT_TYPE:return placeSingleChild(reconcileSingleElement(returnFiber,currentFirstChild,newChild,expirationTime));case REACT_PORTAL_TYPE:return placeSingleChild(reconcileSinglePortal(returnFiber,currentFirstChild,newChild,expirationTime));}}if(typeof newChild==='string'||typeof newChild==='number'){return placeSingleChild(reconcileSingleTextNode(returnFiber,currentFirstChild,''+newChild,expirationTime));}if(isArray(newChild)){return reconcileChildrenArray(returnFiber,currentFirstChild,newChild,expirationTime);}if(getIteratorFn(newChild)){return reconcileChildrenIterator(returnFiber,currentFirstChild,newChild,expirationTime);}if(isObject){throwOnInvalidObjectType(returnFiber,newChild);}{if(typeof newChild==='function'){warnOnFunctionType();}}if(typeof newChild==='undefined'&&!isUnkeyedTopLevelFragment){// If the new child is undefined, and the return fiber is a composite
-// component, throw an error. If Fiber return types are disabled,
-// we already threw above.
-switch(returnFiber.tag){case ClassComponent:{{var instance=returnFiber.stateNode;if(instance.render._isMockFunction){// We allow auto-mocks to proceed as if they're returning null.
-break;}}}// Intentionally fall through to the next case, which handles both
-// functions and classes
-// eslint-disable-next-lined no-fallthrough
-case FunctionComponent:{var Component=returnFiber.type;invariant(false,'%s(...): Nothing was returned from render. This usually means a return statement is missing. Or, to render nothing, return null.',Component.displayName||Component.name||'Component');}}}// Remaining cases are all treated as empty.
-return deleteRemainingChildren(returnFiber,currentFirstChild);}return reconcileChildFibers;}var reconcileChildFibers=ChildReconciler(true);var mountChildFibers=ChildReconciler(false);function cloneChildFibers(current$$1,workInProgress){!(current$$1===null||workInProgress.child===current$$1.child)?invariant(false,'Resuming work not yet implemented.'):void 0;if(workInProgress.child===null){return;}var currentChild=workInProgress.child;var newChild=createWorkInProgress(currentChild,currentChild.pendingProps,currentChild.expirationTime);workInProgress.child=newChild;newChild.return=workInProgress;while(currentChild.sibling!==null){currentChild=currentChild.sibling;newChild=newChild.sibling=createWorkInProgress(currentChild,currentChild.pendingProps,currentChild.expirationTime);newChild.return=workInProgress;}newChild.sibling=null;}// The deepest Fiber on the stack involved in a hydration context.
-// This may have been an insertion or a hydration.
-var hydrationParentFiber=null;var nextHydratableInstance=null;var isHydrating=false;function enterHydrationState(fiber){if(!supportsHydration){return false;}var parentInstance=fiber.stateNode.containerInfo;nextHydratableInstance=getFirstHydratableChild(parentInstance);hydrationParentFiber=fiber;isHydrating=true;return true;}function deleteHydratableInstance(returnFiber,instance){{switch(returnFiber.tag){case HostRoot:didNotHydrateContainerInstance(returnFiber.stateNode.containerInfo,instance);break;case HostComponent:didNotHydrateInstance(returnFiber.type,returnFiber.memoizedProps,returnFiber.stateNode,instance);break;}}var childToDelete=createFiberFromHostInstanceForDeletion();childToDelete.stateNode=instance;childToDelete.return=returnFiber;childToDelete.effectTag=Deletion;// This might seem like it belongs on progressedFirstDeletion. However,
-// these children are not part of the reconciliation list of children.
-// Even if we abort and rereconcile the children, that will try to hydrate
-// again and the nodes are still in the host tree so these will be
-// recreated.
-if(returnFiber.lastEffect!==null){returnFiber.lastEffect.nextEffect=childToDelete;returnFiber.lastEffect=childToDelete;}else{returnFiber.firstEffect=returnFiber.lastEffect=childToDelete;}}function insertNonHydratedInstance(returnFiber,fiber){fiber.effectTag|=Placement;{switch(returnFiber.tag){case HostRoot:{var parentContainer=returnFiber.stateNode.containerInfo;switch(fiber.tag){case HostComponent:var type=fiber.type;var props=fiber.pendingProps;didNotFindHydratableContainerInstance(parentContainer,type,props);break;case HostText:var text=fiber.pendingProps;didNotFindHydratableContainerTextInstance(parentContainer,text);break;}break;}case HostComponent:{var parentType=returnFiber.type;var parentProps=returnFiber.memoizedProps;var parentInstance=returnFiber.stateNode;switch(fiber.tag){case HostComponent:var _type=fiber.type;var _props=fiber.pendingProps;didNotFindHydratableInstance(parentType,parentProps,parentInstance,_type,_props);break;case HostText:var _text=fiber.pendingProps;didNotFindHydratableTextInstance(parentType,parentProps,parentInstance,_text);break;}break;}default:return;}}}function tryHydrate(fiber,nextInstance){switch(fiber.tag){case HostComponent:{var type=fiber.type;var props=fiber.pendingProps;var instance=canHydrateInstance(nextInstance,type,props);if(instance!==null){fiber.stateNode=instance;return true;}return false;}case HostText:{var text=fiber.pendingProps;var textInstance=canHydrateTextInstance(nextInstance,text);if(textInstance!==null){fiber.stateNode=textInstance;return true;}return false;}default:return false;}}function tryToClaimNextHydratableInstance(fiber){if(!isHydrating){return;}var nextInstance=nextHydratableInstance;if(!nextInstance){// Nothing to hydrate. Make it an insertion.
-insertNonHydratedInstance(hydrationParentFiber,fiber);isHydrating=false;hydrationParentFiber=fiber;return;}var firstAttemptedInstance=nextInstance;if(!tryHydrate(fiber,nextInstance)){// If we can't hydrate this instance let's try the next one.
-// We use this as a heuristic. It's based on intuition and not data so it
-// might be flawed or unnecessary.
-nextInstance=getNextHydratableSibling(firstAttemptedInstance);if(!nextInstance||!tryHydrate(fiber,nextInstance)){// Nothing to hydrate. Make it an insertion.
-insertNonHydratedInstance(hydrationParentFiber,fiber);isHydrating=false;hydrationParentFiber=fiber;return;}// We matched the next one, we'll now assume that the first one was
-// superfluous and we'll delete it. Since we can't eagerly delete it
-// we'll have to schedule a deletion. To do that, this node needs a dummy
-// fiber associated with it.
-deleteHydratableInstance(hydrationParentFiber,firstAttemptedInstance);}hydrationParentFiber=fiber;nextHydratableInstance=getFirstHydratableChild(nextInstance);}function prepareToHydrateHostInstance(fiber,rootContainerInstance,hostContext){if(!supportsHydration){invariant(false,'Expected prepareToHydrateHostInstance() to never be called. This error is likely caused by a bug in React. Please file an issue.');}var instance=fiber.stateNode;var updatePayload=hydrateInstance(instance,fiber.type,fiber.memoizedProps,rootContainerInstance,hostContext,fiber);// TODO: Type this specific to this type of component.
-fiber.updateQueue=updatePayload;// If the update payload indicates that there is a change or if there
-// is a new ref we mark this as an update.
-if(updatePayload!==null){return true;}return false;}function prepareToHydrateHostTextInstance(fiber){if(!supportsHydration){invariant(false,'Expected prepareToHydrateHostTextInstance() to never be called. This error is likely caused by a bug in React. Please file an issue.');}var textInstance=fiber.stateNode;var textContent=fiber.memoizedProps;var shouldUpdate=hydrateTextInstance(textInstance,textContent,fiber);{if(shouldUpdate){// We assume that prepareToHydrateHostTextInstance is called in a context where the
-// hydration parent is the parent host component of this host text.
-var returnFiber=hydrationParentFiber;if(returnFiber!==null){switch(returnFiber.tag){case HostRoot:{var parentContainer=returnFiber.stateNode.containerInfo;didNotMatchHydratedContainerTextInstance(parentContainer,textInstance,textContent);break;}case HostComponent:{var parentType=returnFiber.type;var parentProps=returnFiber.memoizedProps;var parentInstance=returnFiber.stateNode;didNotMatchHydratedTextInstance(parentType,parentProps,parentInstance,textInstance,textContent);break;}}}}}return shouldUpdate;}function popToNextHostParent(fiber){var parent=fiber.return;while(parent!==null&&parent.tag!==HostComponent&&parent.tag!==HostRoot){parent=parent.return;}hydrationParentFiber=parent;}function popHydrationState(fiber){if(!supportsHydration){return false;}if(fiber!==hydrationParentFiber){// We're deeper than the current hydration context, inside an inserted
-// tree.
-return false;}if(!isHydrating){// If we're not currently hydrating but we're in a hydration context, then
-// we were an insertion and now need to pop up reenter hydration of our
-// siblings.
-popToNextHostParent(fiber);isHydrating=true;return false;}var type=fiber.type;// If we have any remaining hydratable nodes, we need to delete them now.
-// We only do this deeper than head and body since they tend to have random
-// other nodes in them. We also ignore components with pure text content in
-// side of them.
-// TODO: Better heuristic.
-if(fiber.tag!==HostComponent||type!=='head'&&type!=='body'&&!shouldSetTextContent(type,fiber.memoizedProps)){var nextInstance=nextHydratableInstance;while(nextInstance){deleteHydratableInstance(fiber,nextInstance);nextInstance=getNextHydratableSibling(nextInstance);}}popToNextHostParent(fiber);nextHydratableInstance=hydrationParentFiber?getNextHydratableSibling(fiber.stateNode):null;return true;}function resetHydrationState(){if(!supportsHydration){return;}hydrationParentFiber=null;nextHydratableInstance=null;isHydrating=false;}var ReactCurrentOwner$3=ReactSharedInternals.ReactCurrentOwner;var didWarnAboutBadClass=void 0;var didWarnAboutContextTypeOnFunctionComponent=void 0;var didWarnAboutGetDerivedStateOnFunctionComponent=void 0;var didWarnAboutFunctionRefs=void 0;var didWarnAboutReassigningProps=void 0;{didWarnAboutBadClass={};didWarnAboutContextTypeOnFunctionComponent={};didWarnAboutGetDerivedStateOnFunctionComponent={};didWarnAboutFunctionRefs={};didWarnAboutReassigningProps=false;}function reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime){if(current$$1===null){// If this is a fresh new component that hasn't been rendered yet, we
-// won't update its child set by applying minimal side-effects. Instead,
-// we will add them all to the child before it gets rendered. That means
-// we can optimize this reconciliation pass by not tracking side-effects.
-workInProgress.child=mountChildFibers(workInProgress,null,nextChildren,renderExpirationTime);}else{// If the current child is the same as the work in progress, it means that
-// we haven't yet started any work on these children. Therefore, we use
-// the clone algorithm to create a copy of all the current children.
-// If we had any progressed work already, that is invalid at this point so
-// let's throw it out.
-workInProgress.child=reconcileChildFibers(workInProgress,current$$1.child,nextChildren,renderExpirationTime);}}function forceUnmountCurrentAndReconcile(current$$1,workInProgress,nextChildren,renderExpirationTime){// This function is fork of reconcileChildren. It's used in cases where we
-// want to reconcile without matching against the existing set. This has the
-// effect of all current children being unmounted; even if the type and key
-// are the same, the old child is unmounted and a new child is created.
-//
-// To do this, we're going to go through the reconcile algorithm twice. In
-// the first pass, we schedule a deletion for all the current children by
-// passing null.
-workInProgress.child=reconcileChildFibers(workInProgress,current$$1.child,null,renderExpirationTime);// In the second pass, we mount the new children. The trick here is that we
-// pass null in place of where we usually pass the current child set. This has
-// the effect of remounting all children regardless of whether their their
-// identity matches.
-workInProgress.child=reconcileChildFibers(workInProgress,null,nextChildren,renderExpirationTime);}function updateForwardRef(current$$1,workInProgress,Component,nextProps,renderExpirationTime){{if(workInProgress.type!==workInProgress.elementType){// Lazy component props can't be validated in createElement
-// because they're only guaranteed to be resolved here.
-var innerPropTypes=Component.propTypes;if(innerPropTypes){checkPropTypes(innerPropTypes,nextProps,// Resolved props
-'prop',getComponentName(Component),getCurrentFiberStackInDev);}}}var render=Component.render;var ref=workInProgress.ref;// The rest is a fork of updateFunctionComponent
-var nextChildren=void 0;prepareToReadContext(workInProgress,renderExpirationTime);prepareToUseHooks(current$$1,workInProgress,renderExpirationTime);{ReactCurrentOwner$3.current=workInProgress;setCurrentPhase('render');nextChildren=render(nextProps,ref);setCurrentPhase(null);}nextChildren=finishHooks(render,nextProps,nextChildren,ref);// React DevTools reads this flag.
-workInProgress.effectTag|=PerformedWork;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateMemoComponent(current$$1,workInProgress,Component,nextProps,updateExpirationTime,renderExpirationTime){if(current$$1===null){var type=Component.type;if(isSimpleFunctionComponent(type)&&Component.compare===null&&// SimpleMemoComponent codepath doesn't resolve outer props either.
-Component.defaultProps===undefined){// If this is a plain function component without default props,
-// and with only the default shallow comparison, we upgrade it
-// to a SimpleMemoComponent to allow fast path updates.
-workInProgress.tag=SimpleMemoComponent;workInProgress.type=type;{validateFunctionComponentInDev(workInProgress,type);}return updateSimpleMemoComponent(current$$1,workInProgress,type,nextProps,updateExpirationTime,renderExpirationTime);}{var innerPropTypes=type.propTypes;if(innerPropTypes){// Inner memo component props aren't currently validated in createElement.
-// We could move it there, but we'd still need this for lazy code path.
-checkPropTypes(innerPropTypes,nextProps,// Resolved props
-'prop',getComponentName(type),getCurrentFiberStackInDev);}}var child=createFiberFromTypeAndProps(Component.type,null,nextProps,null,workInProgress.mode,renderExpirationTime);child.ref=workInProgress.ref;child.return=workInProgress;workInProgress.child=child;return child;}{var _type=Component.type;var _innerPropTypes=_type.propTypes;if(_innerPropTypes){// Inner memo component props aren't currently validated in createElement.
-// We could move it there, but we'd still need this for lazy code path.
-checkPropTypes(_innerPropTypes,nextProps,// Resolved props
-'prop',getComponentName(_type),getCurrentFiberStackInDev);}}var currentChild=current$$1.child;// This is always exactly one child
-if(updateExpirationTime<renderExpirationTime){// This will be the props with resolved defaultProps,
-// unlike current.memoizedProps which will be the unresolved ones.
-var prevProps=currentChild.memoizedProps;// Default to shallow comparison
-var compare=Component.compare;compare=compare!==null?compare:shallowEqual;if(compare(prevProps,nextProps)&&current$$1.ref===workInProgress.ref){return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}}// React DevTools reads this flag.
-workInProgress.effectTag|=PerformedWork;var newChild=createWorkInProgress(currentChild,nextProps,renderExpirationTime);newChild.ref=workInProgress.ref;newChild.return=workInProgress;workInProgress.child=newChild;return newChild;}function updateSimpleMemoComponent(current$$1,workInProgress,Component,nextProps,updateExpirationTime,renderExpirationTime){{if(workInProgress.type!==workInProgress.elementType){// Lazy component props can't be validated in createElement
-// because they're only guaranteed to be resolved here.
-var outerMemoType=workInProgress.elementType;if(outerMemoType.$$typeof===REACT_LAZY_TYPE){// We warn when you define propTypes on lazy()
-// so let's just skip over it to find memo() outer wrapper.
-// Inner props for memo are validated later.
-outerMemoType=refineResolvedLazyComponent(outerMemoType);}var outerPropTypes=outerMemoType&&outerMemoType.propTypes;if(outerPropTypes){checkPropTypes(outerPropTypes,nextProps,// Resolved (SimpleMemoComponent has no defaultProps)
-'prop',getComponentName(outerMemoType),getCurrentFiberStackInDev);}// Inner propTypes will be validated in the function component path.
-}}if(current$$1!==null&&updateExpirationTime<renderExpirationTime){var prevProps=current$$1.memoizedProps;if(shallowEqual(prevProps,nextProps)&&current$$1.ref===workInProgress.ref){return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}}return updateFunctionComponent(current$$1,workInProgress,Component,nextProps,renderExpirationTime);}function updateFragment(current$$1,workInProgress,renderExpirationTime){var nextChildren=workInProgress.pendingProps;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateMode(current$$1,workInProgress,renderExpirationTime){var nextChildren=workInProgress.pendingProps.children;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateProfiler(current$$1,workInProgress,renderExpirationTime){if(enableProfilerTimer){workInProgress.effectTag|=Update;}var nextProps=workInProgress.pendingProps;var nextChildren=nextProps.children;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function markRef(current$$1,workInProgress){var ref=workInProgress.ref;if(current$$1===null&&ref!==null||current$$1!==null&&current$$1.ref!==ref){// Schedule a Ref effect
-workInProgress.effectTag|=Ref;}}function updateFunctionComponent(current$$1,workInProgress,Component,nextProps,renderExpirationTime){{if(workInProgress.type!==workInProgress.elementType){// Lazy component props can't be validated in createElement
-// because they're only guaranteed to be resolved here.
-var innerPropTypes=Component.propTypes;if(innerPropTypes){checkPropTypes(innerPropTypes,nextProps,// Resolved props
-'prop',getComponentName(Component),getCurrentFiberStackInDev);}}}var unmaskedContext=getUnmaskedContext(workInProgress,Component,true);var context=getMaskedContext(workInProgress,unmaskedContext);var nextChildren=void 0;prepareToReadContext(workInProgress,renderExpirationTime);prepareToUseHooks(current$$1,workInProgress,renderExpirationTime);{ReactCurrentOwner$3.current=workInProgress;setCurrentPhase('render');nextChildren=Component(nextProps,context);setCurrentPhase(null);}nextChildren=finishHooks(Component,nextProps,nextChildren,context);// React DevTools reads this flag.
-workInProgress.effectTag|=PerformedWork;reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateClassComponent(current$$1,workInProgress,Component,nextProps,renderExpirationTime){{if(workInProgress.type!==workInProgress.elementType){// Lazy component props can't be validated in createElement
-// because they're only guaranteed to be resolved here.
-var innerPropTypes=Component.propTypes;if(innerPropTypes){checkPropTypes(innerPropTypes,nextProps,// Resolved props
-'prop',getComponentName(Component),getCurrentFiberStackInDev);}}}// Push context providers early to prevent context stack mismatches.
-// During mounting we don't know the child context yet as the instance doesn't exist.
-// We will invalidate the child context in finishClassComponent() right after rendering.
-var hasContext=void 0;if(isContextProvider(Component)){hasContext=true;pushContextProvider(workInProgress);}else{hasContext=false;}prepareToReadContext(workInProgress,renderExpirationTime);var instance=workInProgress.stateNode;var shouldUpdate=void 0;if(instance===null){if(current$$1!==null){// An class component without an instance only mounts if it suspended
-// inside a non- concurrent tree, in an inconsistent state. We want to
-// tree it like a new mount, even though an empty version of it already
-// committed. Disconnect the alternate pointers.
-current$$1.alternate=null;workInProgress.alternate=null;// Since this is conceptually a new fiber, schedule a Placement effect
-workInProgress.effectTag|=Placement;}// In the initial pass we might need to construct the instance.
-constructClassInstance(workInProgress,Component,nextProps,renderExpirationTime);mountClassInstance(workInProgress,Component,nextProps,renderExpirationTime);shouldUpdate=true;}else if(current$$1===null){// In a resume, we'll already have an instance we can reuse.
-shouldUpdate=resumeMountClassInstance(workInProgress,Component,nextProps,renderExpirationTime);}else{shouldUpdate=updateClassInstance(current$$1,workInProgress,Component,nextProps,renderExpirationTime);}var nextUnitOfWork=finishClassComponent(current$$1,workInProgress,Component,shouldUpdate,hasContext,renderExpirationTime);{var inst=workInProgress.stateNode;if(inst.props!==nextProps){!didWarnAboutReassigningProps?warning$1(false,'It looks like %s is reassigning its own `this.props` while rendering. '+'This is not supported and can lead to confusing bugs.',getComponentName(workInProgress.type)||'a component'):void 0;didWarnAboutReassigningProps=true;}}return nextUnitOfWork;}function finishClassComponent(current$$1,workInProgress,Component,shouldUpdate,hasContext,renderExpirationTime){// Refs should update even if shouldComponentUpdate returns false
-markRef(current$$1,workInProgress);var didCaptureError=(workInProgress.effectTag&DidCapture)!==NoEffect;if(!shouldUpdate&&!didCaptureError){// Context providers should defer to sCU for rendering
-if(hasContext){invalidateContextProvider(workInProgress,Component,false);}return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}var instance=workInProgress.stateNode;// Rerender
-ReactCurrentOwner$3.current=workInProgress;var nextChildren=void 0;if(didCaptureError&&typeof Component.getDerivedStateFromError!=='function'){// If we captured an error, but getDerivedStateFrom catch is not defined,
-// unmount all the children. componentDidCatch will schedule an update to
-// re-render a fallback. This is temporary until we migrate everyone to
-// the new API.
-// TODO: Warn in a future release.
-nextChildren=null;if(enableProfilerTimer){stopProfilerTimerIfRunning(workInProgress);}}else{{setCurrentPhase('render');nextChildren=instance.render();if(debugRenderPhaseSideEffects||debugRenderPhaseSideEffectsForStrictMode&&workInProgress.mode&StrictMode){instance.render();}setCurrentPhase(null);}}// React DevTools reads this flag.
-workInProgress.effectTag|=PerformedWork;if(current$$1!==null&&didCaptureError){// If we're recovering from an error, reconcile without reusing any of
-// the existing children. Conceptually, the normal children and the children
-// that are shown on error are two different sets, so we shouldn't reuse
-// normal children even if their identities match.
-forceUnmountCurrentAndReconcile(current$$1,workInProgress,nextChildren,renderExpirationTime);}else{reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);}// Memoize state using the values we just used to render.
-// TODO: Restructure so we never read values from the instance.
-workInProgress.memoizedState=instance.state;// The context might have changed so we need to recalculate it.
-if(hasContext){invalidateContextProvider(workInProgress,Component,true);}return workInProgress.child;}function pushHostRootContext(workInProgress){var root=workInProgress.stateNode;if(root.pendingContext){pushTopLevelContextObject(workInProgress,root.pendingContext,root.pendingContext!==root.context);}else if(root.context){// Should always be set
-pushTopLevelContextObject(workInProgress,root.context,false);}pushHostContainer(workInProgress,root.containerInfo);}function updateHostRoot(current$$1,workInProgress,renderExpirationTime){pushHostRootContext(workInProgress);var updateQueue=workInProgress.updateQueue;!(updateQueue!==null)?invariant(false,'If the root does not have an updateQueue, we should have already bailed out. This error is likely caused by a bug in React. Please file an issue.'):void 0;var nextProps=workInProgress.pendingProps;var prevState=workInProgress.memoizedState;var prevChildren=prevState!==null?prevState.element:null;processUpdateQueue(workInProgress,updateQueue,nextProps,null,renderExpirationTime);var nextState=workInProgress.memoizedState;// Caution: React DevTools currently depends on this property
-// being called "element".
-var nextChildren=nextState.element;if(nextChildren===prevChildren){// If the state is the same as before, that's a bailout because we had
-// no work that expires at this time.
-resetHydrationState();return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}var root=workInProgress.stateNode;if((current$$1===null||current$$1.child===null)&&root.hydrate&&enterHydrationState(workInProgress)){// If we don't have any current children this might be the first pass.
-// We always try to hydrate. If this isn't a hydration pass there won't
-// be any children to hydrate which is effectively the same thing as
-// not hydrating.
-// This is a bit of a hack. We track the host root as a placement to
-// know that we're currently in a mounting state. That way isMounted
-// works as expected. We must reset this before committing.
-// TODO: Delete this when we delete isMounted and findDOMNode.
-workInProgress.effectTag|=Placement;// Ensure that children mount into this root without tracking
-// side-effects. This ensures that we don't store Placement effects on
-// nodes that will be hydrated.
-workInProgress.child=mountChildFibers(workInProgress,null,nextChildren,renderExpirationTime);}else{// Otherwise reset hydration state in case we aborted and resumed another
-// root.
-reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);resetHydrationState();}return workInProgress.child;}function updateHostComponent(current$$1,workInProgress,renderExpirationTime){pushHostContext(workInProgress);if(current$$1===null){tryToClaimNextHydratableInstance(workInProgress);}var type=workInProgress.type;var nextProps=workInProgress.pendingProps;var prevProps=current$$1!==null?current$$1.memoizedProps:null;var nextChildren=nextProps.children;var isDirectTextChild=shouldSetTextContent(type,nextProps);if(isDirectTextChild){// We special case a direct text child of a host node. This is a common
-// case. We won't handle it as a reified child. We will instead handle
-// this in the host environment that also have access to this prop. That
-// avoids allocating another HostText fiber and traversing it.
-nextChildren=null;}else if(prevProps!==null&&shouldSetTextContent(type,prevProps)){// If we're switching from a direct text child to a normal child, or to
-// empty, we need to schedule the text content to be reset.
-workInProgress.effectTag|=ContentReset;}markRef(current$$1,workInProgress);// Check the host config to see if the children are offscreen/hidden.
-if(renderExpirationTime!==Never&&workInProgress.mode&ConcurrentMode&&shouldDeprioritizeSubtree(type,nextProps)){// Schedule this fiber to re-render at offscreen priority. Then bailout.
-workInProgress.expirationTime=Never;return null;}reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);return workInProgress.child;}function updateHostText(current$$1,workInProgress){if(current$$1===null){tryToClaimNextHydratableInstance(workInProgress);}// Nothing to do here. This is terminal. We'll do the completion step
-// immediately after.
-return null;}function mountLazyComponent(_current,workInProgress,elementType,updateExpirationTime,renderExpirationTime){if(_current!==null){// An lazy component only mounts if it suspended inside a non-
-// concurrent tree, in an inconsistent state. We want to treat it like
-// a new mount, even though an empty version of it already committed.
-// Disconnect the alternate pointers.
-_current.alternate=null;workInProgress.alternate=null;// Since this is conceptually a new fiber, schedule a Placement effect
-workInProgress.effectTag|=Placement;}var props=workInProgress.pendingProps;// We can't start a User Timing measurement with correct label yet.
-// Cancel and resume right after we know the tag.
-cancelWorkTimer(workInProgress);var Component=readLazyComponentType(elementType);// Store the unwrapped component in the type.
-workInProgress.type=Component;var resolvedTag=workInProgress.tag=resolveLazyComponentTag(Component);startWorkTimer(workInProgress);var resolvedProps=resolveDefaultProps(Component,props);var child=void 0;switch(resolvedTag){case FunctionComponent:{child=updateFunctionComponent(null,workInProgress,Component,resolvedProps,renderExpirationTime);break;}case ClassComponent:{child=updateClassComponent(null,workInProgress,Component,resolvedProps,renderExpirationTime);break;}case ForwardRef:{child=updateForwardRef(null,workInProgress,Component,resolvedProps,renderExpirationTime);break;}case MemoComponent:{{if(workInProgress.type!==workInProgress.elementType){var outerPropTypes=Component.propTypes;if(outerPropTypes){checkPropTypes(outerPropTypes,resolvedProps,// Resolved for outer only
-'prop',getComponentName(Component),getCurrentFiberStackInDev);}}}child=updateMemoComponent(null,workInProgress,Component,resolveDefaultProps(Component.type,resolvedProps),// The inner type can have defaults too
-updateExpirationTime,renderExpirationTime);break;}default:{var hint='';{if(Component!==null&&typeof Component==='object'&&Component.$$typeof===REACT_LAZY_TYPE){hint=' Did you wrap a component in React.lazy() more than once?';}}// This message intentionally doesn't mention ForwardRef or MemoComponent
-// because the fact that it's a separate type of work is an
-// implementation detail.
-invariant(false,'Element type is invalid. Received a promise that resolves to: %s. Lazy element type must resolve to a class or function.%s',Component,hint);}}return child;}function mountIncompleteClassComponent(_current,workInProgress,Component,nextProps,renderExpirationTime){if(_current!==null){// An incomplete component only mounts if it suspended inside a non-
-// concurrent tree, in an inconsistent state. We want to treat it like
-// a new mount, even though an empty version of it already committed.
-// Disconnect the alternate pointers.
-_current.alternate=null;workInProgress.alternate=null;// Since this is conceptually a new fiber, schedule a Placement effect
-workInProgress.effectTag|=Placement;}// Promote the fiber to a class and try rendering again.
-workInProgress.tag=ClassComponent;// The rest of this function is a fork of `updateClassComponent`
-// Push context providers early to prevent context stack mismatches.
-// During mounting we don't know the child context yet as the instance doesn't exist.
-// We will invalidate the child context in finishClassComponent() right after rendering.
-var hasContext=void 0;if(isContextProvider(Component)){hasContext=true;pushContextProvider(workInProgress);}else{hasContext=false;}prepareToReadContext(workInProgress,renderExpirationTime);constructClassInstance(workInProgress,Component,nextProps,renderExpirationTime);mountClassInstance(workInProgress,Component,nextProps,renderExpirationTime);return finishClassComponent(null,workInProgress,Component,true,hasContext,renderExpirationTime);}function mountIndeterminateComponent(_current,workInProgress,Component,renderExpirationTime){if(_current!==null){// An indeterminate component only mounts if it suspended inside a non-
-// concurrent tree, in an inconsistent state. We want to treat it like
-// a new mount, even though an empty version of it already committed.
-// Disconnect the alternate pointers.
-_current.alternate=null;workInProgress.alternate=null;// Since this is conceptually a new fiber, schedule a Placement effect
-workInProgress.effectTag|=Placement;}var props=workInProgress.pendingProps;var unmaskedContext=getUnmaskedContext(workInProgress,Component,false);var context=getMaskedContext(workInProgress,unmaskedContext);prepareToReadContext(workInProgress,renderExpirationTime);prepareToUseHooks(null,workInProgress,renderExpirationTime);var value=void 0;{if(Component.prototype&&typeof Component.prototype.render==='function'){var componentName=getComponentName(Component)||'Unknown';if(!didWarnAboutBadClass[componentName]){warningWithoutStack$1(false,"The <%s /> component appears to have a render method, but doesn't extend React.Component. "+'This is likely to cause errors. Change %s to extend React.Component instead.',componentName,componentName);didWarnAboutBadClass[componentName]=true;}}if(workInProgress.mode&StrictMode){ReactStrictModeWarnings.recordLegacyContextWarning(workInProgress,null);}ReactCurrentOwner$3.current=workInProgress;value=Component(props,context);}// React DevTools reads this flag.
-workInProgress.effectTag|=PerformedWork;if(typeof value==='object'&&value!==null&&typeof value.render==='function'&&value.$$typeof===undefined){// Proceed under the assumption that this is a class instance
-workInProgress.tag=ClassComponent;// Throw out any hooks that were used.
-resetHooks();// Push context providers early to prevent context stack mismatches.
-// During mounting we don't know the child context yet as the instance doesn't exist.
-// We will invalidate the child context in finishClassComponent() right after rendering.
-var hasContext=false;if(isContextProvider(Component)){hasContext=true;pushContextProvider(workInProgress);}else{hasContext=false;}workInProgress.memoizedState=value.state!==null&&value.state!==undefined?value.state:null;var getDerivedStateFromProps=Component.getDerivedStateFromProps;if(typeof getDerivedStateFromProps==='function'){applyDerivedStateFromProps(workInProgress,Component,getDerivedStateFromProps,props);}adoptClassInstance(workInProgress,value);mountClassInstance(workInProgress,Component,props,renderExpirationTime);return finishClassComponent(null,workInProgress,Component,true,hasContext,renderExpirationTime);}else{// Proceed under the assumption that this is a function component
-workInProgress.tag=FunctionComponent;value=finishHooks(Component,props,value,context);reconcileChildren(null,workInProgress,value,renderExpirationTime);{validateFunctionComponentInDev(workInProgress,Component);}return workInProgress.child;}}function validateFunctionComponentInDev(workInProgress,Component){if(Component){!!Component.childContextTypes?warningWithoutStack$1(false,'%s(...): childContextTypes cannot be defined on a function component.',Component.displayName||Component.name||'Component'):void 0;}if(workInProgress.ref!==null){var info='';var ownerName=getCurrentFiberOwnerNameInDevOrNull();if(ownerName){info+='\n\nCheck the render method of `'+ownerName+'`.';}var warningKey=ownerName||workInProgress._debugID||'';var debugSource=workInProgress._debugSource;if(debugSource){warningKey=debugSource.fileName+':'+debugSource.lineNumber;}if(!didWarnAboutFunctionRefs[warningKey]){didWarnAboutFunctionRefs[warningKey]=true;warning$1(false,'Function components cannot be given refs. '+'Attempts to access this ref will fail.%s',info);}}if(typeof Component.getDerivedStateFromProps==='function'){var componentName=getComponentName(Component)||'Unknown';if(!didWarnAboutGetDerivedStateOnFunctionComponent[componentName]){warningWithoutStack$1(false,'%s: Function components do not support getDerivedStateFromProps.',componentName);didWarnAboutGetDerivedStateOnFunctionComponent[componentName]=true;}}if(typeof Component.contextType==='object'&&Component.contextType!==null){var _componentName=getComponentName(Component)||'Unknown';if(!didWarnAboutContextTypeOnFunctionComponent[_componentName]){warningWithoutStack$1(false,'%s: Function components do not support contextType.',_componentName);didWarnAboutContextTypeOnFunctionComponent[_componentName]=true;}}}function updateSuspenseComponent(current$$1,workInProgress,renderExpirationTime){var mode=workInProgress.mode;var nextProps=workInProgress.pendingProps;// We should attempt to render the primary children unless this boundary
-// already suspended during this render (`alreadyCaptured` is true).
-var nextState=workInProgress.memoizedState;var nextDidTimeout=void 0;if((workInProgress.effectTag&DidCapture)===NoEffect){// This is the first attempt.
-nextState=null;nextDidTimeout=false;}else{// Something in this boundary's subtree already suspended. Switch to
-// rendering the fallback children.
-nextState={timedOutAt:nextState!==null?nextState.timedOutAt:NoWork};nextDidTimeout=true;workInProgress.effectTag&=~DidCapture;}// This next part is a bit confusing. If the children timeout, we switch to
-// showing the fallback children in place of the "primary" children.
-// However, we don't want to delete the primary children because then their
-// state will be lost (both the React state and the host state, e.g.
-// uncontrolled form inputs). Instead we keep them mounted and hide them.
-// Both the fallback children AND the primary children are rendered at the
-// same time. Once the primary children are un-suspended, we can delete
-// the fallback children — don't need to preserve their state.
-//
-// The two sets of children are siblings in the host environment, but
-// semantically, for purposes of reconciliation, they are two separate sets.
-// So we store them using two fragment fibers.
-//
-// However, we want to avoid allocating extra fibers for every placeholder.
-// They're only necessary when the children time out, because that's the
-// only time when both sets are mounted.
-//
-// So, the extra fragment fibers are only used if the children time out.
-// Otherwise, we render the primary children directly. This requires some
-// custom reconciliation logic to preserve the state of the primary
-// children. It's essentially a very basic form of re-parenting.
-// `child` points to the child fiber. In the normal case, this is the first
-// fiber of the primary children set. In the timed-out case, it's a
-// a fragment fiber containing the primary children.
-var child=void 0;// `next` points to the next fiber React should render. In the normal case,
-// it's the same as `child`: the first fiber of the primary children set.
-// In the timed-out case, it's a fragment fiber containing the *fallback*
-// children -- we skip over the primary children entirely.
-var next=void 0;if(current$$1===null){// This is the initial mount. This branch is pretty simple because there's
-// no previous state that needs to be preserved.
-if(nextDidTimeout){// Mount separate fragments for primary and fallback children.
-var nextFallbackChildren=nextProps.fallback;var primaryChildFragment=createFiberFromFragment(null,mode,NoWork,null);if((workInProgress.mode&ConcurrentMode)===NoContext){// Outside of concurrent mode, we commit the effects from the
-var progressedState=workInProgress.memoizedState;var progressedPrimaryChild=progressedState!==null?workInProgress.child.child:workInProgress.child;primaryChildFragment.child=progressedPrimaryChild;}var fallbackChildFragment=createFiberFromFragment(nextFallbackChildren,mode,renderExpirationTime,null);primaryChildFragment.sibling=fallbackChildFragment;child=primaryChildFragment;// Skip the primary children, and continue working on the
-// fallback children.
-next=fallbackChildFragment;child.return=next.return=workInProgress;}else{// Mount the primary children without an intermediate fragment fiber.
-var nextPrimaryChildren=nextProps.children;child=next=mountChildFibers(workInProgress,null,nextPrimaryChildren,renderExpirationTime);}}else{// This is an update. This branch is more complicated because we need to
-// ensure the state of the primary children is preserved.
-var prevState=current$$1.memoizedState;var prevDidTimeout=prevState!==null;if(prevDidTimeout){// The current tree already timed out. That means each child set is
-var currentPrimaryChildFragment=current$$1.child;var currentFallbackChildFragment=currentPrimaryChildFragment.sibling;if(nextDidTimeout){// Still timed out. Reuse the current primary children by cloning
-// its fragment. We're going to skip over these entirely.
-var _nextFallbackChildren=nextProps.fallback;var _primaryChildFragment=createWorkInProgress(currentPrimaryChildFragment,currentPrimaryChildFragment.pendingProps,NoWork);if((workInProgress.mode&ConcurrentMode)===NoContext){// Outside of concurrent mode, we commit the effects from the
-var _progressedState=workInProgress.memoizedState;var _progressedPrimaryChild=_progressedState!==null?workInProgress.child.child:workInProgress.child;if(_progressedPrimaryChild!==currentPrimaryChildFragment.child){_primaryChildFragment.child=_progressedPrimaryChild;}}// Because primaryChildFragment is a new fiber that we're inserting as the
-// parent of a new tree, we need to set its treeBaseDuration.
-if(enableProfilerTimer&&workInProgress.mode&ProfileMode){// treeBaseDuration is the sum of all the child tree base durations.
-var treeBaseDuration=0;var hiddenChild=_primaryChildFragment.child;while(hiddenChild!==null){treeBaseDuration+=hiddenChild.treeBaseDuration;hiddenChild=hiddenChild.sibling;}_primaryChildFragment.treeBaseDuration=treeBaseDuration;}// Clone the fallback child fragment, too. These we'll continue
-// working on.
-var _fallbackChildFragment=_primaryChildFragment.sibling=createWorkInProgress(currentFallbackChildFragment,_nextFallbackChildren,currentFallbackChildFragment.expirationTime);child=_primaryChildFragment;_primaryChildFragment.childExpirationTime=NoWork;// Skip the primary children, and continue working on the
-// fallback children.
-next=_fallbackChildFragment;child.return=next.return=workInProgress;}else{// No longer suspended. Switch back to showing the primary children,
-// and remove the intermediate fragment fiber.
-var _nextPrimaryChildren=nextProps.children;var currentPrimaryChild=currentPrimaryChildFragment.child;var primaryChild=reconcileChildFibers(workInProgress,currentPrimaryChild,_nextPrimaryChildren,renderExpirationTime);// If this render doesn't suspend, we need to delete the fallback
-// children. Wait until the complete phase, after we've confirmed the
-// fallback is no longer needed.
-// TODO: Would it be better to store the fallback fragment on
-// the stateNode?
-// Continue rendering the children, like we normally do.
-child=next=primaryChild;}}else{// The current tree has not already timed out. That means the primary
-// children are not wrapped in a fragment fiber.
-var _currentPrimaryChild=current$$1.child;if(nextDidTimeout){// Timed out. Wrap the children in a fragment fiber to keep them
-// separate from the fallback children.
-var _nextFallbackChildren2=nextProps.fallback;var _primaryChildFragment2=createFiberFromFragment(// It shouldn't matter what the pending props are because we aren't
-// going to render this fragment.
-null,mode,NoWork,null);_primaryChildFragment2.child=_currentPrimaryChild;// Even though we're creating a new fiber, there are no new children,
-// because we're reusing an already mounted tree. So we don't need to
-// schedule a placement.
-// primaryChildFragment.effectTag |= Placement;
-if((workInProgress.mode&ConcurrentMode)===NoContext){// Outside of concurrent mode, we commit the effects from the
-var _progressedState2=workInProgress.memoizedState;var _progressedPrimaryChild2=_progressedState2!==null?workInProgress.child.child:workInProgress.child;_primaryChildFragment2.child=_progressedPrimaryChild2;}// Because primaryChildFragment is a new fiber that we're inserting as the
-// parent of a new tree, we need to set its treeBaseDuration.
-if(enableProfilerTimer&&workInProgress.mode&ProfileMode){// treeBaseDuration is the sum of all the child tree base durations.
-var _treeBaseDuration=0;var _hiddenChild=_primaryChildFragment2.child;while(_hiddenChild!==null){_treeBaseDuration+=_hiddenChild.treeBaseDuration;_hiddenChild=_hiddenChild.sibling;}_primaryChildFragment2.treeBaseDuration=_treeBaseDuration;}// Create a fragment from the fallback children, too.
-var _fallbackChildFragment2=_primaryChildFragment2.sibling=createFiberFromFragment(_nextFallbackChildren2,mode,renderExpirationTime,null);_fallbackChildFragment2.effectTag|=Placement;child=_primaryChildFragment2;_primaryChildFragment2.childExpirationTime=NoWork;// Skip the primary children, and continue working on the
-// fallback children.
-next=_fallbackChildFragment2;child.return=next.return=workInProgress;}else{// Still haven't timed out.  Continue rendering the children, like we
-// normally do.
-var _nextPrimaryChildren2=nextProps.children;next=child=reconcileChildFibers(workInProgress,_currentPrimaryChild,_nextPrimaryChildren2,renderExpirationTime);}}workInProgress.stateNode=current$$1.stateNode;}workInProgress.memoizedState=nextState;workInProgress.child=child;return next;}function updatePortalComponent(current$$1,workInProgress,renderExpirationTime){pushHostContainer(workInProgress,workInProgress.stateNode.containerInfo);var nextChildren=workInProgress.pendingProps;if(current$$1===null){// Portals are special because we don't append the children during mount
-// but at commit. Therefore we need to track insertions which the normal
-// flow doesn't do during mount. This doesn't happen at the root because
-// the root always starts with a "current" with a null child.
-// TODO: Consider unifying this with how the root works.
-workInProgress.child=reconcileChildFibers(workInProgress,null,nextChildren,renderExpirationTime);}else{reconcileChildren(current$$1,workInProgress,nextChildren,renderExpirationTime);}return workInProgress.child;}function updateContextProvider(current$$1,workInProgress,renderExpirationTime){var providerType=workInProgress.type;var context=providerType._context;var newProps=workInProgress.pendingProps;var oldProps=workInProgress.memoizedProps;var newValue=newProps.value;{var providerPropTypes=workInProgress.type.propTypes;if(providerPropTypes){checkPropTypes(providerPropTypes,newProps,'prop','Context.Provider',getCurrentFiberStackInDev);}}pushProvider(workInProgress,newValue);if(oldProps!==null){var oldValue=oldProps.value;var changedBits=calculateChangedBits(context,newValue,oldValue);if(changedBits===0){// No change. Bailout early if children are the same.
-if(oldProps.children===newProps.children&&!hasContextChanged()){return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}}else{// The context value changed. Search for matching consumers and schedule
-// them to update.
-propagateContextChange(workInProgress,context,changedBits,renderExpirationTime);}}var newChildren=newProps.children;reconcileChildren(current$$1,workInProgress,newChildren,renderExpirationTime);return workInProgress.child;}var hasWarnedAboutUsingContextAsConsumer=false;function updateContextConsumer(current$$1,workInProgress,renderExpirationTime){var context=workInProgress.type;// The logic below for Context differs depending on PROD or DEV mode. In
-// DEV mode, we create a separate object for Context.Consumer that acts
-// like a proxy to Context. This proxy object adds unnecessary code in PROD
-// so we use the old behaviour (Context.Consumer references Context) to
-// reduce size and overhead. The separate object references context via
-// a property called "_context", which also gives us the ability to check
-// in DEV mode if this property exists or not and warn if it does not.
-{if(context._context===undefined){// This may be because it's a Context (rather than a Consumer).
-// Or it may be because it's older React where they're the same thing.
-// We only want to warn if we're sure it's a new React.
-if(context!==context.Consumer){if(!hasWarnedAboutUsingContextAsConsumer){hasWarnedAboutUsingContextAsConsumer=true;warning$1(false,'Rendering <Context> directly is not supported and will be removed in '+'a future major release. Did you mean to render <Context.Consumer> instead?');}}}else{context=context._context;}}var newProps=workInProgress.pendingProps;var render=newProps.children;{!(typeof render==='function')?warningWithoutStack$1(false,'A context consumer was rendered with multiple children, or a child '+"that isn't a function. A context consumer expects a single child "+'that is a function. If you did pass a function, make sure there '+'is no trailing or leading whitespace around it.'):void 0;}prepareToReadContext(workInProgress,renderExpirationTime);var newValue=readContext(context,newProps.unstable_observedBits);var newChildren=void 0;{ReactCurrentOwner$3.current=workInProgress;setCurrentPhase('render');newChildren=render(newValue);setCurrentPhase(null);}// React DevTools reads this flag.
-workInProgress.effectTag|=PerformedWork;reconcileChildren(current$$1,workInProgress,newChildren,renderExpirationTime);return workInProgress.child;}function bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime){cancelWorkTimer(workInProgress);if(current$$1!==null){// Reuse previous context list
-workInProgress.firstContextDependency=current$$1.firstContextDependency;}if(enableProfilerTimer){// Don't update "base" render times for bailouts.
-stopProfilerTimerIfRunning(workInProgress);}// Check if the children have any pending work.
-var childExpirationTime=workInProgress.childExpirationTime;if(childExpirationTime<renderExpirationTime){// The children don't have any work either. We can skip them.
-// TODO: Once we add back resuming, we should check if the children are
-// a work-in-progress set. If so, we need to transfer their effects.
-return null;}else{// This fiber doesn't have work, but its subtree does. Clone the child
-// fibers and continue.
-cloneChildFibers(current$$1,workInProgress);return workInProgress.child;}}function beginWork(current$$1,workInProgress,renderExpirationTime){var updateExpirationTime=workInProgress.expirationTime;if(current$$1!==null){var oldProps=current$$1.memoizedProps;var newProps=workInProgress.pendingProps;if(oldProps===newProps&&!hasContextChanged()&&updateExpirationTime<renderExpirationTime){// This fiber does not have any pending work. Bailout without entering
-// the begin phase. There's still some bookkeeping we that needs to be done
-// in this optimized path, mostly pushing stuff onto the stack.
-switch(workInProgress.tag){case HostRoot:pushHostRootContext(workInProgress);resetHydrationState();break;case HostComponent:pushHostContext(workInProgress);break;case ClassComponent:{var Component=workInProgress.type;if(isContextProvider(Component)){pushContextProvider(workInProgress);}break;}case HostPortal:pushHostContainer(workInProgress,workInProgress.stateNode.containerInfo);break;case ContextProvider:{var newValue=workInProgress.memoizedProps.value;pushProvider(workInProgress,newValue);break;}case Profiler:if(enableProfilerTimer){workInProgress.effectTag|=Update;}break;case SuspenseComponent:{var state=workInProgress.memoizedState;var didTimeout=state!==null;if(didTimeout){// If this boundary is currently timed out, we need to decide
-// whether to retry the primary children, or to skip over it and
-// go straight to the fallback. Check the priority of the primary
-var primaryChildFragment=workInProgress.child;var primaryChildExpirationTime=primaryChildFragment.childExpirationTime;if(primaryChildExpirationTime!==NoWork&&primaryChildExpirationTime>=renderExpirationTime){// The primary children have pending work. Use the normal path
-// to attempt to render the primary children again.
-return updateSuspenseComponent(current$$1,workInProgress,renderExpirationTime);}else{// The primary children do not have pending work with sufficient
-// priority. Bailout.
-var child=bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);if(child!==null){// The fallback children have pending work. Skip over the
-// primary children and work on the fallback.
-return child.sibling;}else{return null;}}}break;}}return bailoutOnAlreadyFinishedWork(current$$1,workInProgress,renderExpirationTime);}}// Before entering the begin phase, clear the expiration time.
-workInProgress.expirationTime=NoWork;switch(workInProgress.tag){case IndeterminateComponent:{var elementType=workInProgress.elementType;return mountIndeterminateComponent(current$$1,workInProgress,elementType,renderExpirationTime);}case LazyComponent:{var _elementType=workInProgress.elementType;return mountLazyComponent(current$$1,workInProgress,_elementType,updateExpirationTime,renderExpirationTime);}case FunctionComponent:{var _Component=workInProgress.type;var unresolvedProps=workInProgress.pendingProps;var resolvedProps=workInProgress.elementType===_Component?unresolvedProps:resolveDefaultProps(_Component,unresolvedProps);return updateFunctionComponent(current$$1,workInProgress,_Component,resolvedProps,renderExpirationTime);}case ClassComponent:{var _Component2=workInProgress.type;var _unresolvedProps=workInProgress.pendingProps;var _resolvedProps=workInProgress.elementType===_Component2?_unresolvedProps:resolveDefaultProps(_Component2,_unresolvedProps);return updateClassComponent(current$$1,workInProgress,_Component2,_resolvedProps,renderExpirationTime);}case HostRoot:return updateHostRoot(current$$1,workInProgress,renderExpirationTime);case HostComponent:return updateHostComponent(current$$1,workInProgress,renderExpirationTime);case HostText:return updateHostText(current$$1,workInProgress);case SuspenseComponent:return updateSuspenseComponent(current$$1,workInProgress,renderExpirationTime);case HostPortal:return updatePortalComponent(current$$1,workInProgress,renderExpirationTime);case ForwardRef:{var type=workInProgress.type;var _unresolvedProps2=workInProgress.pendingProps;var _resolvedProps2=workInProgress.elementType===type?_unresolvedProps2:resolveDefaultProps(type,_unresolvedProps2);return updateForwardRef(current$$1,workInProgress,type,_resolvedProps2,renderExpirationTime);}case Fragment:return updateFragment(current$$1,workInProgress,renderExpirationTime);case Mode:return updateMode(current$$1,workInProgress,renderExpirationTime);case Profiler:return updateProfiler(current$$1,workInProgress,renderExpirationTime);case ContextProvider:return updateContextProvider(current$$1,workInProgress,renderExpirationTime);case ContextConsumer:return updateContextConsumer(current$$1,workInProgress,renderExpirationTime);case MemoComponent:{var _type2=workInProgress.type;var _unresolvedProps3=workInProgress.pendingProps;// Resolve outer props first, then resolve inner props.
-var _resolvedProps3=resolveDefaultProps(_type2,_unresolvedProps3);{if(workInProgress.type!==workInProgress.elementType){var outerPropTypes=_type2.propTypes;if(outerPropTypes){checkPropTypes(outerPropTypes,_resolvedProps3,// Resolved for outer only
-'prop',getComponentName(_type2),getCurrentFiberStackInDev);}}}_resolvedProps3=resolveDefaultProps(_type2.type,_resolvedProps3);return updateMemoComponent(current$$1,workInProgress,_type2,_resolvedProps3,updateExpirationTime,renderExpirationTime);}case SimpleMemoComponent:{return updateSimpleMemoComponent(current$$1,workInProgress,workInProgress.type,workInProgress.pendingProps,updateExpirationTime,renderExpirationTime);}case IncompleteClassComponent:{var _Component3=workInProgress.type;var _unresolvedProps4=workInProgress.pendingProps;var _resolvedProps4=workInProgress.elementType===_Component3?_unresolvedProps4:resolveDefaultProps(_Component3,_unresolvedProps4);return mountIncompleteClassComponent(current$$1,workInProgress,_Component3,_resolvedProps4,renderExpirationTime);}default:invariant(false,'Unknown unit of work tag. This error is likely caused by a bug in React. Please file an issue.');}}function markUpdate(workInProgress){// Tag the fiber with an update effect. This turns a Placement into
+return{value:value,source:source,stack:getStackByFiberInDevAndProd(source)};}function markUpdate(workInProgress){// Tag the fiber with an update effect. This turns a Placement into
 // a PlacementAndUpdate.
 workInProgress.effectTag|=Update;}function markRef$1(workInProgress){workInProgress.effectTag|=Ref;}var appendAllChildren=void 0;var updateHostContainer=void 0;var updateHostComponent$1=void 0;var updateHostText$1=void 0;if(supportsMutation){// Mutation mode
 appendAllChildren=function(parent,workInProgress,needsVisibilityToggle,isHidden){// We only have the top Fiber that was created but we need recurse down its
@@ -39114,17 +39672,16 @@ return workInProgress;}var nextDidTimeout=nextState!==null;var prevDidTimeout=cu
 // the fallback.
 // TODO: Would it be better to store the fallback fragment on
 var currentFallbackChild=current.child.sibling;if(currentFallbackChild!==null){// Deletions go at the beginning of the return fiber's effect list
-var first=workInProgress.firstEffect;if(first!==null){workInProgress.firstEffect=currentFallbackChild;currentFallbackChild.nextEffect=first;}else{workInProgress.firstEffect=workInProgress.lastEffect=currentFallbackChild;currentFallbackChild.nextEffect=null;}currentFallbackChild.effectTag=Deletion;}}// The children either timed out after previously being visible, or
-// were restored after previously being hidden. Schedule an effect
-// to update their visiblity.
-if(//
-nextDidTimeout!==prevDidTimeout||// Outside concurrent mode, the primary children commit in an
-// inconsistent state, even if they are hidden. So if they are hidden,
-// we need to schedule an effect to re-hide them, just in case.
-(workInProgress.effectTag&ConcurrentMode)===NoContext&&nextDidTimeout){workInProgress.effectTag|=Update;}break;}case Fragment:break;case Mode:break;case Profiler:break;case HostPortal:popHostContainer(workInProgress);updateHostContainer(workInProgress);break;case ContextProvider:// Pop provider fiber
+var first=workInProgress.firstEffect;if(first!==null){workInProgress.firstEffect=currentFallbackChild;currentFallbackChild.nextEffect=first;}else{workInProgress.firstEffect=workInProgress.lastEffect=currentFallbackChild;currentFallbackChild.nextEffect=null;}currentFallbackChild.effectTag=Deletion;}}if(nextDidTimeout||prevDidTimeout){// If the children are hidden, or if they were previous hidden, schedule
+// an effect to toggle their visibility. This is also used to attach a
+// retry listener to the promise.
+workInProgress.effectTag|=Update;}break;}case Fragment:break;case Mode:break;case Profiler:break;case HostPortal:popHostContainer(workInProgress);updateHostContainer(workInProgress);break;case ContextProvider:// Pop provider fiber
 popProvider(workInProgress);break;case ContextConsumer:break;case MemoComponent:break;case IncompleteClassComponent:{// Same as class component case. I put it down here so that the tags are
 // sequential to ensure this switch is compiled to a jump table.
-var _Component=workInProgress.type;if(isContextProvider(_Component)){popContext(workInProgress);}break;}default:invariant(false,'Unknown unit of work tag. This error is likely caused by a bug in React. Please file an issue.');}return null;}function shouldCaptureSuspense(workInProgress){// In order to capture, the Suspense component must have a fallback prop.
+var _Component=workInProgress.type;if(isContextProvider(_Component)){popContext(workInProgress);}break;}case DehydratedSuspenseComponent:{if(enableSuspenseServerRenderer){if(current===null){var _wasHydrated2=popHydrationState(workInProgress);!_wasHydrated2?invariant(false,'A dehydrated suspense component was completed without a hydrated node. This is probably a bug in React.'):void 0;skipPastDehydratedSuspenseInstance(workInProgress);}else if((workInProgress.effectTag&DidCapture)===NoEffect){// This boundary did not suspend so it's now hydrated.
+// To handle any future suspense cases, we're going to now upgrade it
+// to a Suspense component. We detach it from the existing current fiber.
+current.alternate=null;workInProgress.alternate=null;workInProgress.tag=SuspenseComponent;workInProgress.memoizedState=null;workInProgress.stateNode=null;}}break;}default:invariant(false,'Unknown unit of work tag. This error is likely caused by a bug in React. Please file an issue.');}return null;}function shouldCaptureSuspense(workInProgress){// In order to capture, the Suspense component must have a fallback prop.
 if(workInProgress.memoizedProps.fallback===undefined){return false;}// If it was the primary children that just suspended, capture and render the
 // fallback. Otherwise, don't capture and bubble to the next boundary.
 var nextState=workInProgress.memoizedState;return nextState===null;}// This module is forked in different environments.
@@ -39149,7 +39706,7 @@ if(errorBoundaryFound&&errorBoundaryName){if(willRetry){errorBoundaryMessage='Re
 // We don't include the original error message and JS stack because the browser
 // has already printed it. Even if the application swallows the error, it is still
 // displayed by the browser thanks to the DEV-only fake event trick in ReactErrorUtils.
-console.error(combinedMessage);}}var didWarnAboutUndefinedSnapshotBeforeUpdate=null;{didWarnAboutUndefinedSnapshotBeforeUpdate=new Set();}var PossiblyWeakSet=typeof WeakSet==='function'?WeakSet:Set;function logError(boundary,errorInfo){var source=errorInfo.source;var stack=errorInfo.stack;if(stack===null&&source!==null){stack=getStackByFiberInDevAndProd(source);}var capturedError={componentName:source!==null?getComponentName(source.type):null,componentStack:stack!==null?stack:'',error:errorInfo.value,errorBoundary:null,errorBoundaryName:null,errorBoundaryFound:false,willRetry:false};if(boundary!==null&&boundary.tag===ClassComponent){capturedError.errorBoundary=boundary.stateNode;capturedError.errorBoundaryName=getComponentName(boundary.type);capturedError.errorBoundaryFound=true;capturedError.willRetry=true;}try{logCapturedError(capturedError);}catch(e){// This method must not throw, or React internal state will get messed up.
+console.error(combinedMessage);}}var didWarnAboutUndefinedSnapshotBeforeUpdate=null;{didWarnAboutUndefinedSnapshotBeforeUpdate=new Set();}var PossiblyWeakSet$1=typeof WeakSet==='function'?WeakSet:Set;function logError(boundary,errorInfo){var source=errorInfo.source;var stack=errorInfo.stack;if(stack===null&&source!==null){stack=getStackByFiberInDevAndProd(source);}var capturedError={componentName:source!==null?getComponentName(source.type):null,componentStack:stack!==null?stack:'',error:errorInfo.value,errorBoundary:null,errorBoundaryName:null,errorBoundaryFound:false,willRetry:false};if(boundary!==null&&boundary.tag===ClassComponent){capturedError.errorBoundary=boundary.stateNode;capturedError.errorBoundaryName=getComponentName(boundary.type);capturedError.errorBoundaryFound=true;capturedError.willRetry=true;}try{logCapturedError(capturedError);}catch(e){// This method must not throw, or React internal state will get messed up.
 // If console.error is overridden, or logCapturedError() shows a dialog that throws,
 // we want to report this error outside of the normal stack as a last resort.
 // https://github.com/facebook/react/issues/13188
@@ -39158,9 +39715,9 @@ function safelyCallComponentWillUnmount(current$$1,instance){{invokeGuardedCallb
 // but instead we rely on them being set during last render.
 // TODO: revisit this when we implement resuming.
 {if(finishedWork.type===finishedWork.elementType&&!didWarnAboutReassigningProps){!(instance.props===finishedWork.memoizedProps)?warning$1(false,'Expected %s props to match memoized props before '+'getSnapshotBeforeUpdate. '+'This might either be because of a bug in React, or because '+'a component reassigns its own `this.props`. '+'Please file an issue.',getComponentName(finishedWork.type)||'instance'):void 0;!(instance.state===finishedWork.memoizedState)?warning$1(false,'Expected %s state to match memoized state before '+'getSnapshotBeforeUpdate. '+'This might either be because of a bug in React, or because '+'a component reassigns its own `this.props`. '+'Please file an issue.',getComponentName(finishedWork.type)||'instance'):void 0;}}var snapshot=instance.getSnapshotBeforeUpdate(finishedWork.elementType===finishedWork.type?prevProps:resolveDefaultProps(finishedWork.type,prevProps),prevState);{var didWarnSet=didWarnAboutUndefinedSnapshotBeforeUpdate;if(snapshot===undefined&&!didWarnSet.has(finishedWork.type)){didWarnSet.add(finishedWork.type);warningWithoutStack$1(false,'%s.getSnapshotBeforeUpdate(): A snapshot value (or null) '+'must be returned. You have returned undefined.',getComponentName(finishedWork.type));}}instance.__reactInternalSnapshotBeforeUpdate=snapshot;stopPhaseTimer();}}return;}case HostRoot:case HostComponent:case HostText:case HostPortal:case IncompleteClassComponent:// Nothing to do for these component types
-return;default:{invariant(false,'This unit of work tag should not have side-effects. This error is likely caused by a bug in React. Please file an issue.');}}}function commitHookEffectList(unmountTag,mountTag,finishedWork){if(!enableHooks){return;}var updateQueue=finishedWork.updateQueue;var lastEffect=updateQueue!==null?updateQueue.lastEffect:null;if(lastEffect!==null){var firstEffect=lastEffect.next;var effect=firstEffect;do{if((effect.tag&unmountTag)!==NoEffect$1){// Unmount
-var destroy=effect.destroy;effect.destroy=null;if(destroy!==null){destroy();}}if((effect.tag&mountTag)!==NoEffect$1){// Mount
-var create=effect.create;var _destroy=create();if(typeof _destroy!=='function'){{if(_destroy!==null&&_destroy!==undefined){warningWithoutStack$1(false,'useEffect function must return a cleanup function or '+'nothing.%s%s',typeof _destroy.then==='function'?'\n\nIt looks like you wrote useEffect(async () => ...) or returned a Promise. '+'Instead, you may write an async function separately '+'and then call it from inside the effect:\n\n'+'async function fetchComment(commentId) {\n'+'  // You can await here\n'+'}\n\n'+'useEffect(() => {\n'+'  fetchComment(commentId);\n'+'}, [commentId]);\n\n'+'In the future, React will provide a more idiomatic solution for data fetching '+"that doesn't involve writing effects manually.":'',getStackByFiberInDevAndProd(finishedWork));}}_destroy=null;}effect.destroy=_destroy;}effect=effect.next;}while(effect!==firstEffect);}}function commitPassiveHookEffects(finishedWork){commitHookEffectList(UnmountPassive,NoEffect$1,finishedWork);commitHookEffectList(NoEffect$1,MountPassive,finishedWork);}function commitLifeCycles(finishedRoot,current$$1,finishedWork,committedExpirationTime){switch(finishedWork.tag){case FunctionComponent:case ForwardRef:case SimpleMemoComponent:{commitHookEffectList(UnmountLayout,MountLayout,finishedWork);break;}case ClassComponent:{var instance=finishedWork.stateNode;if(finishedWork.effectTag&Update){if(current$$1===null){startPhaseTimer(finishedWork,'componentDidMount');// We could update instance props and state here,
+return;default:{invariant(false,'This unit of work tag should not have side-effects. This error is likely caused by a bug in React. Please file an issue.');}}}function commitHookEffectList(unmountTag,mountTag,finishedWork){var updateQueue=finishedWork.updateQueue;var lastEffect=updateQueue!==null?updateQueue.lastEffect:null;if(lastEffect!==null){var firstEffect=lastEffect.next;var effect=firstEffect;do{if((effect.tag&unmountTag)!==NoEffect$1){// Unmount
+var destroy=effect.destroy;effect.destroy=undefined;if(destroy!==undefined){destroy();}}if((effect.tag&mountTag)!==NoEffect$1){// Mount
+var create=effect.create;effect.destroy=create();{var _destroy=effect.destroy;if(_destroy!==undefined&&typeof _destroy!=='function'){var addendum=void 0;if(_destroy===null){addendum=' You returned null. If your effect does not require clean '+'up, return undefined (or nothing).';}else if(typeof _destroy.then==='function'){addendum='\n\nIt looks like you wrote useEffect(async () => ...) or returned a Promise. '+'Instead, write the async function inside your effect '+'and call it immediately:\n\n'+'useEffect(() => {\n'+'  async function fetchData() {\n'+'    // You can await here\n'+'    const response = await MyAPI.getData(someId);\n'+'    // ...\n'+'  }\n'+'  fetchData();\n'+'}, [someId]); // Or [] if effect doesn\'t need props or state\n\n'+'Learn more about data fetching with Hooks: https://fb.me/react-hooks-data-fetching';}else{addendum=' You returned: '+_destroy;}warningWithoutStack$1(false,'An effect function must not return anything besides a function, '+'which is used for clean-up.%s%s',addendum,getStackByFiberInDevAndProd(finishedWork));}}}effect=effect.next;}while(effect!==firstEffect);}}function commitPassiveHookEffects(finishedWork){commitHookEffectList(UnmountPassive,NoEffect$1,finishedWork);commitHookEffectList(NoEffect$1,MountPassive,finishedWork);}function commitLifeCycles(finishedRoot,current$$1,finishedWork,committedExpirationTime){switch(finishedWork.tag){case FunctionComponent:case ForwardRef:case SimpleMemoComponent:{commitHookEffectList(UnmountLayout,MountLayout,finishedWork);break;}case ClassComponent:{var instance=finishedWork.stateNode;if(finishedWork.effectTag&Update){if(current$$1===null){startPhaseTimer(finishedWork,'componentDidMount');// We could update instance props and state here,
 // but instead we rely on them being set during last render.
 // TODO: revisit this when we implement resuming.
 {if(finishedWork.type===finishedWork.elementType&&!didWarnAboutReassigningProps){!(instance.props===finishedWork.memoizedProps)?warning$1(false,'Expected %s props to match memoized props before '+'componentDidMount. '+'This might either be because of a bug in React, or because '+'a component reassigns its own `this.props`. '+'Please file an issue.',getComponentName(finishedWork.type)||'instance'):void 0;!(instance.state===finishedWork.memoizedState)?warning$1(false,'Expected %s state to match memoized state before '+'componentDidMount. '+'This might either be because of a bug in React, or because '+'a component reassigns its own `this.props`. '+'Please file an issue.',getComponentName(finishedWork.type)||'instance'):void 0;}}instance.componentDidMount();stopPhaseTimer();}else{var prevProps=finishedWork.elementType===finishedWork.type?current$$1.memoizedProps:resolveDefaultProps(finishedWork.type,current$$1.memoizedProps);var prevState=current$$1.memoizedState;startPhaseTimer(finishedWork,'componentDidUpdate');// We could update instance props and state here,
@@ -39175,12 +39732,12 @@ commitUpdateQueue(finishedWork,updateQueue,instance,committedExpirationTime);}re
 // aka when there is no current/alternate.
 if(current$$1===null&&finishedWork.effectTag&Update){var type=finishedWork.type;var props=finishedWork.memoizedProps;commitMount(_instance2,type,props,finishedWork);}return;}case HostText:{// We have no life-cycles associated with text.
 return;}case HostPortal:{// We have no life-cycles associated with portals.
-return;}case Profiler:{if(enableProfilerTimer){var onRender=finishedWork.memoizedProps.onRender;if(enableSchedulerTracing){onRender(finishedWork.memoizedProps.id,current$$1===null?'mount':'update',finishedWork.actualDuration,finishedWork.treeBaseDuration,finishedWork.actualStartTime,getCommitTime(),finishedRoot.memoizedInteractions);}else{onRender(finishedWork.memoizedProps.id,current$$1===null?'mount':'update',finishedWork.actualDuration,finishedWork.treeBaseDuration,finishedWork.actualStartTime,getCommitTime());}}return;}case SuspenseComponent:break;case IncompleteClassComponent:break;default:{invariant(false,'This unit of work tag should not have side-effects. This error is likely caused by a bug in React. Please file an issue.');}}}function hideOrUnhideAllChildren(finishedWork,isHidden){if(supportsMutation){// We only have the top Fiber that was inserted but we need recurse down its
+return;}case Profiler:{if(enableProfilerTimer){var onRender=finishedWork.memoizedProps.onRender;if(enableSchedulerTracing){onRender(finishedWork.memoizedProps.id,current$$1===null?'mount':'update',finishedWork.actualDuration,finishedWork.treeBaseDuration,finishedWork.actualStartTime,getCommitTime(),finishedRoot.memoizedInteractions);}else{onRender(finishedWork.memoizedProps.id,current$$1===null?'mount':'update',finishedWork.actualDuration,finishedWork.treeBaseDuration,finishedWork.actualStartTime,getCommitTime());}}return;}case SuspenseComponent:break;case IncompleteClassComponent:break;default:{invariant(false,'This unit of work tag should not have side-effects. This error is likely caused by a bug in React. Please file an issue.');}}}function hideOrUnhideAllChildren(finishedWork,isHidden){if(supportsMutation){// We only have the top Fiber that was inserted but we need to recurse down its
 var node=finishedWork;while(true){if(node.tag===HostComponent){var instance=node.stateNode;if(isHidden){hideInstance(instance);}else{unhideInstance(node.stateNode,node.memoizedProps);}}else if(node.tag===HostText){var _instance3=node.stateNode;if(isHidden){hideTextInstance(_instance3);}else{unhideTextInstance(_instance3,node.memoizedProps);}}else if(node.tag===SuspenseComponent&&node.memoizedState!==null){// Found a nested Suspense component that timed out. Skip over the
 var fallbackChildFragment=node.child.sibling;fallbackChildFragment.return=node;node=fallbackChildFragment;continue;}else if(node.child!==null){node.child.return=node;node=node.child;continue;}if(node===finishedWork){return;}while(node.sibling===null){if(node.return===null||node.return===finishedWork){return;}node=node.return;}node.sibling.return=node.return;node=node.sibling;}}}function commitAttachRef(finishedWork){var ref=finishedWork.ref;if(ref!==null){var instance=finishedWork.stateNode;var instanceToUse=void 0;switch(finishedWork.tag){case HostComponent:instanceToUse=getPublicInstance(instance);break;default:instanceToUse=instance;}if(typeof ref==='function'){ref(instanceToUse);}else{{if(!ref.hasOwnProperty('current')){warningWithoutStack$1(false,'Unexpected ref object provided for %s. '+'Use either a ref-setter function or React.createRef().%s',getComponentName(finishedWork.type),getStackByFiberInDevAndProd(finishedWork));}}ref.current=instanceToUse;}}}function commitDetachRef(current$$1){var currentRef=current$$1.ref;if(currentRef!==null){if(typeof currentRef==='function'){currentRef(null);}else{currentRef.current=null;}}}// User-originating errors (lifecycles and refs) should not interrupt
 // deletion, so don't let them throw. Host-originating errors should
 // interrupt deletion, so it's okay
-function commitUnmount(current$$1){onCommitUnmount(current$$1);switch(current$$1.tag){case FunctionComponent:case ForwardRef:case MemoComponent:case SimpleMemoComponent:{var updateQueue=current$$1.updateQueue;if(updateQueue!==null){var lastEffect=updateQueue.lastEffect;if(lastEffect!==null){var firstEffect=lastEffect.next;var effect=firstEffect;do{var destroy=effect.destroy;if(destroy!==null){safelyCallDestroy(current$$1,destroy);}effect=effect.next;}while(effect!==firstEffect);}}break;}case ClassComponent:{safelyDetachRef(current$$1);var instance=current$$1.stateNode;if(typeof instance.componentWillUnmount==='function'){safelyCallComponentWillUnmount(current$$1,instance);}return;}case HostComponent:{safelyDetachRef(current$$1);return;}case HostPortal:{// TODO: this is recursive.
+function commitUnmount(current$$1){onCommitUnmount(current$$1);switch(current$$1.tag){case FunctionComponent:case ForwardRef:case MemoComponent:case SimpleMemoComponent:{var updateQueue=current$$1.updateQueue;if(updateQueue!==null){var lastEffect=updateQueue.lastEffect;if(lastEffect!==null){var firstEffect=lastEffect.next;var effect=firstEffect;do{var destroy=effect.destroy;if(destroy!==undefined){safelyCallDestroy(current$$1,destroy);}effect=effect.next;}while(effect!==firstEffect);}}break;}case ClassComponent:{safelyDetachRef(current$$1);var instance=current$$1.stateNode;if(typeof instance.componentWillUnmount==='function'){safelyCallComponentWillUnmount(current$$1,instance);}return;}case HostComponent:{safelyDetachRef(current$$1);return;}case HostPortal:{// TODO: this is recursive.
 // We are also not using this parent because
 // the portal will get pushed immediately.
 if(supportsMutation){unmountHostComponents(current$$1);}else if(supportsPersistence){emptyPortalContainer(current$$1);}return;}}}function commitNestedUnmounts(root){// While we're inside a removed host node we don't want to call
@@ -39202,7 +39759,7 @@ current$$1.return=null;current$$1.child=null;current$$1.memoizedState=null;curre
 var node=fiber;siblings:while(true){// If we didn't find anything, let's try the next sibling.
 while(node.sibling===null){if(node.return===null||isHostParent(node.return)){// If we pop out of the root or hit the parent the fiber we are the
 // last sibling.
-return null;}node=node.return;}node.sibling.return=node.return;node=node.sibling;while(node.tag!==HostComponent&&node.tag!==HostText){// If it is not host node and, we might have a host node inside it.
+return null;}node=node.return;}node.sibling.return=node.return;node=node.sibling;while(node.tag!==HostComponent&&node.tag!==HostText&&node.tag!==DehydratedSuspenseComponent){// If it is not host node and, we might have a host node inside it.
 // Try to search down until we find one.
 if(node.effectTag&Placement){// If we don't have a child, try the siblings instead.
 continue siblings;}// If we don't have a child, try the siblings instead.
@@ -39213,22 +39770,23 @@ return node.stateNode;}}}function commitPlacement(finishedWork){if(!supportsMuta
 var parentFiber=getHostParentFiber(finishedWork);// Note: these two variables *must* always be updated together.
 var parent=void 0;var isContainer=void 0;switch(parentFiber.tag){case HostComponent:parent=parentFiber.stateNode;isContainer=false;break;case HostRoot:parent=parentFiber.stateNode.containerInfo;isContainer=true;break;case HostPortal:parent=parentFiber.stateNode.containerInfo;isContainer=true;break;default:invariant(false,'Invalid host parent fiber. This error is likely caused by a bug in React. Please file an issue.');}if(parentFiber.effectTag&ContentReset){// Reset the text content of the parent before doing any insertions
 resetTextContent(parent);// Clear ContentReset from the effect tag
-parentFiber.effectTag&=~ContentReset;}var before=getHostSibling(finishedWork);// We only have the top Fiber that was inserted but we need recurse down its
+parentFiber.effectTag&=~ContentReset;}var before=getHostSibling(finishedWork);// We only have the top Fiber that was inserted but we need to recurse down its
 // children to find all the terminal nodes.
 var node=finishedWork;while(true){if(node.tag===HostComponent||node.tag===HostText){if(before){if(isContainer){insertInContainerBefore(parent,node.stateNode,before);}else{insertBefore(parent,node.stateNode,before);}}else{if(isContainer){appendChildToContainer(parent,node.stateNode);}else{appendChild(parent,node.stateNode);}}}else if(node.tag===HostPortal){// If the insertion itself is a portal, then we don't want to traverse
 // down its children. Instead, we'll get insertions from each child in
 // the portal directly.
-}else if(node.child!==null){node.child.return=node;node=node.child;continue;}if(node===finishedWork){return;}while(node.sibling===null){if(node.return===null||node.return===finishedWork){return;}node=node.return;}node.sibling.return=node.return;node=node.sibling;}}function unmountHostComponents(current$$1){// We only have the top Fiber that was deleted but we need recurse down its
+}else if(node.child!==null){node.child.return=node;node=node.child;continue;}if(node===finishedWork){return;}while(node.sibling===null){if(node.return===null||node.return===finishedWork){return;}node=node.return;}node.sibling.return=node.return;node=node.sibling;}}function unmountHostComponents(current$$1){// We only have the top Fiber that was deleted but we need to recurse down its
 var node=current$$1;// Each iteration, currentParent is populated with node's host parent if not
 // currentParentIsValid.
 var currentParentIsValid=false;// Note: these two variables *must* always be updated together.
 var currentParent=void 0;var currentParentIsContainer=void 0;while(true){if(!currentParentIsValid){var parent=node.return;findParent:while(true){!(parent!==null)?invariant(false,'Expected to find a host parent. This error is likely caused by a bug in React. Please file an issue.'):void 0;switch(parent.tag){case HostComponent:currentParent=parent.stateNode;currentParentIsContainer=false;break findParent;case HostRoot:currentParent=parent.stateNode.containerInfo;currentParentIsContainer=true;break findParent;case HostPortal:currentParent=parent.stateNode.containerInfo;currentParentIsContainer=true;break findParent;}parent=parent.return;}currentParentIsValid=true;}if(node.tag===HostComponent||node.tag===HostText){commitNestedUnmounts(node);// After all the children have unmounted, it is now safe to remove the
 // node from the tree.
 if(currentParentIsContainer){removeChildFromContainer(currentParent,node.stateNode);}else{removeChild(currentParent,node.stateNode);}// Don't visit children because we already visited them.
-}else if(node.tag===HostPortal){// When we go into a portal, it becomes the parent to remove from.
+}else if(enableSuspenseServerRenderer&&node.tag===DehydratedSuspenseComponent){// Delete the dehydrated suspense boundary and all of its content.
+if(currentParentIsContainer){clearSuspenseBoundaryFromContainer(currentParent,node.stateNode);}else{clearSuspenseBoundary(currentParent,node.stateNode);}}else if(node.tag===HostPortal){if(node.child!==null){// When we go into a portal, it becomes the parent to remove from.
 // We will reassign it back when we pop the portal on the way up.
 currentParent=node.stateNode.containerInfo;currentParentIsContainer=true;// Visit children because portals might contain host components.
-if(node.child!==null){node.child.return=node;node=node.child;continue;}}else{commitUnmount(node);// Visit children because we may find more host components below.
+node.child.return=node;node=node.child;continue;}}else{commitUnmount(node);// Visit children because we may find more host components below.
 if(node.child!==null){node.child.return=node;node=node.child;continue;}}if(node===current$$1){return;}while(node.sibling===null){if(node.return===null||node.return===current$$1){return;}node=node.return;if(node.tag===HostPortal){// When we go out of the portal, we need to restore the parent.
 // Since we don't keep a stack of them, we will search for it.
 currentParentIsValid=false;}}node.sibling.return=node.return;node=node.sibling;}}function commitDeletion(current$$1){if(supportsMutation){// Recursively delete all host nodes from the parent.
@@ -39252,8 +39810,8 @@ var oldText=current$$1!==null?current$$1.memoizedProps:newText;commitTextUpdate(
 newState.timedOutAt=requestCurrentTime();}}if(primaryChildParent!==null){hideOrUnhideAllChildren(primaryChildParent,newDidTimeout);}// If this boundary just timed out, then it will have a set of thenables.
 // For each thenable, attach a listener so that when it resolves, React
 // attempts to re-render the boundary in the primary (pre-timeout) state.
-var thenables=finishedWork.updateQueue;if(thenables!==null){finishedWork.updateQueue=null;var retryCache=finishedWork.stateNode;if(retryCache===null){retryCache=finishedWork.stateNode=new PossiblyWeakSet();}thenables.forEach(function(thenable){// Memoize using the boundary fiber to prevent redundant listeners.
-var retry=retryTimedOutBoundary.bind(null,finishedWork,thenable);if(enableSchedulerTracing){retry=tracing.unstable_wrap(retry);}if(!retryCache.has(thenable)){retryCache.add(thenable);thenable.then(retry,retry);}});}return;}case IncompleteClassComponent:{return;}default:{invariant(false,'This unit of work tag should not have side-effects. This error is likely caused by a bug in React. Please file an issue.');}}}function commitResetTextContent(current$$1){if(!supportsMutation){return;}resetTextContent(current$$1.stateNode);}var PossiblyWeakMap=typeof WeakMap==='function'?WeakMap:Map;function createRootErrorUpdate(fiber,errorInfo,expirationTime){var update=createUpdate(expirationTime);// Unmount the root by rendering null.
+var thenables=finishedWork.updateQueue;if(thenables!==null){finishedWork.updateQueue=null;var retryCache=finishedWork.stateNode;if(retryCache===null){retryCache=finishedWork.stateNode=new PossiblyWeakSet$1();}thenables.forEach(function(thenable){// Memoize using the boundary fiber to prevent redundant listeners.
+var retry=retryTimedOutBoundary.bind(null,finishedWork,thenable);if(enableSchedulerTracing){retry=tracing.unstable_wrap(retry);}if(!retryCache.has(thenable)){retryCache.add(thenable);thenable.then(retry,retry);}});}return;}case IncompleteClassComponent:{return;}default:{invariant(false,'This unit of work tag should not have side-effects. This error is likely caused by a bug in React. Please file an issue.');}}}function commitResetTextContent(current$$1){if(!supportsMutation){return;}resetTextContent(current$$1.stateNode);}var PossiblyWeakSet=typeof WeakSet==='function'?WeakSet:Set;var PossiblyWeakMap=typeof WeakMap==='function'?WeakMap:Map;function createRootErrorUpdate(fiber,errorInfo,expirationTime){var update=createUpdate(expirationTime);// Unmount the root by rendering null.
 update.tag=CaptureUpdate;// Caution: React DevTools currently depends on this property
 // being called "element".
 update.payload={element:null};var error=errorInfo.value;update.callback=function(){onUncaughtError(error);logError(fiber,errorInfo);};return update;}function createClassErrorUpdate(fiber,errorInfo,expirationTime){var update=createUpdate(expirationTime);update.tag=CaptureUpdate;var getDerivedStateFromError=fiber.type.getDerivedStateFromError;if(typeof getDerivedStateFromError==='function'){var error=errorInfo.value;update.payload=function(){return getDerivedStateFromError(error);};}var inst=fiber.stateNode;if(inst!==null&&typeof inst.componentDidCatch==='function'){update.callback=function callback(){if(typeof getDerivedStateFromError!=='function'){// To preserve the preexisting retry behavior of error boundaries,
@@ -39264,7 +39822,11 @@ update.payload={element:null};var error=errorInfo.value;update.callback=function
 markLegacyErrorBoundaryAsFailed(this);}var error=errorInfo.value;var stack=errorInfo.stack;logError(fiber,errorInfo);this.componentDidCatch(error,{componentStack:stack!==null?stack:''});{if(typeof getDerivedStateFromError!=='function'){// If componentDidCatch is the only error boundary method defined,
 // then it needs to call setState to recover from errors.
 // If no state update is scheduled then the boundary will swallow the error.
-!(fiber.expirationTime===Sync)?warningWithoutStack$1(false,'%s: Error boundaries should implement getDerivedStateFromError(). '+'In that method, return a state update to display an error message or fallback UI.',getComponentName(fiber.type)||'Unknown'):void 0;}}};}return update;}function throwException(root,returnFiber,sourceFiber,value,renderExpirationTime){// The source fiber did not complete.
+!(fiber.expirationTime===Sync)?warningWithoutStack$1(false,'%s: Error boundaries should implement getDerivedStateFromError(). '+'In that method, return a state update to display an error message or fallback UI.',getComponentName(fiber.type)||'Unknown'):void 0;}}};}return update;}function attachPingListener(root,renderExpirationTime,thenable){// Attach a listener to the promise to "ping" the root and retry. But
+// only if one does not already exist for the current render expiration
+// time (which acts like a "thread ID" here).
+var pingCache=root.pingCache;var threadIDs=void 0;if(pingCache===null){pingCache=root.pingCache=new PossiblyWeakMap();threadIDs=new Set();pingCache.set(thenable,threadIDs);}else{threadIDs=pingCache.get(thenable);if(threadIDs===undefined){threadIDs=new Set();pingCache.set(thenable,threadIDs);}}if(!threadIDs.has(renderExpirationTime)){// Memoize using the thread ID to prevent redundant listeners.
+threadIDs.add(renderExpirationTime);var ping=pingSuspendedRoot.bind(null,root,thenable,renderExpirationTime);if(enableSchedulerTracing){ping=tracing.unstable_wrap(ping);}thenable.then(ping,ping);}}function throwException(root,returnFiber,sourceFiber,value,renderExpirationTime){// The source fiber did not complete.
 sourceFiber.effectTag|=Incomplete;// Its effect list is no longer valid.
 sourceFiber.firstEffect=sourceFiber.lastEffect=null;if(value!==null&&typeof value==='object'&&typeof value.then==='function'){// This is a thenable.
 var thenable=value;// Find the earliest timeout threshold of all the placeholders in the
@@ -39275,10 +39837,13 @@ var thenable=value;// Find the earliest timeout threshold of all the placeholder
 var _workInProgress=returnFiber;var earliestTimeoutMs=-1;var startTimeMs=-1;do{if(_workInProgress.tag===SuspenseComponent){var current$$1=_workInProgress.alternate;if(current$$1!==null){var currentState=current$$1.memoizedState;if(currentState!==null){// Reached a boundary that already timed out. Do not search
 // any further.
 var timedOutAt=currentState.timedOutAt;startTimeMs=expirationTimeToMs(timedOutAt);// Do not search any further.
-break;}}var timeoutPropMs=_workInProgress.pendingProps.maxDuration;if(typeof timeoutPropMs==='number'){if(timeoutPropMs<=0){earliestTimeoutMs=0;}else if(earliestTimeoutMs===-1||timeoutPropMs<earliestTimeoutMs){earliestTimeoutMs=timeoutPropMs;}}}_workInProgress=_workInProgress.return;}while(_workInProgress!==null);// Schedule the nearest Suspense to re-render the timed out view.
+break;}}var timeoutPropMs=_workInProgress.pendingProps.maxDuration;if(typeof timeoutPropMs==='number'){if(timeoutPropMs<=0){earliestTimeoutMs=0;}else if(earliestTimeoutMs===-1||timeoutPropMs<earliestTimeoutMs){earliestTimeoutMs=timeoutPropMs;}}}// If there is a DehydratedSuspenseComponent we don't have to do anything because
+// if something suspends inside it, we will simply leave that as dehydrated. It
+// will never timeout.
+_workInProgress=_workInProgress.return;}while(_workInProgress!==null);// Schedule the nearest Suspense to re-render the timed out view.
 _workInProgress=returnFiber;do{if(_workInProgress.tag===SuspenseComponent&&shouldCaptureSuspense(_workInProgress)){// Found the nearest boundary.
 // Stash the promise on the boundary fiber. If the boundary times out, we'll
-var thenables=_workInProgress.updateQueue;if(thenables===null){_workInProgress.updateQueue=new Set([thenable]);}else{thenables.add(thenable);}// If the boundary is outside of concurrent mode, we should *not*
+var thenables=_workInProgress.updateQueue;if(thenables===null){var updateQueue=new Set();updateQueue.add(thenable);_workInProgress.updateQueue=updateQueue;}else{thenables.add(thenable);}// If the boundary is outside of concurrent mode, we should *not*
 // suspend the commit. Pretend as if the suspended component rendered
 // null and keep rendering. In the commit phase, we'll schedule a
 // subsequent synchronous update to re-render the Suspense.
@@ -39300,11 +39865,7 @@ var update=createUpdate(Sync);update.tag=ForceUpdate;enqueueUpdate(sourceFiber,u
 sourceFiber.expirationTime=Sync;// Exit without suspending.
 return;}// Confirmed that the boundary is in a concurrent mode tree. Continue
 // with the normal suspend path.
-// Attach a listener to the promise to "ping" the root and retry. But
-// only if one does not already exist for the current render expiration
-// time (which acts like a "thread ID" here).
-var pingCache=root.pingCache;var threadIDs=void 0;if(pingCache===null){pingCache=root.pingCache=new PossiblyWeakMap();threadIDs=new Set();pingCache.set(thenable,threadIDs);}else{threadIDs=pingCache.get(thenable);if(threadIDs===undefined){threadIDs=new Set();pingCache.set(thenable,threadIDs);}}if(!threadIDs.has(renderExpirationTime)){// Memoize using the thread ID to prevent redundant listeners.
-threadIDs.add(renderExpirationTime);var ping=pingSuspendedRoot.bind(null,root,thenable,renderExpirationTime);if(enableSchedulerTracing){ping=tracing.unstable_wrap(ping);}thenable.then(ping,ping);}var absoluteTimeoutMs=void 0;if(earliestTimeoutMs===-1){// If no explicit threshold is given, default to an abitrarily large
+attachPingListener(root,renderExpirationTime,thenable);var absoluteTimeoutMs=void 0;if(earliestTimeoutMs===-1){// If no explicit threshold is given, default to an arbitrarily large
 // value. The actual size doesn't matter because the threshold for the
 // whole tree will be clamped to the expiration time.
 absoluteTimeoutMs=maxSigned31BitInt;}else{if(startTimeMs===-1){// This suspend happened outside of any already timed-out
@@ -39320,7 +39881,9 @@ var earliestExpirationTime=findEarliestOutstandingPriorityLevel(root,renderExpir
 // After completing the root, we'll take the largest of all the
 // suspended fiber's timeouts and use it to compute a timeout for the
 // whole tree.
-renderDidSuspend(root,absoluteTimeoutMs,renderExpirationTime);_workInProgress.effectTag|=ShouldCapture;_workInProgress.expirationTime=renderExpirationTime;return;}// This boundary already captured during this render. Continue to the next
+renderDidSuspend(root,absoluteTimeoutMs,renderExpirationTime);_workInProgress.effectTag|=ShouldCapture;_workInProgress.expirationTime=renderExpirationTime;return;}else if(enableSuspenseServerRenderer&&_workInProgress.tag===DehydratedSuspenseComponent){attachPingListener(root,renderExpirationTime,thenable);// Since we already have a current fiber, we can eagerly add a retry listener.
+var retryCache=_workInProgress.memoizedState;if(retryCache===null){retryCache=_workInProgress.memoizedState=new PossiblyWeakSet();var _current=_workInProgress.alternate;!_current?invariant(false,'A dehydrated suspense boundary must commit before trying to render. This is probably a bug in React.'):void 0;_current.memoizedState=retryCache;}// Memoize using the boundary fiber to prevent redundant listeners.
+if(!retryCache.has(thenable)){retryCache.add(thenable);var retry=retryTimedOutBoundary.bind(null,_workInProgress,thenable);if(enableSchedulerTracing){retry=tracing.unstable_wrap(retry);}thenable.then(retry,retry);}_workInProgress.effectTag|=ShouldCapture;_workInProgress.expirationTime=renderExpirationTime;return;}// This boundary already captured during this render. Continue to the next
 // boundary.
 _workInProgress=_workInProgress.return;}while(_workInProgress!==null);// No boundary was found. Fallthrough to error mode.
 // TODO: Use invariant so the message is stripped in prod?
@@ -39329,16 +39892,16 @@ value=new Error((getComponentName(sourceFiber.type)||'A React component')+' susp
 // as an error.
 renderDidError();value=createCapturedValue(value,sourceFiber);var workInProgress=returnFiber;do{switch(workInProgress.tag){case HostRoot:{var _errorInfo=value;workInProgress.effectTag|=ShouldCapture;workInProgress.expirationTime=renderExpirationTime;var _update=createRootErrorUpdate(workInProgress,_errorInfo,renderExpirationTime);enqueueCapturedUpdate(workInProgress,_update);return;}case ClassComponent:// Capture and retry
 var errorInfo=value;var ctor=workInProgress.type;var instance=workInProgress.stateNode;if((workInProgress.effectTag&DidCapture)===NoEffect&&(typeof ctor.getDerivedStateFromError==='function'||instance!==null&&typeof instance.componentDidCatch==='function'&&!isAlreadyFailedLegacyErrorBoundary(instance))){workInProgress.effectTag|=ShouldCapture;workInProgress.expirationTime=renderExpirationTime;// Schedule the error boundary to re-render using updated state
-var _update2=createClassErrorUpdate(workInProgress,errorInfo,renderExpirationTime);enqueueCapturedUpdate(workInProgress,_update2);return;}break;default:break;}workInProgress=workInProgress.return;}while(workInProgress!==null);}function unwindWork(workInProgress,renderExpirationTime){switch(workInProgress.tag){case ClassComponent:{var Component=workInProgress.type;if(isContextProvider(Component)){popContext(workInProgress);}var effectTag=workInProgress.effectTag;if(effectTag&ShouldCapture){workInProgress.effectTag=effectTag&~ShouldCapture|DidCapture;return workInProgress;}return null;}case HostRoot:{popHostContainer(workInProgress);popTopLevelContextObject(workInProgress);var _effectTag=workInProgress.effectTag;!((_effectTag&DidCapture)===NoEffect)?invariant(false,'The root failed to unmount after an error. This is likely a bug in React. Please file an issue.'):void 0;workInProgress.effectTag=_effectTag&~ShouldCapture|DidCapture;return workInProgress;}case HostComponent:{popHostContext(workInProgress);return null;}case SuspenseComponent:{var _effectTag2=workInProgress.effectTag;if(_effectTag2&ShouldCapture){workInProgress.effectTag=_effectTag2&~ShouldCapture|DidCapture;// Captured a suspense effect. Re-render the boundary.
-return workInProgress;}return null;}case HostPortal:popHostContainer(workInProgress);return null;case ContextProvider:popProvider(workInProgress);return null;default:return null;}}function unwindInterruptedWork(interruptedWork){switch(interruptedWork.tag){case ClassComponent:{var childContextTypes=interruptedWork.type.childContextTypes;if(childContextTypes!==null&&childContextTypes!==undefined){popContext(interruptedWork);}break;}case HostRoot:{popHostContainer(interruptedWork);popTopLevelContextObject(interruptedWork);break;}case HostComponent:{popHostContext(interruptedWork);break;}case HostPortal:popHostContainer(interruptedWork);break;case ContextProvider:popProvider(interruptedWork);break;default:break;}}var Dispatcher={readContext:readContext,useCallback:useCallback,useContext:useContext,useEffect:useEffect,useImperativeMethods:useImperativeMethods,useLayoutEffect:useLayoutEffect,useMemo:useMemo,useReducer:useReducer,useRef:useRef,useState:useState};var DispatcherWithoutHooks={readContext:readContext};var ReactCurrentOwner$2=ReactSharedInternals.ReactCurrentOwner;var didWarnAboutStateTransition=void 0;var didWarnSetStateChildContext=void 0;var warnAboutUpdateOnUnmounted=void 0;var warnAboutInvalidUpdates=void 0;if(enableSchedulerTracing){// Provide explicit error message when production+profiling bundle of e.g. react-dom
+var _update2=createClassErrorUpdate(workInProgress,errorInfo,renderExpirationTime);enqueueCapturedUpdate(workInProgress,_update2);return;}break;default:break;}workInProgress=workInProgress.return;}while(workInProgress!==null);}function unwindWork(workInProgress,renderExpirationTime){switch(workInProgress.tag){case ClassComponent:{var Component=workInProgress.type;if(isContextProvider(Component)){popContext(workInProgress);}var effectTag=workInProgress.effectTag;if(effectTag&ShouldCapture){workInProgress.effectTag=effectTag&~ShouldCapture|DidCapture;return workInProgress;}return null;}case HostRoot:{popHostContainer(workInProgress);popTopLevelContextObject(workInProgress);var _effectTag=workInProgress.effectTag;!((_effectTag&DidCapture)===NoEffect)?invariant(false,'The root failed to unmount after an error. This is likely a bug in React. Please file an issue.'):void 0;workInProgress.effectTag=_effectTag&~ShouldCapture|DidCapture;return workInProgress;}case HostComponent:{// TODO: popHydrationState
+popHostContext(workInProgress);return null;}case SuspenseComponent:{var _effectTag2=workInProgress.effectTag;if(_effectTag2&ShouldCapture){workInProgress.effectTag=_effectTag2&~ShouldCapture|DidCapture;// Captured a suspense effect. Re-render the boundary.
+return workInProgress;}return null;}case DehydratedSuspenseComponent:{if(enableSuspenseServerRenderer){// TODO: popHydrationState
+var _effectTag3=workInProgress.effectTag;if(_effectTag3&ShouldCapture){workInProgress.effectTag=_effectTag3&~ShouldCapture|DidCapture;// Captured a suspense effect. Re-render the boundary.
+return workInProgress;}}return null;}case HostPortal:popHostContainer(workInProgress);return null;case ContextProvider:popProvider(workInProgress);return null;default:return null;}}function unwindInterruptedWork(interruptedWork){switch(interruptedWork.tag){case ClassComponent:{var childContextTypes=interruptedWork.type.childContextTypes;if(childContextTypes!==null&&childContextTypes!==undefined){popContext(interruptedWork);}break;}case HostRoot:{popHostContainer(interruptedWork);popTopLevelContextObject(interruptedWork);break;}case HostComponent:{popHostContext(interruptedWork);break;}case HostPortal:popHostContainer(interruptedWork);break;case ContextProvider:popProvider(interruptedWork);break;default:break;}}var ReactCurrentDispatcher=ReactSharedInternals.ReactCurrentDispatcher;var ReactCurrentOwner$2=ReactSharedInternals.ReactCurrentOwner;var didWarnAboutStateTransition=void 0;var didWarnSetStateChildContext=void 0;var warnAboutUpdateOnUnmounted=void 0;var warnAboutInvalidUpdates=void 0;if(enableSchedulerTracing){// Provide explicit error message when production+profiling bundle of e.g. react-dom
 // is used with production (non-profiling) bundle of scheduler/tracing
 !(tracing.__interactionsRef!=null&&tracing.__interactionsRef.current!=null)?invariant(false,'It is not supported to run the profiling version of a renderer (for example, `react-dom/profiling`) without also replacing the `scheduler/tracing` module with `scheduler/tracing-profiling`. Your bundler might have a setting for aliasing both modules. Learn more at http://fb.me/react-profiling'):void 0;}{didWarnAboutStateTransition=false;didWarnSetStateChildContext=false;var didWarnStateUpdateForUnmountedComponent={};warnAboutUpdateOnUnmounted=function(fiber,isClass){// We show the whole stack but dedupe on the top component's name because
 // the problematic code almost always lies inside that component.
 var componentName=getComponentName(fiber.type)||'ReactComponent';if(didWarnStateUpdateForUnmountedComponent[componentName]){return;}warningWithoutStack$1(false,"Can't perform a React state update on an unmounted component. This "+'is a no-op, but it indicates a memory leak in your application. To '+'fix, cancel all subscriptions and asynchronous tasks in %s.%s',isClass?'the componentWillUnmount method':'a useEffect cleanup function',getStackByFiberInDevAndProd(fiber));didWarnStateUpdateForUnmountedComponent[componentName]=true;};warnAboutInvalidUpdates=function(instance){switch(phase){case'getChildContext':if(didWarnSetStateChildContext){return;}warningWithoutStack$1(false,'setState(...): Cannot call setState() inside getChildContext()');didWarnSetStateChildContext=true;break;case'render':if(didWarnAboutStateTransition){return;}warningWithoutStack$1(false,'Cannot update during an existing state transition (such as within '+'`render`). Render methods should be a pure function of props and state.');didWarnAboutStateTransition=true;break;}};}// Used to ensure computeUniqueAsyncExpiration is monotonically decreasing.
-var lastUniqueAsyncExpiration=Sync-1;// Represents the expiration time that incoming updates should use. (If this
-// is NoWork, use the default strategy: async updates in async mode, sync
-// updates in sync mode.)
-var expirationContext=NoWork;var isWorking=false;// The next work in progress fiber that we're currently working on.
+var lastUniqueAsyncExpiration=Sync-1;var isWorking=false;// The next work in progress fiber that we're currently working on.
 var nextUnitOfWork=null;var nextRoot=null;// The time at which we're currently rendering work.
 var nextRenderExpirationTime=NoWork;var nextLatestAbsoluteTimeoutMs=-1;var nextRenderDidError=false;// The next fiber with an effect that we're currently committing.
 var nextEffect=null;var isCommitting$1=false;var rootWithPendingPassiveEffects=null;var passiveEffectCallbackHandle=null;var passiveEffectCallback=null;var legacyErrorBoundariesThatAlreadyFailed=null;// Used for performance tracking.
@@ -39367,9 +39930,10 @@ nextEffect.effectTag&=~Placement;break;}case PlacementAndUpdate:{// Placement
 commitPlacement(nextEffect);// Clear the "placement" from effect tag so that we know that this is inserted, before
 // any life-cycles like componentDidMount gets called.
 nextEffect.effectTag&=~Placement;// Update
-var _current=nextEffect.alternate;commitWork(_current,nextEffect);break;}case Update:{var _current2=nextEffect.alternate;commitWork(_current2,nextEffect);break;}case Deletion:{commitDeletion(nextEffect);break;}}nextEffect=nextEffect.nextEffect;}{resetCurrentFiber();}}function commitBeforeMutationLifecycles(){while(nextEffect!==null){{setCurrentFiber(nextEffect);}var effectTag=nextEffect.effectTag;if(effectTag&Snapshot){recordEffect();var current$$1=nextEffect.alternate;commitBeforeMutationLifeCycles(current$$1,nextEffect);}nextEffect=nextEffect.nextEffect;}{resetCurrentFiber();}}function commitAllLifeCycles(finishedRoot,committedExpirationTime){{ReactStrictModeWarnings.flushPendingUnsafeLifecycleWarnings();ReactStrictModeWarnings.flushLegacyContextWarning();if(warnAboutDeprecatedLifecycles){ReactStrictModeWarnings.flushPendingDeprecationWarnings();}}while(nextEffect!==null){var effectTag=nextEffect.effectTag;if(effectTag&(Update|Callback)){recordEffect();var current$$1=nextEffect.alternate;commitLifeCycles(finishedRoot,current$$1,nextEffect,committedExpirationTime);}if(effectTag&Ref){recordEffect();commitAttachRef(nextEffect);}if(enableHooks&&effectTag&Passive){rootWithPendingPassiveEffects=finishedRoot;}nextEffect=nextEffect.nextEffect;}}function commitPassiveEffects(root,firstEffect){rootWithPendingPassiveEffects=null;passiveEffectCallbackHandle=null;passiveEffectCallback=null;// Set this to true to prevent re-entrancy
-var previousIsRendering=isRendering;isRendering=true;var effect=firstEffect;do{if(effect.effectTag&Passive){var didError=false;var error=void 0;{invokeGuardedCallback(null,commitPassiveHookEffects,null,effect);if(hasCaughtError()){didError=true;error=clearCaughtError();}}if(didError){captureCommitPhaseError(effect,error);}}effect=effect.nextEffect;}while(effect!==null);isRendering=previousIsRendering;// Check if work was scheduled by one of the effects
-var rootExpirationTime=root.expirationTime;if(rootExpirationTime!==NoWork){requestWork(root,rootExpirationTime);}}function isAlreadyFailedLegacyErrorBoundary(instance){return legacyErrorBoundariesThatAlreadyFailed!==null&&legacyErrorBoundariesThatAlreadyFailed.has(instance);}function markLegacyErrorBoundaryAsFailed(instance){if(legacyErrorBoundariesThatAlreadyFailed===null){legacyErrorBoundariesThatAlreadyFailed=new Set([instance]);}else{legacyErrorBoundariesThatAlreadyFailed.add(instance);}}function flushPassiveEffects(){if(passiveEffectCallback!==null){scheduler.unstable_cancelCallback(passiveEffectCallbackHandle);// We call the scheduled callback instead of commitPassiveEffects directly
+var _current=nextEffect.alternate;commitWork(_current,nextEffect);break;}case Update:{var _current2=nextEffect.alternate;commitWork(_current2,nextEffect);break;}case Deletion:{commitDeletion(nextEffect);break;}}nextEffect=nextEffect.nextEffect;}{resetCurrentFiber();}}function commitBeforeMutationLifecycles(){while(nextEffect!==null){{setCurrentFiber(nextEffect);}var effectTag=nextEffect.effectTag;if(effectTag&Snapshot){recordEffect();var current$$1=nextEffect.alternate;commitBeforeMutationLifeCycles(current$$1,nextEffect);}nextEffect=nextEffect.nextEffect;}{resetCurrentFiber();}}function commitAllLifeCycles(finishedRoot,committedExpirationTime){{ReactStrictModeWarnings.flushPendingUnsafeLifecycleWarnings();ReactStrictModeWarnings.flushLegacyContextWarning();if(warnAboutDeprecatedLifecycles){ReactStrictModeWarnings.flushPendingDeprecationWarnings();}}while(nextEffect!==null){{setCurrentFiber(nextEffect);}var effectTag=nextEffect.effectTag;if(effectTag&(Update|Callback)){recordEffect();var current$$1=nextEffect.alternate;commitLifeCycles(finishedRoot,current$$1,nextEffect,committedExpirationTime);}if(effectTag&Ref){recordEffect();commitAttachRef(nextEffect);}if(effectTag&Passive){rootWithPendingPassiveEffects=finishedRoot;}nextEffect=nextEffect.nextEffect;}{resetCurrentFiber();}}function commitPassiveEffects(root,firstEffect){rootWithPendingPassiveEffects=null;passiveEffectCallbackHandle=null;passiveEffectCallback=null;// Set this to true to prevent re-entrancy
+var previousIsRendering=isRendering;isRendering=true;var effect=firstEffect;do{{setCurrentFiber(effect);}if(effect.effectTag&Passive){var didError=false;var error=void 0;{invokeGuardedCallback(null,commitPassiveHookEffects,null,effect);if(hasCaughtError()){didError=true;error=clearCaughtError();}}if(didError){captureCommitPhaseError(effect,error);}}effect=effect.nextEffect;}while(effect!==null);{resetCurrentFiber();}isRendering=previousIsRendering;// Check if work was scheduled by one of the effects
+var rootExpirationTime=root.expirationTime;if(rootExpirationTime!==NoWork){requestWork(root,rootExpirationTime);}// Flush any sync work that was scheduled by effects
+if(!isBatchingUpdates&&!isRendering){performSyncWork();}}function isAlreadyFailedLegacyErrorBoundary(instance){return legacyErrorBoundariesThatAlreadyFailed!==null&&legacyErrorBoundariesThatAlreadyFailed.has(instance);}function markLegacyErrorBoundaryAsFailed(instance){if(legacyErrorBoundariesThatAlreadyFailed===null){legacyErrorBoundariesThatAlreadyFailed=new Set([instance]);}else{legacyErrorBoundariesThatAlreadyFailed.add(instance);}}function flushPassiveEffects(){if(passiveEffectCallbackHandle!==null){cancelPassiveEffects(passiveEffectCallbackHandle);}if(passiveEffectCallback!==null){// We call the scheduled callback instead of commitPassiveEffects directly
 // to ensure tracing works correctly.
 passiveEffectCallback();}}function commitRoot(root,finishedWork){isWorking=true;isCommitting$1=true;startCommitTimer();!(root.current!==finishedWork)?invariant(false,'Cannot commit the same tree as before. This is probably a bug related to the return field. This error is likely caused by a bug in React. Please file an issue.'):void 0;var committedExpirationTime=root.pendingCommitExpirationTime;!(committedExpirationTime!==NoWork)?invariant(false,'Cannot commit an incomplete root. This error is likely caused by a bug in React. Please file an issue.'):void 0;root.pendingCommitExpirationTime=NoWork;// Update the pending priority levels to account for the work that we are
 // about to commit. This needs to happen before calling the lifecycles, since
@@ -39398,14 +39962,14 @@ root.current=finishedWork;// In the second pass we'll perform all life-cycles an
 // Life-cycles happen as a separate pass so that all placements, updates,
 // and deletions in the entire tree have already been invoked.
 // This pass also triggers any renderer-specific initial effects.
-nextEffect=firstEffect;startCommitLifeCyclesTimer();while(nextEffect!==null){var _didError2=false;var _error2=void 0;{invokeGuardedCallback(null,commitAllLifeCycles,null,root,committedExpirationTime);if(hasCaughtError()){_didError2=true;_error2=clearCaughtError();}}if(_didError2){!(nextEffect!==null)?invariant(false,'Should have next effect. This error is likely caused by a bug in React. Please file an issue.'):void 0;captureCommitPhaseError(nextEffect,_error2);if(nextEffect!==null){nextEffect=nextEffect.nextEffect;}}}if(enableHooks&&firstEffect!==null&&rootWithPendingPassiveEffects!==null){// This commit included a passive effect. These do not need to fire until
+nextEffect=firstEffect;startCommitLifeCyclesTimer();while(nextEffect!==null){var _didError2=false;var _error2=void 0;{invokeGuardedCallback(null,commitAllLifeCycles,null,root,committedExpirationTime);if(hasCaughtError()){_didError2=true;_error2=clearCaughtError();}}if(_didError2){!(nextEffect!==null)?invariant(false,'Should have next effect. This error is likely caused by a bug in React. Please file an issue.'):void 0;captureCommitPhaseError(nextEffect,_error2);if(nextEffect!==null){nextEffect=nextEffect.nextEffect;}}}if(firstEffect!==null&&rootWithPendingPassiveEffects!==null){// This commit included a passive effect. These do not need to fire until
 // after the next paint. Schedule an callback to fire them in an async
 // event. To ensure serial execution, the callback will be flushed early if
 // we enter rootWithPendingPassiveEffects commit phase before then.
 var callback=commitPassiveEffects.bind(null,root,firstEffect);if(enableSchedulerTracing){// TODO: Avoid this extra callback by mutating the tracing ref directly,
 // like we do at the beginning of commitRoot. I've opted not to do that
 // here because that code is still in flux.
-callback=tracing.unstable_wrap(callback);}passiveEffectCallbackHandle=scheduler.unstable_scheduleCallback(callback);passiveEffectCallback=callback;}isCommitting$1=false;isWorking=false;stopCommitLifeCyclesTimer();stopCommitTimer();onCommitRoot(finishedWork.stateNode);if( true&&ReactFiberInstrumentation_1.debugTool){ReactFiberInstrumentation_1.debugTool.onCommitWork(finishedWork);}var updateExpirationTimeAfterCommit=finishedWork.expirationTime;var childExpirationTimeAfterCommit=finishedWork.childExpirationTime;var earliestRemainingTimeAfterCommit=childExpirationTimeAfterCommit>updateExpirationTimeAfterCommit?childExpirationTimeAfterCommit:updateExpirationTimeAfterCommit;if(earliestRemainingTimeAfterCommit===NoWork){// If there's no remaining work, we can clear the set of already failed
+callback=tracing.unstable_wrap(callback);}passiveEffectCallbackHandle=scheduler.unstable_runWithPriority(scheduler.unstable_NormalPriority,function(){return schedulePassiveEffects(callback);});passiveEffectCallback=callback;}isCommitting$1=false;isWorking=false;stopCommitLifeCyclesTimer();stopCommitTimer();onCommitRoot(finishedWork.stateNode);if( true&&ReactFiberInstrumentation_1.debugTool){ReactFiberInstrumentation_1.debugTool.onCommitWork(finishedWork);}var updateExpirationTimeAfterCommit=finishedWork.expirationTime;var childExpirationTimeAfterCommit=finishedWork.childExpirationTime;var earliestRemainingTimeAfterCommit=childExpirationTimeAfterCommit>updateExpirationTimeAfterCommit?childExpirationTimeAfterCommit:updateExpirationTimeAfterCommit;if(earliestRemainingTimeAfterCommit===NoWork){// If there's no remaining work, we can clear the set of already failed
 // error boundaries.
 legacyErrorBoundariesThatAlreadyFailed=null;}onCommit(root,earliestRemainingTimeAfterCommit);if(enableSchedulerTracing){tracing.__interactionsRef.current=prevInteractions;var subscriber=void 0;try{subscriber=tracing.__subscriberRef.current;if(subscriber!==null&&root.memoizedInteractions.size>0){var threadID=computeThreadID(committedExpirationTime,root.interactionThreadID);subscriber.onWorkStopped(root.memoizedInteractions,threadID);}}catch(error){// It's not safe for commitRoot() to throw.
 // Store the error for now and we'll re-throw in finishRendering().
@@ -39487,7 +40051,7 @@ stopProfilerTimerIfRunningAndRecordDelta(workInProgress,true);}}else{next=beginW
 rethrowOriginalError();}}if( true&&ReactFiberInstrumentation_1.debugTool){ReactFiberInstrumentation_1.debugTool.onBeginWork(workInProgress);}if(next===null){// If this doesn't spawn new work, complete the current work.
 next=completeUnitOfWork(workInProgress);}ReactCurrentOwner$2.current=null;return next;}function workLoop(isYieldy){if(!isYieldy){// Flush work without yielding
 while(nextUnitOfWork!==null){nextUnitOfWork=performUnitOfWork(nextUnitOfWork);}}else{// Flush asynchronous work until there's a higher priority event
-while(nextUnitOfWork!==null&&!shouldYieldToRenderer()){nextUnitOfWork=performUnitOfWork(nextUnitOfWork);}}}function renderRoot(root,isYieldy){!!isWorking?invariant(false,'renderRoot was called recursively. This error is likely caused by a bug in React. Please file an issue.'):void 0;flushPassiveEffects();isWorking=true;if(enableHooks){ReactCurrentOwner$2.currentDispatcher=Dispatcher;}else{ReactCurrentOwner$2.currentDispatcher=DispatcherWithoutHooks;}var expirationTime=root.nextExpirationTimeToWorkOn;// Check if we're starting from a fresh stack, or if we're resuming from
+while(nextUnitOfWork!==null&&!shouldYieldToRenderer()){nextUnitOfWork=performUnitOfWork(nextUnitOfWork);}}}function renderRoot(root,isYieldy){!!isWorking?invariant(false,'renderRoot was called recursively. This error is likely caused by a bug in React. Please file an issue.'):void 0;flushPassiveEffects();isWorking=true;var previousDispatcher=ReactCurrentDispatcher.current;ReactCurrentDispatcher.current=ContextOnlyDispatcher;var expirationTime=root.nextExpirationTimeToWorkOn;// Check if we're starting from a fresh stack, or if we're resuming from
 // previously yielded work.
 if(expirationTime!==nextRenderExpirationTime||root!==nextRoot||nextUnitOfWork===null){// Reset the stack and start working from the root.
 resetStack();nextRoot=root;nextRenderExpirationTime=expirationTime;nextUnitOfWork=createWorkInProgress(nextRoot.current,null,nextRenderExpirationTime);root.pendingCommitExpirationTime=NoWork;if(enableSchedulerTracing){// Determine which interactions this batch of work currently includes,
@@ -39497,7 +40061,7 @@ var interactions=new Set();root.pendingInteractionMap.forEach(function(scheduled
 // We will also use it in commitWork() to pass to any Profiler onRender() hooks.
 // This also provides DevTools with a way to access it when the onCommitRoot() hook is called.
 root.memoizedInteractions=interactions;if(interactions.size>0){var subscriber=tracing.__subscriberRef.current;if(subscriber!==null){var threadID=computeThreadID(expirationTime,root.interactionThreadID);try{subscriber.onWorkStarted(interactions,threadID);}catch(error){// Work thrown by an interaction tracing subscriber should be rethrown,
-// But only once it's safe (to avoid leaveing the scheduler in an invalid state).
+// But only once it's safe (to avoid leaving the scheduler in an invalid state).
 // Store the error for now and we'll re-throw in finishRendering().
 if(!hasUnhandledError){hasUnhandledError=true;unhandledError=error;}}}}}}var prevInteractions=null;if(enableSchedulerTracing){// We're about to start new traced work.
 // Restore pending interactions so cascading work triggered during the render phase will be accounted for.
@@ -39519,7 +40083,7 @@ resetCurrentlyProcessingQueue();}if( true&&replayFailedUnitOfWorkWithInvokeGuard
 // for now.
 didFatal=true;onUncaughtError(thrownValue);}else{throwException(root,returnFiber,sourceFiber,thrownValue,nextRenderExpirationTime);nextUnitOfWork=completeUnitOfWork(sourceFiber);continue;}}}break;}while(true);if(enableSchedulerTracing){// Traced work is done for now; restore the previous interactions.
 tracing.__interactionsRef.current=prevInteractions;}// We're done performing work. Time to clean up.
-isWorking=false;ReactCurrentOwner$2.currentDispatcher=null;resetContextDependences();resetHooks();// Yield back to main thread.
+isWorking=false;ReactCurrentDispatcher.current=previousDispatcher;resetContextDependences();resetHooks();// Yield back to main thread.
 if(didFatal){var _didCompleteRoot=false;stopWorkLoopTimer(interruptedBy,_didCompleteRoot);interruptedBy=null;// There was a fatal error.
 {resetStackAfterFatalErrorInDev();}// `nextRoot` points to the in-progress root. A non-null value indicates
 // that we're in the middle of an async render. Set it to null to indicate
@@ -39540,7 +40104,7 @@ if(hasLowerPriorityWork(root,expirationTime)){// There's lower priority work. If
 // priority level.
 markSuspendedPriorityLevel(root,expirationTime);var suspendedExpirationTime=expirationTime;var rootExpirationTime=root.expirationTime;onSuspend(root,rootWorkInProgress,suspendedExpirationTime,rootExpirationTime,-1// Indicates no timeout
 );return;}else if(// There's no lower priority work, but we're rendering asynchronously.
-// Synchronsouly attempt to render the same level one more time. This is
+// Synchronously attempt to render the same level one more time. This is
 // similar to a suspend, but without a timeout because we're not waiting
 // for a promise to resolve.
 !root.didError&&isYieldy){root.didError=true;var _suspendedExpirationTime=root.nextExpirationTimeToWorkOn=expirationTime;var _rootExpirationTime=root.expirationTime=Sync;onSuspend(root,rootWorkInProgress,_suspendedExpirationTime,_rootExpirationTime,-1// Indicates no timeout
@@ -39561,22 +40125,16 @@ return expirationTime*1000+interactionThreadID;}// Creates a unique async expira
 function computeUniqueAsyncExpiration(){var currentTime=requestCurrentTime();var result=computeAsyncExpiration(currentTime);if(result>=lastUniqueAsyncExpiration){// Since we assume the current time monotonically increases, we only hit
 // this branch when computeUniqueAsyncExpiration is fired multiple times
 // within a 200ms window (or whatever the async bucket size is).
-result=lastUniqueAsyncExpiration-1;}lastUniqueAsyncExpiration=result;return lastUniqueAsyncExpiration;}function computeExpirationForFiber(currentTime,fiber){var expirationTime=void 0;if(expirationContext!==NoWork){// An explicit expiration context was set;
-expirationTime=expirationContext;}else if(isWorking){if(isCommitting$1){// Updates that occur during the commit phase should have sync priority
-// by default.
-expirationTime=Sync;}else{// Updates during the render phase should expire at the same time as
-// the work that is being rendered.
-expirationTime=nextRenderExpirationTime;}}else{// No explicit expiration context was set, and we're not currently
-// performing work. Calculate a new expiration time.
-if(fiber.mode&ConcurrentMode){if(isBatchingInteractiveUpdates){// This is an interactive update
-expirationTime=computeInteractiveExpiration(currentTime);}else{// This is an async update
-expirationTime=computeAsyncExpiration(currentTime);}// If we're in the middle of rendering a tree, do not update at the same
+result=lastUniqueAsyncExpiration-1;}lastUniqueAsyncExpiration=result;return lastUniqueAsyncExpiration;}function computeExpirationForFiber(currentTime,fiber){var priorityLevel=scheduler.unstable_getCurrentPriorityLevel();var expirationTime=void 0;if((fiber.mode&ConcurrentMode)===NoContext){// Outside of concurrent mode, updates are always synchronous.
+expirationTime=Sync;}else if(isWorking&&!isCommitting$1){// During render phase, updates expire during as the current render.
+expirationTime=nextRenderExpirationTime;}else{switch(priorityLevel){case scheduler.unstable_ImmediatePriority:expirationTime=Sync;break;case scheduler.unstable_UserBlockingPriority:expirationTime=computeInteractiveExpiration(currentTime);break;case scheduler.unstable_NormalPriority:// This is a normal, concurrent update
+expirationTime=computeAsyncExpiration(currentTime);break;case scheduler.unstable_LowPriority:case scheduler.unstable_IdlePriority:expirationTime=Never;break;default:invariant(false,'Unknown priority level. This error is likely caused by a bug in React. Please file an issue.');}// If we're in the middle of rendering a tree, do not update at the same
 // expiration time that is already rendering.
-if(nextRoot!==null&&expirationTime===nextRenderExpirationTime){expirationTime-=1;}}else{// This is a sync update
-expirationTime=Sync;}}if(isBatchingInteractiveUpdates){// This is an interactive update. Keep track of the lowest pending
-// interactive expiration time. This allows us to synchronously flush
-// all interactive updates when needed.
-if(lowestPriorityPendingInteractiveExpirationTime===NoWork||expirationTime<lowestPriorityPendingInteractiveExpirationTime){lowestPriorityPendingInteractiveExpirationTime=expirationTime;}}return expirationTime;}function renderDidSuspend(root,absoluteTimeoutMs,suspendedTime){// Schedule the timeout.
+if(nextRoot!==null&&expirationTime===nextRenderExpirationTime){expirationTime-=1;}}// Keep track of the lowest pending interactive expiration time. This
+// allows us to synchronously flush all interactive updates
+// when needed.
+// TODO: Move this to renderer?
+if(priorityLevel===scheduler.unstable_UserBlockingPriority&&(lowestPriorityPendingInteractiveExpirationTime===NoWork||expirationTime<lowestPriorityPendingInteractiveExpirationTime)){lowestPriorityPendingInteractiveExpirationTime=expirationTime;}return expirationTime;}function renderDidSuspend(root,absoluteTimeoutMs,suspendedTime){// Schedule the timeout.
 if(absoluteTimeoutMs>=0&&nextLatestAbsoluteTimeoutMs<absoluteTimeoutMs){nextLatestAbsoluteTimeoutMs=absoluteTimeoutMs;}}function renderDidError(){nextRenderDidError=true;}function pingSuspendedRoot(root,thenable,pingTime){// A promise that previously suspended React from committing has resolved.
 // If React is still suspended, try again at the previous level (pingTime).
 var pingCache=root.pingCache;if(pingCache!==null){// The thenable resolved, so we no longer need to memoize, because it will
@@ -39588,21 +40146,21 @@ if(isPriorityLevelSuspended(root,pingTime)){// Ping at the original level
 markPingedPriorityLevel(root,pingTime);var rootExpirationTime=root.expirationTime;if(rootExpirationTime!==NoWork){requestWork(root,rootExpirationTime);}}}}function retryTimedOutBoundary(boundaryFiber,thenable){// The boundary fiber (a Suspense component) previously timed out and was
 // rendered in its fallback state. One of the promises that suspended it has
 // resolved, which means at least part of the tree was likely unblocked. Try
-var retryCache=boundaryFiber.stateNode;if(retryCache!==null){// The thenable resolved, so we no longer need to memoize, because it will
+var retryCache=void 0;if(enableSuspenseServerRenderer){switch(boundaryFiber.tag){case SuspenseComponent:retryCache=boundaryFiber.stateNode;break;case DehydratedSuspenseComponent:retryCache=boundaryFiber.memoizedState;break;default:invariant(false,'Pinged unknown suspense boundary type. This is probably a bug in React.');}}else{retryCache=boundaryFiber.stateNode;}if(retryCache!==null){// The thenable resolved, so we no longer need to memoize, because it will
 // never be thrown again.
 retryCache.delete(thenable);}var currentTime=requestCurrentTime();var retryTime=computeExpirationForFiber(currentTime,boundaryFiber);var root=scheduleWorkToRoot(boundaryFiber,retryTime);if(root!==null){markPendingPriorityLevel(root,retryTime);var rootExpirationTime=root.expirationTime;if(rootExpirationTime!==NoWork){requestWork(root,rootExpirationTime);}}}function scheduleWorkToRoot(fiber,expirationTime){recordScheduleUpdate();{if(fiber.tag===ClassComponent){var instance=fiber.stateNode;warnAboutInvalidUpdates(instance);}}// Update the source fiber's expiration time
 if(fiber.expirationTime<expirationTime){fiber.expirationTime=expirationTime;}var alternate=fiber.alternate;if(alternate!==null&&alternate.expirationTime<expirationTime){alternate.expirationTime=expirationTime;}// Walk the parent path to the root and update the child expiration time.
 var node=fiber.return;var root=null;if(node===null&&fiber.tag===HostRoot){root=fiber.stateNode;}else{while(node!==null){alternate=node.alternate;if(node.childExpirationTime<expirationTime){node.childExpirationTime=expirationTime;if(alternate!==null&&alternate.childExpirationTime<expirationTime){alternate.childExpirationTime=expirationTime;}}else if(alternate!==null&&alternate.childExpirationTime<expirationTime){alternate.childExpirationTime=expirationTime;}if(node.return===null&&node.tag===HostRoot){root=node.stateNode;break;}node=node.return;}}if(enableSchedulerTracing){if(root!==null){var interactions=tracing.__interactionsRef.current;if(interactions.size>0){var pendingInteractionMap=root.pendingInteractionMap;var pendingInteractions=pendingInteractionMap.get(expirationTime);if(pendingInteractions!=null){interactions.forEach(function(interaction){if(!pendingInteractions.has(interaction)){// Update the pending async work count for previously unscheduled interaction.
 interaction.__count++;}pendingInteractions.add(interaction);});}else{pendingInteractionMap.set(expirationTime,new Set(interactions));// Update the pending async work count for the current interactions.
-interactions.forEach(function(interaction){interaction.__count++;});}var subscriber=tracing.__subscriberRef.current;if(subscriber!==null){var threadID=computeThreadID(expirationTime,root.interactionThreadID);subscriber.onWorkScheduled(interactions,threadID);}}}}return root;}function scheduleWork(fiber,expirationTime){var root=scheduleWorkToRoot(fiber,expirationTime);if(root===null){{switch(fiber.tag){case ClassComponent:warnAboutUpdateOnUnmounted(fiber,true);break;case FunctionComponent:case ForwardRef:case MemoComponent:case SimpleMemoComponent:warnAboutUpdateOnUnmounted(fiber,false);break;}}return;}if(!isWorking&&nextRenderExpirationTime!==NoWork&&expirationTime>nextRenderExpirationTime){// This is an interruption. (Used for performance tracking.)
+interactions.forEach(function(interaction){interaction.__count++;});}var subscriber=tracing.__subscriberRef.current;if(subscriber!==null){var threadID=computeThreadID(expirationTime,root.interactionThreadID);subscriber.onWorkScheduled(interactions,threadID);}}}}return root;}function warnIfNotCurrentlyBatchingInDev(fiber){{if(isRendering===false&&isBatchingUpdates===false){warningWithoutStack$1(false,'An update to %s inside a test was not wrapped in act(...).\n\n'+'When testing, code that causes React state updates should be wrapped into act(...):\n\n'+'act(() => {\n'+'  /* fire events that update state */\n'+'});\n'+'/* assert on the output */\n\n'+"This ensures that you're testing the behavior the user would see in the browser."+' Learn more at https://fb.me/react-wrap-tests-with-act'+'%s',getComponentName(fiber.type),getStackByFiberInDevAndProd(fiber));}}}function scheduleWork(fiber,expirationTime){var root=scheduleWorkToRoot(fiber,expirationTime);if(root===null){{switch(fiber.tag){case ClassComponent:warnAboutUpdateOnUnmounted(fiber,true);break;case FunctionComponent:case ForwardRef:case MemoComponent:case SimpleMemoComponent:warnAboutUpdateOnUnmounted(fiber,false);break;}}return;}if(!isWorking&&nextRenderExpirationTime!==NoWork&&expirationTime>nextRenderExpirationTime){// This is an interruption. (Used for performance tracking.)
 interruptedBy=fiber;resetStack();}markPendingPriorityLevel(root,expirationTime);if(// If we're in the render phase, we don't need to schedule this root
 // for an update, because we'll do it before we exit...
 !isWorking||isCommitting$1||// ...unless this is a different root than the one we're rendering.
 nextRoot!==root){var rootExpirationTime=root.expirationTime;requestWork(root,rootExpirationTime);}if(nestedUpdateCount>NESTED_UPDATE_LIMIT){// Reset this back to zero so subsequent updates don't throw.
-nestedUpdateCount=0;invariant(false,'Maximum update depth exceeded. This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate. React limits the number of nested updates to prevent infinite loops.');}}function syncUpdates(fn,a,b,c,d){var previousExpirationContext=expirationContext;expirationContext=Sync;try{return fn(a,b,c,d);}finally{expirationContext=previousExpirationContext;}}// TODO: Everything below this is written as if it has been lifted to the
+nestedUpdateCount=0;invariant(false,'Maximum update depth exceeded. This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate. React limits the number of nested updates to prevent infinite loops.');}}function syncUpdates(fn,a,b,c,d){return scheduler.unstable_runWithPriority(scheduler.unstable_ImmediatePriority,function(){return fn(a,b,c,d);});}// TODO: Everything below this is written as if it has been lifted to the
 // renderers. I'll do this in a follow-up.
 // Linked-list of roots
-var firstScheduledRoot=null;var lastScheduledRoot=null;var callbackExpirationTime=NoWork;var callbackID=void 0;var isRendering=false;var nextFlushedRoot=null;var nextFlushedExpirationTime=NoWork;var lowestPriorityPendingInteractiveExpirationTime=NoWork;var hasUnhandledError=false;var unhandledError=null;var isBatchingUpdates=false;var isUnbatchingUpdates=false;var isBatchingInteractiveUpdates=false;var completedBatches=null;var originalStartTimeMs=scheduler.unstable_now();var currentRendererTime=msToExpirationTime(originalStartTimeMs);var currentSchedulerTime=currentRendererTime;// Use these to prevent an infinite loop of nested updates
+var firstScheduledRoot=null;var lastScheduledRoot=null;var callbackExpirationTime=NoWork;var callbackID=void 0;var isRendering=false;var nextFlushedRoot=null;var nextFlushedExpirationTime=NoWork;var lowestPriorityPendingInteractiveExpirationTime=NoWork;var hasUnhandledError=false;var unhandledError=null;var isBatchingUpdates=false;var isUnbatchingUpdates=false;var completedBatches=null;var originalStartTimeMs=scheduler.unstable_now();var currentRendererTime=msToExpirationTime(originalStartTimeMs);var currentSchedulerTime=currentRendererTime;// Use these to prevent an infinite loop of nested updates
 var NESTED_UPDATE_LIMIT=50;var nestedUpdateCount=0;var lastCommittedRootDuringThisBatch=null;function recomputeCurrentRendererTime(){var currentTimeMs=scheduler.unstable_now()-originalStartTimeMs;currentRendererTime=msToExpirationTime(currentTimeMs);}function scheduleCallbackWithExpirationTime(root,expirationTime){if(callbackExpirationTime!==NoWork){// A callback is already scheduled. Check its expiration time (timeout).
 if(expirationTime<callbackExpirationTime){// Existing callback has sufficient timeout. Exit.
 return;}else{if(callbackID!==null){// Existing callback has insufficient timeout. Cancel and schedule a
@@ -39716,7 +40274,7 @@ root.finishedWork=null;// Check if this is a nested update (a sync update schedu
 if(root===lastCommittedRootDuringThisBatch){// If the next root is the same as the previous root, this is a nested
 // update. To prevent an infinite loop, increment the nested update count.
 nestedUpdateCount++;}else{// Reset whenever we switch roots.
-lastCommittedRootDuringThisBatch=root;nestedUpdateCount=0;}commitRoot(root,finishedWork);}function onUncaughtError(error){!(nextFlushedRoot!==null)?invariant(false,'Should be working on a root. This error is likely caused by a bug in React. Please file an issue.'):void 0;// Unschedule this root so we don't work on it again until there's
+lastCommittedRootDuringThisBatch=root;nestedUpdateCount=0;}scheduler.unstable_runWithPriority(scheduler.unstable_ImmediatePriority,function(){commitRoot(root,finishedWork);});}function onUncaughtError(error){!(nextFlushedRoot!==null)?invariant(false,'Should be working on a root. This error is likely caused by a bug in React. Please file an issue.'):void 0;// Unschedule this root so we don't work on it again until there's
 // another update.
 nextFlushedRoot.expirationTime=NoWork;if(!hasUnhandledError){hasUnhandledError=true;unhandledError=error;}}// TODO: Batching should be implemented at the renderer level, not inside
 // the reconciler.
@@ -39724,12 +40282,12 @@ function batchedUpdates$1(fn,a){var previousIsBatchingUpdates=isBatchingUpdates;
 // the reconciler.
 function unbatchedUpdates(fn,a){if(isBatchingUpdates&&!isUnbatchingUpdates){isUnbatchingUpdates=true;try{return fn(a);}finally{isUnbatchingUpdates=false;}}return fn(a);}// TODO: Batching should be implemented at the renderer level, not within
 // the reconciler.
-function flushSync(fn,a){!!isRendering?invariant(false,'flushSync was called from inside a lifecycle method. It cannot be called when React is already rendering.'):void 0;var previousIsBatchingUpdates=isBatchingUpdates;isBatchingUpdates=true;try{return syncUpdates(fn,a);}finally{isBatchingUpdates=previousIsBatchingUpdates;performSyncWork();}}function interactiveUpdates$1(fn,a,b){if(isBatchingInteractiveUpdates){return fn(a,b);}// If there are any pending interactive updates, synchronously flush them.
+function flushSync(fn,a){!!isRendering?invariant(false,'flushSync was called from inside a lifecycle method. It cannot be called when React is already rendering.'):void 0;var previousIsBatchingUpdates=isBatchingUpdates;isBatchingUpdates=true;try{return syncUpdates(fn,a);}finally{isBatchingUpdates=previousIsBatchingUpdates;performSyncWork();}}function interactiveUpdates$1(fn,a,b){// If there are any pending interactive updates, synchronously flush them.
 // This needs to happen before we read any handlers, because the effect of
 // the previous event may influence which handlers are called during
 // this event.
 if(!isBatchingUpdates&&!isRendering&&lowestPriorityPendingInteractiveExpirationTime!==NoWork){// Synchronously flush pending interactive updates.
-performWork(lowestPriorityPendingInteractiveExpirationTime,false);lowestPriorityPendingInteractiveExpirationTime=NoWork;}var previousIsBatchingInteractiveUpdates=isBatchingInteractiveUpdates;var previousIsBatchingUpdates=isBatchingUpdates;isBatchingInteractiveUpdates=true;isBatchingUpdates=true;try{return fn(a,b);}finally{isBatchingInteractiveUpdates=previousIsBatchingInteractiveUpdates;isBatchingUpdates=previousIsBatchingUpdates;if(!isBatchingUpdates&&!isRendering){performSyncWork();}}}function flushInteractiveUpdates$1(){if(!isRendering&&lowestPriorityPendingInteractiveExpirationTime!==NoWork){// Synchronously flush pending interactive updates.
+performWork(lowestPriorityPendingInteractiveExpirationTime,false);lowestPriorityPendingInteractiveExpirationTime=NoWork;}var previousIsBatchingUpdates=isBatchingUpdates;isBatchingUpdates=true;try{return scheduler.unstable_runWithPriority(scheduler.unstable_UserBlockingPriority,function(){return fn(a,b);});}finally{isBatchingUpdates=previousIsBatchingUpdates;if(!isBatchingUpdates&&!isRendering){performSyncWork();}}}function flushInteractiveUpdates$1(){if(!isRendering&&lowestPriorityPendingInteractiveExpirationTime!==NoWork){// Synchronously flush pending interactive updates.
 performWork(lowestPriorityPendingInteractiveExpirationTime,false);lowestPriorityPendingInteractiveExpirationTime=NoWork;}}function flushControlled(fn){var previousIsBatchingUpdates=isBatchingUpdates;isBatchingUpdates=true;try{syncUpdates(fn);}finally{isBatchingUpdates=previousIsBatchingUpdates;if(!isBatchingUpdates&&!isRendering){performSyncWork();}}}// 0 is PROD, 1 is DEV.
 // Might add PROFILE later.
 var didWarnAboutNestedUpdates=void 0;var didWarnAboutFindNodeInStrictMode=void 0;{didWarnAboutNestedUpdates=false;didWarnAboutFindNodeInStrictMode={};}function getContextForSubtree(parentComponent){if(!parentComponent){return emptyContextObject;}var fiber=get(parentComponent);var parentContext=findCurrentUnmaskedContext(fiber);if(fiber.tag===ClassComponent){var Component=fiber.type;if(isContextProvider(Component)){return processChildContext(fiber,Component,parentContext);}}return parentContext;}function scheduleRootUpdate(current$$1,element,expirationTime,callback){{if(phase==='render'&&current!==null&&!didWarnAboutNestedUpdates){didWarnAboutNestedUpdates=true;warningWithoutStack$1(false,'Render methods should be a pure function of props and state; '+'triggering nested component updates from render is not allowed. '+'If necessary, trigger nested updates in componentDidUpdate.\n\n'+'Check the render method of %s.',getComponentName(current.type)||'Unknown');}}var update=createUpdate(expirationTime);// Caution: React DevTools currently depends on this property
@@ -39737,13 +40295,13 @@ var didWarnAboutNestedUpdates=void 0;var didWarnAboutFindNodeInStrictMode=void 0
 update.payload={element:element};callback=callback===undefined?null:callback;if(callback!==null){!(typeof callback==='function')?warningWithoutStack$1(false,'render(...): Expected the last optional `callback` argument to be a '+'function. Instead received: %s.',callback):void 0;update.callback=callback;}flushPassiveEffects();enqueueUpdate(current$$1,update);scheduleWork(current$$1,expirationTime);return expirationTime;}function updateContainerAtExpirationTime(element,container,parentComponent,expirationTime,callback){// TODO: If this is a nested container, this won't be the root.
 var current$$1=container.current;{if(ReactFiberInstrumentation_1.debugTool){if(current$$1.alternate===null){ReactFiberInstrumentation_1.debugTool.onMountContainer(container);}else if(element===null){ReactFiberInstrumentation_1.debugTool.onUnmountContainer(container);}else{ReactFiberInstrumentation_1.debugTool.onUpdateContainer(container);}}}var context=getContextForSubtree(parentComponent);if(container.context===null){container.context=context;}else{container.pendingContext=context;}return scheduleRootUpdate(current$$1,element,expirationTime,callback);}function findHostInstance(component){var fiber=get(component);if(fiber===undefined){if(typeof component.render==='function'){invariant(false,'Unable to find node on an unmounted component.');}else{invariant(false,'Argument appears to not be a ReactComponent. Keys: %s',Object.keys(component));}}var hostFiber=findCurrentHostFiber(fiber);if(hostFiber===null){return null;}return hostFiber.stateNode;}function findHostInstanceWithWarning(component,methodName){{var fiber=get(component);if(fiber===undefined){if(typeof component.render==='function'){invariant(false,'Unable to find node on an unmounted component.');}else{invariant(false,'Argument appears to not be a ReactComponent. Keys: %s',Object.keys(component));}}var hostFiber=findCurrentHostFiber(fiber);if(hostFiber===null){return null;}if(hostFiber.mode&StrictMode){var componentName=getComponentName(fiber.type)||'Component';if(!didWarnAboutFindNodeInStrictMode[componentName]){didWarnAboutFindNodeInStrictMode[componentName]=true;if(fiber.mode&StrictMode){warningWithoutStack$1(false,'%s is deprecated in StrictMode. '+'%s was passed an instance of %s which is inside StrictMode. '+'Instead, add a ref directly to the element you want to reference.'+'\n%s'+'\n\nLearn more about using refs safely here:'+'\nhttps://fb.me/react-strict-mode-find-node',methodName,methodName,componentName,getStackByFiberInDevAndProd(hostFiber));}else{warningWithoutStack$1(false,'%s is deprecated in StrictMode. '+'%s was passed an instance of %s which renders StrictMode children. '+'Instead, add a ref directly to the element you want to reference.'+'\n%s'+'\n\nLearn more about using refs safely here:'+'\nhttps://fb.me/react-strict-mode-find-node',methodName,methodName,componentName,getStackByFiberInDevAndProd(hostFiber));}}}return hostFiber.stateNode;}return findHostInstance(component);}function createContainer(containerInfo,isConcurrent,hydrate){return createFiberRoot(containerInfo,isConcurrent,hydrate);}function updateContainer(element,container,parentComponent,callback){var current$$1=container.current;var currentTime=requestCurrentTime();var expirationTime=computeExpirationForFiber(currentTime,current$$1);return updateContainerAtExpirationTime(element,container,parentComponent,expirationTime,callback);}function getPublicRootInstance(container){var containerFiber=container.current;if(!containerFiber.child){return null;}switch(containerFiber.child.tag){case HostComponent:return getPublicInstance(containerFiber.child.stateNode);default:return containerFiber.child.stateNode;}}function findHostInstanceWithNoPortals(fiber){var hostFiber=findCurrentHostFiberWithNoPortals(fiber);if(hostFiber===null){return null;}return hostFiber.stateNode;}var overrideProps=null;{var copyWithSetImpl=function(obj,path,idx,value){if(idx>=path.length){return value;}var key=path[idx];var updated=Array.isArray(obj)?obj.slice():_assign({},obj);// $FlowFixMe number or string is fine here
 updated[key]=copyWithSetImpl(obj[key],path,idx+1,value);return updated;};var copyWithSet=function(obj,path,value){return copyWithSetImpl(obj,path,0,value);};// Support DevTools props for function components, forwardRef, memo, host components, etc.
-overrideProps=function(fiber,path,value){flushPassiveEffects();fiber.pendingProps=copyWithSet(fiber.memoizedProps,path,value);if(fiber.alternate){fiber.alternate.pendingProps=fiber.pendingProps;}scheduleWork(fiber,Sync);};}function injectIntoDevTools(devToolsConfig){var findFiberByHostInstance=devToolsConfig.findFiberByHostInstance;return injectInternals(_assign({},devToolsConfig,{overrideProps:overrideProps,findHostInstanceByFiber:function(fiber){var hostFiber=findCurrentHostFiber(fiber);if(hostFiber===null){return null;}return hostFiber.stateNode;},findFiberByHostInstance:function(instance){if(!findFiberByHostInstance){// Might not be implemented by the renderer.
+overrideProps=function(fiber,path,value){flushPassiveEffects();fiber.pendingProps=copyWithSet(fiber.memoizedProps,path,value);if(fiber.alternate){fiber.alternate.pendingProps=fiber.pendingProps;}scheduleWork(fiber,Sync);};}function injectIntoDevTools(devToolsConfig){var findFiberByHostInstance=devToolsConfig.findFiberByHostInstance;var ReactCurrentDispatcher=ReactSharedInternals.ReactCurrentDispatcher;return injectInternals(_assign({},devToolsConfig,{overrideProps:overrideProps,currentDispatcherRef:ReactCurrentDispatcher,findHostInstanceByFiber:function(fiber){var hostFiber=findCurrentHostFiber(fiber);if(hostFiber===null){return null;}return hostFiber.stateNode;},findFiberByHostInstance:function(instance){if(!findFiberByHostInstance){// Might not be implemented by the renderer.
 return null;}return findFiberByHostInstance(instance);}}));}// This file intentionally does *not* have the Flow annotation.
 // Don't add it. See `./inline-typed.js` for an explanation.
 function createPortal$1(children,containerInfo,// TODO: figure out the API for cross-renderer implementation.
 implementation){var key=arguments.length>3&&arguments[3]!==undefined?arguments[3]:null;return{// This tag allow us to uniquely identify this as a React Portal
 $$typeof:REACT_PORTAL_TYPE,key:key==null?null:''+key,children:children,containerInfo:containerInfo,implementation:implementation};}// TODO: this is special because it gets imported during build.
-var ReactVersion='16.7.0';// TODO: This type is shared between the reconciler and ReactDOM, but will
+var ReactVersion='16.8.6';// TODO: This type is shared between the reconciler and ReactDOM, but will
 // eventually be lifted out to the renderer.
 var ReactCurrentOwner=ReactSharedInternals.ReactCurrentOwner;var topLevelUpdateWarnings=void 0;var warnOnInvalidCallback=void 0;var didWarnAboutUnstableCreatePortal=false;{if(typeof Map!=='function'||// $FlowIssue Flow incorrectly thinks Map has no prototype
 Map.prototype==null||typeof Map.prototype.forEach!=='function'||typeof Set!=='function'||// $FlowIssue Flow incorrectly thinks Set has no prototype
@@ -39774,15 +40332,14 @@ var insertAfter=null;var insertBefore=firstBatch;while(insertBefore!==null&&inse
  * @internal
  */function isValidContainer(node){return!!(node&&(node.nodeType===ELEMENT_NODE||node.nodeType===DOCUMENT_NODE||node.nodeType===DOCUMENT_FRAGMENT_NODE||node.nodeType===COMMENT_NODE&&node.nodeValue===' react-mount-point-unstable '));}function getReactRootElementInContainer(container){if(!container){return null;}if(container.nodeType===DOCUMENT_NODE){return container.documentElement;}else{return container.firstChild;}}function shouldHydrateDueToLegacyHeuristic(container){var rootElement=getReactRootElementInContainer(container);return!!(rootElement&&rootElement.nodeType===ELEMENT_NODE&&rootElement.hasAttribute(ROOT_ATTRIBUTE_NAME));}setBatchingImplementation(batchedUpdates$1,interactiveUpdates$1,flushInteractiveUpdates$1);var warnedAboutHydrateAPI=false;function legacyCreateRootFromDOMContainer(container,forceHydrate){var shouldHydrate=forceHydrate||shouldHydrateDueToLegacyHeuristic(container);// First clear any existing content.
 if(!shouldHydrate){var warned=false;var rootSibling=void 0;while(rootSibling=container.lastChild){{if(!warned&&rootSibling.nodeType===ELEMENT_NODE&&rootSibling.hasAttribute(ROOT_ATTRIBUTE_NAME)){warned=true;warningWithoutStack$1(false,'render(): Target node has markup rendered by React, but there '+'are unrelated nodes as well. This is most commonly caused by '+'white-space inserted around server-rendered markup.');}}container.removeChild(rootSibling);}}{if(shouldHydrate&&!forceHydrate&&!warnedAboutHydrateAPI){warnedAboutHydrateAPI=true;lowPriorityWarning$1(false,'render(): Calling ReactDOM.render() to hydrate server-rendered markup '+'will stop working in React v17. Replace the ReactDOM.render() call '+'with ReactDOM.hydrate() if you want React to attach to the server HTML.');}}// Legacy roots are not async by default.
-var isConcurrent=false;return new ReactRoot(container,isConcurrent,shouldHydrate);}function legacyRenderSubtreeIntoContainer(parentComponent,children,container,forceHydrate,callback){// TODO: Ensure all entry points contain this check
-!isValidContainer(container)?invariant(false,'Target container is not a DOM element.'):void 0;{topLevelUpdateWarnings(container);}// TODO: Without `any` type, Flow says "Property cannot be accessed on any
+var isConcurrent=false;return new ReactRoot(container,isConcurrent,shouldHydrate);}function legacyRenderSubtreeIntoContainer(parentComponent,children,container,forceHydrate,callback){{topLevelUpdateWarnings(container);}// TODO: Without `any` type, Flow says "Property cannot be accessed on any
 // member of intersection type." Whyyyyyy.
 var root=container._reactRootContainer;if(!root){// Initial mount
 root=container._reactRootContainer=legacyCreateRootFromDOMContainer(container,forceHydrate);if(typeof callback==='function'){var originalCallback=callback;callback=function(){var instance=getPublicRootInstance(root._internalRoot);originalCallback.call(instance);};}// Initial mount should not be batched.
 unbatchedUpdates(function(){if(parentComponent!=null){root.legacy_renderSubtreeIntoContainer(parentComponent,children,callback);}else{root.render(children,callback);}});}else{if(typeof callback==='function'){var _originalCallback=callback;callback=function(){var instance=getPublicRootInstance(root._internalRoot);_originalCallback.call(instance);};}// Update
 if(parentComponent!=null){root.legacy_renderSubtreeIntoContainer(parentComponent,children,callback);}else{root.render(children,callback);}}return getPublicRootInstance(root._internalRoot);}function createPortal$$1(children,container){var key=arguments.length>2&&arguments[2]!==undefined?arguments[2]:null;!isValidContainer(container)?invariant(false,'Target container is not a DOM element.'):void 0;// TODO: pass ReactDOM portal implementation as third argument
-return createPortal$1(children,container,null,key);}var ReactDOM={createPortal:createPortal$$1,findDOMNode:function(componentOrElement){{var owner=ReactCurrentOwner.current;if(owner!==null&&owner.stateNode!==null){var warnedAboutRefsInRender=owner.stateNode._warnedAboutRefsInRender;!warnedAboutRefsInRender?warningWithoutStack$1(false,'%s is accessing findDOMNode inside its render(). '+'render() should be a pure function of props and state. It should '+'never access something that requires stale data from the previous '+'render, such as refs. Move this logic to componentDidMount and '+'componentDidUpdate instead.',getComponentName(owner.type)||'A component'):void 0;owner.stateNode._warnedAboutRefsInRender=true;}}if(componentOrElement==null){return null;}if(componentOrElement.nodeType===ELEMENT_NODE){return componentOrElement;}{return findHostInstanceWithWarning(componentOrElement,'findDOMNode');}return findHostInstance(componentOrElement);},hydrate:function(element,container,callback){// TODO: throw or warn if we couldn't hydrate?
-return legacyRenderSubtreeIntoContainer(null,element,container,true,callback);},render:function(element,container,callback){return legacyRenderSubtreeIntoContainer(null,element,container,false,callback);},unstable_renderSubtreeIntoContainer:function(parentComponent,element,containerNode,callback){!(parentComponent!=null&&has(parentComponent))?invariant(false,'parentComponent must be a valid React Component'):void 0;return legacyRenderSubtreeIntoContainer(parentComponent,element,containerNode,false,callback);},unmountComponentAtNode:function(container){!isValidContainer(container)?invariant(false,'unmountComponentAtNode(...): Target container is not a DOM element.'):void 0;if(container._reactRootContainer){{var rootEl=getReactRootElementInContainer(container);var renderedByDifferentReact=rootEl&&!getInstanceFromNode$1(rootEl);!!renderedByDifferentReact?warningWithoutStack$1(false,"unmountComponentAtNode(): The node you're attempting to unmount "+'was rendered by another copy of React.'):void 0;}// Unmount should not be batched.
+return createPortal$1(children,container,null,key);}var ReactDOM={createPortal:createPortal$$1,findDOMNode:function(componentOrElement){{var owner=ReactCurrentOwner.current;if(owner!==null&&owner.stateNode!==null){var warnedAboutRefsInRender=owner.stateNode._warnedAboutRefsInRender;!warnedAboutRefsInRender?warningWithoutStack$1(false,'%s is accessing findDOMNode inside its render(). '+'render() should be a pure function of props and state. It should '+'never access something that requires stale data from the previous '+'render, such as refs. Move this logic to componentDidMount and '+'componentDidUpdate instead.',getComponentName(owner.type)||'A component'):void 0;owner.stateNode._warnedAboutRefsInRender=true;}}if(componentOrElement==null){return null;}if(componentOrElement.nodeType===ELEMENT_NODE){return componentOrElement;}{return findHostInstanceWithWarning(componentOrElement,'findDOMNode');}return findHostInstance(componentOrElement);},hydrate:function(element,container,callback){!isValidContainer(container)?invariant(false,'Target container is not a DOM element.'):void 0;{!!container._reactHasBeenPassedToCreateRootDEV?warningWithoutStack$1(false,'You are calling ReactDOM.hydrate() on a container that was previously '+'passed to ReactDOM.%s(). This is not supported. '+'Did you mean to call createRoot(container, {hydrate: true}).render(element)?',enableStableConcurrentModeAPIs?'createRoot':'unstable_createRoot'):void 0;}// TODO: throw or warn if we couldn't hydrate?
+return legacyRenderSubtreeIntoContainer(null,element,container,true,callback);},render:function(element,container,callback){!isValidContainer(container)?invariant(false,'Target container is not a DOM element.'):void 0;{!!container._reactHasBeenPassedToCreateRootDEV?warningWithoutStack$1(false,'You are calling ReactDOM.render() on a container that was previously '+'passed to ReactDOM.%s(). This is not supported. '+'Did you mean to call root.render(element)?',enableStableConcurrentModeAPIs?'createRoot':'unstable_createRoot'):void 0;}return legacyRenderSubtreeIntoContainer(null,element,container,false,callback);},unstable_renderSubtreeIntoContainer:function(parentComponent,element,containerNode,callback){!isValidContainer(containerNode)?invariant(false,'Target container is not a DOM element.'):void 0;!(parentComponent!=null&&has(parentComponent))?invariant(false,'parentComponent must be a valid React Component'):void 0;return legacyRenderSubtreeIntoContainer(parentComponent,element,containerNode,false,callback);},unmountComponentAtNode:function(container){!isValidContainer(container)?invariant(false,'unmountComponentAtNode(...): Target container is not a DOM element.'):void 0;{!!container._reactHasBeenPassedToCreateRootDEV?warningWithoutStack$1(false,'You are calling ReactDOM.unmountComponentAtNode() on a container that was previously '+'passed to ReactDOM.%s(). This is not supported. Did you mean to call root.unmount()?',enableStableConcurrentModeAPIs?'createRoot':'unstable_createRoot'):void 0;}if(container._reactRootContainer){{var rootEl=getReactRootElementInContainer(container);var renderedByDifferentReact=rootEl&&!getInstanceFromNode$1(rootEl);!!renderedByDifferentReact?warningWithoutStack$1(false,"unmountComponentAtNode(): The node you're attempting to unmount "+'was rendered by another copy of React.'):void 0;}// Unmount should not be batched.
 unbatchedUpdates(function(){legacyRenderSubtreeIntoContainer(null,null,container,false,function(){container._reactRootContainer=null;});});// If you call unmountComponentAtNode twice in quick succession, you'll
 // get `true` twice. That's probably fine?
 return true;}else{{var _rootEl=getReactRootElementInContainer(container);var hasNonRootReactChild=!!(_rootEl&&getInstanceFromNode$1(_rootEl));// Check if the container itself is a React root node.
@@ -39790,7 +40347,7 @@ var isContainerReactRoot=container.nodeType===ELEMENT_NODE&&isValidContainer(con
 // TODO: remove in React 17.
 unstable_createPortal:function(){if(!didWarnAboutUnstableCreatePortal){didWarnAboutUnstableCreatePortal=true;lowPriorityWarning$1(false,'The ReactDOM.unstable_createPortal() alias has been deprecated, '+'and will be removed in React 17+. Update your code to use '+'ReactDOM.createPortal() instead. It has the exact same API, '+'but without the "unstable_" prefix.');}return createPortal$$1.apply(undefined,arguments);},unstable_batchedUpdates:batchedUpdates$1,unstable_interactiveUpdates:interactiveUpdates$1,flushSync:flushSync,unstable_createRoot:createRoot,unstable_flushControlled:flushControlled,__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{// Keep in sync with ReactDOMUnstableNativeDependencies.js
 // and ReactTestUtils.js. This is an array for better minification.
-Events:[getInstanceFromNode$1,getNodeFromInstance$1,getFiberCurrentPropsFromNode$1,injection.injectEventPluginsByName,eventNameDispatchConfigs,accumulateTwoPhaseDispatches,accumulateDirectDispatches,enqueueStateRestore,restoreStateIfNeeded,dispatchEvent,runEventsInBatch]}};function createRoot(container,options){var functionName=enableStableConcurrentModeAPIs?'createRoot':'unstable_createRoot';!isValidContainer(container)?invariant(false,'%s(...): Target container is not a DOM element.',functionName):void 0;var hydrate=options!=null&&options.hydrate===true;return new ReactRoot(container,true,hydrate);}if(enableStableConcurrentModeAPIs){ReactDOM.createRoot=createRoot;ReactDOM.unstable_createRoot=undefined;}var foundDevTools=injectIntoDevTools({findFiberByHostInstance:getClosestInstanceFromNode,bundleType:1,version:ReactVersion,rendererPackageName:'react-dom'});{if(!foundDevTools&&canUseDOM&&window.top===window.self){// If we're in Chrome or Firefox, provide a download link if not installed.
+Events:[getInstanceFromNode$1,getNodeFromInstance$1,getFiberCurrentPropsFromNode$1,injection.injectEventPluginsByName,eventNameDispatchConfigs,accumulateTwoPhaseDispatches,accumulateDirectDispatches,enqueueStateRestore,restoreStateIfNeeded,dispatchEvent,runEventsInBatch]}};function createRoot(container,options){var functionName=enableStableConcurrentModeAPIs?'createRoot':'unstable_createRoot';!isValidContainer(container)?invariant(false,'%s(...): Target container is not a DOM element.',functionName):void 0;{!!container._reactRootContainer?warningWithoutStack$1(false,'You are calling ReactDOM.%s() on a container that was previously '+'passed to ReactDOM.render(). This is not supported.',enableStableConcurrentModeAPIs?'createRoot':'unstable_createRoot'):void 0;container._reactHasBeenPassedToCreateRootDEV=true;}var hydrate=options!=null&&options.hydrate===true;return new ReactRoot(container,true,hydrate);}if(enableStableConcurrentModeAPIs){ReactDOM.createRoot=createRoot;ReactDOM.unstable_createRoot=undefined;}var foundDevTools=injectIntoDevTools({findFiberByHostInstance:getClosestInstanceFromNode,bundleType:1,version:ReactVersion,rendererPackageName:'react-dom'});{if(!foundDevTools&&canUseDOM&&window.top===window.self){// If we're in Chrome or Firefox, provide a download link if not installed.
 if(navigator.userAgent.indexOf('Chrome')>-1&&navigator.userAgent.indexOf('Edge')===-1||navigator.userAgent.indexOf('Firefox')>-1){var protocol=window.location.protocol;// Don't warn in exotic cases like chrome-extension://.
 if(/^(https?|file):$/.test(protocol)){console.info('%cDownload the React DevTools '+'for a better development experience: '+'https://fb.me/react-devtools'+(protocol==='file:'?'\nYou might need to use a local HTTP server (instead of file://): '+'https://fb.me/react-devtools-faq':''),'font-weight:bold');}}}}var ReactDOM$2=Object.freeze({default:ReactDOM});var ReactDOM$3=ReactDOM$2&&ReactDOM||ReactDOM$2;// TODO: decide on the top-level export form.
 // This is hacky but makes it work with both Rollup and Jest.
@@ -39849,7 +40406,7 @@ if (false) {} else {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v16.7.0
+/** @license React v16.8.6
  * react-is.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -40116,7 +40673,7 @@ if (false) {} else {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v16.7.0
+/** @license React v16.8.6
  * react.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -40135,7 +40692,7 @@ if (true) {
     var checkPropTypes = __webpack_require__(/*! prop-types/checkPropTypes */ "./node_modules/prop-types/checkPropTypes.js"); // TODO: this is special because it gets imported during build.
 
 
-    var ReactVersion = '16.7.0'; // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
+    var ReactVersion = '16.8.6'; // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
     // nor polyfill, then a plain number is used for performance.
 
     var hasSymbol = typeof Symbol === 'function' && Symbol.for;
@@ -40167,27 +40724,6 @@ if (true) {
 
       return null;
     }
-
-    var enableHooks = false; // Helps identify side effects in begin-phase lifecycle hooks and setState reducers:
-    // In some cases, StrictMode should also double-render lifecycles.
-    // This can be confusing for tests though,
-    // And it can be bad for performance in production.
-    // This feature flag can be used to control the behavior:
-    // To preserve the "Pause on caught exceptions" behavior of the debugger, we
-    // replay the begin phase of a failed component inside invokeGuardedCallback.
-    // Warn about deprecated, async-unsafe lifecycles; relates to RFC #6:
-    // Gather advanced timing metrics for Profiler subtrees.
-    // Trace which interactions trigger each commit.
-    // Only used in www builds.
-    // TODO: true? Here it might just be false.
-    // Only used in www builds.
-    // Only used in www builds.
-    // React Fire: prevent the value and checked attributes from syncing
-    // with their related DOM properties
-    // These APIs will no longer be "unstable" in the upcoming 16.7 release,
-    // Control this behavior with a flag to support 16.6 minor releases in the meanwhile.
-
-    var enableStableConcurrentModeAPIs = false;
     /**
      * Use invariant() to assert state which your program assumes to be true.
      *
@@ -40198,6 +40734,7 @@ if (true) {
      * The invariant message will be stripped in production, but the invariant
      * will remain to ensure logic does not differ in production.
      */
+
 
     var validateFormat = function () {};
 
@@ -40553,20 +41090,30 @@ if (true) {
       return refObject;
     }
     /**
+     * Keeps track of the current dispatcher.
+     */
+
+
+    var ReactCurrentDispatcher = {
+      /**
+       * @internal
+       * @type {ReactComponent}
+       */
+      current: null
+    };
+    /**
      * Keeps track of the current owner.
      *
      * The current owner is the component who should own any components that are
      * currently being constructed.
      */
 
-
     var ReactCurrentOwner = {
       /**
        * @internal
        * @type {ReactComponent}
        */
-      current: null,
-      currentDispatcher: null
+      current: null
     };
     var BEFORE_SLASH_RE = /^(.*)[\\\/]/;
 
@@ -40713,6 +41260,7 @@ if (true) {
       };
     }
     var ReactSharedInternals = {
+      ReactCurrentDispatcher: ReactCurrentDispatcher,
       ReactCurrentOwner: ReactCurrentOwner,
       // Used by renderers to avoid bundling object-assign twice in UMD bundles:
       assign: _assign
@@ -41593,15 +42141,16 @@ if (true) {
     }
 
     function resolveDispatcher() {
-      var dispatcher = ReactCurrentOwner.currentDispatcher;
-      !(dispatcher !== null) ? invariant(false, 'Hooks can only be called inside the body of a function component.') : void 0;
+      var dispatcher = ReactCurrentDispatcher.current;
+      !(dispatcher !== null) ? invariant(false, 'Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:\n1. You might have mismatching versions of React and the renderer (such as React DOM)\n2. You might be breaking the Rules of Hooks\n3. You might have more than one copy of React in the same app\nSee https://fb.me/react-invalid-hook-call for tips about how to debug and fix this problem.') : void 0;
       return dispatcher;
     }
 
-    function useContext(Context, observedBits) {
+    function useContext(Context, unstable_observedBits) {
       var dispatcher = resolveDispatcher();
       {
-        // TODO: add a more generic warning for invalid values.
+        !(unstable_observedBits === undefined) ? warning$1(false, 'useContext() second argument is reserved for future ' + 'use in React. Passing it is not supported. ' + 'You passed: %s.%s', unstable_observedBits, typeof unstable_observedBits === 'number' && Array.isArray(arguments[2]) ? '\n\nDid you call array.map(useContext)? ' + 'Calling Hooks inside a loop is not supported. ' + 'Learn more at https://fb.me/rules-of-hooks' : '') : void 0; // TODO: add a more generic warning for invalid values.
+
         if (Context._context !== undefined) {
           var realContext = Context._context; // Don't deduplicate because this legitimately causes bugs
           // and nobody should be using this in existing code.
@@ -41613,7 +42162,7 @@ if (true) {
           }
         }
       }
-      return dispatcher.useContext(Context, observedBits);
+      return dispatcher.useContext(Context, unstable_observedBits);
     }
 
     function useState(initialState) {
@@ -41621,9 +42170,9 @@ if (true) {
       return dispatcher.useState(initialState);
     }
 
-    function useReducer(reducer, initialState, initialAction) {
+    function useReducer(reducer, initialArg, init) {
       var dispatcher = resolveDispatcher();
-      return dispatcher.useReducer(reducer, initialState, initialAction);
+      return dispatcher.useReducer(reducer, initialArg, init);
     }
 
     function useRef(initialValue) {
@@ -41651,9 +42200,16 @@ if (true) {
       return dispatcher.useMemo(create, inputs);
     }
 
-    function useImperativeMethods(ref, create, inputs) {
+    function useImperativeHandle(ref, create, inputs) {
       var dispatcher = resolveDispatcher();
-      return dispatcher.useImperativeMethods(ref, create, inputs);
+      return dispatcher.useImperativeHandle(ref, create, inputs);
+    }
+
+    function useDebugValue(value, formatterFn) {
+      {
+        var dispatcher = resolveDispatcher();
+        return dispatcher.useDebugValue(value, formatterFn);
+      }
     }
     /**
      * ReactElementValidator provides a wrapper around a element factory
@@ -41750,7 +42306,7 @@ if (true) {
 
       setCurrentlyValidatingElement(element);
       {
-        warning$1(false, 'Each child in an array or iterator should have a unique "key" prop.' + '%s%s See https://fb.me/react-warning-keys for more information.', currentComponentErrorInfo, childOwner);
+        warning$1(false, 'Each child in a list should have a unique "key" prop.' + '%s%s See https://fb.me/react-warning-keys for more information.', currentComponentErrorInfo, childOwner);
       }
       setCurrentlyValidatingElement(null);
     }
@@ -41959,8 +42515,27 @@ if (true) {
 
       validatePropTypes(newElement);
       return newElement;
-    }
+    } // Helps identify side effects in begin-phase lifecycle hooks and setState reducers:
+    // In some cases, StrictMode should also double-render lifecycles.
+    // This can be confusing for tests though,
+    // And it can be bad for performance in production.
+    // This feature flag can be used to control the behavior:
+    // To preserve the "Pause on caught exceptions" behavior of the debugger, we
+    // replay the begin phase of a failed component inside invokeGuardedCallback.
+    // Warn about deprecated, async-unsafe lifecycles; relates to RFC #6:
+    // Gather advanced timing metrics for Profiler subtrees.
+    // Trace which interactions trigger each commit.
+    // Only used in www builds.
+    // TODO: true? Here it might just be false.
+    // Only used in www builds.
+    // Only used in www builds.
+    // React Fire: prevent the value and checked attributes from syncing
+    // with their related DOM properties
+    // These APIs will no longer be "unstable" in the upcoming 16.7 release,
+    // Control this behavior with a flag to support 16.6 minor releases in the meanwhile.
 
+
+    var enableStableConcurrentModeAPIs = false;
     var React = {
       Children: {
         map: mapChildren,
@@ -41976,6 +42551,16 @@ if (true) {
       forwardRef: forwardRef,
       lazy: lazy,
       memo: memo,
+      useCallback: useCallback,
+      useContext: useContext,
+      useEffect: useEffect,
+      useImperativeHandle: useImperativeHandle,
+      useDebugValue: useDebugValue,
+      useLayoutEffect: useLayoutEffect,
+      useMemo: useMemo,
+      useReducer: useReducer,
+      useRef: useRef,
+      useState: useState,
       Fragment: REACT_FRAGMENT_TYPE,
       StrictMode: REACT_STRICT_MODE_TYPE,
       Suspense: REACT_SUSPENSE_TYPE,
@@ -41997,18 +42582,6 @@ if (true) {
       React.Profiler = REACT_PROFILER_TYPE;
       React.unstable_ConcurrentMode = undefined;
       React.unstable_Profiler = undefined;
-    }
-
-    if (enableHooks) {
-      React.useCallback = useCallback;
-      React.useContext = useContext;
-      React.useEffect = useEffect;
-      React.useImperativeMethods = useImperativeMethods;
-      React.useLayoutEffect = useLayoutEffect;
-      React.useMemo = useMemo;
-      React.useReducer = useReducer;
-      React.useRef = useRef;
-      React.useState = useState;
     }
 
     var React$2 = Object.freeze({
@@ -42048,7 +42621,7 @@ if (false) {} else {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v0.12.0
+/** @license React v0.13.6
  * scheduler-tracing.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -42446,7 +43019,7 @@ if (true) {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/** @license React v0.12.0
+/* WEBPACK VAR INJECTION */(function(global) {/** @license React v0.13.6
  * scheduler.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -42462,26 +43035,8 @@ if (true) {
 
     Object.defineProperty(exports, '__esModule', {
       value: true
-    }); // Helps identify side effects in begin-phase lifecycle hooks and setState reducers:
-    // In some cases, StrictMode should also double-render lifecycles.
-    // This can be confusing for tests though,
-    // And it can be bad for performance in production.
-    // This feature flag can be used to control the behavior:
-    // To preserve the "Pause on caught exceptions" behavior of the debugger, we
-    // replay the begin phase of a failed component inside invokeGuardedCallback.
-    // Warn about deprecated, async-unsafe lifecycles; relates to RFC #6:
-    // Gather advanced timing metrics for Profiler subtrees.
-    // Trace which interactions trigger each commit.
-    // Only used in www builds.
-    // TODO: true? Here it might just be false.
-    // Only used in www builds.
-
-    var enableSchedulerDebugging = true; // Only used in www builds.
-    // React Fire: prevent the value and checked attributes from syncing
-    // with their related DOM properties
-    // These APIs will no longer be "unstable" in the upcoming 16.7 release,
-    // Control this behavior with a flag to support 16.6 minor releases in the meanwhile.
-
+    });
+    var enableSchedulerDebugging = false;
     /* eslint-disable no-var */
     // TODO: Use symbols?
 
@@ -42655,7 +43210,7 @@ if (true) {
         if (didTimeout) {
           // Flush all the expired callbacks without yielding.
           while (firstCallbackNode !== null && !(enableSchedulerDebugging && isSchedulerPaused)) {
-            // TODO Wrap i nfeature flag
+            // TODO Wrap in feature flag
             // Read the current time. Flush all the callbacks that expire at or
             // earlier than that time. Then read the current time again and repeat.
             // This optimizes for as few performance.now calls as possible.
@@ -42710,6 +43265,38 @@ if (true) {
 
         default:
           priorityLevel = NormalPriority;
+      }
+
+      var previousPriorityLevel = currentPriorityLevel;
+      var previousEventStartTime = currentEventStartTime;
+      currentPriorityLevel = priorityLevel;
+      currentEventStartTime = exports.unstable_now();
+
+      try {
+        return eventHandler();
+      } finally {
+        currentPriorityLevel = previousPriorityLevel;
+        currentEventStartTime = previousEventStartTime; // Before exiting, flush all the immediate work that was scheduled.
+
+        flushImmediateWork();
+      }
+    }
+
+    function unstable_next(eventHandler) {
+      var priorityLevel = void 0;
+
+      switch (currentPriorityLevel) {
+        case ImmediatePriority:
+        case UserBlockingPriority:
+        case NormalPriority:
+          // Shift down to normal priority
+          priorityLevel = NormalPriority;
+          break;
+
+        default:
+          // Anything lower than normal priority should remain at the current level.
+          priorityLevel = currentPriorityLevel;
+          break;
       }
 
       var previousPriorityLevel = currentPriorityLevel;
@@ -43132,6 +43719,7 @@ if (true) {
     exports.unstable_IdlePriority = IdlePriority;
     exports.unstable_LowPriority = LowPriority;
     exports.unstable_runWithPriority = unstable_runWithPriority;
+    exports.unstable_next = unstable_next;
     exports.unstable_scheduleCallback = unstable_scheduleCallback;
     exports.unstable_cancelCallback = unstable_cancelCallback;
     exports.unstable_wrapCallback = unstable_wrapCallback;
@@ -43410,7 +43998,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
-/* harmony import */ var _lib_getNodeFromProps__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./lib/getNodeFromProps */ "./node_modules/semantic-ui-react/dist/es/addons/MountNode/lib/getNodeFromProps.js");
+/* harmony import */ var _lib_getNodeRefFromProps__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./lib/getNodeRefFromProps */ "./node_modules/semantic-ui-react/dist/es/addons/MountNode/lib/getNodeRefFromProps.js");
 /* harmony import */ var _lib_handleClassNamesChange__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./lib/handleClassNamesChange */ "./node_modules/semantic-ui-react/dist/es/addons/MountNode/lib/handleClassNamesChange.js");
 /* harmony import */ var _lib_NodeRegistry__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./lib/NodeRegistry */ "./node_modules/semantic-ui-react/dist/es/addons/MountNode/lib/NodeRegistry.js");
 
@@ -43451,28 +44039,21 @@ function (_Component) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var node = Object(_lib_getNodeFromProps__WEBPACK_IMPORTED_MODULE_9__["default"])(this.props);
-
-      if (node) {
-        nodeRegistry.add(node, this);
-        nodeRegistry.emit(node, _lib_handleClassNamesChange__WEBPACK_IMPORTED_MODULE_10__["default"]);
-      }
+      var nodeRef = Object(_lib_getNodeRefFromProps__WEBPACK_IMPORTED_MODULE_9__["default"])(this.props);
+      nodeRegistry.add(nodeRef, this);
+      nodeRegistry.emit(nodeRef, _lib_handleClassNamesChange__WEBPACK_IMPORTED_MODULE_10__["default"]);
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
-      var node = Object(_lib_getNodeFromProps__WEBPACK_IMPORTED_MODULE_9__["default"])(this.props);
-      if (node) nodeRegistry.emit(node, _lib_handleClassNamesChange__WEBPACK_IMPORTED_MODULE_10__["default"]);
+      nodeRegistry.emit(Object(_lib_getNodeRefFromProps__WEBPACK_IMPORTED_MODULE_9__["default"])(this.props), _lib_handleClassNamesChange__WEBPACK_IMPORTED_MODULE_10__["default"]);
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      var node = Object(_lib_getNodeFromProps__WEBPACK_IMPORTED_MODULE_9__["default"])(this.props);
-
-      if (node) {
-        nodeRegistry.del(node, this);
-        nodeRegistry.emit(node, _lib_handleClassNamesChange__WEBPACK_IMPORTED_MODULE_10__["default"]);
-      }
+      var nodeRef = Object(_lib_getNodeRefFromProps__WEBPACK_IMPORTED_MODULE_9__["default"])(this.props);
+      nodeRegistry.del(nodeRef, this);
+      nodeRegistry.emit(nodeRef, _lib_handleClassNamesChange__WEBPACK_IMPORTED_MODULE_10__["default"]);
     }
   }, {
     key: "render",
@@ -43492,7 +44073,7 @@ MountNode.propTypes =  true ? {
   className: prop_types__WEBPACK_IMPORTED_MODULE_6___default.a.string,
 
   /** The DOM node where we will apply class names. Defaults to document.body. */
-  node: _lib__WEBPACK_IMPORTED_MODULE_8__["customPropTypes"].domNode
+  node: prop_types__WEBPACK_IMPORTED_MODULE_6___default.a.oneOfType([_lib__WEBPACK_IMPORTED_MODULE_8__["customPropTypes"].domNode, _lib__WEBPACK_IMPORTED_MODULE_8__["customPropTypes"].refObject])
 } : undefined;
 
 /***/ }),
@@ -43536,24 +44117,24 @@ var NodeRegistry = function NodeRegistry() {
 
   _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, NodeRegistry);
 
-  _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()(this, "add", function (node, component) {
-    if (_this.nodes.has(node)) {
-      var set = _this.nodes.get(node);
+  _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()(this, "add", function (nodeRef, component) {
+    if (_this.nodes.has(nodeRef)) {
+      var set = _this.nodes.get(nodeRef);
 
       set.add(component);
       return;
     }
 
-    _this.nodes.set(node, new Set([component]));
+    _this.nodes.set(nodeRef, new Set([component]));
   });
 
-  _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()(this, "del", function (node, component) {
-    if (!_this.nodes.has(node)) return;
+  _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()(this, "del", function (nodeRef, component) {
+    if (!_this.nodes.has(nodeRef)) return;
 
-    var set = _this.nodes.get(node);
+    var set = _this.nodes.get(nodeRef);
 
     if (set.size === 1) {
-      _this.nodes.delete(node);
+      _this.nodes.delete(nodeRef);
 
       return;
     }
@@ -43561,8 +44142,8 @@ var NodeRegistry = function NodeRegistry() {
     set.delete(component);
   });
 
-  _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()(this, "emit", function (node, callback) {
-    callback(node, _this.nodes.get(node));
+  _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()(this, "emit", function (nodeRef, callback) {
+    callback(nodeRef, _this.nodes.get(nodeRef));
   });
 
   this.nodes = new Map();
@@ -43633,10 +44214,10 @@ var computeClassNamesDifference = function computeClassNamesDifference(prevClass
 
 /***/ }),
 
-/***/ "./node_modules/semantic-ui-react/dist/es/addons/MountNode/lib/getNodeFromProps.js":
-/*!*****************************************************************************************!*\
-  !*** ./node_modules/semantic-ui-react/dist/es/addons/MountNode/lib/getNodeFromProps.js ***!
-  \*****************************************************************************************/
+/***/ "./node_modules/semantic-ui-react/dist/es/addons/MountNode/lib/getNodeRefFromProps.js":
+/*!********************************************************************************************!*\
+  !*** ./node_modules/semantic-ui-react/dist/es/addons/MountNode/lib/getNodeRefFromProps.js ***!
+  \********************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -43644,26 +44225,36 @@ var computeClassNamesDifference = function computeClassNamesDifference(prevClass
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash_isNil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js");
 /* harmony import */ var lodash_isNil__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash_isNil__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
+/* harmony import */ var lodash_memoize__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash/memoize */ "./node_modules/lodash/memoize.js");
+/* harmony import */ var lodash_memoize__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash_memoize__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
 
 
+
+
+var toRef = lodash_memoize__WEBPACK_IMPORTED_MODULE_1___default()(function (node) {
+  return {
+    current: node
+  };
+});
 /**
  * Given `this.props`, return a `node` value or undefined.
  *
- * @param {object} props Component's props
- * @return {HTMLElement|undefined}
+ * @param {object|React.RefObject} props Component's props
+ * @return {React.RefObject|undefined}
  */
 
-var getNodeFromProps = function getNodeFromProps(props) {
+
+var getNodeRefFromProps = function getNodeRefFromProps(props) {
   var node = props.node;
 
-  if (Object(_lib__WEBPACK_IMPORTED_MODULE_1__["isBrowser"])()) {
-    if (lodash_isNil__WEBPACK_IMPORTED_MODULE_0___default()(node)) return document.body;
-    return node;
+  if (Object(_lib__WEBPACK_IMPORTED_MODULE_2__["isBrowser"])()) {
+    if (Object(_lib__WEBPACK_IMPORTED_MODULE_2__["isRefObject"])(node)) return node;
+    return lodash_isNil__WEBPACK_IMPORTED_MODULE_0___default()(node) ? toRef(document.body) : toRef(node);
   }
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (getNodeFromProps);
+/* harmony default export */ __webpack_exports__["default"] = (getNodeRefFromProps);
 
 /***/ }),
 
@@ -43687,24 +44278,30 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var prevClassNames = new Map();
+/**
+ * @param {React.RefObject} nodeRef
+ * @param {Object[]} components
+ */
 
-var handleClassNamesChange = function handleClassNamesChange(node, components) {
+var handleClassNamesChange = function handleClassNamesChange(nodeRef, components) {
   var currentClassNames = Object(_computeClassNames__WEBPACK_IMPORTED_MODULE_2__["default"])(components);
 
-  var _computeClassNamesDif = Object(_computeClassNamesDifference__WEBPACK_IMPORTED_MODULE_3__["default"])(prevClassNames.get(node), currentClassNames),
+  var _computeClassNamesDif = Object(_computeClassNamesDifference__WEBPACK_IMPORTED_MODULE_3__["default"])(prevClassNames.get(nodeRef), currentClassNames),
       _computeClassNamesDif2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_computeClassNamesDif, 2),
       forAdd = _computeClassNamesDif2[0],
       forRemoval = _computeClassNamesDif2[1];
 
-  lodash_forEach__WEBPACK_IMPORTED_MODULE_1___default()(forAdd, function (className) {
-    return node.classList.add(className);
-  });
+  if (nodeRef.current) {
+    lodash_forEach__WEBPACK_IMPORTED_MODULE_1___default()(forAdd, function (className) {
+      return nodeRef.current.classList.add(className);
+    });
 
-  lodash_forEach__WEBPACK_IMPORTED_MODULE_1___default()(forRemoval, function (className) {
-    return node.classList.remove(className);
-  });
+    lodash_forEach__WEBPACK_IMPORTED_MODULE_1___default()(forRemoval, function (className) {
+      return nodeRef.current.classList.remove(className);
+    });
+  }
 
-  prevClassNames.set(node, currentClassNames);
+  prevClassNames.set(nodeRef, currentClassNames);
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (handleClassNamesChange);
@@ -43815,7 +44412,7 @@ function (_Component) {
           onClick: function onClick(e, itemProps) {
             lodash_invoke__WEBPACK_IMPORTED_MODULE_11___default()(predefinedProps, 'onClick', e, itemProps);
 
-            _this.handleItemClick(e, itemProps);
+            if (itemProps.type !== 'ellipsisItem') _this.handleItemClick(e, itemProps);
           }
         };
       };
@@ -43975,7 +44572,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js");
 /* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(lodash_invoke__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! keyboard-key */ "./node_modules/semantic-ui-react/node_modules/keyboard-key/src/keyboardKey.js");
+/* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! keyboard-key */ "./node_modules/keyboard-key/src/keyboardKey.js");
 /* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(keyboard_key__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_9__);
@@ -44019,8 +44616,7 @@ function (_Component) {
     _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, (_getPrototypeOf2 = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(PaginationItem)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this)), "handleClick", function (e) {
-      var type = _this.props.type;
-      if (type !== 'ellipsisItem') lodash_invoke__WEBPACK_IMPORTED_MODULE_7___default()(_this.props, 'onClick', e, _this.props);
+      lodash_invoke__WEBPACK_IMPORTED_MODULE_7___default()(_this.props, 'onClick', e, _this.props);
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this)), "handleKeyDown", function (e) {
@@ -44145,7 +44741,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js");
 /* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(lodash_invoke__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! keyboard-key */ "./node_modules/semantic-ui-react/node_modules/keyboard-key/src/keyboardKey.js");
+/* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! keyboard-key */ "./node_modules/keyboard-key/src/keyboardKey.js");
 /* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(keyboard_key__WEBPACK_IMPORTED_MODULE_9__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_10__);
@@ -44195,12 +44791,16 @@ function (_Component) {
 
     _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3___default()(this, (_getPrototypeOf2 = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Portal)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_this)), "contentRef", Object(react__WEBPACK_IMPORTED_MODULE_11__["createRef"])());
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_this)), "triggerRef", Object(react__WEBPACK_IMPORTED_MODULE_11__["createRef"])());
+
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_this)), "handleDocumentClick", function (e) {
       var closeOnDocumentClick = _this.props.closeOnDocumentClick;
 
-      if (!_this.portalNode || // no portal
-      Object(_lib__WEBPACK_IMPORTED_MODULE_12__["doesNodeContainClick"])(_this.triggerNode, e) || // event happened in trigger (delegate to trigger handlers)
-      Object(_lib__WEBPACK_IMPORTED_MODULE_12__["doesNodeContainClick"])(_this.portalNode, e) // event happened in the portal
+      if (!_this.contentRef.current || // no portal
+      Object(_lib__WEBPACK_IMPORTED_MODULE_12__["doesNodeContainClick"])(_this.triggerRef.current, e) || // event happened in trigger (delegate to trigger handlers)
+      Object(_lib__WEBPACK_IMPORTED_MODULE_12__["doesNodeContainClick"])(_this.contentRef.current, e) // event happened in the portal
       ) {
           return;
         } // ignore the click
@@ -44224,7 +44824,7 @@ function (_Component) {
           mouseLeaveDelay = _this$props.mouseLeaveDelay;
       if (!closeOnPortalMouseLeave) return; // Do not close the portal when 'mouseleave' is triggered by children
 
-      if (e.target !== _this.portalNode) return;
+      if (e.target !== _this.contentRef.current) return;
       _this.mouseLeaveTimer = _this.closeWithTimeout(e, mouseLeaveDelay);
     });
 
@@ -44250,7 +44850,7 @@ function (_Component) {
 
       var target = e.relatedTarget || document.activeElement; // do not close if focus is given to the portal
 
-      var didFocusPortal = lodash_invoke__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_this)), 'portalNode.contains', target);
+      var didFocusPortal = lodash_invoke__WEBPACK_IMPORTED_MODULE_8___default()(_this.contentRef.current, 'contains', target);
 
       if (!closeOnTriggerBlur || didFocusPortal) return;
 
@@ -44370,7 +44970,6 @@ function (_Component) {
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_this)), "handleMount", function (e, _ref) {
       var target = _ref.node;
       var eventPool = _this.props.eventPool;
-      _this.portalNode = target;
       _lib__WEBPACK_IMPORTED_MODULE_12__["eventStack"].sub('mouseleave', _this.handlePortalMouseLeave, {
         pool: eventPool,
         target: target
@@ -44392,7 +44991,6 @@ function (_Component) {
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_this)), "handleUnmount", function (e, _ref2) {
       var target = _ref2.node;
       var eventPool = _this.props.eventPool;
-      _this.portalNode = null;
       _lib__WEBPACK_IMPORTED_MODULE_12__["eventStack"].unsub('mouseleave', _this.handlePortalMouseLeave, {
         pool: eventPool,
         target: target
@@ -44412,7 +45010,7 @@ function (_Component) {
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_this)), "handleTriggerRef", function (c) {
-      _this.triggerNode = c;
+      _this.triggerRef.current = c;
       Object(_lib__WEBPACK_IMPORTED_MODULE_12__["handleRef"])(_this.props.triggerRef, c);
     });
 
@@ -44438,6 +45036,7 @@ function (_Component) {
           trigger = _this$props7.trigger;
       var open = this.state.open;
       return react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_11__["Fragment"], null, open && react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(_PortalInner__WEBPACK_IMPORTED_MODULE_14__["default"], {
+        innerRef: this.contentRef,
         mountNode: mountNode,
         onMount: this.handleMount,
         onUnmount: this.handleUnmount
@@ -44557,12 +45156,8 @@ Portal.propTypes =  true ? {
   /** Element to be rendered in-place where the portal is defined. */
   trigger: prop_types__WEBPACK_IMPORTED_MODULE_10___default.a.node,
 
-  /**
-   * Called with a ref to the trigger node.
-   *
-   * @param {HTMLElement} node - Referred node.
-   */
-  triggerRef: prop_types__WEBPACK_IMPORTED_MODULE_10___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_10___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_10___default.a.object])
+  /** Called with a ref to the trigger node. */
+  triggerRef: _lib__WEBPACK_IMPORTED_MODULE_12__["customPropTypes"].ref
 } : undefined;
 /* harmony default export */ __webpack_exports__["default"] = (Portal);
 
@@ -44577,33 +45172,30 @@ Portal.propTypes =  true ? {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/objectSpread */ "./node_modules/@babel/runtime/helpers/objectSpread.js");
-/* harmony import */ var _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js");
-/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js");
-/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(lodash_invoke__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
-/* harmony import */ var _Ref__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../Ref */ "./node_modules/semantic-ui-react/dist/es/addons/Ref/index.js");
-
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js");
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js");
+/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(lodash_invoke__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
+/* harmony import */ var _Ref__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../Ref */ "./node_modules/semantic-ui-react/dist/es/addons/Ref/index.js");
 
 
 
@@ -44624,66 +45216,66 @@ __webpack_require__.r(__webpack_exports__);
 var PortalInner =
 /*#__PURE__*/
 function (_Component) {
-  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default()(PortalInner, _Component);
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4___default()(PortalInner, _Component);
 
   function PortalInner() {
     var _getPrototypeOf2;
 
     var _this;
 
-    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1___default()(this, PortalInner);
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, PortalInner);
 
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3___default()(this, (_getPrototypeOf2 = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(PortalInner)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, (_getPrototypeOf2 = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(PortalInner)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_this)), "handleRef", function (c) {
-      _this.ref = c;
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this)), "handleRef", function (c) {
+      Object(_lib__WEBPACK_IMPORTED_MODULE_11__["handleRef"])(_this.props.innerRef, c);
     });
 
     return _this;
   }
 
-  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2___default()(PortalInner, [{
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(PortalInner, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      lodash_invoke__WEBPACK_IMPORTED_MODULE_8___default()(this.props, 'onMount', null, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_0___default()({}, this.props, {
-        node: this.ref
-      }));
+      lodash_invoke__WEBPACK_IMPORTED_MODULE_7___default()(this.props, 'onMount', null, this.props);
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      lodash_invoke__WEBPACK_IMPORTED_MODULE_8___default()(this.props, 'onUnmount', null, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_0___default()({}, this.props, {
-        node: this.ref
-      }));
+      lodash_invoke__WEBPACK_IMPORTED_MODULE_7___default()(this.props, 'onUnmount', null, this.props);
     }
   }, {
     key: "render",
     value: function render() {
+      if (!Object(_lib__WEBPACK_IMPORTED_MODULE_11__["isBrowser"])()) return null;
       var _this$props = this.props,
           children = _this$props.children,
           _this$props$mountNode = _this$props.mountNode,
-          mountNode = _this$props$mountNode === void 0 ? Object(_lib__WEBPACK_IMPORTED_MODULE_12__["isBrowser"])() ? document.body : null : _this$props$mountNode;
-      return Object(react_dom__WEBPACK_IMPORTED_MODULE_11__["createPortal"])(react__WEBPACK_IMPORTED_MODULE_10___default.a.createElement(_Ref__WEBPACK_IMPORTED_MODULE_13__["default"], {
+          mountNode = _this$props$mountNode === void 0 ? document.body : _this$props$mountNode;
+      return Object(react_dom__WEBPACK_IMPORTED_MODULE_10__["createPortal"])(react__WEBPACK_IMPORTED_MODULE_9___default.a.createElement(_Ref__WEBPACK_IMPORTED_MODULE_12__["default"], {
         innerRef: this.handleRef
       }, children), mountNode);
     }
   }]);
 
   return PortalInner;
-}(react__WEBPACK_IMPORTED_MODULE_10__["Component"]);
+}(react__WEBPACK_IMPORTED_MODULE_9__["Component"]);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(PortalInner, "handledProps", ["children", "mountNode", "onMount", "onUnmount"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default()(PortalInner, "handledProps", ["children", "innerRef", "mountNode", "onMount", "onUnmount"]);
 
 PortalInner.propTypes =  true ? {
   /** Primary content. */
-  children: prop_types__WEBPACK_IMPORTED_MODULE_9___default.a.node.isRequired,
+  children: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.node.isRequired,
+
+  /** Called with a ref to the inner node. */
+  innerRef: _lib__WEBPACK_IMPORTED_MODULE_11__["customPropTypes"].ref,
 
   /** The node where the portal should mount. */
-  mountNode: prop_types__WEBPACK_IMPORTED_MODULE_9___default.a.any,
+  mountNode: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.any,
 
   /**
    * Called when the portal is mounted on the DOM
@@ -44691,7 +45283,7 @@ PortalInner.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onMount: prop_types__WEBPACK_IMPORTED_MODULE_9___default.a.func,
+  onMount: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.func,
 
   /**
    * Called when the portal is unmounted from the DOM
@@ -44699,7 +45291,7 @@ PortalInner.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onUnmount: prop_types__WEBPACK_IMPORTED_MODULE_9___default.a.func
+  onUnmount: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.func
 } : undefined;
 /* harmony default export */ __webpack_exports__["default"] = (PortalInner);
 
@@ -44875,15 +45467,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _lib_handleRef__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../lib/handleRef */ "./node_modules/semantic-ui-react/dist/es/lib/handleRef.js");
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js");
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _lib_refUtils__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../lib/refUtils */ "./node_modules/semantic-ui-react/dist/es/lib/refUtils.js");
+
 
 
 
@@ -44901,21 +45496,45 @@ function (_Component) {
   _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4___default()(RefFindNode, _Component);
 
   function RefFindNode() {
+    var _getPrototypeOf2;
+
+    var _this;
+
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, RefFindNode);
 
-    return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(RefFindNode).apply(this, arguments));
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, (_getPrototypeOf2 = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(RefFindNode)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this)), "prevNode", null);
+
+    return _this;
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(RefFindNode, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       // eslint-disable-next-line react/no-find-dom-node
-      Object(_lib_handleRef__WEBPACK_IMPORTED_MODULE_9__["default"])(this.props.innerRef, Object(react_dom__WEBPACK_IMPORTED_MODULE_8__["findDOMNode"])(this));
+      this.prevNode = Object(react_dom__WEBPACK_IMPORTED_MODULE_9__["findDOMNode"])(this);
+      Object(_lib_refUtils__WEBPACK_IMPORTED_MODULE_10__["handleRef"])(this.props.innerRef, this.prevNode);
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      // eslint-disable-next-line react/no-find-dom-node
+      var currentNode = Object(react_dom__WEBPACK_IMPORTED_MODULE_9__["findDOMNode"])(this);
+
+      if (this.prevNode !== currentNode) {
+        this.prevNode = currentNode;
+        Object(_lib_refUtils__WEBPACK_IMPORTED_MODULE_10__["handleRef"])(this.props.innerRef, currentNode);
+      }
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      Object(_lib_handleRef__WEBPACK_IMPORTED_MODULE_9__["default"])(this.props.innerRef, null);
+      Object(_lib_refUtils__WEBPACK_IMPORTED_MODULE_10__["handleRef"])(this.props.innerRef, null);
     }
   }, {
     key: "render",
@@ -44926,21 +45545,21 @@ function (_Component) {
   }]);
 
   return RefFindNode;
-}(react__WEBPACK_IMPORTED_MODULE_7__["Component"]);
+}(react__WEBPACK_IMPORTED_MODULE_8__["Component"]);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(RefFindNode, "handledProps", ["children", "innerRef"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default()(RefFindNode, "handledProps", ["children", "innerRef"]);
 
 
 RefFindNode.propTypes =  true ? {
   /** Primary content. */
-  children: prop_types__WEBPACK_IMPORTED_MODULE_6___default.a.element.isRequired,
+  children: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.element.isRequired,
 
   /**
    * Called when a child component will be mounted or updated.
    *
    * @param {HTMLElement} node - Referred node.
    */
-  innerRef: prop_types__WEBPACK_IMPORTED_MODULE_6___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_6___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_6___default.a.object])
+  innerRef: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.object])
 } : undefined;
 
 /***/ }),
@@ -44973,7 +45592,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _lib_handleRef__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../lib/handleRef */ "./node_modules/semantic-ui-react/dist/es/lib/handleRef.js");
+/* harmony import */ var _lib_refUtils__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../lib/refUtils */ "./node_modules/semantic-ui-react/dist/es/lib/refUtils.js");
 
 
 
@@ -45007,8 +45626,8 @@ function (_Component) {
       var _this$props = _this.props,
           children = _this$props.children,
           innerRef = _this$props.innerRef;
-      Object(_lib_handleRef__WEBPACK_IMPORTED_MODULE_9__["default"])(children.ref, node);
-      Object(_lib_handleRef__WEBPACK_IMPORTED_MODULE_9__["default"])(innerRef, node);
+      Object(_lib_refUtils__WEBPACK_IMPORTED_MODULE_9__["handleRef"])(children.ref, node);
+      Object(_lib_refUtils__WEBPACK_IMPORTED_MODULE_9__["handleRef"])(innerRef, node);
     });
 
     return _this;
@@ -45411,16 +46030,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var lodash_sum__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! lodash/sum */ "./node_modules/lodash/sum.js");
-/* harmony import */ var lodash_sum__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(lodash_sum__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js");
-/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(lodash_invoke__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! lodash/get */ "./node_modules/lodash/get.js");
-/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(lodash_get__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js");
+/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(lodash_invoke__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! lodash/get */ "./node_modules/lodash/get.js");
+/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(lodash_get__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var _addons_Ref__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../addons/Ref */ "./node_modules/semantic-ui-react/dist/es/addons/Ref/index.js");
 /* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
 
 
@@ -45460,142 +46078,83 @@ function (_Component) {
 
     _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4___default()(this, (_getPrototypeOf2 = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5___default()(TextArea)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "ref", Object(react__WEBPACK_IMPORTED_MODULE_12__["createRef"])());
+
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "focus", function () {
-      return _this.ref.focus();
+      return _this.ref.current.focus();
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleChange", function (e) {
-      var value = lodash_get__WEBPACK_IMPORTED_MODULE_11___default()(e, 'target.value');
+      var value = lodash_get__WEBPACK_IMPORTED_MODULE_10___default()(e, 'target.value');
 
-      lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default()(_this.props, 'onChange', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({}, _this.props, {
+      lodash_invoke__WEBPACK_IMPORTED_MODULE_9___default()(_this.props, 'onChange', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({}, _this.props, {
         value: value
       }));
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleInput", function (e) {
-      var value = lodash_get__WEBPACK_IMPORTED_MODULE_11___default()(e, 'target.value');
+      var value = lodash_get__WEBPACK_IMPORTED_MODULE_10___default()(e, 'target.value');
 
-      lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default()(_this.props, 'onInput', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({}, _this.props, {
+      lodash_invoke__WEBPACK_IMPORTED_MODULE_9___default()(_this.props, 'onInput', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({}, _this.props, {
         value: value
       }));
-
-      _this.updateHeight();
-    });
-
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleRef", function (c) {
-      return _this.ref = c;
-    });
-
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "removeAutoHeightStyles", function () {
-      _this.ref.style.height = null;
-      _this.ref.style.resize = null;
-    });
-
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "updateHeight", function () {
-      var autoHeight = _this.props.autoHeight;
-      if (!_this.ref || !autoHeight) return;
-
-      var _window$getComputedSt = window.getComputedStyle(_this.ref),
-          minHeight = _window$getComputedSt.minHeight,
-          borderBottomWidth = _window$getComputedSt.borderBottomWidth,
-          borderTopWidth = _window$getComputedSt.borderTopWidth;
-
-      var borderHeight = lodash_sum__WEBPACK_IMPORTED_MODULE_9___default()([borderBottomWidth, borderTopWidth].map(function (x) {
-        return parseFloat(x);
-      }));
-
-      var scrollHeight = _this.ref.scrollHeight; // Measure the scrollHeight and update the height to match.
-
-      _this.ref.style.height = 'auto';
-      _this.ref.style.overflowY = 'hidden';
-      _this.ref.style.height = "".concat(Math.max(parseFloat(minHeight), Math.ceil(scrollHeight + borderHeight)), "px");
-      _this.ref.style.overflowY = '';
     });
 
     return _this;
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(TextArea, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this.updateHeight();
-    }
-  }, {
-    key: "componentDidUpdate",
-    value: function componentDidUpdate(prevProps) {
-      // removed autoHeight
-      if (!this.props.autoHeight && prevProps.autoHeight) {
-        this.removeAutoHeightStyles();
-      } // added autoHeight or value changed
-
-
-      if (this.props.autoHeight && !prevProps.autoHeight || prevProps.value !== this.props.value) {
-        this.updateHeight();
-      }
-    }
-  }, {
     key: "render",
     value: function render() {
       var _this$props = this.props,
-          autoHeight = _this$props.autoHeight,
           rows = _this$props.rows,
-          style = _this$props.style,
           value = _this$props.value;
       var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_14__["getUnhandledProps"])(TextArea, this.props);
       var ElementType = Object(_lib__WEBPACK_IMPORTED_MODULE_14__["getElementType"])(TextArea, this.props);
-      var resize = autoHeight ? 'none' : '';
-      return react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, {
+      return react__WEBPACK_IMPORTED_MODULE_12___default.a.createElement(_addons_Ref__WEBPACK_IMPORTED_MODULE_13__["default"], {
+        innerRef: this.ref
+      }, react__WEBPACK_IMPORTED_MODULE_12___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, {
         onChange: this.handleChange,
         onInput: this.handleInput,
-        ref: this.handleRef,
         rows: rows,
-        style: _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({
-          resize: resize
-        }, style),
         value: value
-      }));
+      })));
     }
   }]);
 
   return TextArea;
-}(react__WEBPACK_IMPORTED_MODULE_13__["Component"]);
+}(react__WEBPACK_IMPORTED_MODULE_12__["Component"]);
 
 _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(TextArea, "defaultProps", {
   as: 'textarea',
   rows: 3
 });
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(TextArea, "handledProps", ["as", "autoHeight", "onChange", "onInput", "rows", "style", "value"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(TextArea, "handledProps", ["as", "onChange", "onInput", "rows", "value"]);
 
 TextArea.propTypes =  true ? {
   /** An element type to render as (string or function). */
   as: _lib__WEBPACK_IMPORTED_MODULE_14__["customPropTypes"].as,
-
-  /** Indicates whether height of the textarea fits the content or not. */
-  autoHeight: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool,
 
   /**
    * Called on change.
    * @param {SyntheticEvent} event - The React SyntheticEvent object
    * @param {object} data - All props and the event value.
    */
-  onChange: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.func,
+  onChange: prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.func,
 
   /**
    * Called on input.
    * @param {SyntheticEvent} event - The React SyntheticEvent object
    * @param {object} data - All props and the event value.
    */
-  onInput: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.func,
+  onInput: prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.func,
 
   /** Indicates row count for a TextArea. */
-  rows: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.string]),
-
-  /** Custom TextArea style. */
-  style: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.object,
+  rows: prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.string]),
 
   /** The value of the textarea. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.string])
+  value: prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.string])
 } : undefined;
 /* harmony default export */ __webpack_exports__["default"] = (TextArea);
 
@@ -45873,38 +46432,37 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Visibility; });
-/* harmony import */ var _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/extends */ "./node_modules/@babel/runtime/helpers/extends.js");
-/* harmony import */ var _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/objectSpread */ "./node_modules/@babel/runtime/helpers/objectSpread.js");
-/* harmony import */ var _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js");
-/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js");
-/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(lodash_invoke__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var lodash_forEach__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! lodash/forEach */ "./node_modules/lodash/forEach.js");
-/* harmony import */ var lodash_forEach__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(lodash_forEach__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var lodash_without__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! lodash/without */ "./node_modules/lodash/without.js");
-/* harmony import */ var lodash_without__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(lodash_without__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var lodash_includes__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! lodash/includes */ "./node_modules/lodash/includes.js");
-/* harmony import */ var lodash_includes__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(lodash_includes__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_14__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/objectSpread */ "./node_modules/@babel/runtime/helpers/objectSpread.js");
+/* harmony import */ var _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js");
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js");
+/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(lodash_invoke__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var lodash_forEach__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! lodash/forEach */ "./node_modules/lodash/forEach.js");
+/* harmony import */ var lodash_forEach__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(lodash_forEach__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var lodash_without__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! lodash/without */ "./node_modules/lodash/without.js");
+/* harmony import */ var lodash_without__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(lodash_without__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var lodash_includes__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! lodash/includes */ "./node_modules/lodash/includes.js");
+/* harmony import */ var lodash_includes__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(lodash_includes__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var _addons_Ref__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../addons/Ref */ "./node_modules/semantic-ui-react/dist/es/addons/Ref/index.js");
 /* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
 
 
@@ -45930,22 +46488,22 @@ __webpack_require__.r(__webpack_exports__);
 var Visibility =
 /*#__PURE__*/
 function (_Component) {
-  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_7___default()(Visibility, _Component);
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default()(Visibility, _Component);
 
   function Visibility() {
     var _getPrototypeOf2;
 
     var _this;
 
-    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default()(this, Visibility);
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default()(this, Visibility);
 
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5___default()(this, (_getPrototypeOf2 = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Visibility)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4___default()(this, (_getPrototypeOf2 = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5___default()(Visibility)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "calculations", {
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "calculations", {
       bottomPassed: false,
       bottomVisible: false,
       fits: false,
@@ -45956,9 +46514,11 @@ function (_Component) {
       topVisible: false
     });
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "firedCallbacks", []);
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "firedCallbacks", []);
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "fire", function (_ref, value) {
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "ref", Object(react__WEBPACK_IMPORTED_MODULE_14__["createRef"])());
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "fire", function (_ref, value) {
       var callback = _ref.callback,
           name = _ref.name;
       var reverse = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
@@ -45972,16 +46532,16 @@ function (_Component) {
       var executionPossible = continuous || _this.calculations[value] !== _this.oldCalculations[value];
       if (matchesDirection && executionPossible) _this.execute(callback, name); // Heads up! We should remove callback from the happened when it's not `once`
 
-      if (!once) _this.firedCallbacks = lodash_without__WEBPACK_IMPORTED_MODULE_12___default()(_this.firedCallbacks, name);
+      if (!once) _this.firedCallbacks = lodash_without__WEBPACK_IMPORTED_MODULE_11___default()(_this.firedCallbacks, name);
     });
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleUpdate", function () {
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleUpdate", function () {
       if (_this.ticking) return;
       _this.ticking = true;
       _this.frameId = requestAnimationFrame(_this.update);
     });
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "update", function () {
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "update", function () {
       if (!_this.mounted) return;
       _this.ticking = false;
       _this.oldCalculations = _this.calculations;
@@ -46054,32 +46614,28 @@ function (_Component) {
         }
       };
 
-      lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default()(_this.props, 'onUpdate', null, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2___default()({}, _this.props, {
+      lodash_invoke__WEBPACK_IMPORTED_MODULE_9___default()(_this.props, 'onUpdate', null, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({}, _this.props, {
         calculations: _this.calculations
       }));
 
       _this.fireOnPassed(); // Heads up! Reverse callbacks should be fired first
 
 
-      lodash_forEach__WEBPACK_IMPORTED_MODULE_11___default()(reverse, function (data, value) {
+      lodash_forEach__WEBPACK_IMPORTED_MODULE_10___default()(reverse, function (data, value) {
         return _this.fire(data, value, true);
       });
 
-      lodash_forEach__WEBPACK_IMPORTED_MODULE_11___default()(forward, function (data, value) {
+      lodash_forEach__WEBPACK_IMPORTED_MODULE_10___default()(forward, function (data, value) {
         return _this.fire(data, value);
       });
 
       if (updateOn === 'repaint') _this.handleUpdate();
     });
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleRef", function (c) {
-      return _this.ref = c;
-    });
-
     return _this;
   }
 
-  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4___default()(Visibility, [{
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(Visibility, [{
     key: "componentWillReceiveProps",
     // ----------------------------------------
     // Lifecycle
@@ -46161,8 +46717,8 @@ function (_Component) {
       var continuous = this.props.continuous;
       if (!callback) return; // Heads up! When `continuous` is true, callback will be fired always
 
-      if (!continuous && lodash_includes__WEBPACK_IMPORTED_MODULE_13___default()(this.firedCallbacks, name)) return;
-      callback(null, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2___default()({}, this.props, {
+      if (!continuous && lodash_includes__WEBPACK_IMPORTED_MODULE_12___default()(this.firedCallbacks, name)) return;
+      callback(null, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({}, this.props, {
         calculations: this.calculations
       }));
       this.firedCallbacks.push(name);
@@ -46177,7 +46733,7 @@ function (_Component) {
           pixelsPassed = _this$calculations.pixelsPassed;
       var onPassed = this.props.onPassed;
 
-      lodash_forEach__WEBPACK_IMPORTED_MODULE_11___default()(onPassed, function (callback, passed) {
+      lodash_forEach__WEBPACK_IMPORTED_MODULE_10___default()(onPassed, function (callback, passed) {
         var pixelsValue = Number(passed);
 
         if (pixelsValue && pixelsPassed >= pixelsValue) {
@@ -46200,14 +46756,14 @@ function (_Component) {
     value: function computeCalculations() {
       var offset = this.props.offset;
 
-      var _this$ref$getBounding = this.ref.getBoundingClientRect(),
-          bottom = _this$ref$getBounding.bottom,
-          height = _this$ref$getBounding.height,
-          top = _this$ref$getBounding.top,
-          width = _this$ref$getBounding.width;
+      var _this$ref$current$get = this.ref.current.getBoundingClientRect(),
+          bottom = _this$ref$current$get.bottom,
+          height = _this$ref$current$get.height,
+          top = _this$ref$current$get.top,
+          width = _this$ref$current$get.width;
 
       var _normalizeOffset = Object(_lib__WEBPACK_IMPORTED_MODULE_16__["normalizeOffset"])(offset),
-          _normalizeOffset2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_normalizeOffset, 2),
+          _normalizeOffset2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_normalizeOffset, 2),
           topOffset = _normalizeOffset2[0],
           bottomOffset = _normalizeOffset2[1];
 
@@ -46238,28 +46794,25 @@ function (_Component) {
         width: width
       };
     } // ----------------------------------------
-    // Refs
+    // Render
     // ----------------------------------------
 
   }, {
     key: "render",
-    // ----------------------------------------
-    // Render
-    // ----------------------------------------
     value: function render() {
       var children = this.props.children;
       var ElementType = Object(_lib__WEBPACK_IMPORTED_MODULE_16__["getElementType"])(Visibility, this.props);
       var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_16__["getUnhandledProps"])(Visibility, this.props);
-      return react__WEBPACK_IMPORTED_MODULE_15___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, {
-        ref: this.handleRef
-      }), children);
+      return react__WEBPACK_IMPORTED_MODULE_14___default.a.createElement(_addons_Ref__WEBPACK_IMPORTED_MODULE_15__["default"], {
+        innerRef: this.ref
+      }, react__WEBPACK_IMPORTED_MODULE_14___default.a.createElement(ElementType, rest, children));
     }
   }]);
 
   return Visibility;
-}(react__WEBPACK_IMPORTED_MODULE_15__["Component"]);
+}(react__WEBPACK_IMPORTED_MODULE_14__["Component"]);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Visibility, "defaultProps", {
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Visibility, "defaultProps", {
   context: Object(_lib__WEBPACK_IMPORTED_MODULE_16__["isBrowser"])() ? window : null,
   continuous: false,
   offset: [0, 0],
@@ -46267,7 +46820,7 @@ _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Vis
   updateOn: 'events'
 });
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Visibility, "handledProps", ["as", "children", "context", "continuous", "fireOnMount", "offset", "onBottomPassed", "onBottomPassedReverse", "onBottomVisible", "onBottomVisibleReverse", "onOffScreen", "onOnScreen", "onPassed", "onPassing", "onPassingReverse", "onTopPassed", "onTopPassedReverse", "onTopVisible", "onTopVisibleReverse", "onUpdate", "once", "updateOn"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Visibility, "handledProps", ["as", "children", "context", "continuous", "fireOnMount", "offset", "onBottomPassed", "onBottomPassedReverse", "onBottomVisible", "onBottomVisibleReverse", "onOffScreen", "onOnScreen", "onPassed", "onPassing", "onPassingReverse", "onTopPassed", "onTopPassedReverse", "onTopVisible", "onTopVisibleReverse", "onUpdate", "once", "updateOn"]);
 
 
 Visibility.propTypes =  true ? {
@@ -46275,19 +46828,19 @@ Visibility.propTypes =  true ? {
   as: _lib__WEBPACK_IMPORTED_MODULE_16__["customPropTypes"].as,
 
   /** Primary content. */
-  children: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.node,
+  children: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.node,
 
   /** Context which visibility should attach onscroll events. */
-  context: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.object,
+  context: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.object,
 
   /**
    * When set to true a callback will occur anytime an element passes a condition not just immediately after the
    * threshold is met.
    */
-  continuous: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.bool,
+  continuous: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
 
   /** Fires callbacks immediately after mount. */
-  fireOnMount: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.bool,
+  fireOnMount: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
 
   /**
    * Element's bottom edge has passed top of screen.
@@ -46295,7 +46848,7 @@ Visibility.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onBottomPassed: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.func,
+  onBottomPassed: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Element's bottom edge has not passed top of screen.
@@ -46303,7 +46856,7 @@ Visibility.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onBottomPassedReverse: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.func,
+  onBottomPassedReverse: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Element's bottom edge has passed bottom of screen
@@ -46311,7 +46864,7 @@ Visibility.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onBottomVisible: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.func,
+  onBottomVisible: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Element's bottom edge has not passed bottom of screen.
@@ -46319,19 +46872,19 @@ Visibility.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onBottomVisibleReverse: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.func,
+  onBottomVisibleReverse: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Value that context should be adjusted in pixels. Useful for making content appear below content fixed to the
    * page.
    */
-  offset: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.string]))]),
+  offset: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.string]))]),
 
   /** When set to false a callback will occur each time an element passes the threshold for a condition. */
-  once: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.bool,
+  once: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
 
   /** Element is not visible on the screen. */
-  onPassed: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.object,
+  onPassed: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.object,
 
   /**
    * Any part of an element is visible on screen.
@@ -46339,7 +46892,7 @@ Visibility.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onPassing: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.func,
+  onPassing: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Element's top has not passed top of screen but bottom has.
@@ -46347,7 +46900,7 @@ Visibility.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onPassingReverse: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.func,
+  onPassingReverse: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Element is not visible on the screen.
@@ -46355,7 +46908,7 @@ Visibility.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onOffScreen: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.func,
+  onOffScreen: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Element is visible on the screen.
@@ -46363,7 +46916,7 @@ Visibility.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onOnScreen: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.func,
+  onOnScreen: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Element's top edge has passed top of the screen.
@@ -46371,7 +46924,7 @@ Visibility.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onTopPassed: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.func,
+  onTopPassed: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Element's top edge has not passed top of the screen.
@@ -46379,7 +46932,7 @@ Visibility.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onTopPassedReverse: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.func,
+  onTopPassedReverse: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Element's top edge has passed bottom of screen.
@@ -46387,7 +46940,7 @@ Visibility.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onTopVisible: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.func,
+  onTopVisible: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Element's top edge has not passed bottom of screen.
@@ -46395,7 +46948,7 @@ Visibility.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onTopVisibleReverse: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.func,
+  onTopVisibleReverse: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Element's top edge has passed bottom of screen.
@@ -46403,14 +46956,14 @@ Visibility.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props.
    */
-  onUpdate: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.func,
+  onUpdate: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Allows to choose the mode of the position calculations:
    * - `events` - (default) update and fire callbacks only on scroll/resize events
    * - `repaint` - update and fire callbacks on browser repaint (animation frames)
    */
-  updateOn: prop_types__WEBPACK_IMPORTED_MODULE_14___default.a.oneOf(['events', 'repaint'])
+  updateOn: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.oneOf(['events', 'repaint'])
 } : undefined;
 
 /***/ }),
@@ -49782,12 +50335,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_12__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
-/* harmony import */ var _Icon_Icon__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../Icon/Icon */ "./node_modules/semantic-ui-react/dist/es/elements/Icon/Icon.js");
-/* harmony import */ var _Label_Label__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../Label/Label */ "./node_modules/semantic-ui-react/dist/es/elements/Label/Label.js");
-/* harmony import */ var _ButtonContent__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./ButtonContent */ "./node_modules/semantic-ui-react/dist/es/elements/Button/ButtonContent.js");
-/* harmony import */ var _ButtonGroup__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./ButtonGroup */ "./node_modules/semantic-ui-react/dist/es/elements/Button/ButtonGroup.js");
-/* harmony import */ var _ButtonOr__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./ButtonOr */ "./node_modules/semantic-ui-react/dist/es/elements/Button/ButtonOr.js");
+/* harmony import */ var _addons_Ref__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../addons/Ref */ "./node_modules/semantic-ui-react/dist/es/addons/Ref/index.js");
+/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
+/* harmony import */ var _Icon_Icon__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../Icon/Icon */ "./node_modules/semantic-ui-react/dist/es/elements/Icon/Icon.js");
+/* harmony import */ var _Label_Label__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../Label/Label */ "./node_modules/semantic-ui-react/dist/es/elements/Label/Label.js");
+/* harmony import */ var _ButtonContent__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./ButtonContent */ "./node_modules/semantic-ui-react/dist/es/elements/Button/ButtonContent.js");
+/* harmony import */ var _ButtonGroup__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./ButtonGroup */ "./node_modules/semantic-ui-react/dist/es/elements/Button/ButtonGroup.js");
+/* harmony import */ var _ButtonOr__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./ButtonOr */ "./node_modules/semantic-ui-react/dist/es/elements/Button/ButtonOr.js");
+
 
 
 
@@ -49833,6 +50388,8 @@ function (_Component) {
 
     _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4___default()(this, (_getPrototypeOf2 = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5___default()(Button)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "ref", Object(react__WEBPACK_IMPORTED_MODULE_13__["createRef"])());
+
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "computeElementType", function () {
       var _this$props = _this.props,
           attached = _this$props.attached,
@@ -49850,7 +50407,7 @@ function (_Component) {
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "focus", function () {
-      return lodash_invoke__WEBPACK_IMPORTED_MODULE_9___default()(_this.ref, 'focus');
+      return lodash_invoke__WEBPACK_IMPORTED_MODULE_9___default()(_this.ref.current, 'focus');
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleClick", function (e) {
@@ -49864,10 +50421,6 @@ function (_Component) {
       lodash_invoke__WEBPACK_IMPORTED_MODULE_9___default()(_this.props, 'onClick', e, _this.props);
     });
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleRef", function (c) {
-      return _this.ref = c;
-    });
-
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "hasIconClass", function () {
       var _this$props3 = _this.props,
           labelPosition = _this$props3.labelPosition,
@@ -49875,7 +50428,7 @@ function (_Component) {
           content = _this$props3.content,
           icon = _this$props3.icon;
       if (icon === true) return true;
-      return icon && (labelPosition || _lib__WEBPACK_IMPORTED_MODULE_14__["childrenUtils"].isNil(children) && lodash_isNil__WEBPACK_IMPORTED_MODULE_10___default()(content));
+      return icon && (labelPosition || _lib__WEBPACK_IMPORTED_MODULE_15__["childrenUtils"].isNil(children) && lodash_isNil__WEBPACK_IMPORTED_MODULE_10___default()(content));
     });
 
     return _this;
@@ -49916,17 +50469,17 @@ function (_Component) {
           secondary = _this$props4.secondary,
           size = _this$props4.size,
           toggle = _this$props4.toggle;
-      var baseClasses = classnames__WEBPACK_IMPORTED_MODULE_11___default()(color, size, Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(active, 'active'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(basic, 'basic'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(circular, 'circular'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(compact, 'compact'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(fluid, 'fluid'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(this.hasIconClass(), 'icon'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(inverted, 'inverted'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(loading, 'loading'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(negative, 'negative'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(positive, 'positive'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(primary, 'primary'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(secondary, 'secondary'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(toggle, 'toggle'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOrValueAndKey"])(animated, 'animated'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOrValueAndKey"])(attached, 'attached'));
-      var labeledClasses = classnames__WEBPACK_IMPORTED_MODULE_11___default()(Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOrValueAndKey"])(labelPosition || !!label, 'labeled'));
-      var wrapperClasses = classnames__WEBPACK_IMPORTED_MODULE_11___default()(Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(disabled, 'disabled'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useValueAndKey"])(floated, 'floated'));
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_14__["getUnhandledProps"])(Button, this.props);
-      var ElementType = Object(_lib__WEBPACK_IMPORTED_MODULE_14__["getElementType"])(Button, this.props, this.computeElementType);
+      var baseClasses = classnames__WEBPACK_IMPORTED_MODULE_11___default()(color, size, Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(active, 'active'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(basic, 'basic'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(circular, 'circular'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(compact, 'compact'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(fluid, 'fluid'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(this.hasIconClass(), 'icon'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(inverted, 'inverted'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(loading, 'loading'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(negative, 'negative'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(positive, 'positive'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(primary, 'primary'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(secondary, 'secondary'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(toggle, 'toggle'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOrValueAndKey"])(animated, 'animated'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOrValueAndKey"])(attached, 'attached'));
+      var labeledClasses = classnames__WEBPACK_IMPORTED_MODULE_11___default()(Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOrValueAndKey"])(labelPosition || !!label, 'labeled'));
+      var wrapperClasses = classnames__WEBPACK_IMPORTED_MODULE_11___default()(Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(disabled, 'disabled'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useValueAndKey"])(floated, 'floated'));
+      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_15__["getUnhandledProps"])(Button, this.props);
+      var ElementType = Object(_lib__WEBPACK_IMPORTED_MODULE_15__["getElementType"])(Button, this.props, this.computeElementType);
       var tabIndex = this.computeTabIndex(ElementType);
 
       if (!lodash_isNil__WEBPACK_IMPORTED_MODULE_10___default()(label)) {
         var buttonClasses = classnames__WEBPACK_IMPORTED_MODULE_11___default()('ui', baseClasses, 'button', className);
         var containerClasses = classnames__WEBPACK_IMPORTED_MODULE_11___default()('ui', labeledClasses, 'button', className, wrapperClasses);
-        var labelElement = _Label_Label__WEBPACK_IMPORTED_MODULE_16__["default"].create(label, {
+        var labelElement = _Label_Label__WEBPACK_IMPORTED_MODULE_17__["default"].create(label, {
           defaultProps: {
             basic: true,
             pointing: labelPosition === 'left' ? 'right' : 'left'
@@ -49936,31 +50489,33 @@ function (_Component) {
         return react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_1___default()({}, rest, {
           className: containerClasses,
           onClick: this.handleClick
-        }), labelPosition === 'left' && labelElement, react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement("button", {
+        }), labelPosition === 'left' && labelElement, react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_addons_Ref__WEBPACK_IMPORTED_MODULE_14__["default"], {
+          innerRef: this.ref
+        }, react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement("button", {
           className: buttonClasses,
           "aria-pressed": toggle ? !!active : undefined,
           disabled: disabled,
-          ref: this.handleRef,
           tabIndex: tabIndex
-        }, _Icon_Icon__WEBPACK_IMPORTED_MODULE_15__["default"].create(icon, {
+        }, _Icon_Icon__WEBPACK_IMPORTED_MODULE_16__["default"].create(icon, {
           autoGenerateKey: false
-        }), " ", content), (labelPosition === 'right' || !labelPosition) && labelElement);
+        }), " ", content)), (labelPosition === 'right' || !labelPosition) && labelElement);
       }
 
       var classes = classnames__WEBPACK_IMPORTED_MODULE_11___default()('ui', baseClasses, wrapperClasses, labeledClasses, 'button', className);
-      var hasChildren = !_lib__WEBPACK_IMPORTED_MODULE_14__["childrenUtils"].isNil(children);
+      var hasChildren = !_lib__WEBPACK_IMPORTED_MODULE_15__["childrenUtils"].isNil(children);
       var role = this.computeButtonAriaRole(ElementType);
-      return react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_1___default()({}, rest, {
+      return react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_addons_Ref__WEBPACK_IMPORTED_MODULE_14__["default"], {
+        innerRef: this.ref
+      }, react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_1___default()({}, rest, {
         className: classes,
         "aria-pressed": toggle ? !!active : undefined,
         disabled: disabled && ElementType === 'button' || undefined,
         onClick: this.handleClick,
-        ref: this.handleRef,
         role: role,
         tabIndex: tabIndex
-      }), hasChildren && children, !hasChildren && _Icon_Icon__WEBPACK_IMPORTED_MODULE_15__["default"].create(icon, {
+      }), hasChildren && children, !hasChildren && _Icon_Icon__WEBPACK_IMPORTED_MODULE_16__["default"].create(icon, {
         autoGenerateKey: false
-      }), !hasChildren && content);
+      }), !hasChildren && content));
     }
   }]);
 
@@ -49971,17 +50526,17 @@ _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(But
   as: 'button'
 });
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Button, "Content", _ButtonContent__WEBPACK_IMPORTED_MODULE_17__["default"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Button, "Content", _ButtonContent__WEBPACK_IMPORTED_MODULE_18__["default"]);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Button, "Group", _ButtonGroup__WEBPACK_IMPORTED_MODULE_18__["default"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Button, "Group", _ButtonGroup__WEBPACK_IMPORTED_MODULE_19__["default"]);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Button, "Or", _ButtonOr__WEBPACK_IMPORTED_MODULE_19__["default"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Button, "Or", _ButtonOr__WEBPACK_IMPORTED_MODULE_20__["default"]);
 
 _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Button, "handledProps", ["active", "animated", "as", "attached", "basic", "children", "circular", "className", "color", "compact", "content", "disabled", "floated", "fluid", "icon", "inverted", "label", "labelPosition", "loading", "negative", "onClick", "positive", "primary", "role", "secondary", "size", "tabIndex", "toggle"]);
 
 Button.propTypes =  true ? {
   /** An element type to render as (string or function). */
-  as: _lib__WEBPACK_IMPORTED_MODULE_14__["customPropTypes"].as,
+  as: _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].as,
 
   /** A button can show it is currently the active user selection. */
   active: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool,
@@ -49996,9 +50551,9 @@ Button.propTypes =  true ? {
   basic: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool,
 
   /** Primary content. */
-  children: _lib__WEBPACK_IMPORTED_MODULE_14__["customPropTypes"].every([prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.node, _lib__WEBPACK_IMPORTED_MODULE_14__["customPropTypes"].disallow(['label']), _lib__WEBPACK_IMPORTED_MODULE_14__["customPropTypes"].givenProps({
+  children: _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].every([prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.node, _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].disallow(['label']), _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].givenProps({
     icon: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.string.isRequired, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.object.isRequired, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.element.isRequired])
-  }, _lib__WEBPACK_IMPORTED_MODULE_14__["customPropTypes"].disallow(['icon']))]),
+  }, _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].disallow(['icon']))]),
 
   /** A button can be circular. */
   circular: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool,
@@ -50007,31 +50562,31 @@ Button.propTypes =  true ? {
   className: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.string,
 
   /** A button can have different colors */
-  color: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOf(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(_lib__WEBPACK_IMPORTED_MODULE_14__["SUI"].COLORS).concat(['facebook', 'google plus', 'instagram', 'linkedin', 'twitter', 'vk', 'youtube'])),
+  color: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOf(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(_lib__WEBPACK_IMPORTED_MODULE_15__["SUI"].COLORS).concat(['facebook', 'google plus', 'instagram', 'linkedin', 'twitter', 'vk', 'youtube'])),
 
   /** A button can reduce its padding to fit into tighter spaces. */
   compact: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool,
 
   /** Shorthand for primary content. */
-  content: _lib__WEBPACK_IMPORTED_MODULE_14__["customPropTypes"].contentShorthand,
+  content: _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].contentShorthand,
 
   /** A button can show it is currently unable to be interacted with. */
   disabled: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool,
 
   /** A button can be aligned to the left or right of its container. */
-  floated: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOf(_lib__WEBPACK_IMPORTED_MODULE_14__["SUI"].FLOATS),
+  floated: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOf(_lib__WEBPACK_IMPORTED_MODULE_15__["SUI"].FLOATS),
 
   /** A button can take the width of its container. */
   fluid: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool,
 
   /** Add an Icon by name, props object, or pass an <Icon />. */
-  icon: _lib__WEBPACK_IMPORTED_MODULE_14__["customPropTypes"].some([prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.object, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.element]),
+  icon: _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].some([prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.object, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.element]),
 
   /** A button can be formatted to appear on dark backgrounds. */
   inverted: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool,
 
   /** Add a Label by text, props object, or pass a <Label />. */
-  label: _lib__WEBPACK_IMPORTED_MODULE_14__["customPropTypes"].some([prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.object, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.element]),
+  label: _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].some([prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.object, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.element]),
 
   /** A labeled button can format a Label or Icon to appear on the left or right. */
   labelPosition: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOf(['right', 'left']),
@@ -50062,7 +50617,7 @@ Button.propTypes =  true ? {
   secondary: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool,
 
   /** A button can have different sizes. */
-  size: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOf(_lib__WEBPACK_IMPORTED_MODULE_14__["SUI"].SIZES),
+  size: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOf(_lib__WEBPACK_IMPORTED_MODULE_15__["SUI"].SIZES),
 
   /** A button can receive focus. */
   tabIndex: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.string]),
@@ -50070,7 +50625,7 @@ Button.propTypes =  true ? {
   /** A button can be formatted to toggle on and off. */
   toggle: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool
 } : undefined;
-Button.create = Object(_lib__WEBPACK_IMPORTED_MODULE_14__["createShorthandFactory"])(Button, function (value) {
+Button.create = Object(_lib__WEBPACK_IMPORTED_MODULE_15__["createShorthandFactory"])(Button, function (value) {
   return {
     content: value
   };
@@ -51608,6 +52163,8 @@ function (_Component) {
 
     _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5___default()(this, (_getPrototypeOf2 = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Input)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "inputRef", Object(react__WEBPACK_IMPORTED_MODULE_17__["createRef"])());
+
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "computeIcon", function () {
       var _this$props = _this.props,
           loading = _this$props.loading,
@@ -51625,11 +52182,11 @@ function (_Component) {
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "focus", function () {
-      return _this.inputRef.focus();
+      return _this.inputRef.current.focus();
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "select", function () {
-      return _this.inputRef.select();
+      return _this.inputRef.current.select();
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleChange", function (e) {
@@ -51644,14 +52201,9 @@ function (_Component) {
       return _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2___default()({}, defaultProps, child.props, {
         ref: function ref(c) {
           Object(_lib__WEBPACK_IMPORTED_MODULE_18__["handleRef"])(child.ref, c);
-
-          _this.handleInputRef(c);
+          _this.inputRef.current = c;
         }
       });
-    });
-
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleInputRef", function (c) {
-      return _this.inputRef = c;
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "partitionProps", function () {
@@ -51673,7 +52225,7 @@ function (_Component) {
         type: type,
         tabIndex: tabIndex,
         onChange: _this.handleChange,
-        ref: _this.handleInputRef
+        ref: _this.inputRef
       }), rest];
     });
 
@@ -51816,7 +52368,7 @@ Input.propTypes =  true ? {
   onChange: prop_types__WEBPACK_IMPORTED_MODULE_16___default.a.func,
 
   /** An Input can vary in size. */
-  size: prop_types__WEBPACK_IMPORTED_MODULE_16___default.a.oneOf(_lib__WEBPACK_IMPORTED_MODULE_18__["SUI"].SIZES),
+  size: prop_types__WEBPACK_IMPORTED_MODULE_16___default.a.oneOf(['mini', 'small', 'large', 'big', 'huge', 'massive']),
 
   /** An Input can receive focus. */
   tabIndex: prop_types__WEBPACK_IMPORTED_MODULE_16___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_16___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_16___default.a.string]),
@@ -56453,7 +57005,7 @@ var createInnerSuffix = function createInnerSuffix(innerGroupEnd, lastGroupStart
 /*!***********************************************************************!*\
   !*** ./node_modules/semantic-ui-react/dist/es/lib/customPropTypes.js ***!
   \***********************************************************************/
-/*! exports provided: as, domNode, suggest, disallow, every, some, givenProps, demand, multipleProp, contentShorthand, itemShorthand, collectionShorthand, deprecate */
+/*! exports provided: as, domNode, suggest, disallow, every, some, givenProps, demand, multipleProp, contentShorthand, itemShorthand, collectionShorthand, deprecate, refObject, ref */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -56471,6 +57023,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "itemShorthand", function() { return itemShorthand; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "collectionShorthand", function() { return collectionShorthand; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deprecate", function() { return deprecate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "refObject", function() { return refObject; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ref", function() { return ref; });
 /* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/toConsumableArray.js");
 /* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var lodash_fp_difference__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash/fp/difference */ "./node_modules/lodash/fp/difference.js");
@@ -56550,7 +57104,7 @@ var domNode = function domNode(props, propName) {
   if (props[propName] === undefined) return; // skip if prop is valid
 
   if (props[propName] instanceof Element) return;
-  throw new Error("Invalid prop \"".concat(propName, "\" supplied, expected a DOM node."));
+  return new Error("Invalid prop \"".concat(propName, "\" supplied, expected a DOM node."));
 };
 /**
  * Similar to PropTypes.oneOf but shows closest matches.
@@ -56856,62 +57410,14 @@ var deprecate = function deprecate(help, validator) {
     return error;
   };
 };
+/** A checker that matches the React.RefObject type. */
 
-/***/ }),
+var refObject = prop_types__WEBPACK_IMPORTED_MODULE_17___default.a.shape({
+  current: prop_types__WEBPACK_IMPORTED_MODULE_17___default.a.object
+});
+/** A checker that matches the React.Ref type. */
 
-/***/ "./node_modules/semantic-ui-react/dist/es/lib/debug.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/semantic-ui-react/dist/es/lib/debug.js ***!
-  \*************************************************************/
-/*! exports provided: makeDebugger, debug */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeDebugger", function() { return makeDebugger; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "debug", function() { return debug; });
-/* harmony import */ var _isBrowser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./isBrowser */ "./node_modules/semantic-ui-react/dist/es/lib/isBrowser.js");
-
-
-if (Object(_isBrowser__WEBPACK_IMPORTED_MODULE_0__["default"])() && "development" !== 'production' && "development" !== 'test') {
-  // Heads Up!
-  // https://github.com/visionmedia/debug/pull/331
-  //
-  // debug now clears storage on load, grab the debug settings before require('debug').
-  // We try/catch here as Safari throws on localStorage access in private mode or with cookies disabled.
-  var DEBUG;
-
-  try {
-    DEBUG = window.localStorage.debug;
-  } catch (e) {
-    /* eslint-disable no-console */
-    console.error('Semantic-UI-React could not enable debug.');
-    console.error(e);
-    /* eslint-enable no-console */
-  } // enable what ever settings we got from storage
-
-}
-/**
- * Create a namespaced debug function.
- * @param {String} namespace Usually a component name.
- * @example
- * import { makeDebugger } from 'src/lib'
- * const debug = makeDebugger('namespace')
- *
- * debug('Some message')
- * @returns {Function}
- */
-
-
-var makeDebugger = function makeDebugger(namespace) {};
-/**
- * Default debugger, simple log.
- * @example
- * import { debug } from 'src/lib'
- * debug('Some message')
- */
-
-var debug = makeDebugger('log');
+var ref = prop_types__WEBPACK_IMPORTED_MODULE_17___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_17___default.a.func, refObject]);
 
 /***/ }),
 
@@ -57301,48 +57807,6 @@ var getUnhandledProps = function getUnhandledProps(Component, props) {
 
 /***/ }),
 
-/***/ "./node_modules/semantic-ui-react/dist/es/lib/handleRef.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/semantic-ui-react/dist/es/lib/handleRef.js ***!
-  \*****************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
-/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
-
-/**
- * The function that correctly handles passing refs.
- *
- * @param {Function|Object} ref An ref object or function
- * @param {HTMLElement} node A node that should be passed by ref
- */
-
-var handleRef = function handleRef(ref, node) {
-  if (true) {
-    if (typeof ref === 'string') {
-      throw new Error(['We do not support refs as string, this is a legacy API and will be likely to be removed in', 'one of the future releases of React.'].join(' '));
-    }
-  }
-
-  if (typeof ref === 'function') {
-    ref(node);
-    return;
-  }
-
-  if (ref !== null && _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(ref) === 'object') {
-    // The `current` property is defined as readonly, however it's a valid way because `ref` is a mutable object
-    // eslint-disable-next-line no-param-reassign
-    ref.current = node;
-  }
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (handleRef);
-
-/***/ }),
-
 /***/ "./node_modules/semantic-ui-react/dist/es/lib/htmlPropsUtils.js":
 /*!**********************************************************************!*\
   !*** ./node_modules/semantic-ui-react/dist/es/lib/htmlPropsUtils.js ***!
@@ -57409,7 +57873,7 @@ var partitionHTMLProps = function partitionHTMLProps(props) {
 /*!*************************************************************!*\
   !*** ./node_modules/semantic-ui-react/dist/es/lib/index.js ***!
   \*************************************************************/
-/*! exports provided: AutoControlledComponent, getChildMapping, mergeChildMappings, childrenUtils, useKeyOnly, useKeyOrValueAndKey, useValueAndKey, useMultipleProp, useTextAlignProp, useVerticalAlignProp, useWidthProp, customPropTypes, debug, makeDebugger, eventStack, getUnhandledProps, getElementType, handleRef, htmlInputAttrs, htmlInputEvents, htmlInputProps, htmlImageProps, partitionHTMLProps, isBrowser, doesNodeContainClick, leven, createPaginationItems, SUI, numberToWordMap, numberToWord, normalizeOffset, normalizeTransitionDuration, objectDiff, createShorthand, createShorthandFactory, createHTMLDivision, createHTMLIframe, createHTMLImage, createHTMLInput, createHTMLLabel, createHTMLParagraph */
+/*! exports provided: AutoControlledComponent, getChildMapping, mergeChildMappings, childrenUtils, useKeyOnly, useKeyOrValueAndKey, useValueAndKey, useMultipleProp, useTextAlignProp, useVerticalAlignProp, useWidthProp, customPropTypes, eventStack, getUnhandledProps, getElementType, htmlInputAttrs, htmlInputEvents, htmlInputProps, htmlImageProps, partitionHTMLProps, isBrowser, doesNodeContainClick, leven, createPaginationItems, SUI, numberToWordMap, numberToWord, normalizeOffset, normalizeTransitionDuration, objectDiff, handleRef, isRefObject, createShorthand, createShorthandFactory, createHTMLDivision, createHTMLIframe, createHTMLImage, createHTMLInput, createHTMLLabel, createHTMLParagraph */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -57441,78 +57905,76 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _customPropTypes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./customPropTypes */ "./node_modules/semantic-ui-react/dist/es/lib/customPropTypes.js");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "customPropTypes", function() { return _customPropTypes__WEBPACK_IMPORTED_MODULE_4__; });
-/* harmony import */ var _debug__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./debug */ "./node_modules/semantic-ui-react/dist/es/lib/debug.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "debug", function() { return _debug__WEBPACK_IMPORTED_MODULE_5__["debug"]; });
+/* harmony import */ var _eventStack__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./eventStack */ "./node_modules/semantic-ui-react/dist/es/lib/eventStack/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "eventStack", function() { return _eventStack__WEBPACK_IMPORTED_MODULE_5__["default"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "makeDebugger", function() { return _debug__WEBPACK_IMPORTED_MODULE_5__["makeDebugger"]; });
+/* harmony import */ var _factories__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./factories */ "./node_modules/semantic-ui-react/dist/es/lib/factories.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createShorthand", function() { return _factories__WEBPACK_IMPORTED_MODULE_6__["createShorthand"]; });
 
-/* harmony import */ var _eventStack__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./eventStack */ "./node_modules/semantic-ui-react/dist/es/lib/eventStack/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "eventStack", function() { return _eventStack__WEBPACK_IMPORTED_MODULE_6__["default"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createShorthandFactory", function() { return _factories__WEBPACK_IMPORTED_MODULE_6__["createShorthandFactory"]; });
 
-/* harmony import */ var _factories__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./factories */ "./node_modules/semantic-ui-react/dist/es/lib/factories.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createShorthand", function() { return _factories__WEBPACK_IMPORTED_MODULE_7__["createShorthand"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createHTMLDivision", function() { return _factories__WEBPACK_IMPORTED_MODULE_6__["createHTMLDivision"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createShorthandFactory", function() { return _factories__WEBPACK_IMPORTED_MODULE_7__["createShorthandFactory"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createHTMLIframe", function() { return _factories__WEBPACK_IMPORTED_MODULE_6__["createHTMLIframe"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createHTMLDivision", function() { return _factories__WEBPACK_IMPORTED_MODULE_7__["createHTMLDivision"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createHTMLImage", function() { return _factories__WEBPACK_IMPORTED_MODULE_6__["createHTMLImage"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createHTMLIframe", function() { return _factories__WEBPACK_IMPORTED_MODULE_7__["createHTMLIframe"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createHTMLInput", function() { return _factories__WEBPACK_IMPORTED_MODULE_6__["createHTMLInput"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createHTMLImage", function() { return _factories__WEBPACK_IMPORTED_MODULE_7__["createHTMLImage"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createHTMLLabel", function() { return _factories__WEBPACK_IMPORTED_MODULE_6__["createHTMLLabel"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createHTMLInput", function() { return _factories__WEBPACK_IMPORTED_MODULE_7__["createHTMLInput"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createHTMLParagraph", function() { return _factories__WEBPACK_IMPORTED_MODULE_6__["createHTMLParagraph"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createHTMLLabel", function() { return _factories__WEBPACK_IMPORTED_MODULE_7__["createHTMLLabel"]; });
+/* harmony import */ var _getUnhandledProps__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./getUnhandledProps */ "./node_modules/semantic-ui-react/dist/es/lib/getUnhandledProps.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getUnhandledProps", function() { return _getUnhandledProps__WEBPACK_IMPORTED_MODULE_7__["default"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createHTMLParagraph", function() { return _factories__WEBPACK_IMPORTED_MODULE_7__["createHTMLParagraph"]; });
+/* harmony import */ var _getElementType__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./getElementType */ "./node_modules/semantic-ui-react/dist/es/lib/getElementType.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getElementType", function() { return _getElementType__WEBPACK_IMPORTED_MODULE_8__["default"]; });
 
-/* harmony import */ var _getUnhandledProps__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./getUnhandledProps */ "./node_modules/semantic-ui-react/dist/es/lib/getUnhandledProps.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getUnhandledProps", function() { return _getUnhandledProps__WEBPACK_IMPORTED_MODULE_8__["default"]; });
+/* harmony import */ var _htmlPropsUtils__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./htmlPropsUtils */ "./node_modules/semantic-ui-react/dist/es/lib/htmlPropsUtils.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "htmlInputAttrs", function() { return _htmlPropsUtils__WEBPACK_IMPORTED_MODULE_9__["htmlInputAttrs"]; });
 
-/* harmony import */ var _getElementType__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./getElementType */ "./node_modules/semantic-ui-react/dist/es/lib/getElementType.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getElementType", function() { return _getElementType__WEBPACK_IMPORTED_MODULE_9__["default"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "htmlInputEvents", function() { return _htmlPropsUtils__WEBPACK_IMPORTED_MODULE_9__["htmlInputEvents"]; });
 
-/* harmony import */ var _handleRef__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./handleRef */ "./node_modules/semantic-ui-react/dist/es/lib/handleRef.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "handleRef", function() { return _handleRef__WEBPACK_IMPORTED_MODULE_10__["default"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "htmlInputProps", function() { return _htmlPropsUtils__WEBPACK_IMPORTED_MODULE_9__["htmlInputProps"]; });
 
-/* harmony import */ var _htmlPropsUtils__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./htmlPropsUtils */ "./node_modules/semantic-ui-react/dist/es/lib/htmlPropsUtils.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "htmlInputAttrs", function() { return _htmlPropsUtils__WEBPACK_IMPORTED_MODULE_11__["htmlInputAttrs"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "htmlImageProps", function() { return _htmlPropsUtils__WEBPACK_IMPORTED_MODULE_9__["htmlImageProps"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "htmlInputEvents", function() { return _htmlPropsUtils__WEBPACK_IMPORTED_MODULE_11__["htmlInputEvents"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "partitionHTMLProps", function() { return _htmlPropsUtils__WEBPACK_IMPORTED_MODULE_9__["partitionHTMLProps"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "htmlInputProps", function() { return _htmlPropsUtils__WEBPACK_IMPORTED_MODULE_11__["htmlInputProps"]; });
+/* harmony import */ var _isBrowser__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./isBrowser */ "./node_modules/semantic-ui-react/dist/es/lib/isBrowser.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isBrowser", function() { return _isBrowser__WEBPACK_IMPORTED_MODULE_10__["default"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "htmlImageProps", function() { return _htmlPropsUtils__WEBPACK_IMPORTED_MODULE_11__["htmlImageProps"]; });
+/* harmony import */ var _doesNodeContainClick__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./doesNodeContainClick */ "./node_modules/semantic-ui-react/dist/es/lib/doesNodeContainClick.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "doesNodeContainClick", function() { return _doesNodeContainClick__WEBPACK_IMPORTED_MODULE_11__["default"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "partitionHTMLProps", function() { return _htmlPropsUtils__WEBPACK_IMPORTED_MODULE_11__["partitionHTMLProps"]; });
+/* harmony import */ var _leven__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./leven */ "./node_modules/semantic-ui-react/dist/es/lib/leven.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "leven", function() { return _leven__WEBPACK_IMPORTED_MODULE_12__["default"]; });
 
-/* harmony import */ var _isBrowser__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./isBrowser */ "./node_modules/semantic-ui-react/dist/es/lib/isBrowser.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isBrowser", function() { return _isBrowser__WEBPACK_IMPORTED_MODULE_12__["default"]; });
+/* harmony import */ var _createPaginationItems__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./createPaginationItems */ "./node_modules/semantic-ui-react/dist/es/lib/createPaginationItems/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createPaginationItems", function() { return _createPaginationItems__WEBPACK_IMPORTED_MODULE_13__["default"]; });
 
-/* harmony import */ var _doesNodeContainClick__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./doesNodeContainClick */ "./node_modules/semantic-ui-react/dist/es/lib/doesNodeContainClick.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "doesNodeContainClick", function() { return _doesNodeContainClick__WEBPACK_IMPORTED_MODULE_13__["default"]; });
+/* harmony import */ var _SUI__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./SUI */ "./node_modules/semantic-ui-react/dist/es/lib/SUI.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "SUI", function() { return _SUI__WEBPACK_IMPORTED_MODULE_14__; });
+/* harmony import */ var _numberToWord__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./numberToWord */ "./node_modules/semantic-ui-react/dist/es/lib/numberToWord.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "numberToWordMap", function() { return _numberToWord__WEBPACK_IMPORTED_MODULE_15__["numberToWordMap"]; });
 
-/* harmony import */ var _leven__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./leven */ "./node_modules/semantic-ui-react/dist/es/lib/leven.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "leven", function() { return _leven__WEBPACK_IMPORTED_MODULE_14__["default"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "numberToWord", function() { return _numberToWord__WEBPACK_IMPORTED_MODULE_15__["numberToWord"]; });
 
-/* harmony import */ var _createPaginationItems__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./createPaginationItems */ "./node_modules/semantic-ui-react/dist/es/lib/createPaginationItems/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createPaginationItems", function() { return _createPaginationItems__WEBPACK_IMPORTED_MODULE_15__["default"]; });
+/* harmony import */ var _normalizeOffset__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./normalizeOffset */ "./node_modules/semantic-ui-react/dist/es/lib/normalizeOffset.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "normalizeOffset", function() { return _normalizeOffset__WEBPACK_IMPORTED_MODULE_16__["default"]; });
 
-/* harmony import */ var _SUI__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./SUI */ "./node_modules/semantic-ui-react/dist/es/lib/SUI.js");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "SUI", function() { return _SUI__WEBPACK_IMPORTED_MODULE_16__; });
-/* harmony import */ var _numberToWord__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./numberToWord */ "./node_modules/semantic-ui-react/dist/es/lib/numberToWord.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "numberToWordMap", function() { return _numberToWord__WEBPACK_IMPORTED_MODULE_17__["numberToWordMap"]; });
+/* harmony import */ var _normalizeTransitionDuration__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./normalizeTransitionDuration */ "./node_modules/semantic-ui-react/dist/es/lib/normalizeTransitionDuration.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "normalizeTransitionDuration", function() { return _normalizeTransitionDuration__WEBPACK_IMPORTED_MODULE_17__["default"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "numberToWord", function() { return _numberToWord__WEBPACK_IMPORTED_MODULE_17__["numberToWord"]; });
+/* harmony import */ var _objectDiff__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./objectDiff */ "./node_modules/semantic-ui-react/dist/es/lib/objectDiff.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectDiff", function() { return _objectDiff__WEBPACK_IMPORTED_MODULE_18__["default"]; });
 
-/* harmony import */ var _normalizeOffset__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./normalizeOffset */ "./node_modules/semantic-ui-react/dist/es/lib/normalizeOffset.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "normalizeOffset", function() { return _normalizeOffset__WEBPACK_IMPORTED_MODULE_18__["default"]; });
+/* harmony import */ var _refUtils__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./refUtils */ "./node_modules/semantic-ui-react/dist/es/lib/refUtils.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "handleRef", function() { return _refUtils__WEBPACK_IMPORTED_MODULE_19__["handleRef"]; });
 
-/* harmony import */ var _normalizeTransitionDuration__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./normalizeTransitionDuration */ "./node_modules/semantic-ui-react/dist/es/lib/normalizeTransitionDuration.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "normalizeTransitionDuration", function() { return _normalizeTransitionDuration__WEBPACK_IMPORTED_MODULE_19__["default"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isRefObject", function() { return _refUtils__WEBPACK_IMPORTED_MODULE_19__["isRefObject"]; });
 
-/* harmony import */ var _objectDiff__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./objectDiff */ "./node_modules/semantic-ui-react/dist/es/lib/objectDiff.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectDiff", function() { return _objectDiff__WEBPACK_IMPORTED_MODULE_20__["default"]; });
 
 
 
@@ -57546,10 +58008,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-
+ // Heads up! We import/export for this module to safely remove it with "babel-plugin-filter-imports"
 
 /***/ }),
 
@@ -57773,6 +58232,54 @@ __webpack_require__.r(__webpack_exports__);
     else if (!lodash_isEqual__WEBPACK_IMPORTED_MODULE_0___default()(val, target[key])) res[key] = target[key];
   }, {});
 });
+
+/***/ }),
+
+/***/ "./node_modules/semantic-ui-react/dist/es/lib/refUtils.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/semantic-ui-react/dist/es/lib/refUtils.js ***!
+  \****************************************************************/
+/*! exports provided: handleRef, isRefObject */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleRef", function() { return handleRef; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isRefObject", function() { return isRefObject; });
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
+
+/**
+ * The function that correctly handles passing refs.
+ *
+ * @param {Function|Object} ref An ref object or function
+ * @param {HTMLElement} node A node that should be passed by ref
+ */
+
+var handleRef = function handleRef(ref, node) {
+  if (true) {
+    if (typeof ref === 'string') {
+      throw new Error(['We do not support refs as string, this is a legacy API and will be likely to be removed in', 'one of the future releases of React.'].join(' '));
+    }
+  }
+
+  if (typeof ref === 'function') {
+    ref(node);
+    return;
+  }
+
+  if (ref !== null && _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(ref) === 'object') {
+    // The `current` property is defined as readonly, however it's a valid way because `ref` is a mutable object
+    // eslint-disable-next-line no-param-reassign
+    ref.current = node;
+  }
+};
+var isRefObject = function isRefObject(ref) {
+  return (// https://github.com/facebook/react/blob/v16.8.2/packages/react-reconciler/src/ReactFiberCommitWork.js#L665
+    // eslint-disable-next-line
+    ref !== null && _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(ref) === 'object' && ref.hasOwnProperty('current')
+  );
+};
 
 /***/ }),
 
@@ -58365,12 +58872,14 @@ function (_Component) {
           active = _this$props.active,
           children = _this$props.children,
           className = _this$props.className,
-          content = _this$props.content;
+          content = _this$props.content,
+          icon = _this$props.icon;
       var classes = classnames__WEBPACK_IMPORTED_MODULE_10___default()(Object(_lib__WEBPACK_IMPORTED_MODULE_13__["useKeyOnly"])(active, 'active'), 'title', className);
       var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_13__["getUnhandledProps"])(AccordionTitle, this.props);
       var ElementType = Object(_lib__WEBPACK_IMPORTED_MODULE_13__["getElementType"])(AccordionTitle, this.props);
+      var iconValue = lodash_isNil__WEBPACK_IMPORTED_MODULE_8___default()(icon) ? 'dropdown' : icon;
 
-      if (lodash_isNil__WEBPACK_IMPORTED_MODULE_8___default()(content)) {
+      if (!_lib__WEBPACK_IMPORTED_MODULE_13__["childrenUtils"].isNil(children)) {
         return react__WEBPACK_IMPORTED_MODULE_12___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, {
           className: classes,
           onClick: this.handleClick
@@ -58380,8 +58889,8 @@ function (_Component) {
       return react__WEBPACK_IMPORTED_MODULE_12___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, {
         className: classes,
         onClick: this.handleClick
-      }), react__WEBPACK_IMPORTED_MODULE_12___default.a.createElement(_elements_Icon__WEBPACK_IMPORTED_MODULE_14__["default"], {
-        name: "dropdown"
+      }), _elements_Icon__WEBPACK_IMPORTED_MODULE_14__["default"].create(iconValue, {
+        autoGenerateKey: false
       }), content);
     }
   }]);
@@ -58389,7 +58898,7 @@ function (_Component) {
   return AccordionTitle;
 }(react__WEBPACK_IMPORTED_MODULE_12__["Component"]);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(AccordionTitle, "handledProps", ["active", "as", "children", "className", "content", "index", "onClick"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(AccordionTitle, "handledProps", ["active", "as", "children", "className", "content", "icon", "index", "onClick"]);
 
 
 AccordionTitle.propTypes =  true ? {
@@ -58407,6 +58916,9 @@ AccordionTitle.propTypes =  true ? {
 
   /** Shorthand for primary content. */
   content: _lib__WEBPACK_IMPORTED_MODULE_13__["customPropTypes"].contentShorthand,
+
+  /** Shorthand for Icon. */
+  icon: _lib__WEBPACK_IMPORTED_MODULE_13__["customPropTypes"].itemShorthand,
 
   /** AccordionTitle index inside Accordion. */
   index: prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.number]),
@@ -58457,17 +58969,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js");
-/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(lodash_invoke__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var lodash_isNil__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js");
-/* harmony import */ var lodash_isNil__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(lodash_isNil__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_14__);
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
+/* harmony import */ var lodash_set__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! lodash/set */ "./node_modules/lodash/set.js");
+/* harmony import */ var lodash_set__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(lodash_set__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js");
+/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(lodash_invoke__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! lodash/get */ "./node_modules/lodash/get.js");
+/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(lodash_get__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var lodash_isNil__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js");
+/* harmony import */ var lodash_isNil__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(lodash_isNil__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_16__);
+/* harmony import */ var _addons_Ref__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../addons/Ref */ "./node_modules/semantic-ui-react/dist/es/addons/Ref/index.js");
+/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
+
+
+
 
 
 
@@ -58508,6 +59028,10 @@ function (_Component) {
 
     _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5___default()(this, (_getPrototypeOf2 = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Checkbox)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "inputRef", Object(react__WEBPACK_IMPORTED_MODULE_16__["createRef"])());
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "labelRef", Object(react__WEBPACK_IMPORTED_MODULE_16__["createRef"])());
+
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "canToggle", function () {
       var _this$props = _this.props,
           disabled = _this$props.disabled,
@@ -58521,29 +59045,46 @@ function (_Component) {
       var _this$props2 = _this.props,
           disabled = _this$props2.disabled,
           tabIndex = _this$props2.tabIndex;
-      if (!lodash_isNil__WEBPACK_IMPORTED_MODULE_11___default()(tabIndex)) return tabIndex;
+      if (!lodash_isNil__WEBPACK_IMPORTED_MODULE_13___default()(tabIndex)) return tabIndex;
       return disabled ? -1 : 0;
     });
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleInputRef", function (c) {
-      return _this.inputRef = c;
-    });
-
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleChange", function (e, fromMouseUp) {
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleClick", function (e) {
       var id = _this.props.id;
       var _this$state = _this.state,
           checked = _this$state.checked,
           indeterminate = _this$state.indeterminate;
+      var hasId = !lodash_isNil__WEBPACK_IMPORTED_MODULE_13___default()(id);
+      var isLabelClick = e.target === _this.labelRef.current;
+      var isLabelClickAndForwardedToInput = isLabelClick && hasId; // https://github.com/Semantic-Org/Semantic-UI-React/pull/3351
+
+      if (!isLabelClickAndForwardedToInput) {
+        lodash_invoke__WEBPACK_IMPORTED_MODULE_11___default()(_this.props, 'onClick', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2___default()({}, _this.props, {
+          checked: !checked,
+          indeterminate: !!indeterminate
+        }));
+      }
+
+      if (_this.isClickFromMouse) {
+        _this.isClickFromMouse = false;
+
+        if (isLabelClick && !hasId) {
+          _this.handleChange(e);
+        }
+
+        if (hasId) {
+          // To prevent two clicks from being fired from the component we have to stop the propagation
+          // from the "input" click: https://github.com/Semantic-Org/Semantic-UI-React/issues/3433
+          e.stopPropagation();
+        }
+      }
+    });
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleChange", function (e) {
+      var checked = _this.state.checked;
       if (!_this.canToggle()) return;
-      if (fromMouseUp && !lodash_isNil__WEBPACK_IMPORTED_MODULE_11___default()(id)) return; // We don't have a separate click handler as it's already called in here,
-      // and also to avoid duplicate calls, matching all DOM Checkbox comparisons.
 
-      lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default()(_this.props, 'onClick', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2___default()({}, _this.props, {
-        checked: !checked,
-        indeterminate: !!indeterminate
-      }));
-
-      lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default()(_this.props, 'onChange', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2___default()({}, _this.props, {
+      lodash_invoke__WEBPACK_IMPORTED_MODULE_11___default()(_this.props, 'onChange', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2___default()({}, _this.props, {
         checked: !checked,
         indeterminate: false
       }));
@@ -58559,12 +59100,14 @@ function (_Component) {
           checked = _this$state2.checked,
           indeterminate = _this$state2.indeterminate;
 
-      lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default()(_this.props, 'onMouseDown', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2___default()({}, _this.props, {
+      lodash_invoke__WEBPACK_IMPORTED_MODULE_11___default()(_this.props, 'onMouseDown', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2___default()({}, _this.props, {
         checked: !!checked,
         indeterminate: !!indeterminate
       }));
 
-      lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default()(_this.inputRef, 'focus');
+      lodash_invoke__WEBPACK_IMPORTED_MODULE_11___default()(_this.inputRef.current, 'focus'); // Heads up!
+      // We need to call "preventDefault" to keep element focused.
+
 
       e.preventDefault();
     });
@@ -58573,18 +59116,18 @@ function (_Component) {
       var _this$state3 = _this.state,
           checked = _this$state3.checked,
           indeterminate = _this$state3.indeterminate;
+      _this.isClickFromMouse = true;
 
-      lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default()(_this.props, 'onMouseUp', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2___default()({}, _this.props, {
+      lodash_invoke__WEBPACK_IMPORTED_MODULE_11___default()(_this.props, 'onMouseUp', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2___default()({}, _this.props, {
         checked: !!checked,
         indeterminate: !!indeterminate
       }));
-
-      _this.handleChange(e, true);
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "setIndeterminate", function () {
       var indeterminate = _this.state.indeterminate;
-      if (_this.inputRef) _this.inputRef.indeterminate = !!indeterminate;
+
+      lodash_set__WEBPACK_IMPORTED_MODULE_10___default()(_this.inputRef, 'current.indeterminate', !!indeterminate);
     });
 
     return _this;
@@ -58618,48 +59161,55 @@ function (_Component) {
       var _this$state4 = this.state,
           checked = _this$state4.checked,
           indeterminate = _this$state4.indeterminate;
-      var classes = classnames__WEBPACK_IMPORTED_MODULE_12___default()('ui', Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(checked, 'checked'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(disabled, 'disabled'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(indeterminate, 'indeterminate'), // auto apply fitted class to compact white space when there is no label
+      var classes = classnames__WEBPACK_IMPORTED_MODULE_14___default()('ui', Object(_lib__WEBPACK_IMPORTED_MODULE_18__["useKeyOnly"])(checked, 'checked'), Object(_lib__WEBPACK_IMPORTED_MODULE_18__["useKeyOnly"])(disabled, 'disabled'), Object(_lib__WEBPACK_IMPORTED_MODULE_18__["useKeyOnly"])(indeterminate, 'indeterminate'), // auto apply fitted class to compact white space when there is no label
       // https://semantic-ui.com/modules/checkbox.html#fitted
-      Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(lodash_isNil__WEBPACK_IMPORTED_MODULE_11___default()(label), 'fitted'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(radio, 'radio'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(readOnly, 'read-only'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(slider, 'slider'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(toggle, 'toggle'), 'checkbox', className);
-      var unhandled = Object(_lib__WEBPACK_IMPORTED_MODULE_15__["getUnhandledProps"])(Checkbox, this.props);
-      var ElementType = Object(_lib__WEBPACK_IMPORTED_MODULE_15__["getElementType"])(Checkbox, this.props);
+      Object(_lib__WEBPACK_IMPORTED_MODULE_18__["useKeyOnly"])(lodash_isNil__WEBPACK_IMPORTED_MODULE_13___default()(label), 'fitted'), Object(_lib__WEBPACK_IMPORTED_MODULE_18__["useKeyOnly"])(radio, 'radio'), Object(_lib__WEBPACK_IMPORTED_MODULE_18__["useKeyOnly"])(readOnly, 'read-only'), Object(_lib__WEBPACK_IMPORTED_MODULE_18__["useKeyOnly"])(slider, 'slider'), Object(_lib__WEBPACK_IMPORTED_MODULE_18__["useKeyOnly"])(toggle, 'toggle'), 'checkbox', className);
+      var unhandled = Object(_lib__WEBPACK_IMPORTED_MODULE_18__["getUnhandledProps"])(Checkbox, this.props);
+      var ElementType = Object(_lib__WEBPACK_IMPORTED_MODULE_18__["getElementType"])(Checkbox, this.props);
 
-      var _partitionHTMLProps = Object(_lib__WEBPACK_IMPORTED_MODULE_15__["partitionHTMLProps"])(unhandled, {
-        htmlProps: _lib__WEBPACK_IMPORTED_MODULE_15__["htmlInputAttrs"]
+      var _partitionHTMLProps = Object(_lib__WEBPACK_IMPORTED_MODULE_18__["partitionHTMLProps"])(unhandled, {
+        htmlProps: _lib__WEBPACK_IMPORTED_MODULE_18__["htmlInputAttrs"]
       }),
           _partitionHTMLProps2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_partitionHTMLProps, 2),
           htmlInputProps = _partitionHTMLProps2[0],
-          rest = _partitionHTMLProps2[1];
+          rest = _partitionHTMLProps2[1]; // Heads Up!
+      // Do not remove empty labels, they are required by SUI CSS
 
-      return react__WEBPACK_IMPORTED_MODULE_14___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, {
+
+      var labelElement = Object(_lib__WEBPACK_IMPORTED_MODULE_18__["createHTMLLabel"])(label, {
+        defaultProps: {
+          htmlFor: id
+        },
+        autoGenerateKey: false
+      }) || react__WEBPACK_IMPORTED_MODULE_16___default.a.createElement("label", {
+        htmlFor: id
+      });
+      return react__WEBPACK_IMPORTED_MODULE_16___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, {
         className: classes,
+        onClick: this.handleClick,
         onChange: this.handleChange,
         onMouseDown: this.handleMouseDown,
         onMouseUp: this.handleMouseUp
-      }), react__WEBPACK_IMPORTED_MODULE_14___default.a.createElement("input", _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, htmlInputProps, {
+      }), react__WEBPACK_IMPORTED_MODULE_16___default.a.createElement(_addons_Ref__WEBPACK_IMPORTED_MODULE_17__["default"], {
+        innerRef: this.inputRef
+      }, react__WEBPACK_IMPORTED_MODULE_16___default.a.createElement("input", _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, htmlInputProps, {
         checked: checked,
         className: "hidden",
         disabled: disabled,
         id: id,
         name: name,
         readOnly: true,
-        ref: this.handleInputRef,
         tabIndex: this.computeTabIndex(),
         type: type,
         value: value
-      })), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["createHTMLLabel"])(label, {
-        defaultProps: {
-          htmlFor: id
-        },
-        autoGenerateKey: false
-      }) || react__WEBPACK_IMPORTED_MODULE_14___default.a.createElement("label", {
-        htmlFor: id
-      }));
+      }))), react__WEBPACK_IMPORTED_MODULE_16___default.a.createElement(_addons_Ref__WEBPACK_IMPORTED_MODULE_17__["default"], {
+        innerRef: this.labelRef
+      }, labelElement));
     }
   }]);
 
   return Checkbox;
-}(_lib__WEBPACK_IMPORTED_MODULE_15__["AutoControlledComponent"]);
+}(_lib__WEBPACK_IMPORTED_MODULE_18__["AutoControlledComponent"]);
 
 _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Checkbox, "defaultProps", {
   type: 'checkbox'
@@ -58672,37 +59222,37 @@ _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Che
 
 Checkbox.propTypes =  true ? {
   /** An element type to render as (string or function). */
-  as: _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].as,
+  as: _lib__WEBPACK_IMPORTED_MODULE_18__["customPropTypes"].as,
 
   /** Whether or not checkbox is checked. */
-  checked: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
+  checked: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.bool,
 
   /** Additional classes. */
-  className: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.string,
+  className: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.string,
 
   /** The initial value of checked. */
-  defaultChecked: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
+  defaultChecked: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.bool,
 
   /** Whether or not checkbox is indeterminate. */
-  defaultIndeterminate: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
+  defaultIndeterminate: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.bool,
 
   /** A checkbox can appear disabled and be unable to change states */
-  disabled: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
+  disabled: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.bool,
 
   /** Removes padding for a label. Auto applied when there is no label. */
-  fitted: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
+  fitted: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.bool,
 
   /** A unique identifier. */
-  id: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.string]),
+  id: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.string]),
 
   /** Whether or not checkbox is indeterminate. */
-  indeterminate: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
+  indeterminate: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.bool,
 
   /** The text of the associated label element. */
-  label: _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].itemShorthand,
+  label: _lib__WEBPACK_IMPORTED_MODULE_18__["customPropTypes"].itemShorthand,
 
   /** The HTML input name. */
-  name: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.string,
+  name: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.string,
 
   /**
    * Called when the user attempts to change the checked state.
@@ -58710,7 +59260,7 @@ Checkbox.propTypes =  true ? {
    * @param {SyntheticEvent} event - React's original SyntheticEvent.
    * @param {object} data - All props and proposed checked/indeterminate state.
    */
-  onChange: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
+  onChange: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.func,
 
   /**
    * Called when the checkbox or label is clicked.
@@ -58718,7 +59268,7 @@ Checkbox.propTypes =  true ? {
    * @param {SyntheticEvent} event - React's original SyntheticEvent.
    * @param {object} data - All props and current checked/indeterminate state.
    */
-  onClick: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
+  onClick: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.func,
 
   /**
    * Called when the user presses down on the mouse.
@@ -58726,7 +59276,7 @@ Checkbox.propTypes =  true ? {
    * @param {SyntheticEvent} event - React's original SyntheticEvent.
    * @param {object} data - All props and current checked/indeterminate state.
    */
-  onMouseDown: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
+  onMouseDown: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.func,
 
   /**
    * Called when the user releases the mouse.
@@ -58734,28 +59284,28 @@ Checkbox.propTypes =  true ? {
    * @param {SyntheticEvent} event - React's original SyntheticEvent.
    * @param {object} data - All props and current checked/indeterminate state.
    */
-  onMouseUp: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
+  onMouseUp: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.func,
 
   /** Format as a radio element. This means it is an exclusive option. */
-  radio: _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].every([prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool, _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].disallow(['slider', 'toggle'])]),
+  radio: _lib__WEBPACK_IMPORTED_MODULE_18__["customPropTypes"].every([prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.bool, _lib__WEBPACK_IMPORTED_MODULE_18__["customPropTypes"].disallow(['slider', 'toggle'])]),
 
   /** A checkbox can be read-only and unable to change states. */
-  readOnly: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
+  readOnly: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.bool,
 
   /** Format to emphasize the current selection state. */
-  slider: _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].every([prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool, _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].disallow(['radio', 'toggle'])]),
+  slider: _lib__WEBPACK_IMPORTED_MODULE_18__["customPropTypes"].every([prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.bool, _lib__WEBPACK_IMPORTED_MODULE_18__["customPropTypes"].disallow(['radio', 'toggle'])]),
 
   /** A checkbox can receive focus. */
-  tabIndex: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.string]),
+  tabIndex: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.string]),
 
   /** Format to show an on or off choice. */
-  toggle: _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].every([prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool, _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].disallow(['radio', 'slider'])]),
+  toggle: _lib__WEBPACK_IMPORTED_MODULE_18__["customPropTypes"].every([prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.bool, _lib__WEBPACK_IMPORTED_MODULE_18__["customPropTypes"].disallow(['radio', 'slider'])]),
 
   /** HTML input type, either checkbox or radio. */
-  type: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.oneOf(['checkbox', 'radio']),
+  type: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.oneOf(['checkbox', 'radio']),
 
   /** The HTML input value. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.number])
+  value: prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_15___default.a.number])
 } : undefined;
 
 /***/ }),
@@ -59017,7 +59567,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_10__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
+/* harmony import */ var _addons_Ref__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../addons/Ref */ "./node_modules/semantic-ui-react/dist/es/addons/Ref/index.js");
+/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
+
 
 
 
@@ -59062,7 +59614,7 @@ function (_Component) {
 
       lodash_invoke__WEBPACK_IMPORTED_MODULE_8___default()(_this.props, 'onClick', e, _this.props);
 
-      if (contentRef && contentRef !== e.target && Object(_lib__WEBPACK_IMPORTED_MODULE_12__["doesNodeContainClick"])(contentRef, e)) {
+      if (contentRef && contentRef !== e.target && Object(_lib__WEBPACK_IMPORTED_MODULE_13__["doesNodeContainClick"])(contentRef, e)) {
         return;
       }
 
@@ -59110,18 +59662,19 @@ function (_Component) {
           page = _this$props.page,
           simple = _this$props.simple,
           verticalAlign = _this$props.verticalAlign;
-      var classes = classnames__WEBPACK_IMPORTED_MODULE_9___default()('ui', Object(_lib__WEBPACK_IMPORTED_MODULE_12__["useKeyOnly"])(active, 'active transition visible'), Object(_lib__WEBPACK_IMPORTED_MODULE_12__["useKeyOnly"])(disabled, 'disabled'), Object(_lib__WEBPACK_IMPORTED_MODULE_12__["useKeyOnly"])(inverted, 'inverted'), Object(_lib__WEBPACK_IMPORTED_MODULE_12__["useKeyOnly"])(page, 'page'), Object(_lib__WEBPACK_IMPORTED_MODULE_12__["useKeyOnly"])(simple, 'simple'), Object(_lib__WEBPACK_IMPORTED_MODULE_12__["useVerticalAlignProp"])(verticalAlign), 'dimmer', className);
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_12__["getUnhandledProps"])(DimmerInner, this.props);
-      var ElementType = Object(_lib__WEBPACK_IMPORTED_MODULE_12__["getElementType"])(DimmerInner, this.props);
-      var childrenContent = _lib__WEBPACK_IMPORTED_MODULE_12__["childrenUtils"].isNil(children) ? content : children;
-      return react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, {
+      var classes = classnames__WEBPACK_IMPORTED_MODULE_9___default()('ui', Object(_lib__WEBPACK_IMPORTED_MODULE_13__["useKeyOnly"])(active, 'active transition visible'), Object(_lib__WEBPACK_IMPORTED_MODULE_13__["useKeyOnly"])(disabled, 'disabled'), Object(_lib__WEBPACK_IMPORTED_MODULE_13__["useKeyOnly"])(inverted, 'inverted'), Object(_lib__WEBPACK_IMPORTED_MODULE_13__["useKeyOnly"])(page, 'page'), Object(_lib__WEBPACK_IMPORTED_MODULE_13__["useKeyOnly"])(simple, 'simple'), Object(_lib__WEBPACK_IMPORTED_MODULE_13__["useVerticalAlignProp"])(verticalAlign), 'dimmer', className);
+      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_13__["getUnhandledProps"])(DimmerInner, this.props);
+      var ElementType = Object(_lib__WEBPACK_IMPORTED_MODULE_13__["getElementType"])(DimmerInner, this.props);
+      var childrenContent = _lib__WEBPACK_IMPORTED_MODULE_13__["childrenUtils"].isNil(children) ? content : children;
+      return react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(_addons_Ref__WEBPACK_IMPORTED_MODULE_12__["default"], {
+        innerRef: this.containerRef
+      }, react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, {
         className: classes,
-        onClick: this.handleClick,
-        ref: this.containerRef
+        onClick: this.handleClick
       }), childrenContent && react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("div", {
         className: "content",
         ref: this.contentRef
-      }, childrenContent));
+      }, childrenContent)));
     }
   }]);
 
@@ -59133,7 +59686,7 @@ _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(Dim
 
 DimmerInner.propTypes =  true ? {
   /** An element type to render as (string or function). */
-  as: _lib__WEBPACK_IMPORTED_MODULE_12__["customPropTypes"].as,
+  as: _lib__WEBPACK_IMPORTED_MODULE_13__["customPropTypes"].as,
 
   /** An active dimmer will dim its parent container. */
   active: prop_types__WEBPACK_IMPORTED_MODULE_10___default.a.bool,
@@ -59145,7 +59698,7 @@ DimmerInner.propTypes =  true ? {
   className: prop_types__WEBPACK_IMPORTED_MODULE_10___default.a.string,
 
   /** Shorthand for primary content. */
-  content: _lib__WEBPACK_IMPORTED_MODULE_12__["customPropTypes"].contentShorthand,
+  content: _lib__WEBPACK_IMPORTED_MODULE_13__["customPropTypes"].contentShorthand,
 
   /** A disabled dimmer cannot be activated */
   disabled: prop_types__WEBPACK_IMPORTED_MODULE_10___default.a.bool,
@@ -59278,24 +59831,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash_has__WEBPACK_IMPORTED_MODULE_33___default = /*#__PURE__*/__webpack_require__.n(lodash_has__WEBPACK_IMPORTED_MODULE_33__);
 /* harmony import */ var lodash_isNil__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js");
 /* harmony import */ var lodash_isNil__WEBPACK_IMPORTED_MODULE_34___default = /*#__PURE__*/__webpack_require__.n(lodash_isNil__WEBPACK_IMPORTED_MODULE_34__);
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_35___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_35__);
-/* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! keyboard-key */ "./node_modules/semantic-ui-react/node_modules/keyboard-key/src/keyboardKey.js");
-/* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_36___default = /*#__PURE__*/__webpack_require__.n(keyboard_key__WEBPACK_IMPORTED_MODULE_36__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_37___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_37__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_38___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_38__);
-/* harmony import */ var shallowequal__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! shallowequal */ "./node_modules/shallowequal/index.js");
-/* harmony import */ var shallowequal__WEBPACK_IMPORTED_MODULE_39___default = /*#__PURE__*/__webpack_require__.n(shallowequal__WEBPACK_IMPORTED_MODULE_39__);
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
-/* harmony import */ var _elements_Icon__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ../../elements/Icon */ "./node_modules/semantic-ui-react/dist/es/elements/Icon/index.js");
-/* harmony import */ var _elements_Label__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ../../elements/Label */ "./node_modules/semantic-ui-react/dist/es/elements/Label/index.js");
-/* harmony import */ var _DropdownDivider__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./DropdownDivider */ "./node_modules/semantic-ui-react/dist/es/modules/Dropdown/DropdownDivider.js");
-/* harmony import */ var _DropdownItem__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./DropdownItem */ "./node_modules/semantic-ui-react/dist/es/modules/Dropdown/DropdownItem.js");
-/* harmony import */ var _DropdownHeader__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./DropdownHeader */ "./node_modules/semantic-ui-react/dist/es/modules/Dropdown/DropdownHeader.js");
-/* harmony import */ var _DropdownMenu__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./DropdownMenu */ "./node_modules/semantic-ui-react/dist/es/modules/Dropdown/DropdownMenu.js");
-/* harmony import */ var _DropdownSearchInput__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./DropdownSearchInput */ "./node_modules/semantic-ui-react/dist/es/modules/Dropdown/DropdownSearchInput.js");
+/* harmony import */ var _semantic_ui_react_event_stack__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! @semantic-ui-react/event-stack */ "./node_modules/@semantic-ui-react/event-stack/lib/index.js");
+/* harmony import */ var _semantic_ui_react_event_stack__WEBPACK_IMPORTED_MODULE_35___default = /*#__PURE__*/__webpack_require__.n(_semantic_ui_react_event_stack__WEBPACK_IMPORTED_MODULE_35__);
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_36___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_36__);
+/* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! keyboard-key */ "./node_modules/keyboard-key/src/keyboardKey.js");
+/* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_37___default = /*#__PURE__*/__webpack_require__.n(keyboard_key__WEBPACK_IMPORTED_MODULE_37__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_38___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_38__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_39___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_39__);
+/* harmony import */ var shallowequal__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! shallowequal */ "./node_modules/shallowequal/index.js");
+/* harmony import */ var shallowequal__WEBPACK_IMPORTED_MODULE_40___default = /*#__PURE__*/__webpack_require__.n(shallowequal__WEBPACK_IMPORTED_MODULE_40__);
+/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
+/* harmony import */ var _addons_Ref__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ../../addons/Ref */ "./node_modules/semantic-ui-react/dist/es/addons/Ref/index.js");
+/* harmony import */ var _elements_Icon__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ../../elements/Icon */ "./node_modules/semantic-ui-react/dist/es/elements/Icon/index.js");
+/* harmony import */ var _elements_Label__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ../../elements/Label */ "./node_modules/semantic-ui-react/dist/es/elements/Label/index.js");
+/* harmony import */ var _DropdownDivider__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./DropdownDivider */ "./node_modules/semantic-ui-react/dist/es/modules/Dropdown/DropdownDivider.js");
+/* harmony import */ var _DropdownItem__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./DropdownItem */ "./node_modules/semantic-ui-react/dist/es/modules/Dropdown/DropdownItem.js");
+/* harmony import */ var _DropdownHeader__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./DropdownHeader */ "./node_modules/semantic-ui-react/dist/es/modules/Dropdown/DropdownHeader.js");
+/* harmony import */ var _DropdownMenu__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./DropdownMenu */ "./node_modules/semantic-ui-react/dist/es/modules/Dropdown/DropdownMenu.js");
+/* harmony import */ var _DropdownSearchInput__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./DropdownSearchInput */ "./node_modules/semantic-ui-react/dist/es/modules/Dropdown/DropdownSearchInput.js");
+
+
 
 
 
@@ -59374,6 +59932,12 @@ function (_Component) {
 
     _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4___default()(this, (_getPrototypeOf2 = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5___default()(Dropdown)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "searchRef", Object(react__WEBPACK_IMPORTED_MODULE_39__["createRef"])());
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "sizerRef", Object(react__WEBPACK_IMPORTED_MODULE_39__["createRef"])());
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "ref", Object(react__WEBPACK_IMPORTED_MODULE_39__["createRef"])());
+
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleChange", function (e, value) {
       lodash_invoke__WEBPACK_IMPORTED_MODULE_31___default()(_this.props, 'onChange', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({}, _this.props, {
         value: value
@@ -59389,7 +59953,7 @@ function (_Component) {
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "closeOnEscape", function (e) {
-      if (keyboard_key__WEBPACK_IMPORTED_MODULE_36___default.a.getCode(e) !== keyboard_key__WEBPACK_IMPORTED_MODULE_36___default.a.Escape) return;
+      if (keyboard_key__WEBPACK_IMPORTED_MODULE_37___default.a.getCode(e) !== keyboard_key__WEBPACK_IMPORTED_MODULE_37___default.a.Escape) return;
       e.preventDefault();
 
       _this.close();
@@ -59401,8 +59965,8 @@ function (_Component) {
       var _this$props2 = _this.props,
           multiple = _this$props2.multiple,
           selectOnNavigation = _this$props2.selectOnNavigation;
-      var moves = (_moves = {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_moves, keyboard_key__WEBPACK_IMPORTED_MODULE_36___default.a.ArrowDown, 1), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_moves, keyboard_key__WEBPACK_IMPORTED_MODULE_36___default.a.ArrowUp, -1), _moves);
-      var move = moves[keyboard_key__WEBPACK_IMPORTED_MODULE_36___default.a.getCode(e)];
+      var moves = (_moves = {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_moves, keyboard_key__WEBPACK_IMPORTED_MODULE_37___default.a.ArrowDown, 1), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_moves, keyboard_key__WEBPACK_IMPORTED_MODULE_37___default.a.ArrowUp, -1), _moves);
+      var move = moves[keyboard_key__WEBPACK_IMPORTED_MODULE_37___default.a.getCode(e)];
       if (move === undefined) return;
       e.preventDefault();
 
@@ -59412,16 +59976,15 @@ function (_Component) {
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "openOnSpace", function (e) {
-      if (keyboard_key__WEBPACK_IMPORTED_MODULE_36___default.a.getCode(e) !== keyboard_key__WEBPACK_IMPORTED_MODULE_36___default.a.Spacebar) return;
-      if (_this.state.open) return;
+      if (keyboard_key__WEBPACK_IMPORTED_MODULE_37___default.a.getCode(e) !== keyboard_key__WEBPACK_IMPORTED_MODULE_37___default.a.Spacebar) return;
       e.preventDefault();
 
       _this.open(e);
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "openOnArrow", function (e) {
-      var code = keyboard_key__WEBPACK_IMPORTED_MODULE_36___default.a.getCode(e);
-      if (!lodash_includes__WEBPACK_IMPORTED_MODULE_29___default()([keyboard_key__WEBPACK_IMPORTED_MODULE_36___default.a.ArrowDown, keyboard_key__WEBPACK_IMPORTED_MODULE_36___default.a.ArrowUp], code)) return;
+      var code = keyboard_key__WEBPACK_IMPORTED_MODULE_37___default.a.getCode(e);
+      if (!lodash_includes__WEBPACK_IMPORTED_MODULE_29___default()([keyboard_key__WEBPACK_IMPORTED_MODULE_37___default.a.ArrowDown, keyboard_key__WEBPACK_IMPORTED_MODULE_37___default.a.ArrowUp], code)) return;
       if (_this.state.open) return;
       e.preventDefault();
 
@@ -59465,7 +60028,7 @@ function (_Component) {
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "selectItemOnEnter", function (e) {
       var search = _this.props.search;
-      if (keyboard_key__WEBPACK_IMPORTED_MODULE_36___default.a.getCode(e) !== keyboard_key__WEBPACK_IMPORTED_MODULE_36___default.a.Enter) return;
+      if (keyboard_key__WEBPACK_IMPORTED_MODULE_37___default.a.getCode(e) !== keyboard_key__WEBPACK_IMPORTED_MODULE_37___default.a.Enter) return;
       e.preventDefault();
 
       var optionSize = lodash_size__WEBPACK_IMPORTED_MODULE_25___default()(_this.getMenuOptions());
@@ -59478,7 +60041,7 @@ function (_Component) {
 
       _this.clearSearchQuery();
 
-      if (search && _this.searchRef) _this.searchRef.focus();
+      if (search) lodash_invoke__WEBPACK_IMPORTED_MODULE_31___default()(_this.searchRef.current, 'focus');
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "removeItemOnBackspace", function (e) {
@@ -59488,7 +60051,7 @@ function (_Component) {
       var _this$state2 = _this.state,
           searchQuery = _this$state2.searchQuery,
           value = _this$state2.value;
-      if (keyboard_key__WEBPACK_IMPORTED_MODULE_36___default.a.getCode(e) !== keyboard_key__WEBPACK_IMPORTED_MODULE_36___default.a.Backspace) return;
+      if (keyboard_key__WEBPACK_IMPORTED_MODULE_37___default.a.getCode(e) !== keyboard_key__WEBPACK_IMPORTED_MODULE_37___default.a.Backspace) return;
       if (searchQuery || !search || !multiple || lodash_isEmpty__WEBPACK_IMPORTED_MODULE_24___default()(value)) return;
       e.preventDefault(); // remove most recent value
 
@@ -59504,27 +60067,22 @@ function (_Component) {
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "closeOnDocumentClick", function (e) {
       if (!_this.props.closeOnBlur) return; // If event happened in the dropdown, ignore it
 
-      if (_this.ref && Object(_lib__WEBPACK_IMPORTED_MODULE_40__["doesNodeContainClick"])(_this.ref, e)) return;
+      if (_this.ref.current && Object(_lib__WEBPACK_IMPORTED_MODULE_41__["doesNodeContainClick"])(_this.ref.current, e)) return;
 
       _this.close();
     });
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "attachHandlersOnOpen", function () {
-      _lib__WEBPACK_IMPORTED_MODULE_40__["eventStack"].sub('keydown', [_this.closeOnEscape, _this.moveSelectionOnKeyDown, _this.selectItemOnEnter, _this.removeItemOnBackspace]);
-      _lib__WEBPACK_IMPORTED_MODULE_40__["eventStack"].sub('click', _this.closeOnDocumentClick);
-      _lib__WEBPACK_IMPORTED_MODULE_40__["eventStack"].unsub('keydown', [_this.openOnArrow, _this.openOnSpace]);
-    });
-
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleMouseDown", function (e) {
       _this.isMouseDown = true;
-      _lib__WEBPACK_IMPORTED_MODULE_40__["eventStack"].sub('mouseup', _this.handleDocumentMouseUp);
 
       lodash_invoke__WEBPACK_IMPORTED_MODULE_31___default()(_this.props, 'onMouseDown', e, _this.props);
+
+      document.addEventListener('mouseup', _this.handleDocumentMouseUp);
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleDocumentMouseUp", function () {
       _this.isMouseDown = false;
-      _lib__WEBPACK_IMPORTED_MODULE_40__["eventStack"].unsub('mouseup', _this.handleDocumentMouseUp);
+      document.removeEventListener('mouseup', _this.handleDocumentMouseUp);
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleClick", function (e) {
@@ -59540,7 +60098,12 @@ function (_Component) {
 
       e.stopPropagation();
       if (!search) return _this.toggle(e);
-      if (open) return;
+
+      if (open) {
+        lodash_invoke__WEBPACK_IMPORTED_MODULE_31___default()(_this.searchRef.current, 'focus');
+
+        return;
+      }
 
       if (searchQuery.length >= minCharacters || minCharacters === 1) {
         _this.open(e);
@@ -59548,7 +60111,7 @@ function (_Component) {
         return;
       }
 
-      if (_this.searchRef) _this.searchRef.focus();
+      lodash_invoke__WEBPACK_IMPORTED_MODULE_31___default()(_this.searchRef.current, 'focus');
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleIconClick", function (e) {
@@ -59572,6 +60135,7 @@ function (_Component) {
       var _this$props5 = _this.props,
           multiple = _this$props5.multiple,
           search = _this$props5.search;
+      var currentValue = _this.state.value;
       var value = item.value; // prevent toggle() in handleClick()
 
       e.stopPropagation(); // prevent closeOnDocumentClick() if multiple or item is disabled
@@ -59579,15 +60143,18 @@ function (_Component) {
       if (multiple || item.disabled) e.nativeEvent.stopImmediatePropagation();
       if (item.disabled) return;
       var isAdditionItem = item['data-additional'];
-      var newValue = multiple ? lodash_union__WEBPACK_IMPORTED_MODULE_27___default()(_this.state.value, [value]) : value; // notify the onChange prop that the user is trying to change value
+      var newValue = multiple ? lodash_union__WEBPACK_IMPORTED_MODULE_27___default()(_this.state.value, [value]) : value;
+      var valueHasChanged = multiple ? !!lodash_difference__WEBPACK_IMPORTED_MODULE_26___default()(newValue, currentValue).length : newValue !== currentValue; // notify the onChange prop that the user is trying to change value
 
-      _this.setValue(newValue);
+      if (valueHasChanged) {
+        _this.setValue(newValue);
 
-      _this.setSelectedIndex(value);
+        _this.setSelectedIndex(value);
+
+        _this.handleChange(e, newValue);
+      }
 
       _this.clearSearchQuery();
-
-      _this.handleChange(e, newValue);
 
       _this.closeOnChange(e); // Heads up! This event handler should be called after `onChange`
       // Notify the onAddItem prop if this is a new value
@@ -59596,7 +60163,7 @@ function (_Component) {
       if (isAdditionItem) lodash_invoke__WEBPACK_IMPORTED_MODULE_31___default()(_this.props, 'onAddItem', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({}, _this.props, {
         value: value
       }));
-      if (multiple && search && _this.searchRef) _this.searchRef.focus();
+      if (search) lodash_invoke__WEBPACK_IMPORTED_MODULE_31___default()(_this.searchRef.current, 'focus');
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleFocus", function (e) {
@@ -59710,14 +60277,14 @@ function (_Component) {
       if (allowAdditions && search && searchQuery && !lodash_some__WEBPACK_IMPORTED_MODULE_17___default()(filteredOptions, {
         text: searchQuery
       })) {
-        var additionLabelElement = react__WEBPACK_IMPORTED_MODULE_38___default.a.isValidElement(additionLabel) ? react__WEBPACK_IMPORTED_MODULE_38___default.a.cloneElement(additionLabel, {
+        var additionLabelElement = react__WEBPACK_IMPORTED_MODULE_39___default.a.isValidElement(additionLabel) ? react__WEBPACK_IMPORTED_MODULE_39___default.a.cloneElement(additionLabel, {
           key: 'addition-label'
         }) : additionLabel || '';
         var addItem = {
           key: 'addition',
           // by using an array, we can pass multiple elements, but when doing so
           // we must specify a `key` for React to know which one is which
-          text: [additionLabelElement, react__WEBPACK_IMPORTED_MODULE_38___default.a.createElement("b", {
+          text: [additionLabelElement, react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement("b", {
             key: "addition-query"
           }, searchQuery)],
           value: searchQuery,
@@ -59892,7 +60459,7 @@ function (_Component) {
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleIconOverrides", function (predefinedProps) {
       var clearable = _this.props.clearable;
-      var classes = classnames__WEBPACK_IMPORTED_MODULE_35___default()(clearable && _this.hasValue() && 'clear', predefinedProps.className);
+      var classes = classnames__WEBPACK_IMPORTED_MODULE_36___default()(clearable && _this.hasValue() && 'clear', predefinedProps.className);
       return {
         className: classes,
         onClick: function onClick(e) {
@@ -59901,18 +60468,6 @@ function (_Component) {
           _this.handleIconClick(e);
         }
       };
-    });
-
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleSearchRef", function (c) {
-      return _this.searchRef = c;
-    });
-
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleSizerRef", function (c) {
-      return _this.sizerRef = c;
-    });
-
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleRef", function (c) {
-      return _this.ref = c;
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "clearValue", function (e) {
@@ -59937,13 +60492,13 @@ function (_Component) {
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "computeSearchInputWidth", function () {
       var searchQuery = _this.state.searchQuery;
 
-      if (_this.sizerRef && searchQuery) {
+      if (_this.sizerRef.current && searchQuery) {
         // resize the search input, temporarily show the sizer so we can measure it
-        _this.sizerRef.style.display = 'inline';
-        _this.sizerRef.textContent = searchQuery;
-        var searchWidth = Math.ceil(_this.sizerRef.getBoundingClientRect().width);
+        _this.sizerRef.current.style.display = 'inline';
+        _this.sizerRef.current.textContent = searchQuery;
+        var searchWidth = Math.ceil(_this.sizerRef.current.getBoundingClientRect().width);
 
-        _this.sizerRef.style.removeProperty('display');
+        _this.sizerRef.current.style.removeProperty('display');
 
         return searchWidth;
       }
@@ -59977,9 +60532,9 @@ function (_Component) {
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "scrollSelectedItemIntoView", function () {
-      if (!_this.ref) return;
+      if (!_this.ref.current) return;
 
-      var menu = _this.ref.querySelector('.menu.visible');
+      var menu = _this.ref.current.querySelector('.menu.visible');
 
       if (!menu) return;
       var item = menu.querySelector('.item.selected');
@@ -59996,13 +60551,13 @@ function (_Component) {
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "setOpenDirection", function () {
-      if (!_this.ref) return;
+      if (!_this.ref.current) return;
 
-      var menu = _this.ref.querySelector('.menu.visible');
+      var menu = _this.ref.current.querySelector('.menu.visible');
 
       if (!menu) return;
 
-      var dropdownRect = _this.ref.getBoundingClientRect();
+      var dropdownRect = _this.ref.current.getBoundingClientRect();
 
       var menuHeight = menu.clientHeight;
       var spaceAtTheBottom = document.documentElement.clientHeight - dropdownRect.top - dropdownRect.height - menuHeight;
@@ -60022,7 +60577,7 @@ function (_Component) {
           open = _this$props11.open,
           search = _this$props11.search;
       if (disabled) return;
-      if (search && _this.searchRef) _this.searchRef.focus();
+      if (search) lodash_invoke__WEBPACK_IMPORTED_MODULE_31___default()(_this.searchRef.current, 'focus');
 
       lodash_invoke__WEBPACK_IMPORTED_MODULE_31___default()(_this.props, 'onOpen', e, _this.props);
 
@@ -60046,17 +60601,17 @@ function (_Component) {
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "handleClose", function () {
-      var hasSearchFocus = document.activeElement === _this.searchRef;
-      var hasDropdownFocus = document.activeElement === _this.ref;
-      var hasFocus = hasSearchFocus || hasDropdownFocus; // https://github.com/Semantic-Org/Semantic-UI-React/issues/627
+      var hasSearchFocus = document.activeElement === _this.searchRef.current; // https://github.com/Semantic-Org/Semantic-UI-React/issues/627
       // Blur the Dropdown on close so it is blurred after selecting an item.
       // This is to prevent it from re-opening when switching tabs after selecting an item.
 
       if (!hasSearchFocus) {
-        _this.ref.blur();
-      } // We need to keep the virtual model in sync with the browser focus change
-      // https://github.com/Semantic-Org/Semantic-UI-React/issues/692
+        _this.ref.current.blur();
+      }
 
+      var hasDropdownFocus = document.activeElement === _this.ref.current;
+      var hasFocus = hasSearchFocus || hasDropdownFocus; // We need to keep the virtual model in sync with the browser focus change
+      // https://github.com/Semantic-Org/Semantic-UI-React/issues/692
 
       _this.setState({
         focus: hasFocus
@@ -60080,7 +60635,7 @@ function (_Component) {
 
       var hasValue = _this.hasValue();
 
-      var classes = classnames__WEBPACK_IMPORTED_MODULE_35___default()(placeholder && !hasValue && 'default', 'text', search && searchQuery && 'filtered');
+      var classes = classnames__WEBPACK_IMPORTED_MODULE_36___default()(placeholder && !hasValue && 'default', 'text', search && searchQuery && 'filtered');
       var _text = placeholder;
 
       if (searchQuery) {
@@ -60093,7 +60648,7 @@ function (_Component) {
         _text = lodash_get__WEBPACK_IMPORTED_MODULE_28___default()(_this.getItemByValue(value), 'text');
       }
 
-      return react__WEBPACK_IMPORTED_MODULE_38___default.a.createElement("div", {
+      return react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement("div", {
         className: classes,
         role: "alert",
         "aria-live": "polite"
@@ -60105,10 +60660,10 @@ function (_Component) {
           search = _this$props13.search,
           searchInput = _this$props13.searchInput;
       var searchQuery = _this.state.searchQuery;
-      if (!search) return null;
-      return _DropdownSearchInput__WEBPACK_IMPORTED_MODULE_47__["default"].create(searchInput, {
+      return search && react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement(_addons_Ref__WEBPACK_IMPORTED_MODULE_42__["default"], {
+        innerRef: _this.searchRef
+      }, _DropdownSearchInput__WEBPACK_IMPORTED_MODULE_49__["default"].create(searchInput, {
         defaultProps: {
-          inputRef: _this.handleSearchRef,
           style: {
             width: _this.computeSearchInputWidth()
           },
@@ -60116,17 +60671,16 @@ function (_Component) {
           value: searchQuery
         },
         overrideProps: _this.handleSearchInputOverrides
-      });
+      }));
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_8___default()(_this)), "renderSearchSizer", function () {
       var _this$props14 = _this.props,
           search = _this$props14.search,
           multiple = _this$props14.multiple;
-      if (!(search && multiple)) return null;
-      return react__WEBPACK_IMPORTED_MODULE_38___default.a.createElement("span", {
+      return search && multiple && react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement("span", {
         className: "sizer",
-        ref: _this.handleSizerRef
+        ref: _this.sizerRef
       });
     });
 
@@ -60155,7 +60709,7 @@ function (_Component) {
           onRemove: _this.handleLabelRemove,
           value: item.value
         };
-        return _elements_Label__WEBPACK_IMPORTED_MODULE_42__["default"].create(renderLabel(item, index, defaultProps), {
+        return _elements_Label__WEBPACK_IMPORTED_MODULE_44__["default"].create(renderLabel(item, index, defaultProps), {
           defaultProps: defaultProps
         });
       });
@@ -60177,7 +60731,7 @@ function (_Component) {
       var options = _this.getMenuOptions();
 
       if (noResultsMessage !== null && search && lodash_isEmpty__WEBPACK_IMPORTED_MODULE_24___default()(options)) {
-        return react__WEBPACK_IMPORTED_MODULE_38___default.a.createElement("div", {
+        return react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement("div", {
           className: "message"
         }, noResultsMessage);
       }
@@ -60188,7 +60742,7 @@ function (_Component) {
         return optValue === value;
       };
       return lodash_map__WEBPACK_IMPORTED_MODULE_11___default()(options, function (opt, i) {
-        return _DropdownItem__WEBPACK_IMPORTED_MODULE_44__["default"].create(_babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({
+        return _DropdownItem__WEBPACK_IMPORTED_MODULE_46__["default"].create(_babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({
           active: isActive(opt.value),
           onClick: _this.handleItemClick,
           selected: selectedIndex === i
@@ -60212,18 +60766,18 @@ function (_Component) {
       var ariaOptions = _this.getDropdownMenuAriaOptions(); // single menu child
 
 
-      if (!_lib__WEBPACK_IMPORTED_MODULE_40__["childrenUtils"].isNil(children)) {
-        var menuChild = react__WEBPACK_IMPORTED_MODULE_38__["Children"].only(children);
-        var className = classnames__WEBPACK_IMPORTED_MODULE_35___default()(direction, Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(open, 'visible'), menuChild.props.className);
-        return Object(react__WEBPACK_IMPORTED_MODULE_38__["cloneElement"])(menuChild, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({
+      if (!_lib__WEBPACK_IMPORTED_MODULE_41__["childrenUtils"].isNil(children)) {
+        var menuChild = react__WEBPACK_IMPORTED_MODULE_39__["Children"].only(children);
+        var className = classnames__WEBPACK_IMPORTED_MODULE_36___default()(direction, Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(open, 'visible'), menuChild.props.className);
+        return Object(react__WEBPACK_IMPORTED_MODULE_39__["cloneElement"])(menuChild, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({
           className: className
         }, ariaOptions));
       }
 
-      return react__WEBPACK_IMPORTED_MODULE_38___default.a.createElement(_DropdownMenu__WEBPACK_IMPORTED_MODULE_46__["default"], _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, ariaOptions, {
+      return react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement(_DropdownMenu__WEBPACK_IMPORTED_MODULE_48__["default"], _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, ariaOptions, {
         direction: direction,
         open: open
-      }), _DropdownHeader__WEBPACK_IMPORTED_MODULE_45__["default"].create(header, {
+      }), _DropdownHeader__WEBPACK_IMPORTED_MODULE_47__["default"].create(header, {
         autoGenerateKey: false
       }), _this.renderOptions());
     });
@@ -60235,6 +60789,7 @@ function (_Component) {
     key: "getInitialAutoControlledState",
     value: function getInitialAutoControlledState() {
       return {
+        focus: false,
         searchQuery: ''
       };
     }
@@ -60249,7 +60804,6 @@ function (_Component) {
 
       if (open) {
         this.open();
-        this.attachHandlersOnOpen();
       }
     }
   }, {
@@ -60274,7 +60828,7 @@ function (_Component) {
       /* eslint-enable no-console */
 
 
-      if (!shallowequal__WEBPACK_IMPORTED_MODULE_39___default()(nextProps.value, this.props.value)) {
+      if (!shallowequal__WEBPACK_IMPORTED_MODULE_40___default()(nextProps.value, this.props.value)) {
         this.setValue(nextProps.value);
         this.setSelectedIndex(nextProps.value);
       } // The selected index is only dependent on option keys/values.
@@ -60289,60 +60843,36 @@ function (_Component) {
   }, {
     key: "shouldComponentUpdate",
     value: function shouldComponentUpdate(nextProps, nextState) {
-      return !shallowequal__WEBPACK_IMPORTED_MODULE_39___default()(nextProps, this.props) || !shallowequal__WEBPACK_IMPORTED_MODULE_39___default()(nextState, this.state);
+      return !shallowequal__WEBPACK_IMPORTED_MODULE_40___default()(nextProps, this.props) || !shallowequal__WEBPACK_IMPORTED_MODULE_40___default()(nextState, this.state);
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps, prevState) {
       // eslint-disable-line complexity
-      // focused / blurred
+      var _this$props18 = this.props,
+          closeOnBlur = _this$props18.closeOnBlur,
+          minCharacters = _this$props18.minCharacters,
+          openOnFocus = _this$props18.openOnFocus,
+          search = _this$props18.search; // focused / blurred
+
       if (!prevState.focus && this.state.focus) {
         if (!this.isMouseDown) {
-          var _this$props18 = this.props,
-              minCharacters = _this$props18.minCharacters,
-              openOnFocus = _this$props18.openOnFocus,
-              search = _this$props18.search;
           var openable = !search || search && minCharacters === 1 && !this.state.open;
           if (openOnFocus && openable) this.open();
         }
-
-        if (!this.state.open) {
-          _lib__WEBPACK_IMPORTED_MODULE_40__["eventStack"].sub('keydown', [this.openOnArrow, this.openOnSpace]);
-        } else {
-          _lib__WEBPACK_IMPORTED_MODULE_40__["eventStack"].sub('keydown', [this.moveSelectionOnKeyDown, this.selectItemOnEnter]);
-        }
-
-        _lib__WEBPACK_IMPORTED_MODULE_40__["eventStack"].sub('keydown', this.removeItemOnBackspace);
       } else if (prevState.focus && !this.state.focus) {
-        var closeOnBlur = this.props.closeOnBlur;
-
         if (!this.isMouseDown && closeOnBlur) {
           this.close();
         }
-
-        _lib__WEBPACK_IMPORTED_MODULE_40__["eventStack"].unsub('keydown', [this.openOnArrow, this.openOnSpace, this.moveSelectionOnKeyDown, this.selectItemOnEnter, this.removeItemOnBackspace]);
       } // opened / closed
 
 
       if (!prevState.open && this.state.open) {
-        this.attachHandlersOnOpen();
         this.setOpenDirection();
         this.scrollSelectedItemIntoView();
       } else if (prevState.open && !this.state.open) {
         this.handleClose();
-        _lib__WEBPACK_IMPORTED_MODULE_40__["eventStack"].unsub('keydown', [this.closeOnEscape, this.moveSelectionOnKeyDown, this.selectItemOnEnter]);
-        _lib__WEBPACK_IMPORTED_MODULE_40__["eventStack"].unsub('click', this.closeOnDocumentClick);
-
-        if (!this.state.focus) {
-          _lib__WEBPACK_IMPORTED_MODULE_40__["eventStack"].unsub('keydown', this.removeItemOnBackspace);
-        }
       }
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      _lib__WEBPACK_IMPORTED_MODULE_40__["eventStack"].unsub('keydown', [this.openOnArrow, this.openOnSpace, this.moveSelectionOnKeyDown, this.selectItemOnEnter, this.removeItemOnBackspace, this.closeOnEscape]);
-      _lib__WEBPACK_IMPORTED_MODULE_40__["eventStack"].unsub('click', this.closeOnDocumentClick);
     } // ----------------------------------------
     // Document Event Handlers
     // ----------------------------------------
@@ -60392,35 +60922,58 @@ function (_Component) {
           simple = _this$props20.simple,
           trigger = _this$props20.trigger;
       var _this$state8 = this.state,
+          focus = _this$state8.focus,
           open = _this$state8.open,
           upward = _this$state8.upward; // Classes
 
-      var classes = classnames__WEBPACK_IMPORTED_MODULE_35___default()('ui', Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(open, 'active visible'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(disabled, 'disabled'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(error, 'error'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(loading, 'loading'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(basic, 'basic'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(button, 'button'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(compact, 'compact'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(fluid, 'fluid'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(floating, 'floating'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(inline, 'inline'), // TODO: consider augmentation to render Dropdowns as Button/Menu, solves icon/link item issues
+      var classes = classnames__WEBPACK_IMPORTED_MODULE_36___default()('ui', Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(open, 'active visible'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(disabled, 'disabled'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(error, 'error'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(loading, 'loading'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(basic, 'basic'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(button, 'button'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(compact, 'compact'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(fluid, 'fluid'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(floating, 'floating'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(inline, 'inline'), // TODO: consider augmentation to render Dropdowns as Button/Menu, solves icon/link item issues
       // https://github.com/Semantic-Org/Semantic-UI-React/issues/401#issuecomment-240487229
       // TODO: the icon class is only required when a dropdown is a button
       // useKeyOnly(icon, 'icon'),
-      Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(labeled, 'labeled'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(item, 'item'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(multiple, 'multiple'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(search, 'search'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(selection, 'selection'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(simple, 'simple'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(scrolling, 'scrolling'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOnly"])(upward, 'upward'), Object(_lib__WEBPACK_IMPORTED_MODULE_40__["useKeyOrValueAndKey"])(pointing, 'pointing'), 'dropdown', className);
-      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_40__["getUnhandledProps"])(Dropdown, this.props);
-      var ElementType = Object(_lib__WEBPACK_IMPORTED_MODULE_40__["getElementType"])(Dropdown, this.props);
+      Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(labeled, 'labeled'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(item, 'item'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(multiple, 'multiple'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(search, 'search'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(selection, 'selection'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(simple, 'simple'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(scrolling, 'scrolling'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOnly"])(upward, 'upward'), Object(_lib__WEBPACK_IMPORTED_MODULE_41__["useKeyOrValueAndKey"])(pointing, 'pointing'), 'dropdown', className);
+      var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_41__["getUnhandledProps"])(Dropdown, this.props);
+      var ElementType = Object(_lib__WEBPACK_IMPORTED_MODULE_41__["getElementType"])(Dropdown, this.props);
       var ariaOptions = this.getDropdownAriaOptions(ElementType, this.props);
-      return react__WEBPACK_IMPORTED_MODULE_38___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, ariaOptions, {
+      return react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement(_addons_Ref__WEBPACK_IMPORTED_MODULE_42__["default"], {
+        innerRef: this.ref
+      }, react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, ariaOptions, {
         className: classes,
         onBlur: this.handleBlur,
         onClick: this.handleClick,
         onMouseDown: this.handleMouseDown,
         onFocus: this.handleFocus,
         onChange: this.handleChange,
-        tabIndex: this.computeTabIndex(),
-        ref: this.handleRef
-      }), this.renderLabels(), this.renderSearchInput(), this.renderSearchSizer(), trigger || this.renderText(), _elements_Icon__WEBPACK_IMPORTED_MODULE_41__["default"].create(icon, {
+        tabIndex: this.computeTabIndex()
+      }), this.renderLabels(), this.renderSearchInput(), this.renderSearchSizer(), trigger || this.renderText(), _elements_Icon__WEBPACK_IMPORTED_MODULE_43__["default"].create(icon, {
         overrideProps: this.handleIconOverrides,
         autoGenerateKey: false
-      }), this.renderMenu());
+      }), this.renderMenu(), open && react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement(_semantic_ui_react_event_stack__WEBPACK_IMPORTED_MODULE_35___default.a, {
+        name: "keydown",
+        on: this.closeOnEscape
+      }), open && react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement(_semantic_ui_react_event_stack__WEBPACK_IMPORTED_MODULE_35___default.a, {
+        name: "keydown",
+        on: this.moveSelectionOnKeyDown
+      }), open && react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement(_semantic_ui_react_event_stack__WEBPACK_IMPORTED_MODULE_35___default.a, {
+        name: "click",
+        on: this.closeOnDocumentClick
+      }), open && react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement(_semantic_ui_react_event_stack__WEBPACK_IMPORTED_MODULE_35___default.a, {
+        name: "keydown",
+        on: this.selectItemOnEnter
+      }), focus && react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement(_semantic_ui_react_event_stack__WEBPACK_IMPORTED_MODULE_35___default.a, {
+        name: "keydown",
+        on: this.removeItemOnBackspace
+      }), focus && !open && react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement(_semantic_ui_react_event_stack__WEBPACK_IMPORTED_MODULE_35___default.a, {
+        name: "keydown",
+        on: this.openOnArrow
+      }), focus && !open && react__WEBPACK_IMPORTED_MODULE_39___default.a.createElement(_semantic_ui_react_event_stack__WEBPACK_IMPORTED_MODULE_35___default.a, {
+        name: "keydown",
+        on: this.openOnSpace
+      })));
     }
   }]);
 
   return Dropdown;
-}(_lib__WEBPACK_IMPORTED_MODULE_40__["AutoControlledComponent"]);
+}(_lib__WEBPACK_IMPORTED_MODULE_41__["AutoControlledComponent"]);
 
 _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Dropdown, "defaultProps", {
   additionLabel: 'Add ',
@@ -60443,127 +60996,127 @@ _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Dro
 
 _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Dropdown, "autoControlledProps", ['open', 'searchQuery', 'selectedLabel', 'value', 'upward']);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Dropdown, "Divider", _DropdownDivider__WEBPACK_IMPORTED_MODULE_43__["default"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Dropdown, "Divider", _DropdownDivider__WEBPACK_IMPORTED_MODULE_45__["default"]);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Dropdown, "Header", _DropdownHeader__WEBPACK_IMPORTED_MODULE_45__["default"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Dropdown, "Header", _DropdownHeader__WEBPACK_IMPORTED_MODULE_47__["default"]);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Dropdown, "Item", _DropdownItem__WEBPACK_IMPORTED_MODULE_44__["default"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Dropdown, "Item", _DropdownItem__WEBPACK_IMPORTED_MODULE_46__["default"]);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Dropdown, "Menu", _DropdownMenu__WEBPACK_IMPORTED_MODULE_46__["default"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Dropdown, "Menu", _DropdownMenu__WEBPACK_IMPORTED_MODULE_48__["default"]);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Dropdown, "SearchInput", _DropdownSearchInput__WEBPACK_IMPORTED_MODULE_47__["default"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Dropdown, "SearchInput", _DropdownSearchInput__WEBPACK_IMPORTED_MODULE_49__["default"]);
 
 _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(Dropdown, "handledProps", ["additionLabel", "additionPosition", "allowAdditions", "as", "basic", "button", "children", "className", "clearable", "closeOnBlur", "closeOnChange", "compact", "deburr", "defaultOpen", "defaultSearchQuery", "defaultSelectedLabel", "defaultUpward", "defaultValue", "direction", "disabled", "error", "floating", "fluid", "header", "icon", "inline", "item", "labeled", "lazyLoad", "loading", "minCharacters", "multiple", "noResultsMessage", "onAddItem", "onBlur", "onChange", "onClick", "onClose", "onFocus", "onLabelClick", "onMouseDown", "onOpen", "onSearchChange", "open", "openOnFocus", "options", "placeholder", "pointing", "renderLabel", "scrolling", "search", "searchInput", "searchQuery", "selectOnBlur", "selectOnNavigation", "selectedLabel", "selection", "simple", "tabIndex", "text", "trigger", "upward", "value", "wrapSelection"]);
 
 
 Dropdown.propTypes =  true ? {
   /** An element type to render as (string or function). */
-  as: _lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].as,
+  as: _lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].as,
 
   /** Label prefixed to an option added by a user. */
-  additionLabel: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.element, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.string]),
+  additionLabel: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.element, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.string]),
 
   /** Position of the `Add: ...` option in the dropdown list ('top' or 'bottom'). */
-  additionPosition: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOf(['top', 'bottom']),
+  additionPosition: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOf(['top', 'bottom']),
 
   /**
    * Allow user additions to the list of options (boolean).
    * Requires the use of `selection`, `options` and `search`.
    */
-  allowAdditions: _lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].every([_lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].demand(['options', 'selection', 'search']), prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool]),
+  allowAdditions: _lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].every([_lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].demand(['options', 'selection', 'search']), prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool]),
 
   /** A Dropdown can reduce its complexity. */
-  basic: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  basic: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** Format the Dropdown to appear as a button. */
-  button: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  button: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** Primary content. */
-  children: _lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].every([_lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].disallow(['options', 'selection']), _lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].givenProps({
-    children: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.any.isRequired
-  }, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.element.isRequired)]),
+  children: _lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].every([_lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].disallow(['options', 'selection']), _lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].givenProps({
+    children: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.any.isRequired
+  }, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.element.isRequired)]),
 
   /** Additional classes. */
-  className: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.string,
+  className: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.string,
 
   /** Using the clearable setting will let users remove their selection from a dropdown. */
-  clearable: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  clearable: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** Whether or not the menu should close when the dropdown is blurred. */
-  closeOnBlur: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  closeOnBlur: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /**
    * Whether or not the menu should close when a value is selected from the dropdown.
    * By default, multiple selection dropdowns will remain open on change, while single
    * selection dropdowns will close on change.
    */
-  closeOnChange: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  closeOnChange: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** A compact dropdown has no minimum width. */
-  compact: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  compact: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** Whether or not the dropdown should strip diacritics in options and input search */
-  deburr: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  deburr: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** Initial value of open. */
-  defaultOpen: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  defaultOpen: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** Initial value of searchQuery. */
-  defaultSearchQuery: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.string,
+  defaultSearchQuery: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.string,
 
   /** Currently selected label in multi-select. */
-  defaultSelectedLabel: _lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].every([_lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].demand(['multiple']), prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.string])]),
+  defaultSelectedLabel: _lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].every([_lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].demand(['multiple']), prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.string])]),
 
   /** Initial value of upward. */
-  defaultUpward: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  defaultUpward: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** Initial value or value array if multiple. */
-  defaultValue: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool]))]),
+  defaultValue: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool]))]),
 
   /** A dropdown menu can open to the left or to the right. */
-  direction: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOf(['left', 'right']),
+  direction: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOf(['left', 'right']),
 
   /** A disabled dropdown menu or item does not allow user interaction. */
-  disabled: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  disabled: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** An errored dropdown can alert a user to a problem. */
-  error: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  error: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** A dropdown menu can contain floated content. */
-  floating: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  floating: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** A dropdown can take the full width of its parent */
-  fluid: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  fluid: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** A dropdown menu can contain a header. */
-  header: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.node,
+  header: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.node,
 
   /** Shorthand for Icon. */
-  icon: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.node, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.object]),
+  icon: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.node, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.object]),
 
   /** A dropdown can be formatted to appear inline in other content. */
-  inline: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  inline: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** A dropdown can be formatted as a Menu item. */
-  item: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  item: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** A dropdown can be labeled. */
-  labeled: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  labeled: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** A dropdown can defer rendering its options until it is open. */
-  lazyLoad: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  lazyLoad: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** A dropdown can show that it is currently loading data. */
-  loading: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  loading: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** The minimum characters for a search to begin showing results. */
-  minCharacters: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.number,
+  minCharacters: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.number,
 
   /** A selection dropdown can allow multiple selections. */
-  multiple: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  multiple: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** Message to display when there are no results. */
-  noResultsMessage: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.node,
+  noResultsMessage: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.node,
 
   /**
    * Called when a user adds a new item. Use this to update the options list.
@@ -60571,7 +61124,7 @@ Dropdown.propTypes =  true ? {
    * @param {SyntheticEvent} event - React's original SyntheticEvent.
    * @param {object} data - All props and the new item's value.
    */
-  onAddItem: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.func,
+  onAddItem: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.func,
 
   /**
    * Called on blur.
@@ -60579,7 +61132,7 @@ Dropdown.propTypes =  true ? {
    * @param {SyntheticEvent} event - React's original SyntheticEvent.
    * @param {object} data - All props.
    */
-  onBlur: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.func,
+  onBlur: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.func,
 
   /**
    * Called when the user attempts to change the value.
@@ -60587,7 +61140,7 @@ Dropdown.propTypes =  true ? {
    * @param {SyntheticEvent} event - React's original SyntheticEvent.
    * @param {object} data - All props and proposed value.
    */
-  onChange: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.func,
+  onChange: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.func,
 
   /**
    * Called on click.
@@ -60595,7 +61148,7 @@ Dropdown.propTypes =  true ? {
    * @param {SyntheticEvent} event - React's original SyntheticEvent.
    * @param {object} data - All props.
    */
-  onClick: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.func,
+  onClick: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.func,
 
   /**
    * Called when a close event happens.
@@ -60603,7 +61156,7 @@ Dropdown.propTypes =  true ? {
    * @param {SyntheticEvent} event - React's original SyntheticEvent.
    * @param {object} data - All props.
    */
-  onClose: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.func,
+  onClose: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.func,
 
   /**
    * Called on focus.
@@ -60611,7 +61164,7 @@ Dropdown.propTypes =  true ? {
    * @param {SyntheticEvent} event - React's original SyntheticEvent.
    * @param {object} data - All props.
    */
-  onFocus: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.func,
+  onFocus: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.func,
 
   /**
    * Called when a multi-select label is clicked.
@@ -60619,7 +61172,7 @@ Dropdown.propTypes =  true ? {
    * @param {SyntheticEvent} event - React's original SyntheticEvent.
    * @param {object} data - All label props.
    */
-  onLabelClick: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.func,
+  onLabelClick: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.func,
 
   /**
    * Called on mousedown.
@@ -60627,7 +61180,7 @@ Dropdown.propTypes =  true ? {
    * @param {SyntheticEvent} event - React's original SyntheticEvent.
    * @param {object} data - All props.
    */
-  onMouseDown: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.func,
+  onMouseDown: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.func,
 
   /**
    * Called when an open event happens.
@@ -60635,7 +61188,7 @@ Dropdown.propTypes =  true ? {
    * @param {SyntheticEvent} event - React's original SyntheticEvent.
    * @param {object} data - All props.
    */
-  onOpen: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.func,
+  onOpen: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.func,
 
   /**
    * Called on search input change.
@@ -60643,22 +61196,22 @@ Dropdown.propTypes =  true ? {
    * @param {SyntheticEvent} event - React's original SyntheticEvent.
    * @param {object} data - All props, includes current value of searchQuery.
    */
-  onSearchChange: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.func,
+  onSearchChange: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.func,
 
   /** Controls whether or not the dropdown menu is displayed. */
-  open: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  open: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** Whether or not the menu should open when the dropdown is focused. */
-  openOnFocus: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  openOnFocus: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** Array of Dropdown.Item props e.g. `{ text: '', value: '' }` */
-  options: _lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].every([_lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].disallow(['children']), prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.shape(_DropdownItem__WEBPACK_IMPORTED_MODULE_44__["default"].propTypes))]),
+  options: _lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].every([_lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].disallow(['children']), prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.shape(_DropdownItem__WEBPACK_IMPORTED_MODULE_46__["default"].propTypes))]),
 
   /** Placeholder text. */
-  placeholder: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.string,
+  placeholder: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.string,
 
   /** A dropdown can be formatted so that its menu is pointing. */
-  pointing: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOf(['left', 'right', 'top', 'top left', 'top right', 'bottom', 'bottom left', 'bottom right'])]),
+  pointing: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOf(['left', 'right', 'top', 'top left', 'top right', 'bottom', 'bottom left', 'bottom right'])]),
 
   /**
    * Mapped over the active items and returns shorthand for the active item Labels.
@@ -60669,62 +61222,62 @@ Dropdown.propTypes =  true ? {
    * @param {object} defaultLabelProps - The default props for an active item Label.
    * @returns {*} Shorthand for a Label.
    */
-  renderLabel: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.func,
+  renderLabel: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.func,
 
   /** A dropdown can have its menu scroll. */
-  scrolling: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  scrolling: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /**
    * A selection dropdown can allow a user to search through a large list of choices.
    * Pass a function here to replace the default search.
    */
-  search: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.func]),
+  search: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.func]),
 
   /** A shorthand for a search input. */
-  searchInput: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.array, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.node, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.object]),
+  searchInput: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.array, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.node, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.object]),
 
   /** Current value of searchQuery. Creates a controlled component. */
-  searchQuery: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.string,
+  searchQuery: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.string,
   // TODO 'searchInMenu' or 'search='in menu' or ???  How to handle this markup and functionality?
 
   /** Define whether the highlighted item should be selected on blur. */
-  selectOnBlur: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  selectOnBlur: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /**
    * Whether or not to change the value when navigating the menu using arrow keys.
    * Setting to false will require enter or left click to confirm a choice.
    */
-  selectOnNavigation: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  selectOnNavigation: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** Currently selected label in multi-select. */
-  selectedLabel: _lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].every([_lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].demand(['multiple']), prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.number])]),
+  selectedLabel: _lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].every([_lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].demand(['multiple']), prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.number])]),
 
   /** A dropdown can be used to select between choices in a form. */
-  selection: _lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].every([_lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].disallow(['children']), _lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].demand(['options']), prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool]),
+  selection: _lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].every([_lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].disallow(['children']), _lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].demand(['options']), prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool]),
 
   /** A simple dropdown can open without Javascript. */
-  simple: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  simple: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /** A dropdown can receive focus. */
-  tabIndex: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.string]),
+  tabIndex: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.string]),
 
   /** The text displayed in the dropdown, usually for the active item. */
-  text: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.string,
+  text: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.string,
 
   /** Custom element to trigger the menu to become visible. Takes place of 'text'. */
-  trigger: _lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].every([_lib__WEBPACK_IMPORTED_MODULE_40__["customPropTypes"].disallow(['selection', 'text']), prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.node]),
+  trigger: _lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].every([_lib__WEBPACK_IMPORTED_MODULE_41__["customPropTypes"].disallow(['selection', 'text']), prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.node]),
 
   /** Current value or value array if multiple. Creates a controlled component. */
-  value: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.number]))]),
+  value: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.number]))]),
 
   /** Controls whether the dropdown will open upward. */
-  upward: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool,
+  upward: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool,
 
   /**
    * A dropdown will go to the last element when ArrowUp is pressed on the first,
    * or go to the first when ArrowDown is pressed on the last( aka infinite selection )
    */
-  wrapSelection: prop_types__WEBPACK_IMPORTED_MODULE_37___default.a.bool
+  wrapSelection: prop_types__WEBPACK_IMPORTED_MODULE_38___default.a.bool
 } : undefined;
 
 /***/ }),
@@ -61232,10 +61785,6 @@ function (_Component) {
       }));
     });
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleRef", function (c) {
-      Object(_lib__WEBPACK_IMPORTED_MODULE_14__["handleRef"])(_this.props.inputRef, c);
-    });
-
     return _this;
   }
 
@@ -61255,7 +61804,6 @@ function (_Component) {
         autoComplete: autoComplete,
         className: classes,
         onChange: this.handleChange,
-        ref: this.handleRef,
         tabIndex: tabIndex,
         type: type,
         value: value
@@ -61271,7 +61819,7 @@ _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Dro
   type: 'text'
 });
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(DropdownSearchInput, "handledProps", ["as", "autoComplete", "className", "inputRef", "tabIndex", "type", "value"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(DropdownSearchInput, "handledProps", ["as", "autoComplete", "className", "tabIndex", "type", "value"]);
 
 DropdownSearchInput.propTypes =  true ? {
   /** An element type to render as (string or function). */
@@ -61282,9 +61830,6 @@ DropdownSearchInput.propTypes =  true ? {
 
   /** Additional classes. */
   className: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.string,
-
-  /** A ref handler for input. */
-  inputRef: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.object]),
 
   /** An input can receive focus. */
   tabIndex: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.string]),
@@ -61679,6 +62224,10 @@ function (_Component) {
 
     _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4___default()(this, (_getPrototypeOf2 = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5___default()(Modal)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "ref", Object(react__WEBPACK_IMPORTED_MODULE_16__["createRef"])());
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "dimmerRef", Object(react__WEBPACK_IMPORTED_MODULE_16__["createRef"])());
+
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "getMountNode", function () {
       return Object(_lib__WEBPACK_IMPORTED_MODULE_17__["isBrowser"])() ? _this.props.mountNode || document.body : null;
     });
@@ -61705,7 +62254,7 @@ function (_Component) {
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleDocumentClick", function (e) {
       var closeOnDimmerClick = _this.props.closeOnDimmerClick;
-      if (!closeOnDimmerClick || Object(_lib__WEBPACK_IMPORTED_MODULE_17__["doesNodeContainClick"])(_this.ref, e)) return;
+      if (!closeOnDimmerClick || Object(_lib__WEBPACK_IMPORTED_MODULE_17__["doesNodeContainClick"])(_this.ref.current, e)) return;
 
       lodash_invoke__WEBPACK_IMPORTED_MODULE_13___default()(_this.props, 'onClose', e, _this.props);
 
@@ -61743,7 +62292,7 @@ function (_Component) {
 
       _lib__WEBPACK_IMPORTED_MODULE_17__["eventStack"].sub('click', _this.handleDocumentClick, {
         pool: eventPool,
-        target: _this.dimmerRef
+        target: _this.dimmerRef.current
       });
 
       lodash_invoke__WEBPACK_IMPORTED_MODULE_13___default()(_this.props, 'onMount', e, _this.props);
@@ -61754,23 +62303,15 @@ function (_Component) {
       cancelAnimationFrame(_this.animationRequestId);
       _lib__WEBPACK_IMPORTED_MODULE_17__["eventStack"].unsub('click', _this.handleDocumentClick, {
         pool: eventPool,
-        target: _this.dimmerRef
+        target: _this.dimmerRef.current
       });
 
       lodash_invoke__WEBPACK_IMPORTED_MODULE_13___default()(_this.props, 'onUnmount', e, _this.props);
     });
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleRef", function (c) {
-      return _this.ref = c;
-    });
-
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleDimmerRef", function (c) {
-      return _this.dimmerRef = c;
-    });
-
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "setDimmerNodeStyle", function () {
-      if (_this.dimmerRef) {
-        _this.dimmerRef.style.setProperty('display', 'flex', 'important');
+      if (_this.dimmerRef.current) {
+        _this.dimmerRef.current.style.setProperty('display', 'flex', 'important');
       }
     });
 
@@ -61788,9 +62329,9 @@ function (_Component) {
 
       var newState = {};
 
-      if (_this.ref) {
-        var _this$ref$getBounding = _this.ref.getBoundingClientRect(),
-            height = _this$ref$getBounding.height; // Leaving the old calculation here since we may need it as an older browser fallback
+      if (_this.ref.current) {
+        var _this$ref$current$get = _this.ref.current.getBoundingClientRect(),
+            height = _this$ref$current$get.height; // Leaving the old calculation here since we may need it as an older browser fallback
         // SEE: https://github.com/Semantic-Org/Semantic-UI/issues/6185#issuecomment-376725956
         // const marginTop = -Math.round(height / 2)
 
@@ -61838,25 +62379,8 @@ function (_Component) {
       var closeIconJSX = _elements_Icon__WEBPACK_IMPORTED_MODULE_18__["default"].create(closeIconName, {
         overrideProps: _this.handleIconOverrides
       });
-
-      if (!_lib__WEBPACK_IMPORTED_MODULE_17__["childrenUtils"].isNil(children)) {
-        // TODO: remove when ref with "as" is resolved: PR #2306
-        return react__WEBPACK_IMPORTED_MODULE_16___default.a.createElement(_addons_Ref__WEBPACK_IMPORTED_MODULE_25__["default"], {
-          innerRef: _this.handleRef
-        }, react__WEBPACK_IMPORTED_MODULE_16___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, {
-          className: classes,
-          style: _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({
-            marginTop: marginTop
-          }, style)
-        }), react__WEBPACK_IMPORTED_MODULE_16___default.a.createElement(_addons_MountNode__WEBPACK_IMPORTED_MODULE_19__["default"], {
-          className: mountClasses,
-          node: mountNode
-        }), closeIconJSX, children));
-      } // TODO: remove when ref with "as" is resolved: PR #2306
-
-
       return react__WEBPACK_IMPORTED_MODULE_16___default.a.createElement(_addons_Ref__WEBPACK_IMPORTED_MODULE_25__["default"], {
-        innerRef: _this.handleRef
+        innerRef: _this.ref
       }, react__WEBPACK_IMPORTED_MODULE_16___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, {
         className: classes,
         style: _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({
@@ -61865,13 +62389,13 @@ function (_Component) {
       }), react__WEBPACK_IMPORTED_MODULE_16___default.a.createElement(_addons_MountNode__WEBPACK_IMPORTED_MODULE_19__["default"], {
         className: mountClasses,
         node: mountNode
-      }), closeIconJSX, _ModalHeader__WEBPACK_IMPORTED_MODULE_21__["default"].create(header, {
+      }), closeIconJSX, _lib__WEBPACK_IMPORTED_MODULE_17__["childrenUtils"].isNil(children) ? react__WEBPACK_IMPORTED_MODULE_16___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_16__["Fragment"], null, _ModalHeader__WEBPACK_IMPORTED_MODULE_21__["default"].create(header, {
         autoGenerateKey: false
       }), _ModalContent__WEBPACK_IMPORTED_MODULE_22__["default"].create(content, {
         autoGenerateKey: false
       }), _ModalActions__WEBPACK_IMPORTED_MODULE_23__["default"].create(actions, {
         overrideProps: _this.handleActionsOverrides
-      })));
+      })) : children));
     });
 
     return _this;
@@ -61934,7 +62458,7 @@ function (_Component) {
         onUnmount: this.handlePortalUnmount
       }), react__WEBPACK_IMPORTED_MODULE_16___default.a.createElement("div", {
         className: dimmerClasses,
-        ref: this.handleDimmerRef
+        ref: this.dimmerRef
       }, this.renderContent(rest)));
     }
   }]);
@@ -62325,7 +62849,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /**
- * A modal can have a header.
+ * A modal can contain a description with one or more paragraphs.
  */
 
 function ModalDescription(props) {
@@ -62492,8 +63016,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_20__);
 /* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
 /* harmony import */ var _addons_Portal__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../../addons/Portal */ "./node_modules/semantic-ui-react/dist/es/addons/Portal/index.js");
-/* harmony import */ var _PopupContent__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./PopupContent */ "./node_modules/semantic-ui-react/dist/es/modules/Popup/PopupContent.js");
-/* harmony import */ var _PopupHeader__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./PopupHeader */ "./node_modules/semantic-ui-react/dist/es/modules/Popup/PopupHeader.js");
+/* harmony import */ var _addons_Ref__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../../addons/Ref */ "./node_modules/semantic-ui-react/dist/es/addons/Ref/index.js");
+/* harmony import */ var _PopupContent__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./PopupContent */ "./node_modules/semantic-ui-react/dist/es/modules/Popup/PopupContent.js");
+/* harmony import */ var _PopupHeader__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./PopupHeader */ "./node_modules/semantic-ui-react/dist/es/modules/Popup/PopupHeader.js");
+
 
 
 
@@ -62776,7 +63302,9 @@ function (_Component) {
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "getContext", function () {
-      return _this.props.context || _this.triggerRef;
+      var context = _this.props.context;
+      var contextFromProp = Object(_lib__WEBPACK_IMPORTED_MODULE_21__["isRefObject"])(context) ? context.current : context;
+      return contextFromProp || _this.triggerRef;
     });
 
     return _this;
@@ -62833,15 +63361,16 @@ function (_Component) {
       var portalProps = lodash_pick__WEBPACK_IMPORTED_MODULE_9___default()(unhandled, portalPropNames);
 
       var ElementType = Object(_lib__WEBPACK_IMPORTED_MODULE_21__["getElementType"])(Popup, this.props);
-      var popupJSX = react__WEBPACK_IMPORTED_MODULE_20___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_1___default()({}, rest, {
+      var popupJSX = react__WEBPACK_IMPORTED_MODULE_20___default.a.createElement(_addons_Ref__WEBPACK_IMPORTED_MODULE_23__["default"], {
+        innerRef: this.handlePopupRef
+      }, react__WEBPACK_IMPORTED_MODULE_20___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_1___default()({}, rest, {
         className: classes,
-        style: style,
-        ref: this.handlePopupRef
-      }), children, _lib__WEBPACK_IMPORTED_MODULE_21__["childrenUtils"].isNil(children) && _PopupHeader__WEBPACK_IMPORTED_MODULE_24__["default"].create(header, {
+        style: style
+      }), children, _lib__WEBPACK_IMPORTED_MODULE_21__["childrenUtils"].isNil(children) && _PopupHeader__WEBPACK_IMPORTED_MODULE_25__["default"].create(header, {
         autoGenerateKey: false
-      }), _lib__WEBPACK_IMPORTED_MODULE_21__["childrenUtils"].isNil(children) && _PopupContent__WEBPACK_IMPORTED_MODULE_23__["default"].create(content, {
+      }), _lib__WEBPACK_IMPORTED_MODULE_21__["childrenUtils"].isNil(children) && _PopupContent__WEBPACK_IMPORTED_MODULE_24__["default"].create(content, {
         autoGenerateKey: false
-      }));
+      })));
 
       var mergedPortalProps = _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_0___default()({}, this.getPortalProps(), portalProps);
 
@@ -62866,9 +63395,9 @@ _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Pop
   disabled: false
 });
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Popup, "Content", _PopupContent__WEBPACK_IMPORTED_MODULE_23__["default"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Popup, "Content", _PopupContent__WEBPACK_IMPORTED_MODULE_24__["default"]);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Popup, "Header", _PopupHeader__WEBPACK_IMPORTED_MODULE_24__["default"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Popup, "Header", _PopupHeader__WEBPACK_IMPORTED_MODULE_25__["default"]);
 
 _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Popup, "handledProps", ["as", "basic", "children", "className", "content", "context", "disabled", "flowing", "header", "hideOnScroll", "horizontalOffset", "hoverable", "inverted", "keepInViewPort", "on", "onClose", "onMount", "onOpen", "onUnmount", "position", "size", "style", "trigger", "verticalOffset", "wide"]);
 
@@ -62890,7 +63419,7 @@ Popup.propTypes =  true ? {
   content: _lib__WEBPACK_IMPORTED_MODULE_21__["customPropTypes"].itemShorthand,
 
   /** Existing element the pop-up should be bound to. */
-  context: prop_types__WEBPACK_IMPORTED_MODULE_19___default.a.object,
+  context: prop_types__WEBPACK_IMPORTED_MODULE_19___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_19___default.a.object, _lib__WEBPACK_IMPORTED_MODULE_21__["customPropTypes"].refObject]),
 
   /** A disabled popup only renders its trigger. */
   disabled: prop_types__WEBPACK_IMPORTED_MODULE_19___default.a.bool,
@@ -63661,7 +64190,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(lodash_invoke__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! keyboard-key */ "./node_modules/semantic-ui-react/node_modules/keyboard-key/src/keyboardKey.js");
+/* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! keyboard-key */ "./node_modules/keyboard-key/src/keyboardKey.js");
 /* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(keyboard_key__WEBPACK_IMPORTED_MODULE_10__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_11__);
@@ -63873,7 +64402,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash_without__WEBPACK_IMPORTED_MODULE_19___default = /*#__PURE__*/__webpack_require__.n(lodash_without__WEBPACK_IMPORTED_MODULE_19__);
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_20__);
-/* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! keyboard-key */ "./node_modules/semantic-ui-react/node_modules/keyboard-key/src/keyboardKey.js");
+/* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! keyboard-key */ "./node_modules/keyboard-key/src/keyboardKey.js");
 /* harmony import */ var keyboard_key__WEBPACK_IMPORTED_MODULE_21___default = /*#__PURE__*/__webpack_require__.n(keyboard_key__WEBPACK_IMPORTED_MODULE_21__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_22___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_22__);
@@ -64035,9 +64564,14 @@ function (_Component) {
       _this.close();
     });
 
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_11___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_10___default()(_this)), "handleItemMouseDown", function (e) {
+      // Heads up! We should prevent default to prevent blur events.
+      // https://github.com/Semantic-Org/Semantic-UI-React/issues/3298
+      e.preventDefault();
+    });
+
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_11___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_10___default()(_this)), "handleFocus", function (e) {
-      var onFocus = _this.props.onFocus;
-      if (onFocus) onFocus(e, _this.props);
+      lodash_invoke__WEBPACK_IMPORTED_MODULE_18___default()(_this.props, 'onFocus', e, _this.props);
 
       _this.setState({
         focus: true
@@ -64045,8 +64579,7 @@ function (_Component) {
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_11___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_10___default()(_this)), "handleBlur", function (e) {
-      var onBlur = _this.props.onBlur;
-      if (onBlur) onBlur(e, _this.props);
+      lodash_invoke__WEBPACK_IMPORTED_MODULE_18___default()(_this.props, 'onBlur', e, _this.props);
 
       _this.setState({
         focus: false
@@ -64203,6 +64736,7 @@ function (_Component) {
         key: childKey || result.title,
         active: selectedIndex === offsetIndex,
         onClick: _this.handleItemClick,
+        onMouseDown: _this.handleItemMouseDown,
         renderer: resultRenderer
       }, result, {
         id: offsetIndex // Used to lookup the result on item click
@@ -64945,6 +65479,8 @@ function (_Component) {
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "state", {});
 
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "ref", Object(react__WEBPACK_IMPORTED_MODULE_13__["createRef"])());
+
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleAnimationStart", function () {
       var visible = _this.props.visible;
       var callback = visible ? 'onVisible' : 'onHide';
@@ -64976,17 +65512,13 @@ function (_Component) {
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleDocumentClick", function (e) {
-      if (!Object(_lib__WEBPACK_IMPORTED_MODULE_15__["doesNodeContainClick"])(_this.ref, e)) {
+      if (!Object(_lib__WEBPACK_IMPORTED_MODULE_15__["doesNodeContainClick"])(_this.ref.current, e)) {
         _this.skipNextCallback = true;
 
         lodash_invoke__WEBPACK_IMPORTED_MODULE_9___default()(_this.props, 'onHide', e, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_1___default()({}, _this.props, {
           visible: false
         }));
       }
-    });
-
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleRef", function (c) {
-      return _this.ref = c;
     });
 
     return _this;
@@ -65021,7 +65553,7 @@ function (_Component) {
       var rest = Object(_lib__WEBPACK_IMPORTED_MODULE_15__["getUnhandledProps"])(Sidebar, this.props);
       var ElementType = Object(_lib__WEBPACK_IMPORTED_MODULE_15__["getElementType"])(Sidebar, this.props);
       return react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_addons_Ref__WEBPACK_IMPORTED_MODULE_14__["default"], {
-        innerRef: this.handleRef
+        innerRef: this.ref
       }, react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, {
         className: classes
       }), _lib__WEBPACK_IMPORTED_MODULE_15__["childrenUtils"].isNil(children) ? content : children, visible && react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_semantic_ui_react_event_stack__WEBPACK_IMPORTED_MODULE_10___default.a, {
@@ -65101,7 +65633,7 @@ Sidebar.propTypes =  true ? {
   onVisible: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.func,
 
   /** A sidebar can handle clicks on the passed element. */
-  target: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.object,
+  target: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOfType([_lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].domNode, _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].refObject]),
 
   /** Controls whether or not the sidebar is visible on the page. */
   visible: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool,
@@ -65325,28 +65857,34 @@ function (_Component) {
       sticky: false
     });
 
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "stickyRef", Object(react__WEBPACK_IMPORTED_MODULE_12__["createRef"])());
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "triggerRef", Object(react__WEBPACK_IMPORTED_MODULE_12__["createRef"])());
+
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "addListeners", function (props) {
       var scrollContext = props.scrollContext;
+      var scrollContextNode = Object(_lib__WEBPACK_IMPORTED_MODULE_13__["isRefObject"])(scrollContext) ? scrollContext.current : scrollContext;
 
-      if (scrollContext) {
+      if (scrollContextNode) {
         _lib__WEBPACK_IMPORTED_MODULE_13__["eventStack"].sub('resize', _this.handleUpdate, {
-          target: scrollContext
+          target: scrollContextNode
         });
         _lib__WEBPACK_IMPORTED_MODULE_13__["eventStack"].sub('scroll', _this.handleUpdate, {
-          target: scrollContext
+          target: scrollContextNode
         });
       }
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "removeListeners", function () {
       var scrollContext = _this.props.scrollContext;
+      var scrollContextNode = Object(_lib__WEBPACK_IMPORTED_MODULE_13__["isRefObject"])(scrollContext) ? scrollContext.current : scrollContext;
 
-      if (scrollContext) {
+      if (scrollContextNode) {
         _lib__WEBPACK_IMPORTED_MODULE_13__["eventStack"].unsub('resize', _this.handleUpdate, {
-          target: scrollContext
+          target: scrollContextNode
         });
         _lib__WEBPACK_IMPORTED_MODULE_13__["eventStack"].unsub('scroll', _this.handleUpdate, {
-          target: scrollContext
+          target: scrollContextNode
         });
       }
     });
@@ -65387,9 +65925,10 @@ function (_Component) {
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "assignRects", function () {
       var context = _this.props.context;
-      _this.triggerRect = _this.triggerRef.getBoundingClientRect();
-      _this.contextRect = (context || document.body).getBoundingClientRect();
-      _this.stickyRect = _this.stickyRef.getBoundingClientRect();
+      var contextNode = Object(_lib__WEBPACK_IMPORTED_MODULE_13__["isRefObject"])(context) ? context.current : context || document.body;
+      _this.triggerRect = _this.triggerRef.current.getBoundingClientRect();
+      _this.contextRect = contextNode.getBoundingClientRect();
+      _this.stickyRect = _this.stickyRef.current.getBoundingClientRect();
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "didReachContextBottom", function () {
@@ -65475,14 +66014,6 @@ function (_Component) {
         top: top,
         bottom: null
       });
-    });
-
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleStickyRef", function (c) {
-      return _this.stickyRef = c;
-    });
-
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this)), "handleTriggerRef", function (c) {
-      return _this.triggerRef = c;
     });
 
     return _this;
@@ -65579,10 +66110,10 @@ function (_Component) {
       return react__WEBPACK_IMPORTED_MODULE_12___default.a.createElement(ElementType, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, rest, {
         className: containerClasses
       }), react__WEBPACK_IMPORTED_MODULE_12___default.a.createElement("div", {
-        ref: this.handleTriggerRef
+        ref: this.triggerRef
       }), react__WEBPACK_IMPORTED_MODULE_12___default.a.createElement("div", {
-        className: classnames__WEBPACK_IMPORTED_MODULE_10___default()(elementClasses),
-        ref: this.handleStickyRef,
+        className: elementClasses,
+        ref: this.stickyRef,
         style: this.computeStyle()
       }, children));
     }
@@ -65618,7 +66149,7 @@ Sticky.propTypes =  true ? {
   className: prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.string,
 
   /** Context which sticky element should stick to. */
-  context: prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.object,
+  context: prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.oneOfType([_lib__WEBPACK_IMPORTED_MODULE_13__["customPropTypes"].domNode, _lib__WEBPACK_IMPORTED_MODULE_13__["customPropTypes"].refObject]),
 
   /** Offset in pixels from the top of the screen when fixing element to viewport. */
   offset: prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.number,
@@ -65659,7 +66190,7 @@ Sticky.propTypes =  true ? {
   pushing: prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.bool,
 
   /** Context which sticky should attach onscroll events. */
-  scrollContext: prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.object,
+  scrollContext: prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.oneOfType([_lib__WEBPACK_IMPORTED_MODULE_13__["customPropTypes"].domNode, _lib__WEBPACK_IMPORTED_MODULE_13__["customPropTypes"].refObject]),
 
   /** Custom style for sticky element. */
   styleElement: prop_types__WEBPACK_IMPORTED_MODULE_11___default.a.object
@@ -66073,18 +66604,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var lodash_includes__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lodash/includes */ "./node_modules/lodash/includes.js");
 /* harmony import */ var lodash_includes__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(lodash_includes__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! lodash/get */ "./node_modules/lodash/get.js");
-/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(lodash_get__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js");
-/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(lodash_invoke__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
-/* harmony import */ var _TransitionGroup__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./TransitionGroup */ "./node_modules/semantic-ui-react/dist/es/modules/Transition/TransitionGroup.js");
+/* harmony import */ var lodash_isNil__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js");
+/* harmony import */ var lodash_isNil__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(lodash_isNil__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! lodash/get */ "./node_modules/lodash/get.js");
+/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(lodash_get__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js");
+/* harmony import */ var lodash_invoke__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(lodash_invoke__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../lib */ "./node_modules/semantic-ui-react/dist/es/lib/index.js");
+/* harmony import */ var _TransitionGroup__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./TransitionGroup */ "./node_modules/semantic-ui-react/dist/es/modules/Transition/TransitionGroup.js");
+
 
 
 
@@ -66138,9 +66672,9 @@ function (_Component) {
         animating: true
       }, function () {
         var durationType = TRANSITION_TYPE[status];
-        var durationValue = Object(_lib__WEBPACK_IMPORTED_MODULE_14__["normalizeTransitionDuration"])(duration, durationType);
+        var durationValue = Object(_lib__WEBPACK_IMPORTED_MODULE_15__["normalizeTransitionDuration"])(duration, durationType);
 
-        lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default()(_this.props, 'onStart', null, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_0___default()({}, _this.props, {
+        lodash_invoke__WEBPACK_IMPORTED_MODULE_11___default()(_this.props, 'onStart', null, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_0___default()({}, _this.props, {
           status: status
         }));
 
@@ -66151,7 +66685,7 @@ function (_Component) {
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_this)), "handleComplete", function () {
       var current = _this.state.status;
 
-      lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default()(_this.props, 'onComplete', null, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_0___default()({}, _this.props, {
+      lodash_invoke__WEBPACK_IMPORTED_MODULE_11___default()(_this.props, 'onComplete', null, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_0___default()({}, _this.props, {
         status: current
       }));
 
@@ -66169,7 +66703,7 @@ function (_Component) {
         status: status,
         animating: false
       }, function () {
-        lodash_invoke__WEBPACK_IMPORTED_MODULE_10___default()(_this.props, callback, null, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_0___default()({}, _this.props, {
+        lodash_invoke__WEBPACK_IMPORTED_MODULE_11___default()(_this.props, callback, null, _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_0___default()({}, _this.props, {
           status: status
         }));
       });
@@ -66187,20 +66721,21 @@ function (_Component) {
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_this)), "computeClasses", function () {
       var _this$props = _this.props,
           animation = _this$props.animation,
+          directional = _this$props.directional,
           children = _this$props.children;
       var _this$state = _this.state,
           animating = _this$state.animating,
           status = _this$state.status;
 
-      var childClasses = lodash_get__WEBPACK_IMPORTED_MODULE_9___default()(children, 'props.className');
+      var childClasses = lodash_get__WEBPACK_IMPORTED_MODULE_10___default()(children, 'props.className');
 
-      var directional = lodash_includes__WEBPACK_IMPORTED_MODULE_8___default()(_lib__WEBPACK_IMPORTED_MODULE_14__["SUI"].DIRECTIONAL_TRANSITIONS, animation);
+      var isDirectional = lodash_isNil__WEBPACK_IMPORTED_MODULE_9___default()(directional) ? lodash_includes__WEBPACK_IMPORTED_MODULE_8___default()(_lib__WEBPACK_IMPORTED_MODULE_15__["SUI"].DIRECTIONAL_TRANSITIONS, animation) : directional;
 
-      if (directional) {
-        return classnames__WEBPACK_IMPORTED_MODULE_11___default()(animation, childClasses, Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(animating, 'animating'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(status === Transition.ENTERING, 'in'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(status === Transition.EXITING, 'out'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(status === Transition.EXITED, 'hidden'), Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(status !== Transition.EXITED, 'visible'), 'transition');
+      if (isDirectional) {
+        return classnames__WEBPACK_IMPORTED_MODULE_12___default()(animation, childClasses, Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(animating, 'animating'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(status === Transition.ENTERING, 'in'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(status === Transition.EXITING, 'out'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(status === Transition.EXITED, 'hidden'), Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(status !== Transition.EXITED, 'visible'), 'transition');
       }
 
-      return classnames__WEBPACK_IMPORTED_MODULE_11___default()(animation, childClasses, Object(_lib__WEBPACK_IMPORTED_MODULE_14__["useKeyOnly"])(animating, 'animating transition'));
+      return classnames__WEBPACK_IMPORTED_MODULE_12___default()(animation, childClasses, Object(_lib__WEBPACK_IMPORTED_MODULE_15__["useKeyOnly"])(animating, 'animating transition'));
     });
 
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_this)), "computeCompletedStatus", function () {
@@ -66268,10 +66803,10 @@ function (_Component) {
           duration = _this$props3.duration;
       var status = _this.state.status;
 
-      var childStyle = lodash_get__WEBPACK_IMPORTED_MODULE_9___default()(children, 'props.style');
+      var childStyle = lodash_get__WEBPACK_IMPORTED_MODULE_10___default()(children, 'props.style');
 
       var type = TRANSITION_TYPE[status];
-      var animationDuration = type && "".concat(Object(_lib__WEBPACK_IMPORTED_MODULE_14__["normalizeTransitionDuration"])(duration, type), "ms");
+      var animationDuration = type && "".concat(Object(_lib__WEBPACK_IMPORTED_MODULE_15__["normalizeTransitionDuration"])(duration, type), "ms");
       return _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_0___default()({}, childStyle, {
         animationDuration: animationDuration
       });
@@ -66330,7 +66865,7 @@ function (_Component) {
       var children = this.props.children;
       var status = this.state.status;
       if (status === Transition.UNMOUNTED) return null;
-      return Object(react__WEBPACK_IMPORTED_MODULE_13__["cloneElement"])(children, {
+      return Object(react__WEBPACK_IMPORTED_MODULE_14__["cloneElement"])(children, {
         className: this.computeClasses(),
         style: this.computeStyle()
       });
@@ -66338,7 +66873,7 @@ function (_Component) {
   }]);
 
   return Transition;
-}(react__WEBPACK_IMPORTED_MODULE_13__["Component"]);
+}(react__WEBPACK_IMPORTED_MODULE_14__["Component"]);
 
 _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(Transition, "defaultProps", {
   animation: 'fade',
@@ -66359,29 +66894,32 @@ _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(Tra
 
 _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(Transition, "UNMOUNTED", 'UNMOUNTED');
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(Transition, "Group", _TransitionGroup__WEBPACK_IMPORTED_MODULE_15__["default"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(Transition, "Group", _TransitionGroup__WEBPACK_IMPORTED_MODULE_16__["default"]);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(Transition, "handledProps", ["animation", "children", "duration", "mountOnShow", "onComplete", "onHide", "onShow", "onStart", "reactKey", "transitionOnMount", "unmountOnHide", "visible"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(Transition, "handledProps", ["animation", "children", "directional", "duration", "mountOnShow", "onComplete", "onHide", "onShow", "onStart", "reactKey", "transitionOnMount", "unmountOnHide", "visible"]);
 
 
 Transition.propTypes =  true ? {
   /** Named animation event to used. Must be defined in CSS. */
-  animation: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOf(_lib__WEBPACK_IMPORTED_MODULE_14__["SUI"].TRANSITIONS),
+  animation: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.oneOf(_lib__WEBPACK_IMPORTED_MODULE_15__["SUI"].TRANSITIONS), prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.string]),
 
   /** Primary content. */
-  children: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.element.isRequired,
+  children: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.element.isRequired,
+
+  /** Whether it is directional animation event or not. Use it only for custom transitions. */
+  directional: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
 
   /** Duration of the CSS transition animation in milliseconds. */
-  duration: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.shape({
-    hide: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.number,
-    show: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.number
-  }), prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.string]),
+  duration: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.shape({
+    hide: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.number,
+    show: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.number
+  }), prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.string]),
 
   /** Show the component; triggers the enter or exit animation. */
-  visible: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool,
+  visible: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
 
   /** Wait until the first "enter" transition to mount the component (add it to the DOM). */
-  mountOnShow: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool,
+  mountOnShow: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
 
   /**
    * Callback on each transition that changes visibility to shown.
@@ -66389,7 +66927,7 @@ Transition.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props with status.
    */
-  onComplete: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.func,
+  onComplete: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Callback on each transition that changes visibility to hidden.
@@ -66397,7 +66935,7 @@ Transition.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props with status.
    */
-  onHide: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.func,
+  onHide: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Callback on each transition that changes visibility to shown.
@@ -66405,7 +66943,7 @@ Transition.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props with status.
    */
-  onShow: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.func,
+  onShow: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /**
    * Callback on animation start.
@@ -66413,16 +66951,16 @@ Transition.propTypes =  true ? {
    * @param {null}
    * @param {object} data - All props with status.
    */
-  onStart: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.func,
+  onStart: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.func,
 
   /** React's key of the element. */
-  reactKey: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.string,
+  reactKey: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.string,
 
   /** Run the enter animation when the component mounts, if it is initially shown. */
-  transitionOnMount: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool,
+  transitionOnMount: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
 
   /** Unmount the component (remove it from the DOM) when it is not shown. */
-  unmountOnHide: prop_types__WEBPACK_IMPORTED_MODULE_12___default.a.bool
+  unmountOnHide: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool
 } : undefined;
 
 /***/ }),
@@ -66525,6 +67063,7 @@ function (_React$Component) {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var _this$props = _this.props,
           animation = _this$props.animation,
+          directional = _this$props.directional,
           duration = _this$props.duration;
       var key = child.key;
       var _options$visible = options.visible,
@@ -66533,6 +67072,7 @@ function (_React$Component) {
           transitionOnMount = _options$transitionOn === void 0 ? false : _options$transitionOn;
       return react__WEBPACK_IMPORTED_MODULE_14___default.a.createElement(_Transition__WEBPACK_IMPORTED_MODULE_16__["default"], {
         animation: animation,
+        directional: directional,
         duration: duration,
         key: key,
         onHide: _this.handleOnHide,
@@ -66621,7 +67161,7 @@ _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(Tra
   duration: 500
 });
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(TransitionGroup, "handledProps", ["animation", "as", "children", "duration"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(TransitionGroup, "handledProps", ["animation", "as", "children", "directional", "duration"]);
 
 
 TransitionGroup.propTypes =  true ? {
@@ -66629,10 +67169,13 @@ TransitionGroup.propTypes =  true ? {
   as: _lib__WEBPACK_IMPORTED_MODULE_15__["customPropTypes"].as,
 
   /** Named animation event to used. Must be defined in CSS. */
-  animation: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.oneOf(_lib__WEBPACK_IMPORTED_MODULE_15__["SUI"].TRANSITIONS),
+  animation: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.oneOf(_lib__WEBPACK_IMPORTED_MODULE_15__["SUI"].TRANSITIONS), prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.string]),
 
   /** Primary content. */
   children: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.node,
+
+  /** Whether it is directional animation event or not. Use it only for custom transitions. */
+  directional: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.bool,
 
   /** Duration of the CSS transition animation in milliseconds. */
   duration: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.shape({
@@ -69864,369 +70407,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-/***/ }),
-
-/***/ "./node_modules/semantic-ui-react/node_modules/keyboard-key/src/keyboardKey.js":
-/*!*************************************************************************************!*\
-  !*** ./node_modules/semantic-ui-react/node_modules/keyboard-key/src/keyboardKey.js ***!
-  \*************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var isObject = function isObject(val) {
-  return val !== null && !Array.isArray(val) && typeof val === 'object';
-};
-
-var codes = {
-  // ----------------------------------------
-  // By Code
-  // ----------------------------------------
-  3: 'Cancel',
-  6: 'Help',
-  8: 'Backspace',
-  9: 'Tab',
-  12: 'Clear',
-  13: 'Enter',
-  16: 'Shift',
-  17: 'Control',
-  18: 'Alt',
-  19: 'Pause',
-  20: 'CapsLock',
-  27: 'Escape',
-  28: 'Convert',
-  29: 'NonConvert',
-  30: 'Accept',
-  31: 'ModeChange',
-  32: ' ',
-  33: 'PageUp',
-  34: 'PageDown',
-  35: 'End',
-  36: 'Home',
-  37: 'ArrowLeft',
-  38: 'ArrowUp',
-  39: 'ArrowRight',
-  40: 'ArrowDown',
-  41: 'Select',
-  42: 'Print',
-  43: 'Execute',
-  44: 'PrintScreen',
-  45: 'Insert',
-  46: 'Delete',
-  48: ['0', ')'],
-  49: ['1', '!'],
-  50: ['2', '@'],
-  51: ['3', '#'],
-  52: ['4', '$'],
-  53: ['5', '%'],
-  54: ['6', '^'],
-  55: ['7', '&'],
-  56: ['8', '*'],
-  57: ['9', '('],
-  91: 'OS',
-  93: 'ContextMenu',
-  144: 'NumLock',
-  145: 'ScrollLock',
-  181: 'VolumeMute',
-  182: 'VolumeDown',
-  183: 'VolumeUp',
-  186: [';', ':'],
-  187: ['=', '+'],
-  188: [',', '<'],
-  189: ['-', '_'],
-  190: ['.', '>'],
-  191: ['/', '?'],
-  192: ['`', '~'],
-  219: ['[', '{'],
-  220: ['\\', '|'],
-  221: [']', '}'],
-  222: ["'", '"'],
-  224: 'Meta',
-  225: 'AltGraph',
-  246: 'Attn',
-  247: 'CrSel',
-  248: 'ExSel',
-  249: 'EraseEof',
-  250: 'Play',
-  251: 'ZoomOut' // Function Keys (F1-24)
-
-};
-
-for (var i = 0; i < 24; i += 1) {
-  codes[112 + i] = 'F' + (i + 1);
-} // Alphabet (a-Z)
-
-
-for (var j = 0; j < 26; j += 1) {
-  var n = j + 65;
-  codes[n] = [String.fromCharCode(n + 32), String.fromCharCode(n)];
-}
-
-var keyboardKey = {
-  codes: codes,
-
-  /**
-   * Get the `keyCode` or `which` value from a keyboard event or `key` name.
-   * @param {string|object} eventOrKey A keyboard event-like object or `key` name.
-   * @param {string} [eventOrKey.key] If object, it must have one of these keys.
-   * @param {string} [eventOrKey.keyCode] If object, it must have one of these keys.
-   * @param {string} [eventOrKey.which] If object, it must have one of these keys.
-   * @returns {*}
-   */
-  getCode: function getCode(eventOrKey) {
-    if (isObject(eventOrKey)) {
-      return eventOrKey.keyCode || eventOrKey.which || this[eventOrKey.key];
-    }
-
-    return this[eventOrKey];
-  },
-
-  /**
-   * Get the key name from a keyboard event, `keyCode`, or `which` value.
-   * @param {number|object} eventOrCode A keyboard event-like object or key code.
-   * @param {number} [eventOrCode.key] If object with a `key` name, it will be returned.
-   * @param {number} [eventOrCode.keyCode] If object, it must have one of these keys.
-   * @param {number} [eventOrCode.which] If object, it must have one of these keys.
-   * @param {number} [eventOrCode.shiftKey] If object, it must have one of these keys.
-   * @returns {*}
-   */
-  getKey: function getKey(eventOrCode) {
-    var isEvent = isObject(eventOrCode); // handle events with a `key` already defined
-
-    if (isEvent && eventOrCode.key) {
-      return eventOrCode.key;
-    }
-
-    var name = codes[isEvent ? eventOrCode.keyCode || eventOrCode.which : eventOrCode];
-
-    if (Array.isArray(name)) {
-      if (isEvent) {
-        name = name[eventOrCode.shiftKey ? 1 : 0];
-      } else {
-        name = name[0];
-      }
-    }
-
-    return name;
-  },
-  // ----------------------------------------
-  // By Name
-  // ----------------------------------------
-  // declare these manually for static analysis
-  Cancel: 3,
-  Help: 6,
-  Backspace: 8,
-  Tab: 9,
-  Clear: 12,
-  Enter: 13,
-  Shift: 16,
-  Control: 17,
-  Alt: 18,
-  Pause: 19,
-  CapsLock: 20,
-  Escape: 27,
-  Convert: 28,
-  NonConvert: 29,
-  Accept: 30,
-  ModeChange: 31,
-  ' ': 32,
-  PageUp: 33,
-  PageDown: 34,
-  End: 35,
-  Home: 36,
-  ArrowLeft: 37,
-  ArrowUp: 38,
-  ArrowRight: 39,
-  ArrowDown: 40,
-  Select: 41,
-  Print: 42,
-  Execute: 43,
-  PrintScreen: 44,
-  Insert: 45,
-  Delete: 46,
-  0: 48,
-  ')': 48,
-  1: 49,
-  '!': 49,
-  2: 50,
-  '@': 50,
-  3: 51,
-  '#': 51,
-  4: 52,
-  $: 52,
-  5: 53,
-  '%': 53,
-  6: 54,
-  '^': 54,
-  7: 55,
-  '&': 55,
-  8: 56,
-  '*': 56,
-  9: 57,
-  '(': 57,
-  a: 65,
-  A: 65,
-  b: 66,
-  B: 66,
-  c: 67,
-  C: 67,
-  d: 68,
-  D: 68,
-  e: 69,
-  E: 69,
-  f: 70,
-  F: 70,
-  g: 71,
-  G: 71,
-  h: 72,
-  H: 72,
-  i: 73,
-  I: 73,
-  j: 74,
-  J: 74,
-  k: 75,
-  K: 75,
-  l: 76,
-  L: 76,
-  m: 77,
-  M: 77,
-  n: 78,
-  N: 78,
-  o: 79,
-  O: 79,
-  p: 80,
-  P: 80,
-  q: 81,
-  Q: 81,
-  r: 82,
-  R: 82,
-  s: 83,
-  S: 83,
-  t: 84,
-  T: 84,
-  u: 85,
-  U: 85,
-  v: 86,
-  V: 86,
-  w: 87,
-  W: 87,
-  x: 88,
-  X: 88,
-  y: 89,
-  Y: 89,
-  z: 90,
-  Z: 90,
-  OS: 91,
-  ContextMenu: 93,
-  F1: 112,
-  F2: 113,
-  F3: 114,
-  F4: 115,
-  F5: 116,
-  F6: 117,
-  F7: 118,
-  F8: 119,
-  F9: 120,
-  F10: 121,
-  F11: 122,
-  F12: 123,
-  F13: 124,
-  F14: 125,
-  F15: 126,
-  F16: 127,
-  F17: 128,
-  F18: 129,
-  F19: 130,
-  F20: 131,
-  F21: 132,
-  F22: 133,
-  F23: 134,
-  F24: 135,
-  NumLock: 144,
-  ScrollLock: 145,
-  VolumeMute: 181,
-  VolumeDown: 182,
-  VolumeUp: 183,
-  ';': 186,
-  ':': 186,
-  '=': 187,
-  '+': 187,
-  ',': 188,
-  '<': 188,
-  '-': 189,
-  _: 189,
-  '.': 190,
-  '>': 190,
-  '/': 191,
-  '?': 191,
-  '`': 192,
-  '~': 192,
-  '[': 219,
-  '{': 219,
-  '\\': 220,
-  '|': 220,
-  ']': 221,
-  '}': 221,
-  "'": 222,
-  '"': 222,
-  Meta: 224,
-  AltGraph: 225,
-  Attn: 246,
-  CrSel: 247,
-  ExSel: 248,
-  EraseEof: 249,
-  Play: 250,
-  ZoomOut: 251 // ----------------------------------------
-  // By Alias
-  // ----------------------------------------
-  // provide dot-notation accessible keys for all key names
-
-};
-keyboardKey.Spacebar = keyboardKey[' '];
-keyboardKey.Digit0 = keyboardKey['0'];
-keyboardKey.Digit1 = keyboardKey['1'];
-keyboardKey.Digit2 = keyboardKey['2'];
-keyboardKey.Digit3 = keyboardKey['3'];
-keyboardKey.Digit4 = keyboardKey['4'];
-keyboardKey.Digit5 = keyboardKey['5'];
-keyboardKey.Digit6 = keyboardKey['6'];
-keyboardKey.Digit7 = keyboardKey['7'];
-keyboardKey.Digit8 = keyboardKey['8'];
-keyboardKey.Digit9 = keyboardKey['9'];
-keyboardKey.Tilde = keyboardKey['~'];
-keyboardKey.GraveAccent = keyboardKey['`'];
-keyboardKey.ExclamationPoint = keyboardKey['!'];
-keyboardKey.AtSign = keyboardKey['@'];
-keyboardKey.PoundSign = keyboardKey['#'];
-keyboardKey.PercentSign = keyboardKey['%'];
-keyboardKey.Caret = keyboardKey['^'];
-keyboardKey.Ampersand = keyboardKey['&'];
-keyboardKey.PlusSign = keyboardKey['+'];
-keyboardKey.MinusSign = keyboardKey['-'];
-keyboardKey.EqualsSign = keyboardKey['='];
-keyboardKey.DivisionSign = keyboardKey['/'];
-keyboardKey.MultiplicationSign = keyboardKey['*'];
-keyboardKey.Comma = keyboardKey[','];
-keyboardKey.Decimal = keyboardKey['.'];
-keyboardKey.Colon = keyboardKey[':'];
-keyboardKey.Semicolon = keyboardKey[';'];
-keyboardKey.Pipe = keyboardKey['|'];
-keyboardKey.BackSlash = keyboardKey['\\'];
-keyboardKey.QuestionMark = keyboardKey['?'];
-keyboardKey.SingleQuote = keyboardKey["'"];
-keyboardKey.DoubleQuote = keyboardKey['"'];
-keyboardKey.LeftCurlyBrace = keyboardKey['{'];
-keyboardKey.RightCurlyBrace = keyboardKey['}'];
-keyboardKey.LeftParenthesis = keyboardKey['('];
-keyboardKey.RightParenthesis = keyboardKey[')'];
-keyboardKey.LeftAngleBracket = keyboardKey['<'];
-keyboardKey.RightAngleBracket = keyboardKey['>'];
-keyboardKey.LeftSquareBracket = keyboardKey['['];
-keyboardKey.RightSquareBracket = keyboardKey[']'];
-module.exports = keyboardKey;
 
 /***/ }),
 
