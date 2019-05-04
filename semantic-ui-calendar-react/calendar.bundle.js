@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "de05686ee80d5af35ea9";
+/******/ 	var hotCurrentHash = "3d60834abff07bf235fd";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -815,17 +815,13 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // import 'moment/locale/ru';
-var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var ReactDOM = __importStar(__webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js"));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js"));
 var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
 var inputs_1 = __webpack_require__(/*! ../src/inputs */ "./src/inputs/index.ts");
 var App = /** @class */ (function (_super) {
@@ -838,14 +834,14 @@ var App = /** @class */ (function (_super) {
         return _this;
     }
     App.prototype.render = function () {
-        return (React.createElement("div", { className: 'example-calendar-container' },
-            React.createElement(semantic_ui_react_1.Header, { as: 'h2', dividing: true },
+        return (react_1.default.createElement("div", { className: 'example-calendar-container' },
+            react_1.default.createElement(semantic_ui_react_1.Header, { as: 'h2', dividing: true },
                 "As text fields",
-                React.createElement(semantic_ui_react_1.Header.Subheader, null,
-                    React.createElement(semantic_ui_react_1.Checkbox, { label: 'Make data inputs clearable', checked: this.state.clearable, onChange: this.handleCheckboxChange.bind(this) }))),
-            React.createElement(DateTimeForm, { clearable: this.state.clearable }),
-            React.createElement("h2", null, "Inline"),
-            React.createElement(DateTimeFormInline, null)));
+                react_1.default.createElement(semantic_ui_react_1.Header.Subheader, null,
+                    react_1.default.createElement(semantic_ui_react_1.Checkbox, { label: 'Make data inputs clearable', checked: this.state.clearable, onChange: this.handleCheckboxChange.bind(this) }))),
+            react_1.default.createElement(DateTimeForm, { clearable: this.state.clearable }),
+            react_1.default.createElement("h2", null, "Inline"),
+            react_1.default.createElement(DateTimeFormInline, null)));
     };
     App.prototype.handleCheckboxChange = function () {
         var _this = this;
@@ -854,7 +850,7 @@ var App = /** @class */ (function (_super) {
         }); });
     };
     return App;
-}(React.Component));
+}(react_1.default.Component));
 var DateTimeForm = /** @class */ (function (_super) {
     __extends(DateTimeForm, _super);
     function DateTimeForm(props) {
@@ -880,25 +876,25 @@ var DateTimeForm = /** @class */ (function (_super) {
     }
     DateTimeForm.prototype.render = function () {
         var clearable = this.props.clearable;
-        return (React.createElement(semantic_ui_react_1.Form, null,
-            React.createElement(inputs_1.DateInput, { placeholder: 'Date', popupPosition: 'bottom right', className: 'example-calendar-input', name: 'date', closable: true, clearIcon: (React.createElement(semantic_ui_react_1.Icon, { name: 'remove', color: 'red' })), clearable: clearable, animation: 'scale', duration: 200, value: this.state.date, iconPosition: 'left', preserveViewMode: false, autoComplete: 'off', onChange: this.handleChange }),
-            React.createElement("br", null),
-            React.createElement(inputs_1.DateInput, { startMode: 'year', popupPosition: 'bottom right', placeholder: 'Date startMode year', className: 'example-calendar-input', name: 'dateStartYear', animation: 'fly left', duration: 300, closable: true, clearable: clearable, value: this.state.dateStartYear, iconPosition: 'left', autoComplete: 'off', preserveViewMode: false, onChange: this.handleChange }),
-            React.createElement("br", null),
-            React.createElement(inputs_1.TimeInput, { placeholder: 'Time', popupPosition: 'bottom right', className: 'example-calendar-input', name: 'time', animation: 'horizontal flip', duration: 300, closable: true, autoComplete: 'off', clearable: clearable, value: this.state.time, iconPosition: 'left', onChange: this.handleChange }),
-            React.createElement("br", null),
-            React.createElement(inputs_1.DateTimeInput, { placeholder: 'Date Time', className: 'example-calendar-input', popupPosition: 'bottom right', name: 'dateTime', closable: true, clearable: clearable, value: this.state.dateTime, iconPosition: 'left', preserveViewMode: false, autoComplete: 'off', onChange: this.handleChange }),
-            React.createElement("br", null),
-            React.createElement(inputs_1.DatesRangeInput, { dateFormat: 'DD.MM.YY', placeholder: 'From - To', popupPosition: 'bottom right', className: 'example-calendar-input', name: 'datesRange', closable: true, clearable: clearable, value: this.state.datesRange, iconPosition: 'left', autoComplete: 'off', onChange: this.handleChange }),
-            React.createElement("br", null),
-            React.createElement(inputs_1.YearInput, { placeholder: 'Year', className: 'example-calendar-input', name: 'year', popupPosition: 'bottom right', clearable: clearable, closable: true, value: this.state.year, iconPosition: 'left', autoComplete: 'off', onChange: this.handleChange }),
-            React.createElement("br", null),
-            React.createElement(inputs_1.MonthInput, { placeholder: 'Month', className: 'example-calendar-input', name: 'month', popupPosition: 'bottom right', clearable: clearable, closable: true, value: this.state.month, iconPosition: 'left', autoComplete: 'off', onChange: this.handleChange }),
-            React.createElement("br", null),
-            React.createElement(inputs_1.MonthRangeInput, { placeholder: 'MonthRange', dateFormat: 'YYYY-MM', name: 'monthRange', popupPosition: 'bottom right', clearable: clearable, closable: true, iconPosition: 'left', autoComplete: 'off', value: this.state.monthRange, onChange: this.handleChange })));
+        return (react_1.default.createElement(semantic_ui_react_1.Form, null,
+            react_1.default.createElement(inputs_1.DateInput, { placeholder: 'Date', popupPosition: 'bottom right', className: 'example-calendar-input', name: 'date', closable: true, clearIcon: (react_1.default.createElement(semantic_ui_react_1.Icon, { name: 'remove', color: 'red' })), clearable: clearable, animation: 'scale', duration: 200, hideMobileKeyboard: true, value: this.state.date, iconPosition: 'left', preserveViewMode: false, autoComplete: 'off', onChange: this.handleChange }),
+            react_1.default.createElement("br", null),
+            react_1.default.createElement(inputs_1.DateInput, { startMode: 'year', popupPosition: 'bottom right', placeholder: 'Date startMode year', className: 'example-calendar-input', name: 'dateStartYear', animation: 'fly left', duration: 300, closable: true, hideMobileKeyboard: true, clearable: clearable, value: this.state.dateStartYear, iconPosition: 'left', autoComplete: 'off', preserveViewMode: false, onChange: this.handleChange }),
+            react_1.default.createElement("br", null),
+            react_1.default.createElement(inputs_1.TimeInput, { placeholder: 'Time', popupPosition: 'bottom right', className: 'example-calendar-input', name: 'time', animation: 'horizontal flip', duration: 300, closable: true, autoComplete: 'off', hideMobileKeyboard: true, clearable: clearable, value: this.state.time, iconPosition: 'left', onChange: this.handleChange }),
+            react_1.default.createElement("br", null),
+            react_1.default.createElement(inputs_1.DateTimeInput, { placeholder: 'Date Time', className: 'example-calendar-input', popupPosition: 'bottom right', name: 'dateTime', closable: true, clearable: clearable, hideMobileKeyboard: true, value: this.state.dateTime, iconPosition: 'left', preserveViewMode: false, autoComplete: 'off', onChange: this.handleChange }),
+            react_1.default.createElement("br", null),
+            react_1.default.createElement(inputs_1.DatesRangeInput, { dateFormat: 'DD.MM.YY', placeholder: 'From - To', popupPosition: 'bottom right', className: 'example-calendar-input', name: 'datesRange', closable: true, hideMobileKeyboard: true, clearable: clearable, value: this.state.datesRange, iconPosition: 'left', autoComplete: 'off', onChange: this.handleChange }),
+            react_1.default.createElement("br", null),
+            react_1.default.createElement(inputs_1.YearInput, { placeholder: 'Year', className: 'example-calendar-input', name: 'year', popupPosition: 'bottom right', clearable: clearable, closable: true, hideMobileKeyboard: true, value: this.state.year, iconPosition: 'left', autoComplete: 'off', onChange: this.handleChange }),
+            react_1.default.createElement("br", null),
+            react_1.default.createElement(inputs_1.MonthInput, { placeholder: 'Month', className: 'example-calendar-input', name: 'month', popupPosition: 'bottom right', clearable: clearable, closable: true, hideMobileKeyboard: true, value: this.state.month, iconPosition: 'left', autoComplete: 'off', onChange: this.handleChange }),
+            react_1.default.createElement("br", null),
+            react_1.default.createElement(inputs_1.MonthRangeInput, { placeholder: 'MonthRange', dateFormat: 'YYYY-MM', name: 'monthRange', popupPosition: 'bottom right', clearable: clearable, closable: true, hideMobileKeyboard: true, iconPosition: 'left', autoComplete: 'off', value: this.state.monthRange, onChange: this.handleChange })));
     };
     return DateTimeForm;
-}(React.Component));
+}(react_1.default.Component));
 var DateTimeFormInline = /** @class */ (function (_super) {
     __extends(DateTimeFormInline, _super);
     function DateTimeFormInline(props) {
@@ -922,24 +918,24 @@ var DateTimeFormInline = /** @class */ (function (_super) {
         return _this;
     }
     DateTimeFormInline.prototype.render = function () {
-        return (React.createElement(semantic_ui_react_1.Form, null,
-            React.createElement(inputs_1.DateInput, { inline: true, className: 'example-calendar-input', value: this.state.date, name: 'date', onChange: this.handleChange, marked: [new Date()], markColor: 'orange' }),
-            React.createElement("br", null),
-            React.createElement(inputs_1.TimeInput, { inline: true, className: 'example-calendar-input', value: this.state.time, name: 'time', onChange: this.handleChange }),
-            React.createElement("br", null),
-            React.createElement(inputs_1.DateTimeInput, { inline: true, className: 'example-calendar-input', value: this.state.dateTime, name: 'dateTime', onChange: this.handleChange }),
-            React.createElement("br", null),
-            React.createElement(inputs_1.DatesRangeInput, { inline: true, className: 'example-calendar-input', value: this.state.datesRange, name: 'datesRange', onChange: this.handleChange }),
-            React.createElement("br", null),
-            React.createElement(inputs_1.YearInput, { inline: true, className: 'example-calendar-input', value: this.state.year, name: 'year', onChange: this.handleChange }),
-            React.createElement("br", null),
-            React.createElement(inputs_1.MonthInput, { inline: true, className: 'example-calendar-input', value: this.state.month, name: 'month', onChange: this.handleChange }),
-            React.createElement("br", null),
-            React.createElement(inputs_1.MonthRangeInput, { inline: true, className: 'example-calendar-input', value: this.state.monthRange, name: 'monthRange', onChange: this.handleChange })));
+        return (react_1.default.createElement(semantic_ui_react_1.Form, null,
+            react_1.default.createElement(inputs_1.DateInput, { inline: true, className: 'example-calendar-input', value: this.state.date, name: 'date', onChange: this.handleChange, marked: [new Date()], markColor: 'orange' }),
+            react_1.default.createElement("br", null),
+            react_1.default.createElement(inputs_1.TimeInput, { inline: true, className: 'example-calendar-input', value: this.state.time, name: 'time', onChange: this.handleChange }),
+            react_1.default.createElement("br", null),
+            react_1.default.createElement(inputs_1.DateTimeInput, { inline: true, className: 'example-calendar-input', value: this.state.dateTime, name: 'dateTime', onChange: this.handleChange }),
+            react_1.default.createElement("br", null),
+            react_1.default.createElement(inputs_1.DatesRangeInput, { inline: true, className: 'example-calendar-input', value: this.state.datesRange, name: 'datesRange', onChange: this.handleChange }),
+            react_1.default.createElement("br", null),
+            react_1.default.createElement(inputs_1.YearInput, { inline: true, className: 'example-calendar-input', value: this.state.year, name: 'year', onChange: this.handleChange }),
+            react_1.default.createElement("br", null),
+            react_1.default.createElement(inputs_1.MonthInput, { inline: true, className: 'example-calendar-input', value: this.state.month, name: 'month', onChange: this.handleChange }),
+            react_1.default.createElement("br", null),
+            react_1.default.createElement(inputs_1.MonthRangeInput, { inline: true, className: 'example-calendar-input', value: this.state.monthRange, name: 'monthRange', onChange: this.handleChange })));
     };
     return DateTimeFormInline;
-}(React.Component));
-ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
+}(react_1.default.Component));
+react_dom_1.default.render(react_1.default.createElement(App, null), document.getElementById('root'));
 
 
 /***/ }),
@@ -70653,12 +70649,19 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var isNil_1 = __importDefault(__webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js"));
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
-var prop_types_1 = __importDefault(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var CustomPropTypes_1 = __importDefault(__webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts"));
 var DayPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/dayPicker/DayPicker */ "./src/pickers/dayPicker/DayPicker.tsx"));
 var MonthPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/monthPicker/MonthPicker */ "./src/pickers/monthPicker/MonthPicker.tsx"));
@@ -70690,6 +70693,19 @@ var DateInput = /** @class */ (function (_super) {
     __extends(DateInput, _super);
     function DateInput(props) {
         var _this = _super.call(this, props) || this;
+        _this.componentDidUpdate = function (prevProps) {
+            // update internal date if ``value`` prop changed and successuffly parsed
+            if (prevProps.value !== _this.props.value) {
+                var parsed = parse_1.parseValue(_this.props.value, _this.props.dateFormat, _this.props.localization);
+                if (parsed) {
+                    _this.setState({
+                        year: parsed.year(),
+                        month: parsed.month(),
+                        date: parsed.date(),
+                    });
+                }
+            }
+        };
         _this.getPicker = function () {
             var _a = _this.props, value = _a.value, initialDate = _a.initialDate, dateFormat = _a.dateFormat, disable = _a.disable, minDate = _a.minDate, maxDate = _a.maxDate, enable = _a.enable, inline = _a.inline, marked = _a.marked, markColor = _a.markColor, localization = _a.localization, tabIndex = _a.tabIndex, pickerWidth = _a.pickerWidth, pickerStyle = _a.pickerStyle;
             var pickerProps = {
@@ -70714,12 +70730,12 @@ var DateInput = /** @class */ (function (_super) {
             var markedParsed = parse_1.parseArrayOrValue(marked, dateFormat, localization);
             var mode = _this.state.mode;
             if (mode === 'year') {
-                return (react_1.default.createElement(YearPicker_1.default, __assign({}, pickerProps, { disable: shared_1.getDisabledYears(disableParsed) })));
+                return (React.createElement(YearPicker_1.default, __assign({}, pickerProps, { disable: shared_1.getDisabledYears(disableParsed) })));
             }
             if (mode === 'month') {
-                return (react_1.default.createElement(MonthPicker_1.default, __assign({}, pickerProps, { hasHeader: true, disable: shared_1.getDisabledMonths(disableParsed) })));
+                return (React.createElement(MonthPicker_1.default, __assign({}, pickerProps, { hasHeader: true, disable: shared_1.getDisabledMonths(disableParsed) })));
             }
-            return react_1.default.createElement(DayPicker_1.default, __assign({}, pickerProps, { disable: disableParsed, marked: markedParsed, markColor: markColor }));
+            return React.createElement(DayPicker_1.default, __assign({}, pickerProps, { disable: disableParsed, marked: markedParsed, markColor: markColor }));
         };
         _this.switchToNextModeUndelayed = function () {
             _this.setState(function (_a) {
@@ -70788,7 +70804,7 @@ var DateInput = /** @class */ (function (_super) {
     DateInput.prototype.render = function () {
         var _this = this;
         var _a = this.props, value = _a.value, dateFormat = _a.dateFormat, initialDate = _a.initialDate, disable = _a.disable, enable = _a.enable, maxDate = _a.maxDate, minDate = _a.minDate, preserveViewMode = _a.preserveViewMode, startMode = _a.startMode, closable = _a.closable, markColor = _a.markColor, marked = _a.marked, localization = _a.localization, onChange = _a.onChange, rest = __rest(_a, ["value", "dateFormat", "initialDate", "disable", "enable", "maxDate", "minDate", "preserveViewMode", "startMode", "closable", "markColor", "marked", "localization", "onChange"]);
-        return (react_1.default.createElement(InputView_1.default, __assign({ closePopup: this.closePopup, openPopup: this.openPopup, popupIsClosed: this.state.popupIsClosed, onMount: this.onInputViewMount, onFocus: this.onFocus, onChange: this.onInputValueChange }, rest, { renderPicker: function () { return _this.getPicker(); }, value: parse_1.dateValueToString(value, dateFormat, localization) })));
+        return (React.createElement(InputView_1.default, __assign({ closePopup: this.closePopup, openPopup: this.openPopup, popupIsClosed: this.state.popupIsClosed, onMount: this.onInputViewMount, onFocus: this.onFocus, onChange: this.onInputValueChange }, rest, { renderPicker: function () { return _this.getPicker(); }, value: parse_1.dateValueToString(value, dateFormat, localization) })));
     };
     DateInput.prototype.parseInternalValue = function () {
         /*
@@ -70810,79 +70826,80 @@ var DateInput = /** @class */ (function (_super) {
     DateInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { dateFormat: 'DD-MM-YYYY', startMode: 'day', preserveViewMode: true, icon: 'calendar' });
     DateInput.propTypes = {
         /** Currently selected value. */
-        value: prop_types_1.default.string.isRequired,
+        value: PropTypes.string.isRequired,
         /** Moment date formatting string. */
-        dateFormat: prop_types_1.default.string,
+        dateFormat: PropTypes.string,
         /** Date to display initially when no date is selected. */
-        initialDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        initialDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** Date or list of dates that are displayed as disabled. */
-        disable: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
-            prop_types_1.default.arrayOf(prop_types_1.default.string),
+        disable: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.arrayOf(PropTypes.string),
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.arrayOf(CustomPropTypes_1.default.momentObj),
-            prop_types_1.default.instanceOf(Date),
-            prop_types_1.default.arrayOf(prop_types_1.default.instanceOf(Date)),
+            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+            PropTypes.instanceOf(Date),
+            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
         ]),
         /** Date or list of dates that are enabled (the rest are disabled). */
-        enable: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
-            prop_types_1.default.arrayOf(prop_types_1.default.string),
+        enable: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.arrayOf(PropTypes.string),
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.arrayOf(CustomPropTypes_1.default.momentObj),
-            prop_types_1.default.instanceOf(Date),
-            prop_types_1.default.arrayOf(prop_types_1.default.instanceOf(Date)),
+            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+            PropTypes.instanceOf(Date),
+            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
         ]),
         /** Maximum date that can be selected. */
-        maxDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        maxDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** Minimum date that can be selected. */
-        minDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        minDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** Preserve viewmode on focus? */
-        preserveViewMode: prop_types_1.default.bool,
+        preserveViewMode: PropTypes.bool,
         /** Display mode to start. */
-        startMode: prop_types_1.default.oneOf([
+        startMode: PropTypes.oneOf([
             'year', 'month', 'day',
         ]),
         /** If true, popup closes after selecting a date-time. */
-        closable: prop_types_1.default.bool,
+        closable: PropTypes.bool,
         /**
          * Called on clear.
          *
          * @param {SyntheticEvent} event - React's original SyntheticEvent.
          * @param {object} data - All props and proposed value.
          */
-        onClear: prop_types_1.default.func,
+        onClear: PropTypes.func,
         /** Using the clearable setting will let users remove their selection from a calendar. */
-        clearable: prop_types_1.default.bool,
+        clearable: PropTypes.bool,
         /** Optional Icon to display inside the clearable Input. */
-        clearIcon: prop_types_1.default.any,
+        clearIcon: PropTypes.any,
         /** Duration of the CSS transition animation in milliseconds. */
-        duration: prop_types_1.default.number,
+        duration: PropTypes.number,
         /** Named animation event to used. Must be defined in CSS. */
-        animation: prop_types_1.default.string,
-        marked: prop_types_1.default.oneOfType([
+        animation: PropTypes.string,
+        marked: PropTypes.oneOfType([
             CustomPropTypes_1.default.momentObj,
             CustomPropTypes_1.default.dateObject,
-            prop_types_1.default.arrayOf(CustomPropTypes_1.default.momentObj),
-            prop_types_1.default.arrayOf(CustomPropTypes_1.default.dateObject),
+            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+            PropTypes.arrayOf(CustomPropTypes_1.default.dateObject),
         ]),
-        markColor: prop_types_1.default.string,
+        markColor: PropTypes.string,
         /** Moment date localization. */
-        localization: prop_types_1.default.string,
-        icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
-        iconPosition: prop_types_1.default.oneOf(['left', 'right']),
+        localization: PropTypes.string,
+        icon: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+        iconPosition: PropTypes.oneOf(['left', 'right']),
+        hideMobileKeyboard: PropTypes.bool,
     };
     return DateInput;
 }(BaseInput_1.default));
@@ -70936,12 +70953,19 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var isNil_1 = __importDefault(__webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js"));
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
-var prop_types_1 = __importDefault(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var CustomPropTypes_1 = __importDefault(__webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts"));
 var DayPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/dayPicker/DayPicker */ "./src/pickers/dayPicker/DayPicker.tsx"));
 var MonthPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/monthPicker/MonthPicker */ "./src/pickers/monthPicker/MonthPicker.tsx"));
@@ -70977,6 +71001,21 @@ var DateTimeInput = /** @class */ (function (_super) {
     __extends(DateTimeInput, _super);
     function DateTimeInput(props) {
         var _this = _super.call(this, props) || this;
+        _this.componentDidUpdate = function (prevProps) {
+            // update internal date if ``value`` prop changed and successuffly parsed
+            if (prevProps.value !== _this.props.value) {
+                var parsed = parse_1.parseValue(_this.props.value, _this.getDateTimeFormat(), _this.props.localization);
+                if (parsed) {
+                    _this.setState({
+                        year: parsed.year(),
+                        month: parsed.month(),
+                        date: parsed.date(),
+                        hour: parsed.hour(),
+                        minute: parsed.minute(),
+                    });
+                }
+            }
+        };
         _this.switchToNextModeUndelayed = function () {
             _this.setState(function (_a) {
                 var mode = _a.mode;
@@ -71039,7 +71078,7 @@ var DateTimeInput = /** @class */ (function (_super) {
             }
             invoke_1.default(_this.props, 'onChange', e, __assign({}, _this.props, { value: value }));
         };
-        var parsedValue = parse_1.parseValue(props.value, props.dateFormat, props.localization);
+        var parsedValue = parse_1.parseValue(props.value, _this.getDateTimeFormat(), props.localization);
         _this.state = {
             mode: props.startMode,
             year: parsedValue ? parsedValue.year() : undefined,
@@ -71054,7 +71093,7 @@ var DateTimeInput = /** @class */ (function (_super) {
     DateTimeInput.prototype.render = function () {
         var _this = this;
         var _a = this.props, value = _a.value, dateTimeFormat = _a.dateTimeFormat, dateFormat = _a.dateFormat, timeFormat = _a.timeFormat, initialDate = _a.initialDate, disable = _a.disable, maxDate = _a.maxDate, minDate = _a.minDate, preserveViewMode = _a.preserveViewMode, startMode = _a.startMode, divider = _a.divider, closable = _a.closable, markColor = _a.markColor, marked = _a.marked, localization = _a.localization, onChange = _a.onChange, rest = __rest(_a, ["value", "dateTimeFormat", "dateFormat", "timeFormat", "initialDate", "disable", "maxDate", "minDate", "preserveViewMode", "startMode", "divider", "closable", "markColor", "marked", "localization", "onChange"]);
-        return (react_1.default.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, closePopup: this.closePopup, openPopup: this.openPopup, onFocus: this.onFocus, onMount: this.onInputViewMount, onChange: this.onInputValueChange }, rest, { value: parse_1.dateValueToString(value, dateFormat, localization), renderPicker: function () { return _this.getPicker(); } })));
+        return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, closePopup: this.closePopup, openPopup: this.openPopup, onFocus: this.onFocus, onMount: this.onInputViewMount, onChange: this.onInputValueChange }, rest, { value: parse_1.dateValueToString(value, dateFormat, localization), renderPicker: function () { return _this.getPicker(); } })));
     };
     DateTimeInput.prototype.parseInternalValue = function () {
         /*
@@ -71100,18 +71139,18 @@ var DateTimeInput = /** @class */ (function (_super) {
         var mode = this.state.mode;
         var markedParsed = parse_1.parseArrayOrValue(marked, dateTimeFormat, localization);
         if (mode === 'year') {
-            return (react_1.default.createElement(YearPicker_1.default, __assign({}, pickerProps, { disable: shared_1.getDisabledYears(disableParsed) })));
+            return (React.createElement(YearPicker_1.default, __assign({}, pickerProps, { disable: shared_1.getDisabledYears(disableParsed) })));
         }
         if (mode === 'month') {
-            return (react_1.default.createElement(MonthPicker_1.default, __assign({}, pickerProps, { hasHeader: true, disable: shared_1.getDisabledMonths(disableParsed) })));
+            return (React.createElement(MonthPicker_1.default, __assign({}, pickerProps, { hasHeader: true, disable: shared_1.getDisabledMonths(disableParsed) })));
         }
         if (mode === 'day') {
-            return (react_1.default.createElement(DayPicker_1.default, __assign({}, pickerProps, { marked: markedParsed, markColor: markColor, disable: disableParsed })));
+            return (React.createElement(DayPicker_1.default, __assign({}, pickerProps, { marked: markedParsed, markColor: markColor, disable: disableParsed })));
         }
         if (mode === 'hour') {
-            return (react_1.default.createElement(HourPicker_1.default, __assign({ timeFormat: this.props.timeFormat, hasHeader: true }, pickerProps, { disable: disableParsed })));
+            return (React.createElement(HourPicker_1.default, __assign({ timeFormat: this.props.timeFormat, hasHeader: true }, pickerProps, { disable: disableParsed })));
         }
-        return (react_1.default.createElement(MinutePicker_1.default, __assign({ timeFormat: this.props.timeFormat, hasHeader: true }, pickerProps, { disable: disableParsed })));
+        return (React.createElement(MinutePicker_1.default, __assign({ timeFormat: this.props.timeFormat, hasHeader: true }, pickerProps, { disable: disableParsed })));
     };
     /**
      * Component responsibility:
@@ -71121,76 +71160,77 @@ var DateTimeInput = /** @class */ (function (_super) {
     DateTimeInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { dateFormat: 'DD-MM-YYYY', timeFormat: '24', startMode: 'day', divider: ' ', icon: 'calendar', preserveViewMode: true });
     DateTimeInput.propTypes = {
         /** Currently selected value. */
-        value: prop_types_1.default.string,
+        value: PropTypes.string,
         /** Moment datetime formatting string */
-        dateTimeFormat: prop_types_1.default.string,
+        dateTimeFormat: PropTypes.string,
         /** Moment date formatting string. */
-        dateFormat: prop_types_1.default.string,
+        dateFormat: PropTypes.string,
         /** Time format ["AMPM", "ampm", "24"] */
-        timeFormat: prop_types_1.default.string,
+        timeFormat: PropTypes.string,
         /** Date to display initially when no date is selected. */
-        initialDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        initialDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** Date or list of dates that are displayed as disabled. */
-        disable: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
-            prop_types_1.default.arrayOf(prop_types_1.default.string),
+        disable: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.arrayOf(PropTypes.string),
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.arrayOf(CustomPropTypes_1.default.momentObj),
-            prop_types_1.default.instanceOf(Date),
-            prop_types_1.default.arrayOf(prop_types_1.default.instanceOf(Date)),
+            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+            PropTypes.instanceOf(Date),
+            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
         ]),
         /** Maximum date that can be selected. */
-        maxDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        maxDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** Minimum date that can be selected. */
-        minDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        minDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** Preserve viewmode on focus? */
-        preserveViewMode: prop_types_1.default.bool,
+        preserveViewMode: PropTypes.bool,
         /** Display mode to start. */
-        startMode: prop_types_1.default.oneOf([
+        startMode: PropTypes.oneOf([
             'year', 'month', 'day',
         ]),
         /** Date and time divider. */
-        divider: prop_types_1.default.string,
+        divider: PropTypes.string,
         /** If true, popup closes after selecting a date-time. */
-        closable: prop_types_1.default.bool,
+        closable: PropTypes.bool,
         /**
          * Called on clear.
          *
          * @param {SyntheticEvent} event - React's original SyntheticEvent.
          * @param {object} data - All props and proposed value.
          */
-        onClear: prop_types_1.default.func,
+        onClear: PropTypes.func,
         /** Using the clearable setting will let users remove their selection from a calendar. */
-        clearable: prop_types_1.default.bool,
+        clearable: PropTypes.bool,
         /** Optional Icon to display inside the clearable Input. */
-        clearIcon: prop_types_1.default.any,
+        clearIcon: PropTypes.any,
         /** Duration of the CSS transition animation in milliseconds. */
-        duration: prop_types_1.default.number,
+        duration: PropTypes.number,
         /** Named animation event to used. Must be defined in CSS. */
-        animation: prop_types_1.default.string,
-        marked: prop_types_1.default.oneOfType([
+        animation: PropTypes.string,
+        marked: PropTypes.oneOfType([
             CustomPropTypes_1.default.momentObj,
             CustomPropTypes_1.default.dateObject,
-            prop_types_1.default.arrayOf(CustomPropTypes_1.default.momentObj),
-            prop_types_1.default.arrayOf(CustomPropTypes_1.default.dateObject),
+            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+            PropTypes.arrayOf(CustomPropTypes_1.default.dateObject),
         ]),
-        markColor: prop_types_1.default.string,
+        markColor: PropTypes.string,
         /** Moment date localization. */
-        localization: prop_types_1.default.string,
-        icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
-        iconPosition: prop_types_1.default.oneOf(['left', 'right']),
+        localization: PropTypes.string,
+        icon: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+        iconPosition: PropTypes.oneOf(['left', 'right']),
+        hideMobileKeyboard: PropTypes.bool,
     };
     return DateTimeInput;
 }(BaseInput_1.default));
@@ -71244,10 +71284,17 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
-var prop_types_1 = __importDefault(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var CustomPropTypes_1 = __importDefault(__webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts"));
 var InputView_1 = __importDefault(__webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx"));
 var parse_1 = __webpack_require__(/*! ./parse */ "./src/inputs/parse.ts");
@@ -71262,7 +71309,16 @@ var DatesRangeInput = /** @class */ (function (_super) {
             var _a = _this.props, value = _a.value, dateFormat = _a.dateFormat, markColor = _a.markColor, marked = _a.marked, initialDate = _a.initialDate, localization = _a.localization, minDate = _a.minDate, maxDate = _a.maxDate, tabIndex = _a.tabIndex, pickerWidth = _a.pickerWidth, pickerStyle = _a.pickerStyle, allowSameEndDate = _a.allowSameEndDate;
             var _b = parse_1.parseDatesRange(value, dateFormat), start = _b.start, end = _b.end;
             var markedParsed = parse_1.parseArrayOrValue(marked, dateFormat, localization);
-            return (react_1.default.createElement(DatesRangePicker_1.default, { isPickerInFocus: _this.isPickerInFocus, isTriggerInFocus: _this.isTriggerInFocus, inline: _this.props.inline, onCalendarViewMount: _this.onCalendarViewMount, closePopup: _this.closePopup, onChange: _this.handleSelect, dateFormat: dateFormat, initializeWith: parse_1.buildValue(start, initialDate, localization, dateFormat), start: start, end: end, marked: markedParsed, markColor: markColor, minDate: parse_1.parseValue(minDate, dateFormat, localization), maxDate: parse_1.parseValue(maxDate, dateFormat, localization), localization: localization, onHeaderClick: function () { return undefined; }, tabIndex: tabIndex, pickerWidth: pickerWidth, pickerStyle: pickerStyle, allowSameEndDate: allowSameEndDate }));
+            var minDateParsed = parse_1.parseValue(minDate, dateFormat, localization);
+            var maxDateParsed = parse_1.parseValue(maxDate, dateFormat, localization);
+            var initializeWith;
+            if (!initialDate && minDateParsed || maxDateParsed) {
+                initializeWith = minDateParsed || maxDateParsed;
+            }
+            else {
+                initializeWith = parse_1.buildValue(start, initialDate, localization, dateFormat);
+            }
+            return (React.createElement(DatesRangePicker_1.default, { isPickerInFocus: _this.isPickerInFocus, isTriggerInFocus: _this.isTriggerInFocus, inline: _this.props.inline, onCalendarViewMount: _this.onCalendarViewMount, closePopup: _this.closePopup, onChange: _this.handleSelect, dateFormat: dateFormat, initializeWith: initializeWith, start: start, end: end, marked: markedParsed, markColor: markColor, minDate: parse_1.parseValue(minDate, dateFormat, localization), maxDate: parse_1.parseValue(maxDate, dateFormat, localization), localization: localization, onHeaderClick: function () { return undefined; }, tabIndex: tabIndex, pickerWidth: pickerWidth, pickerStyle: pickerStyle, allowSameEndDate: allowSameEndDate }));
         };
         _this.handleSelect = function (e, _a) {
             var value = _a.value;
@@ -71287,7 +71343,7 @@ var DatesRangeInput = /** @class */ (function (_super) {
     }
     DatesRangeInput.prototype.render = function () {
         var _a = this.props, value = _a.value, dateFormat = _a.dateFormat, initialDate = _a.initialDate, maxDate = _a.maxDate, minDate = _a.minDate, closable = _a.closable, marked = _a.marked, markColor = _a.markColor, localization = _a.localization, allowSameEndDate = _a.allowSameEndDate, rest = __rest(_a, ["value", "dateFormat", "initialDate", "maxDate", "minDate", "closable", "marked", "markColor", "localization", "allowSameEndDate"]);
-        return (react_1.default.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed }, rest, { value: value, onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup, renderPicker: this.getPicker })));
+        return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed }, rest, { value: value, onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup, renderPicker: this.getPicker })));
     };
     /**
      * Component responsibility:
@@ -71298,56 +71354,57 @@ var DatesRangeInput = /** @class */ (function (_super) {
     DatesRangeInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { dateFormat: 'DD-MM-YYYY', icon: 'calendar' });
     DatesRangeInput.propTypes = {
         /** Currently selected value. */
-        value: prop_types_1.default.string,
+        value: PropTypes.string,
         /** Moment date formatting string. */
-        dateFormat: prop_types_1.default.string,
+        dateFormat: PropTypes.string,
         /** Date to display initially when no date is selected. */
-        initialDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        initialDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** Maximum date that can be selected. */
-        maxDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        maxDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** Minimum date that can be selected. */
-        minDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        minDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** If true, popup closes after selecting a date-time. */
-        closable: prop_types_1.default.bool,
+        closable: PropTypes.bool,
         /**
          * Called on clear.
          *
          * @param {SyntheticEvent} event - React's original SyntheticEvent.
          * @param {object} data - All props and proposed value.
          */
-        onClear: prop_types_1.default.func,
+        onClear: PropTypes.func,
         /** Using the clearable setting will let users remove their selection from a calendar. */
-        clearable: prop_types_1.default.bool,
+        clearable: PropTypes.bool,
         /** Optional Icon to display inside the clearable Input. */
-        clearIcon: prop_types_1.default.any,
+        clearIcon: PropTypes.any,
         /** Duration of the CSS transition animation in milliseconds. */
-        duration: prop_types_1.default.number,
+        duration: PropTypes.number,
         /** Named animation event to used. Must be defined in CSS. */
-        animation: prop_types_1.default.string,
-        marked: prop_types_1.default.oneOfType([
+        animation: PropTypes.string,
+        marked: PropTypes.oneOfType([
             CustomPropTypes_1.default.momentObj,
             CustomPropTypes_1.default.dateObject,
-            prop_types_1.default.arrayOf(CustomPropTypes_1.default.momentObj),
-            prop_types_1.default.arrayOf(CustomPropTypes_1.default.dateObject),
+            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+            PropTypes.arrayOf(CustomPropTypes_1.default.dateObject),
         ]),
-        markColor: prop_types_1.default.string,
+        markColor: PropTypes.string,
         /** Moment date localization. */
-        localization: prop_types_1.default.string,
-        icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
-        iconPosition: prop_types_1.default.oneOf(['left', 'right']),
-        allowSameEndDate: prop_types_1.default.bool,
+        localization: PropTypes.string,
+        icon: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+        iconPosition: PropTypes.oneOf(['left', 'right']),
+        allowSameEndDate: PropTypes.bool,
+        hideMobileKeyboard: PropTypes.bool,
     };
     return DatesRangeInput;
 }(BaseInput_1.default));
@@ -71401,11 +71458,18 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
-var prop_types_1 = __importDefault(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var CustomPropTypes_1 = __importDefault(__webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts"));
 var MonthPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/monthPicker/MonthPicker */ "./src/pickers/monthPicker/MonthPicker.tsx"));
 var InputView_1 = __importDefault(__webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx"));
@@ -71417,7 +71481,7 @@ var MonthInput = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.getPicker = function () {
             var _a = _this.props, value = _a.value, dateFormat = _a.dateFormat, disable = _a.disable, maxDate = _a.maxDate, minDate = _a.minDate, localization = _a.localization, initialDate = _a.initialDate;
-            return (react_1.default.createElement(MonthPicker_1.default, { inline: _this.props.inline, isPickerInFocus: _this.isPickerInFocus, isTriggerInFocus: _this.isTriggerInFocus, onCalendarViewMount: _this.onCalendarViewMount, closePopup: _this.closePopup, hasHeader: false, onChange: _this.handleSelect, initializeWith: parse_1.buildValue(value, initialDate, localization, dateFormat), value: parse_1.buildValue(value, null, localization, dateFormat, null), disable: parse_1.parseArrayOrValue(disable, dateFormat, localization), maxDate: parse_1.parseValue(maxDate, dateFormat, localization), minDate: parse_1.parseValue(minDate, dateFormat, localization), localization: localization, onHeaderClick: function () { return undefined; } }));
+            return (React.createElement(MonthPicker_1.default, { inline: _this.props.inline, isPickerInFocus: _this.isPickerInFocus, isTriggerInFocus: _this.isTriggerInFocus, onCalendarViewMount: _this.onCalendarViewMount, closePopup: _this.closePopup, hasHeader: false, onChange: _this.handleSelect, initializeWith: parse_1.buildValue(value, initialDate, localization, dateFormat), value: parse_1.buildValue(value, null, localization, dateFormat, null), disable: parse_1.parseArrayOrValue(disable, dateFormat, localization), maxDate: parse_1.parseValue(maxDate, dateFormat, localization), minDate: parse_1.parseValue(minDate, dateFormat, localization), localization: localization, onHeaderClick: function () { return undefined; } }));
         };
         _this.handleSelect = function (e, _a) {
             var value = _a.value;
@@ -71439,64 +71503,65 @@ var MonthInput = /** @class */ (function (_super) {
     }
     MonthInput.prototype.render = function () {
         var _a = this.props, value = _a.value, dateFormat = _a.dateFormat, initialDate = _a.initialDate, disable = _a.disable, maxDate = _a.maxDate, minDate = _a.minDate, closable = _a.closable, localization = _a.localization, rest = __rest(_a, ["value", "dateFormat", "initialDate", "disable", "maxDate", "minDate", "closable", "localization"]);
-        return (react_1.default.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed }, rest, { value: parse_1.dateValueToString(value, dateFormat, localization), onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup, renderPicker: this.getPicker })));
+        return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed }, rest, { value: parse_1.dateValueToString(value, dateFormat, localization), onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup, renderPicker: this.getPicker })));
     };
     MonthInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { dateFormat: 'MMM', icon: 'calendar' });
     MonthInput.propTypes = {
         /** Called on selected value change. */
-        onChange: prop_types_1.default.func.isRequired,
+        onChange: PropTypes.func.isRequired,
         /** Currently selected value. */
-        value: prop_types_1.default.string,
+        value: PropTypes.string,
         /** Moment date formatting string. */
-        dateFormat: prop_types_1.default.string,
+        dateFormat: PropTypes.string,
         /** Date to display initially when no date is selected. */
-        initialDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        initialDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** Date or list of dates that are displayed as disabled. */
-        disable: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
-            prop_types_1.default.arrayOf(prop_types_1.default.string),
+        disable: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.arrayOf(PropTypes.string),
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.arrayOf(CustomPropTypes_1.default.momentObj),
-            prop_types_1.default.instanceOf(Date),
-            prop_types_1.default.arrayOf(prop_types_1.default.instanceOf(Date)),
+            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+            PropTypes.instanceOf(Date),
+            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
         ]),
         /** Maximum date that can be selected. */
-        maxDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        maxDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** Minimum date that can be selected. */
-        minDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        minDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** If true, popup closes after selecting a date-time. */
-        closable: prop_types_1.default.bool,
+        closable: PropTypes.bool,
         /**
          * Called on clear.
          *
          * @param {SyntheticEvent} event - React's original SyntheticEvent.
          * @param {object} data - All props and proposed value.
          */
-        onClear: prop_types_1.default.func,
+        onClear: PropTypes.func,
         /** Using the clearable setting will let users remove their selection from a calendar. */
-        clearable: prop_types_1.default.bool,
+        clearable: PropTypes.bool,
         /** Optional Icon to display inside the clearable Input. */
-        clearIcon: prop_types_1.default.any,
+        clearIcon: PropTypes.any,
         /** Duration of the CSS transition animation in milliseconds. */
-        duration: prop_types_1.default.number,
+        duration: PropTypes.number,
         /** Named animation event to used. Must be defined in CSS. */
-        animation: prop_types_1.default.string,
+        animation: PropTypes.string,
         /** Moment date localization. */
-        localization: prop_types_1.default.string,
-        icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
-        iconPosition: prop_types_1.default.oneOf(['left', 'right']),
+        localization: PropTypes.string,
+        icon: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+        iconPosition: PropTypes.oneOf(['left', 'right']),
+        hideMobileKeyboard: PropTypes.bool,
     };
     return MonthInput;
 }(BaseInput_1.default));
@@ -71550,10 +71615,17 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
-var prop_types_1 = __importDefault(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var BaseInput_1 = __importDefault(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
 var CustomPropTypes_1 = __importDefault(__webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts"));
 var MonthRangePicker_1 = __importDefault(__webpack_require__(/*! ../pickers/monthPicker/MonthRangePicker */ "./src/pickers/monthPicker/MonthRangePicker.tsx"));
@@ -71567,7 +71639,7 @@ var MonthRangeInput = /** @class */ (function (_super) {
         _this.getPicker = function () {
             var _a = _this.props, value = _a.value, dateFormat = _a.dateFormat, initialDate = _a.initialDate, maxDate = _a.maxDate, minDate = _a.minDate, localization = _a.localization;
             var _b = parse_1.parseDatesRange(value, dateFormat), start = _b.start, end = _b.end;
-            return (react_1.default.createElement(MonthRangePicker_1.default, { isPickerInFocus: _this.isPickerInFocus, isTriggerInFocus: _this.isTriggerInFocus, inline: _this.props.inline, onCalendarViewMount: _this.onCalendarViewMount, closePopup: _this.closePopup, onChange: _this.handleSelect, dateFormat: dateFormat, initializeWith: parse_1.buildValue(start, initialDate, localization, dateFormat), start: start, end: end, minDate: parse_1.parseValue(minDate, dateFormat, localization), maxDate: parse_1.parseValue(maxDate, dateFormat, localization), localization: localization, onHeaderClick: function () { return undefined; } }));
+            return (React.createElement(MonthRangePicker_1.default, { isPickerInFocus: _this.isPickerInFocus, isTriggerInFocus: _this.isTriggerInFocus, inline: _this.props.inline, onCalendarViewMount: _this.onCalendarViewMount, closePopup: _this.closePopup, onChange: _this.handleSelect, dateFormat: dateFormat, initializeWith: parse_1.buildValue(start, initialDate, localization, dateFormat), start: start, end: end, minDate: parse_1.parseValue(minDate, dateFormat, localization), maxDate: parse_1.parseValue(maxDate, dateFormat, localization), localization: localization, onHeaderClick: function () { return undefined; } }));
         };
         _this.handleSelect = function (e, _a) {
             var value = _a.value;
@@ -71592,53 +71664,54 @@ var MonthRangeInput = /** @class */ (function (_super) {
     }
     MonthRangeInput.prototype.render = function () {
         var _a = this.props, value = _a.value, dateFormat = _a.dateFormat, initialDate = _a.initialDate, maxDate = _a.maxDate, minDate = _a.minDate, closable = _a.closable, localization = _a.localization, rest = __rest(_a, ["value", "dateFormat", "initialDate", "maxDate", "minDate", "closable", "localization"]);
-        return (react_1.default.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed }, rest, { value: value, onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup, renderPicker: this.getPicker })));
+        return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed }, rest, { value: value, onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup, renderPicker: this.getPicker })));
     };
     MonthRangeInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { dateFormat: 'MM-YYYY', icon: 'calendar' });
     MonthRangeInput.propTypes = {
         /** Currently selected value. */
-        value: prop_types_1.default.string,
+        value: PropTypes.string,
         /** Moment date formatting string. */
-        dateFormat: prop_types_1.default.string,
+        dateFormat: PropTypes.string,
         /** Date to display initially when no date is selected. */
-        initialDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        initialDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** Maximum date that can be selected. */
-        maxDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        maxDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** Minimum date that can be selected. */
-        minDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        minDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** If true, popup closes after selecting a date-time. */
-        closable: prop_types_1.default.bool,
+        closable: PropTypes.bool,
         /**
          * Called on clear.
          *
          * @param {SyntheticEvent} event - React's original SyntheticEvent.
          * @param {object} data - All props and proposed value.
          */
-        onClear: prop_types_1.default.func,
+        onClear: PropTypes.func,
         /** Using the clearable setting will let users remove their selection from a calendar. */
-        clearable: prop_types_1.default.bool,
+        clearable: PropTypes.bool,
         /** Optional Icon to display inside the clearable Input. */
-        clearIcon: prop_types_1.default.any,
+        clearIcon: PropTypes.any,
         /** Duration of the CSS transition animation in milliseconds. */
-        duration: prop_types_1.default.number,
+        duration: PropTypes.number,
         /** Named animation event to used. Must be defined in CSS. */
-        animation: prop_types_1.default.string,
+        animation: PropTypes.string,
         /** Moment date localization. */
-        localization: prop_types_1.default.string,
-        icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
-        iconPosition: prop_types_1.default.oneOf(['left', 'right']),
+        localization: PropTypes.string,
+        icon: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+        iconPosition: PropTypes.oneOf(['left', 'right']),
+        hideMobileKeyboard: PropTypes.bool,
     };
     return MonthRangeInput;
 }(BaseInput_1.default));
@@ -71692,12 +71765,19 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var isNil_1 = __importDefault(__webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js"));
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
-var prop_types_1 = __importDefault(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
 var HourPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/timePicker/HourPicker */ "./src/pickers/timePicker/HourPicker.tsx"));
 var MinutePicker_1 = __importDefault(__webpack_require__(/*! ../pickers/timePicker/MinutePicker */ "./src/pickers/timePicker/MinutePicker.tsx"));
@@ -71752,7 +71832,7 @@ var TimeInput = /** @class */ (function (_super) {
     TimeInput.prototype.render = function () {
         var _this = this;
         var _a = this.props, value = _a.value, timeFormat = _a.timeFormat, closable = _a.closable, disableMinute = _a.disableMinute, rest = __rest(_a, ["value", "timeFormat", "closable", "disableMinute"]);
-        return (react_1.default.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup }, rest, { value: value, renderPicker: function () { return _this.getPicker(); } })));
+        return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup }, rest, { value: value, renderPicker: function () { return _this.getPicker(); } })));
     };
     TimeInput.prototype.getPicker = function () {
         var _a = this.props, value = _a.value, timeFormat = _a.timeFormat, inline = _a.inline, localization = _a.localization, tabIndex = _a.tabIndex, pickerStyle = _a.pickerStyle, pickerWidth = _a.pickerWidth;
@@ -71775,9 +71855,9 @@ var TimeInput = /** @class */ (function (_super) {
             localization: localization,
         };
         if (this.state.mode === 'hour') {
-            return react_1.default.createElement(HourPicker_1.default, __assign({}, pickerProps));
+            return React.createElement(HourPicker_1.default, __assign({}, pickerProps));
         }
-        return react_1.default.createElement(MinutePicker_1.default, __assign({}, pickerProps));
+        return React.createElement(MinutePicker_1.default, __assign({}, pickerProps));
     };
     /**
      * Component responsibility:
@@ -71788,34 +71868,35 @@ var TimeInput = /** @class */ (function (_super) {
     TimeInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { icon: 'time', timeFormat: '24', disableMinute: false });
     TimeInput.propTypes = {
         /** Currently selected value. */
-        value: prop_types_1.default.string,
+        value: PropTypes.string,
         /** One of ["24", "AMPM", "ampm"] */
-        timeFormat: prop_types_1.default.oneOf([
+        timeFormat: PropTypes.oneOf([
             '24', 'AMPM', 'ampm',
         ]),
         /** If true, popup closes after selecting a date-time. */
-        closable: prop_types_1.default.bool,
+        closable: PropTypes.bool,
         /** If true, minutes picker won't be shown after picking the hour. */
-        disableMinute: prop_types_1.default.bool,
+        disableMinute: PropTypes.bool,
         /**
          * Called on clear.
          *
          * @param {SyntheticEvent} event - React's original SyntheticEvent.
          * @param {object} data - All props and proposed value.
          */
-        onClear: prop_types_1.default.func,
+        onClear: PropTypes.func,
         /** Using the clearable setting will let users remove their selection from a calendar. */
-        clearable: prop_types_1.default.bool,
+        clearable: PropTypes.bool,
         /** Optional Icon to display inside the clearable Input. */
-        clearIcon: prop_types_1.default.any,
+        clearIcon: PropTypes.any,
         /** Duration of the CSS transition animation in milliseconds. */
-        duration: prop_types_1.default.number,
+        duration: PropTypes.number,
         /** Named animation event to used. Must be defined in CSS. */
-        animation: prop_types_1.default.string,
+        animation: PropTypes.string,
         /** Moment date localization. */
-        localization: prop_types_1.default.string,
-        icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
-        iconPosition: prop_types_1.default.oneOf(['left', 'right']),
+        localization: PropTypes.string,
+        icon: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+        iconPosition: PropTypes.oneOf(['left', 'right']),
+        hideMobileKeyboard: PropTypes.bool,
     };
     return TimeInput;
 }(BaseInput_1.default));
@@ -71869,10 +71950,17 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
-var prop_types_1 = __importDefault(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var CustomPropTypes_1 = __importDefault(__webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts"));
 var YearPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/YearPicker */ "./src/pickers/YearPicker.tsx"));
 var InputView_1 = __importDefault(__webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx"));
@@ -71884,7 +71972,7 @@ var YearInput = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.getPicker = function () {
             var _a = _this.props, value = _a.value, disable = _a.disable, maxDate = _a.maxDate, minDate = _a.minDate, initialDate = _a.initialDate, dateFormat = _a.dateFormat, localization = _a.localization;
-            return (react_1.default.createElement(YearPicker_1.default, { isPickerInFocus: _this.isPickerInFocus, isTriggerInFocus: _this.isTriggerInFocus, inline: _this.props.inline, onCalendarViewMount: _this.onCalendarViewMount, closePopup: _this.closePopup, onChange: _this.handleSelect, initializeWith: parse_1.buildValue(value, initialDate, localization, dateFormat), value: parse_1.buildValue(value, null, localization, dateFormat, null), disable: parse_1.parseArrayOrValue(disable, dateFormat, localization), maxDate: parse_1.parseValue(maxDate, dateFormat, localization), minDate: parse_1.parseValue(minDate, dateFormat, localization), onHeaderClick: function () { return undefined; } }));
+            return (React.createElement(YearPicker_1.default, { isPickerInFocus: _this.isPickerInFocus, isTriggerInFocus: _this.isTriggerInFocus, inline: _this.props.inline, onCalendarViewMount: _this.onCalendarViewMount, closePopup: _this.closePopup, onChange: _this.handleSelect, initializeWith: parse_1.buildValue(value, initialDate, localization, dateFormat), value: parse_1.buildValue(value, null, localization, dateFormat, null), disable: parse_1.parseArrayOrValue(disable, dateFormat, localization), maxDate: parse_1.parseValue(maxDate, dateFormat, localization), minDate: parse_1.parseValue(minDate, dateFormat, localization), onHeaderClick: function () { return undefined; } }));
         };
         _this.handleSelect = function (e, _a) {
             var value = _a.value;
@@ -71907,62 +71995,63 @@ var YearInput = /** @class */ (function (_super) {
     }
     YearInput.prototype.render = function () {
         var _a = this.props, value = _a.value, disable = _a.disable, maxDate = _a.maxDate, minDate = _a.minDate, initialDate = _a.initialDate, dateFormat = _a.dateFormat, closable = _a.closable, localization = _a.localization, rest = __rest(_a, ["value", "disable", "maxDate", "minDate", "initialDate", "dateFormat", "closable", "localization"]);
-        return (react_1.default.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, closePopup: this.closePopup, openPopup: this.openPopup }, rest, { value: value, onMount: this.onInputViewMount, renderPicker: this.getPicker })));
+        return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, closePopup: this.closePopup, openPopup: this.openPopup }, rest, { value: value, onMount: this.onInputViewMount, renderPicker: this.getPicker })));
     };
     YearInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { dateFormat: 'YYYY', icon: 'calendar' });
     YearInput.propTypes = {
         /** Currently selected value. */
-        value: prop_types_1.default.string,
+        value: PropTypes.string,
         /** Moment date formatting string. */
-        dateFormat: prop_types_1.default.string,
+        dateFormat: PropTypes.string,
         /** Date to display initially when no date is selected. */
-        initialDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        initialDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** Date or list of dates that are displayed as disabled. */
-        disable: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
-            prop_types_1.default.arrayOf(prop_types_1.default.string),
+        disable: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.arrayOf(PropTypes.string),
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.arrayOf(CustomPropTypes_1.default.momentObj),
-            prop_types_1.default.instanceOf(Date),
-            prop_types_1.default.arrayOf(prop_types_1.default.instanceOf(Date)),
+            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+            PropTypes.instanceOf(Date),
+            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
         ]),
         /** Maximum date that can be selected. */
-        maxDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        maxDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** Minimum date that can be selected. */
-        minDate: prop_types_1.default.oneOfType([
-            prop_types_1.default.string,
+        minDate: PropTypes.oneOfType([
+            PropTypes.string,
             CustomPropTypes_1.default.momentObj,
-            prop_types_1.default.instanceOf(Date),
+            PropTypes.instanceOf(Date),
         ]),
         /** If true, popup closes after selecting a date-time. */
-        closable: prop_types_1.default.bool,
+        closable: PropTypes.bool,
         /**
          * Called on clear.
          *
          * @param {SyntheticEvent} event - React's original SyntheticEvent.
          * @param {object} data - All props and proposed value.
          */
-        onClear: prop_types_1.default.func,
+        onClear: PropTypes.func,
         /** Using the clearable setting will let users remove their selection from a calendar. */
-        clearable: prop_types_1.default.bool,
+        clearable: PropTypes.bool,
         /** Optional Icon to display inside the clearable Input. */
-        clearIcon: prop_types_1.default.any,
+        clearIcon: PropTypes.any,
         /** Duration of the CSS transition animation in milliseconds. */
-        duration: prop_types_1.default.number,
+        duration: PropTypes.number,
         /** Named animation event to used. Must be defined in CSS. */
-        animation: prop_types_1.default.string,
+        animation: PropTypes.string,
         /** Moment date localization. */
-        localization: prop_types_1.default.string,
-        icon: prop_types_1.default.oneOfType([prop_types_1.default.string, prop_types_1.default.bool]),
-        iconPosition: prop_types_1.default.oneOf(['left', 'right']),
+        localization: PropTypes.string,
+        icon: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+        iconPosition: PropTypes.oneOf(['left', 'right']),
+        hideMobileKeyboard: PropTypes.bool,
     };
     return YearInput;
 }(BaseInput_1.default));
@@ -72305,6 +72394,34 @@ exports.default = checkIE;
 
 /***/ }),
 
+/***/ "./src/lib/checkMobile.ts":
+/*!********************************!*\
+  !*** ./src/lib/checkMobile.ts ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/** Return true if run on mobile browser. */
+var checkMobile = function () {
+    if (navigator.userAgent.match(/Android/i)
+        || navigator.userAgent.match(/webOS/i)
+        || navigator.userAgent.match(/iPhone/i)
+        || navigator.userAgent.match(/iPad/i)
+        || navigator.userAgent.match(/iPod/i)
+        || navigator.userAgent.match(/BlackBerry/i)
+        || navigator.userAgent.match(/Windows Phone/i)) {
+        return true;
+    }
+    return false;
+};
+exports.default = checkMobile;
+
+
+/***/ }),
+
 /***/ "./src/lib/findHTMLElement.ts":
 /*!************************************!*\
   !*** ./src/lib/findHTMLElement.ts ***!
@@ -72314,13 +72431,17 @@ exports.default = checkIE;
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js"));
+var ReactDOM = __importStar(__webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js"));
 function findHTMLElement(e) {
-    var el = react_dom_1.default.findDOMNode(e);
+    var el = ReactDOM.findDOMNode(e);
     if (el && el.focus) {
         return el;
     }
@@ -72345,6 +72466,8 @@ var tick_1 = __webpack_require__(/*! ./tick */ "./src/lib/tick.ts");
 exports.tick = tick_1.default;
 var findHTMLElement_1 = __webpack_require__(/*! ./findHTMLElement */ "./src/lib/findHTMLElement.ts");
 exports.findHTMLElement = findHTMLElement_1.default;
+var checkMobile_1 = __webpack_require__(/*! ./checkMobile */ "./src/lib/checkMobile.ts");
+exports.checkMobile = checkMobile_1.default;
 
 
 /***/ }),
@@ -72406,12 +72529,19 @@ var __extends = (this && this.__extends) || (function () {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var keyboard_key_1 = __importDefault(__webpack_require__(/*! keyboard-key */ "./node_modules/keyboard-key/src/keyboardKey.js"));
 var isNumber_1 = __importDefault(__webpack_require__(/*! lodash/isNumber */ "./node_modules/lodash/isNumber.js"));
 var isNil_1 = __importDefault(__webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js"));
 var includes_1 = __importDefault(__webpack_require__(/*! lodash/includes */ "./node_modules/lodash/includes.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 /** Do not expose this class. Instead use RangeSelectionPicker and SingleSelectionPicker. */
 var BasePicker = /** @class */ (function (_super) {
     __extends(BasePicker, _super);
@@ -72438,6 +72568,7 @@ var BasePicker = /** @class */ (function (_super) {
                 case 'Enter':
                     _this.handleEnterKeyPress(event);
                     break;
+                case 'Esc':
                 case 'Escape':
                     _this.props.closePopup();
                     break;
@@ -72470,8 +72601,8 @@ var BasePicker = /** @class */ (function (_super) {
             var nextSelectableCellPositionRight = selectableCells
                 .slice(selectableCells.indexOf(_this.state.hoveredCellPosition) + 1)[0];
             switch (key) {
+                case 'Left':
                 case 'ArrowLeft':
-                    event.preventDefault();
                     if (!isNil_1.default(nextSelectableCellPositionLeft)) {
                         _this.onHoveredCellPositionChange(null, { itemPosition: nextSelectableCellPositionLeft });
                     }
@@ -72484,8 +72615,8 @@ var BasePicker = /** @class */ (function (_super) {
                         }
                     }
                     break;
+                case 'Right':
                 case 'ArrowRight':
-                    event.preventDefault();
                     if (!isNil_1.default(nextSelectableCellPositionRight)) {
                         _this.onHoveredCellPositionChange(null, { itemPosition: nextSelectableCellPositionRight });
                     }
@@ -72498,12 +72629,14 @@ var BasePicker = /** @class */ (function (_super) {
                         }
                     }
                     break;
+                case 'Up':
                 case 'ArrowUp':
                     event.preventDefault();
                     if (includes_1.default(selectableCells, _this.state.hoveredCellPosition - _this.PAGE_WIDTH)) {
                         _this.onHoveredCellPositionChange(null, { itemPosition: _this.state.hoveredCellPosition - _this.PAGE_WIDTH });
                     }
                     break;
+                case 'Down':
                 case 'ArrowDown':
                     event.preventDefault();
                     if (includes_1.default(selectableCells, _this.state.hoveredCellPosition + _this.PAGE_WIDTH)) {
@@ -72527,7 +72660,7 @@ var BasePicker = /** @class */ (function (_super) {
         document.removeEventListener('keydown', this.handleKeyPress);
     };
     return BasePicker;
-}(react_1.default.Component));
+}(React.Component));
 var RangeSelectionPicker = /** @class */ (function (_super) {
     __extends(RangeSelectionPicker, _super);
     function RangeSelectionPicker() {
@@ -72617,6 +72750,13 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var range_1 = __importDefault(__webpack_require__(/*! lodash/range */ "./node_modules/lodash/range.js"));
 var includes_1 = __importDefault(__webpack_require__(/*! lodash/includes */ "./node_modules/lodash/includes.js"));
@@ -72628,7 +72768,7 @@ var filter_1 = __importDefault(__webpack_require__(/*! lodash/filter */ "./node_
 var last_1 = __importDefault(__webpack_require__(/*! lodash/last */ "./node_modules/lodash/last.js"));
 var first_1 = __importDefault(__webpack_require__(/*! lodash/first */ "./node_modules/lodash/first.js"));
 var some_1 = __importDefault(__webpack_require__(/*! lodash/some */ "./node_modules/lodash/some.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var YearView_1 = __importDefault(__webpack_require__(/*! ../views/YearView */ "./src/views/YearView.tsx"));
 var BasePicker_1 = __webpack_require__(/*! ./BasePicker */ "./src/pickers/BasePicker.tsx");
 var PAGE_WIDTH = 3;
@@ -72669,7 +72809,7 @@ var YearPicker = /** @class */ (function (_super) {
     }
     YearPicker.prototype.render = function () {
         var _a = this.props, onChange = _a.onChange, value = _a.value, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, disable = _a.disable, enable = _a.enable, minDate = _a.minDate, maxDate = _a.maxDate, localization = _a.localization, rest = __rest(_a, ["onChange", "value", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "disable", "enable", "minDate", "maxDate", "localization"]);
-        return (react_1.default.createElement(YearView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onValueClick: this.handleChange, onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, hoveredItemIndex: this.state.hoveredCellPosition, onCellHover: this.onHoveredCellPositionChange, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), disabledItemIndexes: this.getDisabledPositions(), activeItemIndex: this.getActiveCellPosition(), localization: localization })));
+        return (React.createElement(YearView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onValueClick: this.handleChange, onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, hoveredItemIndex: this.state.hoveredCellPosition, onCellHover: this.onHoveredCellPositionChange, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), disabledItemIndexes: this.getDisabledPositions(), activeItemIndex: this.getActiveCellPosition(), localization: localization })));
     };
     YearPicker.prototype.buildCalendarValues = function () {
         /*
@@ -72823,6 +72963,13 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var filter_1 = __importDefault(__webpack_require__(/*! lodash/filter */ "./node_modules/lodash/filter.js"));
 var range_1 = __importDefault(__webpack_require__(/*! lodash/range */ "./node_modules/lodash/range.js"));
@@ -72830,7 +72977,7 @@ var includes_1 = __importDefault(__webpack_require__(/*! lodash/includes */ "./n
 var last_1 = __importDefault(__webpack_require__(/*! lodash/last */ "./node_modules/lodash/last.js"));
 var isNil_1 = __importDefault(__webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js"));
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var DatesRangeView_1 = __importDefault(__webpack_require__(/*! ../../views/DatesRangeView */ "./src/views/DatesRangeView.tsx"));
 var BasePicker_1 = __webpack_require__(/*! ../BasePicker */ "./src/pickers/BasePicker.tsx");
 var DayPicker_1 = __webpack_require__(/*! ./DayPicker */ "./src/pickers/dayPicker/DayPicker.tsx");
@@ -72881,7 +73028,7 @@ var DatesRangePicker = /** @class */ (function (_super) {
     }
     DatesRangePicker.prototype.render = function () {
         var _a = this.props, onChange = _a.onChange, value = _a.value, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, dateFormat = _a.dateFormat, start = _a.start, end = _a.end, minDate = _a.minDate, maxDate = _a.maxDate, marked = _a.marked, markColor = _a.markColor, localization = _a.localization, allowSameEndDate = _a.allowSameEndDate, rest = __rest(_a, ["onChange", "value", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "dateFormat", "start", "end", "minDate", "maxDate", "marked", "markColor", "localization", "allowSameEndDate"]);
-        return (react_1.default.createElement(DatesRangeView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onCellHover: this.onHoveredCellPositionChange, hoveredItemIndex: this.state.hoveredCellPosition, onValueClick: this.handleChange, inline: this.props.inline, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), onBlur: this.handleBlur, onMount: this.props.onCalendarViewMount, currentHeadingValue: this.getCurrentDate(), currentRangeHeadingValue: this.getSelectedRange(), activeRange: this.getActiveCellsPositions(), markedItemIndexes: this.getMarkedPositions(), markColor: markColor, disabledItemIndexes: this.getDisabledPositions(), localization: localization })));
+        return (React.createElement(DatesRangeView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onCellHover: this.onHoveredCellPositionChange, hoveredItemIndex: this.state.hoveredCellPosition, onValueClick: this.handleChange, inline: this.props.inline, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), onBlur: this.handleBlur, onMount: this.props.onCalendarViewMount, currentHeadingValue: this.getCurrentDate(), currentRangeHeadingValue: this.getSelectedRange(), activeRange: this.getActiveCellsPositions(), markedItemIndexes: this.getMarkedPositions(), markColor: markColor, disabledItemIndexes: this.getDisabledPositions(), localization: localization })));
     };
     DatesRangePicker.prototype.getCurrentDate = function () {
         /* Return currently selected year and month(string) to display in calendar header. */
@@ -73084,13 +73231,20 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var filter_1 = __importDefault(__webpack_require__(/*! lodash/filter */ "./node_modules/lodash/filter.js"));
 var range_1 = __importDefault(__webpack_require__(/*! lodash/range */ "./node_modules/lodash/range.js"));
 var includes_1 = __importDefault(__webpack_require__(/*! lodash/includes */ "./node_modules/lodash/includes.js"));
 var isArray_1 = __importDefault(__webpack_require__(/*! lodash/isArray */ "./node_modules/lodash/isArray.js"));
 var some_1 = __importDefault(__webpack_require__(/*! lodash/some */ "./node_modules/lodash/some.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var DayView_1 = __importDefault(__webpack_require__(/*! ../../views/DayView */ "./src/views/DayView.tsx"));
 var DayView_2 = __webpack_require__(/*! ../../views/DayView */ "./src/views/DayView.tsx");
 var BasePicker_1 = __webpack_require__(/*! ../BasePicker */ "./src/pickers/BasePicker.tsx");
@@ -73146,7 +73300,7 @@ var DayPicker = /** @class */ (function (_super) {
     }
     DayPicker.prototype.render = function () {
         var _a = this.props, onChange = _a.onChange, value = _a.value, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, disable = _a.disable, enable = _a.enable, minDate = _a.minDate, maxDate = _a.maxDate, marked = _a.marked, markColor = _a.markColor, localization = _a.localization, rest = __rest(_a, ["onChange", "value", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "disable", "enable", "minDate", "maxDate", "marked", "markColor", "localization"]);
-        return (react_1.default.createElement(DayView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), hasNextPage: this.isNextPageAvailable(), hasPrevPage: this.isPrevPageAvailable(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onValueClick: this.handleChange, onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, hoveredItemIndex: this.state.hoveredCellPosition, onCellHover: this.onHoveredCellPositionChange, currentHeadingValue: this.getCurrentDate(), disabledItemIndexes: this.getDisabledPositions(), activeItemIndex: this.getActiveCellPosition(), markedItemIndexes: this.getMarkedPositions(), markColor: markColor, localization: localization })));
+        return (React.createElement(DayView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), hasNextPage: this.isNextPageAvailable(), hasPrevPage: this.isPrevPageAvailable(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onValueClick: this.handleChange, onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, hoveredItemIndex: this.state.hoveredCellPosition, onCellHover: this.onHoveredCellPositionChange, currentHeadingValue: this.getCurrentDate(), disabledItemIndexes: this.getDisabledPositions(), activeItemIndex: this.getActiveCellPosition(), markedItemIndexes: this.getMarkedPositions(), markColor: markColor, localization: localization })));
     };
     DayPicker.prototype.getCurrentDate = function () {
         /* Return currently selected year and month(string) to display in calendar header. */
@@ -73446,12 +73600,19 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var filter_1 = __importDefault(__webpack_require__(/*! lodash/filter */ "./node_modules/lodash/filter.js"));
 var range_1 = __importDefault(__webpack_require__(/*! lodash/range */ "./node_modules/lodash/range.js"));
 var includes_1 = __importDefault(__webpack_require__(/*! lodash/includes */ "./node_modules/lodash/includes.js"));
 var isNil_1 = __importDefault(__webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var MonthView_1 = __importDefault(__webpack_require__(/*! ../../views/MonthView */ "./src/views/MonthView.tsx"));
 var BasePicker_1 = __webpack_require__(/*! ../BasePicker */ "./src/pickers/BasePicker.tsx");
 var const_1 = __webpack_require__(/*! ./const */ "./src/pickers/monthPicker/const.ts");
@@ -73494,7 +73655,7 @@ var MonthPicker = /** @class */ (function (_super) {
     }
     MonthPicker.prototype.render = function () {
         var _a = this.props, onChange = _a.onChange, value = _a.value, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, disable = _a.disable, enable = _a.enable, minDate = _a.minDate, maxDate = _a.maxDate, localization = _a.localization, rest = __rest(_a, ["onChange", "value", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "disable", "enable", "minDate", "maxDate", "localization"]);
-        return (react_1.default.createElement(MonthView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onValueClick: this.handleChange, onCellHover: this.onHoveredCellPositionChange, onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, disabledItemIndexes: this.getDisabledPositions(), activeItemIndex: this.getActiveCellPosition(), hoveredItemIndex: this.state.hoveredCellPosition, currentHeadingValue: this.getCurrentDate(), localization: localization })));
+        return (React.createElement(MonthView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onValueClick: this.handleChange, onCellHover: this.onHoveredCellPositionChange, onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, disabledItemIndexes: this.getDisabledPositions(), activeItemIndex: this.getActiveCellPosition(), hoveredItemIndex: this.state.hoveredCellPosition, currentHeadingValue: this.getCurrentDate(), localization: localization })));
     };
     MonthPicker.prototype.getCurrentDate = function () {
         /* Return current year(string) to display in calendar header. */
@@ -73587,13 +73748,20 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var filter_1 = __importDefault(__webpack_require__(/*! lodash/filter */ "./node_modules/lodash/filter.js"));
 var range_1 = __importDefault(__webpack_require__(/*! lodash/range */ "./node_modules/lodash/range.js"));
 var includes_1 = __importDefault(__webpack_require__(/*! lodash/includes */ "./node_modules/lodash/includes.js"));
 var isNil_1 = __importDefault(__webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js"));
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var MonthRangeView_1 = __importDefault(__webpack_require__(/*! ../../views/MonthRangeView */ "./src/views/MonthRangeView.tsx"));
 var BasePicker_1 = __webpack_require__(/*! ../BasePicker */ "./src/pickers/BasePicker.tsx");
 var const_1 = __webpack_require__(/*! ./const */ "./src/pickers/monthPicker/const.ts");
@@ -73652,7 +73820,7 @@ var MonthRangePicker = /** @class */ (function (_super) {
     }
     MonthRangePicker.prototype.render = function () {
         var _a = this.props, onChange = _a.onChange, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, dateFormat = _a.dateFormat, start = _a.start, end = _a.end, minDate = _a.minDate, maxDate = _a.maxDate, localization = _a.localization, rest = __rest(_a, ["onChange", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "dateFormat", "start", "end", "minDate", "maxDate", "localization"]);
-        return (react_1.default.createElement(MonthRangeView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onCellHover: this.onHoveredCellPositionChange, hoveredItemIndex: this.state.hoveredCellPosition, onValueClick: this.handleChange, inline: this.props.inline, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), onBlur: this.handleBlur, onMount: this.props.onCalendarViewMount, currentHeadingValue: this.getCurrentDate(), currentRangeHeadingValue: this.getSelectedRange(), activeRange: this.getActiveCellsPositions(), disabledItemIndexes: this.getDisabledPositions(), localization: localization })));
+        return (React.createElement(MonthRangeView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onCellHover: this.onHoveredCellPositionChange, hoveredItemIndex: this.state.hoveredCellPosition, onValueClick: this.handleChange, inline: this.props.inline, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), onBlur: this.handleBlur, onMount: this.props.onCalendarViewMount, currentHeadingValue: this.getCurrentDate(), currentRangeHeadingValue: this.getSelectedRange(), activeRange: this.getActiveCellsPositions(), disabledItemIndexes: this.getDisabledPositions(), localization: localization })));
     };
     MonthRangePicker.prototype.getCurrentDate = function () {
         /* Return currently selected year and month(string) to display in calendar header. */
@@ -73879,6 +74047,13 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var filter_1 = __importDefault(__webpack_require__(/*! lodash/filter */ "./node_modules/lodash/filter.js"));
 var range_1 = __importDefault(__webpack_require__(/*! lodash/range */ "./node_modules/lodash/range.js"));
@@ -73887,7 +74062,7 @@ var isArray_1 = __importDefault(__webpack_require__(/*! lodash/isArray */ "./nod
 var concat_1 = __importDefault(__webpack_require__(/*! lodash/concat */ "./node_modules/lodash/concat.js"));
 var uniq_1 = __importDefault(__webpack_require__(/*! lodash/uniq */ "./node_modules/lodash/uniq.js"));
 var sortBy_1 = __importDefault(__webpack_require__(/*! lodash/sortBy */ "./node_modules/lodash/sortBy.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var HourView_1 = __importDefault(__webpack_require__(/*! ../../views/HourView */ "./src/views/HourView.tsx"));
 var BasePicker_1 = __webpack_require__(/*! ../BasePicker */ "./src/pickers/BasePicker.tsx");
 var sharedFunctions_1 = __webpack_require__(/*! ./sharedFunctions */ "./src/pickers/timePicker/sharedFunctions.ts");
@@ -73928,7 +74103,7 @@ var HourPicker = /** @class */ (function (_super) {
     }
     HourPicker.prototype.render = function () {
         var _a = this.props, onChange = _a.onChange, value = _a.value, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, minDate = _a.minDate, maxDate = _a.maxDate, disable = _a.disable, timeFormat = _a.timeFormat, localization = _a.localization, rest = __rest(_a, ["onChange", "value", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "minDate", "maxDate", "disable", "timeFormat", "localization"]);
-        return (react_1.default.createElement(HourView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), onValueClick: this.handleChange, onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, hoveredItemIndex: this.state.hoveredCellPosition, onCellHover: this.onHoveredCellPositionChange, disabledItemIndexes: this.getDisabledPositions(), activeItemIndex: this.getActiveCellPosition(), currentHeadingValue: this.getCurrentDate(), localization: localization })));
+        return (React.createElement(HourView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, hasPrevPage: this.isPrevPageAvailable(), hasNextPage: this.isNextPageAvailable(), onValueClick: this.handleChange, onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, hoveredItemIndex: this.state.hoveredCellPosition, onCellHover: this.onHoveredCellPositionChange, disabledItemIndexes: this.getDisabledPositions(), activeItemIndex: this.getActiveCellPosition(), currentHeadingValue: this.getCurrentDate(), localization: localization })));
     };
     HourPicker.prototype.getCurrentDate = function () {
         /* Return currently selected month, date and year(string) to display in calendar header. */
@@ -74055,13 +74230,20 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var range_1 = __importDefault(__webpack_require__(/*! lodash/range */ "./node_modules/lodash/range.js"));
 var isArray_1 = __importDefault(__webpack_require__(/*! lodash/isArray */ "./node_modules/lodash/isArray.js"));
 var concat_1 = __importDefault(__webpack_require__(/*! lodash/concat */ "./node_modules/lodash/concat.js"));
 var uniq_1 = __importDefault(__webpack_require__(/*! lodash/uniq */ "./node_modules/lodash/uniq.js"));
 var sortBy_1 = __importDefault(__webpack_require__(/*! lodash/sortBy */ "./node_modules/lodash/sortBy.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var MinuteView_1 = __importDefault(__webpack_require__(/*! ../../views/MinuteView */ "./src/views/MinuteView.tsx"));
 var BasePicker_1 = __webpack_require__(/*! ../BasePicker */ "./src/pickers/BasePicker.tsx");
 var sharedFunctions_1 = __webpack_require__(/*! ./sharedFunctions */ "./src/pickers/timePicker/sharedFunctions.ts");
@@ -74104,7 +74286,7 @@ var MinutePicker = /** @class */ (function (_super) {
     }
     MinutePicker.prototype.render = function () {
         var _a = this.props, onChange = _a.onChange, value = _a.value, initializeWith = _a.initializeWith, closePopup = _a.closePopup, inline = _a.inline, isPickerInFocus = _a.isPickerInFocus, isTriggerInFocus = _a.isTriggerInFocus, onCalendarViewMount = _a.onCalendarViewMount, minDate = _a.minDate, maxDate = _a.maxDate, disable = _a.disable, timeFormat = _a.timeFormat, localization = _a.localization, rest = __rest(_a, ["onChange", "value", "initializeWith", "closePopup", "inline", "isPickerInFocus", "isTriggerInFocus", "onCalendarViewMount", "minDate", "maxDate", "disable", "timeFormat", "localization"]);
-        return (react_1.default.createElement(MinuteView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onValueClick: this.handleChange, hoveredItemIndex: this.state.hoveredCellPosition, onCellHover: this.onHoveredCellPositionChange, onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, hasNextPage: this.isNextPageAvailable(), hasPrevPage: this.isPrevPageAvailable(), disabledItemIndexes: this.getDisabledPositions(), currentHeadingValue: this.getCurrentDate(), activeItemIndex: this.getActiveCellPosition(), localization: localization })));
+        return (React.createElement(MinuteView_1.default, __assign({}, rest, { values: this.buildCalendarValues(), onNextPageBtnClick: this.switchToNextPage, onPrevPageBtnClick: this.switchToPrevPage, onValueClick: this.handleChange, hoveredItemIndex: this.state.hoveredCellPosition, onCellHover: this.onHoveredCellPositionChange, onBlur: this.handleBlur, inline: this.props.inline, onMount: this.props.onCalendarViewMount, hasNextPage: this.isNextPageAvailable(), hasPrevPage: this.isPrevPageAvailable(), disabledItemIndexes: this.getDisabledPositions(), currentHeadingValue: this.getCurrentDate(), activeItemIndex: this.getActiveCellPosition(), localization: localization })));
     };
     MinutePicker.prototype.getCurrentDate = function () {
         /* Return currently selected month, date and year(string) to display in calendar header. */
@@ -74277,11 +74459,15 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 /** Base class for picker view components. */
 var BaseCalendarView = /** @class */ (function (_super) {
     __extends(BaseCalendarView, _super);
@@ -74294,7 +74480,7 @@ var BaseCalendarView = /** @class */ (function (_super) {
         }
     };
     return BaseCalendarView;
-}(react_1.default.Component));
+}(React.Component));
 exports.default = BaseCalendarView;
 
 
@@ -74342,11 +74528,15 @@ var __rest = (this && this.__rest) || function (s, e) {
             t[p[i]] = s[p[i]];
     return t;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
 var Calendar = /** @class */ (function (_super) {
     __extends(Calendar, _super);
@@ -74359,13 +74549,13 @@ var Calendar = /** @class */ (function (_super) {
             // Prevent poped up picker from beeing outlined on focus.
             // Inline picker should be outlined when in focus.
             outline: outlineOnFocus ? undefined : 'none' }, pickerStyle);
-        return (react_1.default.createElement(semantic_ui_react_1.Table, __assign({ style: style, unstackable: true, celled: true }, rest, { textAlign: 'center' }), children));
+        return (React.createElement(semantic_ui_react_1.Table, __assign({ style: style, unstackable: true, celled: true }, rest, { textAlign: 'center' }), children));
     };
     Calendar.defaultProps = {
         pickerWidth: '100%',
     };
     return Calendar;
-}(react_1.default.Component));
+}(React.Component));
 exports.default = Calendar;
 
 
@@ -74383,17 +74573,24 @@ exports.default = Calendar;
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var isNil_1 = __importDefault(__webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js"));
 var isArray_1 = __importDefault(__webpack_require__(/*! lodash/isArray */ "./node_modules/lodash/isArray.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
 var Cell_1 = __importDefault(__webpack_require__(/*! ./Cell */ "./src/views/CalendarBody/Cell.tsx"));
 var Cell_2 = __webpack_require__(/*! ./Cell */ "./src/views/CalendarBody/Cell.tsx");
 function Body(props) {
     var data = props.data, width = props.width, onCellClick = props.onCellClick, active = props.active, disabled = props.disabled, hovered = props.hovered, onCellHover = props.onCellHover, marked = props.marked, markColor = props.markColor;
-    var content = buildRows(data, width).map(function (row, rowIndex) { return (react_1.default.createElement(semantic_ui_react_1.Table.Row, { key: "" + rowIndex + row[0] }, row.map(function (item, itemIndex) { return (react_1.default.createElement(Cell_1.default, { style: getCellStyle(width), active: isActive(rowIndex, width, itemIndex, active), hovered: isHovered(rowIndex, width, itemIndex, hovered), disabled: isDisabled(rowIndex, width, itemIndex, disabled), marked: isMarked(rowIndex, width, itemIndex, marked), markColor: markColor, key: "" + (rowIndex * width + itemIndex), itemPosition: rowIndex * width + itemIndex, content: item, onHover: onCellHover, onClick: onCellClick })); }))); });
-    return (react_1.default.createElement(semantic_ui_react_1.Table.Body, null, content));
+    var content = buildRows(data, width).map(function (row, rowIndex) { return (React.createElement(semantic_ui_react_1.Table.Row, { key: "" + rowIndex + row[0] }, row.map(function (item, itemIndex) { return (React.createElement(Cell_1.default, { style: getCellStyle(width), active: isActive(rowIndex, width, itemIndex, active), hovered: isHovered(rowIndex, width, itemIndex, hovered), disabled: isDisabled(rowIndex, width, itemIndex, disabled), marked: isMarked(rowIndex, width, itemIndex, marked), markColor: markColor, key: "" + (rowIndex * width + itemIndex), itemPosition: rowIndex * width + itemIndex, content: item, onHover: onCellHover, onClick: onCellClick })); }))); });
+    return (React.createElement(semantic_ui_react_1.Table.Body, null, content));
 }
 function buildRows(data, width) {
     var height = data.length / width;
@@ -74509,9 +74706,16 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
 var hoverCellStyles = {
     outline: '1px solid #85b7d9',
@@ -74543,10 +74747,11 @@ var Cell = /** @class */ (function (_super) {
     Cell.prototype.render = function () {
         var _a = this.props, itemPosition = _a.itemPosition, content = _a.content, style = _a.style, onClick = _a.onClick, onHover = _a.onHover, hovered = _a.hovered, marked = _a.marked, markColor = _a.markColor, rest = __rest(_a, ["itemPosition", "content", "style", "onClick", "onHover", "hovered", "marked", "markColor"]);
         var cellStyle = __assign({}, style, (hovered ? hoverCellStyles : {}));
-        return (react_1.default.createElement(semantic_ui_react_1.Table.Cell, __assign({}, rest, { style: cellStyle, onMouseOver: this.onCellHover, onClick: this.onCellClick }), (marked && !rest.disabled) ? react_1.default.createElement(semantic_ui_react_1.Label, { circular: true, color: markColor, key: content }, content) : content));
+        return (React.createElement(semantic_ui_react_1.Table.Cell, __assign({}, rest, { style: cellStyle, onMouseOver: this.onCellHover, onClick: this.onCellClick }), (marked && !rest.disabled) ? React.createElement(semantic_ui_react_1.Label, { circular: true, color: markColor, key: content }, content)
+            : React.createElement("span", { className: 'suicr-content-item' }, content)));
     };
     return Cell;
-}(react_1.default.Component));
+}(React.Component));
 exports.default = Cell;
 
 
@@ -74564,14 +74769,21 @@ exports.default = Cell;
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var isNil_1 = __importDefault(__webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
 var HeaderRange_1 = __importDefault(__webpack_require__(/*! ./HeaderRange */ "./src/views/CalendarHeader/HeaderRange.tsx"));
 var HeaderWeeks_1 = __importDefault(__webpack_require__(/*! ./HeaderWeeks */ "./src/views/CalendarHeader/HeaderWeeks.tsx"));
 function Header(props) {
-    var rangeRowContent = props.rangeRowContent, displayWeeks = props.displayWeeks, onNextPageBtnClick = props.onNextPageBtnClick, onPrevPageBtnClick = props.onPrevPageBtnClick, hasPrevPage = props.hasPrevPage, hasNextPage = props.hasNextPage, onHeaderClick = props.onHeaderClick, width = props.width, title = props.title, localization = props.localization;
+    var rangeRowContent = props.rangeRowContent, displayWeeks = props.displayWeeks, onNextPageBtnClick = props.onNextPageBtnClick, onPrevPageBtnClick = props.onPrevPageBtnClick, hasPrevPage = props.hasPrevPage, hasNextPage = props.hasNextPage, onHeaderClick = props.onHeaderClick, width = props.width, title = props.title, localization = props.localization, className = props.className;
     var cellStyle = {
         border: 'none',
         borderBottom: displayWeeks ? 'none' : '1px solid rgba(34,36,38,.1)',
@@ -74585,16 +74797,16 @@ function Header(props) {
     var headerTitleStyle = {
         cursor: onHeaderClick ? 'pointer' : 'default',
     };
-    return (react_1.default.createElement(semantic_ui_react_1.Table.Header, null,
-        !isNil_1.default(rangeRowContent) && react_1.default.createElement(HeaderRange_1.default, { content: rangeRowContent }),
-        react_1.default.createElement(semantic_ui_react_1.Table.Row, null,
-            react_1.default.createElement(semantic_ui_react_1.Table.HeaderCell, { style: cellStyle, colSpan: '1' },
-                react_1.default.createElement(semantic_ui_react_1.Icon, { fitted: true, style: prevPageBtnStyle, disabled: !hasPrevPage, onClick: hasPrevPage ? onPrevPageBtnClick : undefined, name: 'chevron left' })),
-            react_1.default.createElement(semantic_ui_react_1.Table.HeaderCell, { onClick: onHeaderClick ? onHeaderClick : undefined, style: cellStyle, colSpan: (width - 2).toString() },
-                react_1.default.createElement("span", { style: headerTitleStyle }, title)),
-            react_1.default.createElement(semantic_ui_react_1.Table.HeaderCell, { style: cellStyle, colSpan: '1' },
-                react_1.default.createElement(semantic_ui_react_1.Icon, { fitted: true, style: nextPageBtnStyle, disabled: !hasNextPage, onClick: hasNextPage ? onNextPageBtnClick : undefined, name: 'chevron right' }))),
-        displayWeeks && react_1.default.createElement(HeaderWeeks_1.default, { localization: localization })));
+    return (React.createElement(semantic_ui_react_1.Table.Header, { className: className },
+        !isNil_1.default(rangeRowContent) && React.createElement(HeaderRange_1.default, { content: rangeRowContent }),
+        React.createElement(semantic_ui_react_1.Table.Row, null,
+            React.createElement(semantic_ui_react_1.Table.HeaderCell, { style: cellStyle, colSpan: '1' },
+                React.createElement(semantic_ui_react_1.Icon, { fitted: true, style: prevPageBtnStyle, disabled: !hasPrevPage, onClick: hasPrevPage ? onPrevPageBtnClick : undefined, name: 'chevron left' })),
+            React.createElement(semantic_ui_react_1.Table.HeaderCell, { onClick: onHeaderClick ? onHeaderClick : undefined, style: cellStyle, colSpan: (width - 2).toString() },
+                React.createElement("span", { style: headerTitleStyle }, title)),
+            React.createElement(semantic_ui_react_1.Table.HeaderCell, { style: cellStyle, colSpan: '1' },
+                React.createElement(semantic_ui_react_1.Icon, { fitted: true, style: nextPageBtnStyle, disabled: !hasNextPage, onClick: hasNextPage ? onNextPageBtnClick : undefined, name: 'chevron right' }))),
+        displayWeeks && React.createElement(HeaderWeeks_1.default, { localization: localization })));
 }
 exports.default = Header;
 
@@ -74610,19 +74822,23 @@ exports.default = Header;
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
 var cellStyle = {
     border: 'none',
 };
 function HeaderRange(props) {
     var content = props.content;
-    return (react_1.default.createElement(semantic_ui_react_1.Table.Row, null,
-        react_1.default.createElement(semantic_ui_react_1.Table.HeaderCell, { style: cellStyle, colSpan: '7' }, content)));
+    return (React.createElement(semantic_ui_react_1.Table.Row, null,
+        React.createElement(semantic_ui_react_1.Table.HeaderCell, { style: cellStyle, colSpan: '7' }, content)));
 }
 exports.default = HeaderRange;
 
@@ -74641,9 +74857,16 @@ exports.default = HeaderRange;
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
 /** Return array of week day names.
  *
@@ -74662,10 +74885,10 @@ var cellStyle = {
     border: 'none',
     borderBottom: '1px solid rgba(34,36,38,.1)',
 };
-var getWeekDayCells = function (m, localization) { return getWeekDays(m, localization).map(function (weekDay) { return (react_1.default.createElement(semantic_ui_react_1.Table.HeaderCell, { key: weekDay, style: cellStyle, colSpan: '1' }, weekDay)); }); };
+var getWeekDayCells = function (m, localization) { return getWeekDays(m, localization).map(function (weekDay) { return (React.createElement(semantic_ui_react_1.Table.HeaderCell, { key: weekDay, style: cellStyle, colSpan: '1' }, weekDay)); }); };
 function HeaderWeeks(props) {
     var localization = props.localization;
-    return (react_1.default.createElement(semantic_ui_react_1.Table.Row, null, getWeekDayCells(moment_1.default, localization)));
+    return (React.createElement(semantic_ui_react_1.Table.Row, null, getWeekDayCells(moment_1.default, localization)));
 }
 exports.default = HeaderWeeks;
 
@@ -74717,10 +74940,17 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var range_1 = __importDefault(__webpack_require__(/*! lodash/range */ "./node_modules/lodash/range.js"));
 var isNil_1 = __importDefault(__webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var BaseCalendarView_1 = __importDefault(__webpack_require__(/*! ./BaseCalendarView */ "./src/views/BaseCalendarView.ts"));
 var Calendar_1 = __importDefault(__webpack_require__(/*! ./Calendar */ "./src/views/Calendar.tsx"));
 var Body_1 = __importDefault(__webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.tsx"));
@@ -74748,9 +74978,9 @@ var DatesRangeView = /** @class */ (function (_super) {
         var _this = this;
         var _a = this.props, values = _a.values, onNextPageBtnClick = _a.onNextPageBtnClick, onPrevPageBtnClick = _a.onPrevPageBtnClick, onValueClick = _a.onValueClick, hasPrevPage = _a.hasPrevPage, hasNextPage = _a.hasNextPage, currentHeadingValue = _a.currentHeadingValue, onHeaderClick = _a.onHeaderClick, activeRange = _a.activeRange, disabledItemIndexes = _a.disabledItemIndexes, currentRangeHeadingValue = _a.currentRangeHeadingValue, hoveredItemIndex = _a.hoveredItemIndex, onCellHover = _a.onCellHover, onMount = _a.onMount, inline = _a.inline, markColor = _a.markColor, markedItemIndexes = _a.markedItemIndexes, localization = _a.localization, rest = __rest(_a, ["values", "onNextPageBtnClick", "onPrevPageBtnClick", "onValueClick", "hasPrevPage", "hasNextPage", "currentHeadingValue", "onHeaderClick", "activeRange", "disabledItemIndexes", "currentRangeHeadingValue", "hoveredItemIndex", "onCellHover", "onMount", "inline", "markColor", "markedItemIndexes", "localization"]);
         var start = activeRange.start, end = activeRange.end;
-        return (react_1.default.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
-            react_1.default.createElement(Header_1.default, { width: DayView_1.DAY_CALENDAR_ROW_WIDTH, displayWeeks: true, rangeRowContent: currentRangeHeadingValue, onNextPageBtnClick: onNextPageBtnClick, onPrevPageBtnClick: onPrevPageBtnClick, hasNextPage: hasNextPage, hasPrevPage: hasPrevPage, title: currentHeadingValue, onHeaderClick: onHeaderClick, localization: localization }),
-            react_1.default.createElement(Body_1.default, { width: DayView_1.DAY_CALENDAR_ROW_WIDTH, data: values, onCellClick: onValueClick, onCellHover: onCellHover, hovered: hoveredItemIndex, markColor: markColor, marked: markedItemIndexes, active: getActive(start, end), disabled: disabledItemIndexes })));
+        return (React.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
+            React.createElement(Header_1.default, { width: DayView_1.DAY_CALENDAR_ROW_WIDTH, className: 'suicr-dates-range-view-header', displayWeeks: true, rangeRowContent: currentRangeHeadingValue, onNextPageBtnClick: onNextPageBtnClick, onPrevPageBtnClick: onPrevPageBtnClick, hasNextPage: hasNextPage, hasPrevPage: hasPrevPage, title: currentHeadingValue, onHeaderClick: onHeaderClick, localization: localization }),
+            React.createElement(Body_1.default, { width: DayView_1.DAY_CALENDAR_ROW_WIDTH, data: values, onCellClick: onValueClick, onCellHover: onCellHover, hovered: hoveredItemIndex, markColor: markColor, marked: markedItemIndexes, active: getActive(start, end), disabled: disabledItemIndexes })));
     };
     DatesRangeView.defaultProps = {
         active: {
@@ -74807,11 +75037,18 @@ var __rest = (this && this.__rest) || function (s, e) {
             t[p[i]] = s[p[i]];
     return t;
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var BaseCalendarView_1 = __importDefault(__webpack_require__(/*! ./BaseCalendarView */ "./src/views/BaseCalendarView.ts"));
 var Calendar_1 = __importDefault(__webpack_require__(/*! ./Calendar */ "./src/views/Calendar.tsx"));
 var Body_1 = __importDefault(__webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.tsx"));
@@ -74827,9 +75064,9 @@ var DayView = /** @class */ (function (_super) {
     DayView.prototype.render = function () {
         var _this = this;
         var _a = this.props, values = _a.values, onNextPageBtnClick = _a.onNextPageBtnClick, onPrevPageBtnClick = _a.onPrevPageBtnClick, onValueClick = _a.onValueClick, hasNextPage = _a.hasNextPage, hasPrevPage = _a.hasPrevPage, currentHeadingValue = _a.currentHeadingValue, onHeaderClick = _a.onHeaderClick, disabledItemIndexes = _a.disabledItemIndexes, activeItemIndex = _a.activeItemIndex, hoveredItemIndex = _a.hoveredItemIndex, onCellHover = _a.onCellHover, onMount = _a.onMount, inline = _a.inline, markedItemIndexes = _a.markedItemIndexes, markColor = _a.markColor, localization = _a.localization, rest = __rest(_a, ["values", "onNextPageBtnClick", "onPrevPageBtnClick", "onValueClick", "hasNextPage", "hasPrevPage", "currentHeadingValue", "onHeaderClick", "disabledItemIndexes", "activeItemIndex", "hoveredItemIndex", "onCellHover", "onMount", "inline", "markedItemIndexes", "markColor", "localization"]);
-        return (react_1.default.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
-            react_1.default.createElement(Header_1.default, { width: exports.DAY_CALENDAR_ROW_WIDTH, displayWeeks: true, onNextPageBtnClick: onNextPageBtnClick, onPrevPageBtnClick: onPrevPageBtnClick, hasNextPage: hasNextPage, hasPrevPage: hasPrevPage, title: currentHeadingValue, onHeaderClick: onHeaderClick, localization: localization }),
-            react_1.default.createElement(Body_1.default, { width: exports.DAY_CALENDAR_ROW_WIDTH, data: values, hovered: hoveredItemIndex, onCellHover: onCellHover, onCellClick: onValueClick, active: activeItemIndex, disabled: disabledItemIndexes, marked: markedItemIndexes, markColor: markColor })));
+        return (React.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
+            React.createElement(Header_1.default, { className: 'suicr-day-view-header', width: exports.DAY_CALENDAR_ROW_WIDTH, displayWeeks: true, onNextPageBtnClick: onNextPageBtnClick, onPrevPageBtnClick: onPrevPageBtnClick, hasNextPage: hasNextPage, hasPrevPage: hasPrevPage, title: currentHeadingValue, onHeaderClick: onHeaderClick, localization: localization }),
+            React.createElement(Body_1.default, { width: exports.DAY_CALENDAR_ROW_WIDTH, data: values, hovered: hoveredItemIndex, onCellHover: onCellHover, onCellClick: onValueClick, active: activeItemIndex, disabled: disabledItemIndexes, marked: markedItemIndexes, markColor: markColor })));
     };
     return DayView;
 }(BaseCalendarView_1.default));
@@ -74880,11 +75117,18 @@ var __rest = (this && this.__rest) || function (s, e) {
             t[p[i]] = s[p[i]];
     return t;
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var BaseCalendarView_1 = __importDefault(__webpack_require__(/*! ./BaseCalendarView */ "./src/views/BaseCalendarView.ts"));
 var Calendar_1 = __importDefault(__webpack_require__(/*! ./Calendar */ "./src/views/Calendar.tsx"));
 var Body_1 = __importDefault(__webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.tsx"));
@@ -74900,6 +75144,7 @@ var HourView = /** @class */ (function (_super) {
         var _this = this;
         var _a = this.props, values = _a.values, hasHeader = _a.hasHeader, onValueClick = _a.onValueClick, onNextPageBtnClick = _a.onNextPageBtnClick, onPrevPageBtnClick = _a.onPrevPageBtnClick, hasPrevPage = _a.hasPrevPage, hasNextPage = _a.hasNextPage, onHeaderClick = _a.onHeaderClick, disabledItemIndexes = _a.disabledItemIndexes, activeItemIndex = _a.activeItemIndex, currentHeadingValue = _a.currentHeadingValue, hoveredItemIndex = _a.hoveredItemIndex, onCellHover = _a.onCellHover, onMount = _a.onMount, inline = _a.inline, localization = _a.localization, rest = __rest(_a, ["values", "hasHeader", "onValueClick", "onNextPageBtnClick", "onPrevPageBtnClick", "hasPrevPage", "hasNextPage", "onHeaderClick", "disabledItemIndexes", "activeItemIndex", "currentHeadingValue", "hoveredItemIndex", "onCellHover", "onMount", "inline", "localization"]);
         var headerProps = {
+            className: 'suicr-hour-view-header',
             onNextPageBtnClick: onNextPageBtnClick,
             onPrevPageBtnClick: onPrevPageBtnClick,
             hasPrevPage: hasPrevPage,
@@ -74910,9 +75155,9 @@ var HourView = /** @class */ (function (_super) {
             displayWeeks: false,
             localization: localization,
         };
-        return (react_1.default.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
-            hasHeader && react_1.default.createElement(Header_1.default, __assign({}, headerProps)),
-            react_1.default.createElement(Body_1.default, { data: values, width: HOUR_CALENDAR_ROW_WIDTH, onCellClick: onValueClick, hovered: hoveredItemIndex, onCellHover: onCellHover, active: activeItemIndex, disabled: disabledItemIndexes })));
+        return (React.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
+            hasHeader && React.createElement(Header_1.default, __assign({}, headerProps)),
+            React.createElement(Body_1.default, { data: values, width: HOUR_CALENDAR_ROW_WIDTH, onCellClick: onValueClick, hovered: hoveredItemIndex, onCellHover: onCellHover, active: activeItemIndex, disabled: disabledItemIndexes })));
     };
     return HourView;
 }(BaseCalendarView_1.default));
@@ -74966,12 +75211,20 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var isString_1 = __importDefault(__webpack_require__(/*! lodash/isString */ "./node_modules/lodash/isString.js"));
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var semantic_ui_react_1 = __webpack_require__(/*! semantic-ui-react */ "./node_modules/semantic-ui-react/dist/es/index.js");
 var checkIE_1 = __importDefault(__webpack_require__(/*! ../lib/checkIE */ "./src/lib/checkIE.ts"));
+var checkMobile_1 = __importDefault(__webpack_require__(/*! ../lib/checkMobile */ "./src/lib/checkMobile.ts"));
 var popupStyle = {
     padding: '0',
     filter: 'none',
@@ -74984,17 +75237,17 @@ var FormInputWithRef = /** @class */ (function (_super) {
     FormInputWithRef.prototype.render = function () {
         var _a = this.props, value = _a.value, clearable = _a.clearable, icon = _a.icon, clearIcon = _a.clearIcon, onClear = _a.onClear, innerRef = _a.innerRef, onFocus = _a.onFocus, onBlur = _a.onBlur, onMouseEnter = _a.onMouseEnter, rest = __rest(_a, ["value", "clearable", "icon", "clearIcon", "onClear", "innerRef", "onFocus", "onBlur", "onMouseEnter"]);
         var ClearIcon = isString_1.default(clearIcon) ?
-            react_1.default.createElement(semantic_ui_react_1.Icon, { name: clearIcon, link: true, onClick: onClear }) :
-            react_1.default.createElement(clearIcon.type, __assign({}, clearIcon.props, { link: true, onClick: onClear }));
-        return (react_1.default.createElement(semantic_ui_react_1.Form.Input, __assign({ onFocus: onFocus, onBlur: onBlur, onClick: onFocus, onMouseEnter: onMouseEnter, icon: true }, rest),
+            React.createElement(semantic_ui_react_1.Icon, { name: clearIcon, link: true, onClick: onClear }) :
+            React.createElement(clearIcon.type, __assign({}, clearIcon.props, { link: true, onClick: onClear }));
+        return (React.createElement(semantic_ui_react_1.Form.Input, __assign({ onFocus: onFocus, onBlur: onBlur, onClick: onFocus, onMouseEnter: onMouseEnter, icon: true }, rest),
             value && clearable ?
                 ClearIcon
                 :
-                    react_1.default.createElement(semantic_ui_react_1.Icon, { name: icon }),
-            react_1.default.createElement("input", { ref: innerRef, value: value })));
+                    React.createElement(semantic_ui_react_1.Icon, { name: icon }),
+            React.createElement("input", { ref: innerRef, value: value })));
     };
     return FormInputWithRef;
-}(react_1.default.Component));
+}(React.Component));
 var InputView = /** @class */ (function (_super) {
     __extends(InputView, _super);
     function InputView() {
@@ -75007,7 +75260,7 @@ var InputView = /** @class */ (function (_super) {
     }
     InputView.prototype.render = function () {
         var _this = this;
-        var _a = this.props, renderPicker = _a.renderPicker, popupPosition = _a.popupPosition, inline = _a.inline, value = _a.value, closeOnMouseLeave = _a.closeOnMouseLeave, onChange = _a.onChange, onClear = _a.onClear, children = _a.children, inlineLabel = _a.inlineLabel, popupIsClosed = _a.popupIsClosed, mountNode = _a.mountNode, tabIndex = _a.tabIndex, onMount = _a.onMount, closePopup = _a.closePopup, openPopup = _a.openPopup, animation = _a.animation, duration = _a.duration, pickerWidth = _a.pickerWidth, pickerStyle = _a.pickerStyle, iconPosition = _a.iconPosition, icon = _a.icon, readOnly = _a.readOnly, rest = __rest(_a, ["renderPicker", "popupPosition", "inline", "value", "closeOnMouseLeave", "onChange", "onClear", "children", "inlineLabel", "popupIsClosed", "mountNode", "tabIndex", "onMount", "closePopup", "openPopup", "animation", "duration", "pickerWidth", "pickerStyle", "iconPosition", "icon", "readOnly"]);
+        var _a = this.props, renderPicker = _a.renderPicker, popupPosition = _a.popupPosition, inline = _a.inline, value = _a.value, closeOnMouseLeave = _a.closeOnMouseLeave, onChange = _a.onChange, onClear = _a.onClear, children = _a.children, inlineLabel = _a.inlineLabel, popupIsClosed = _a.popupIsClosed, mountNode = _a.mountNode, tabIndex = _a.tabIndex, onMount = _a.onMount, closePopup = _a.closePopup, openPopup = _a.openPopup, animation = _a.animation, duration = _a.duration, pickerWidth = _a.pickerWidth, pickerStyle = _a.pickerStyle, iconPosition = _a.iconPosition, icon = _a.icon, readOnly = _a.readOnly, hideMobileKeyboard = _a.hideMobileKeyboard, rest = __rest(_a, ["renderPicker", "popupPosition", "inline", "value", "closeOnMouseLeave", "onChange", "onClear", "children", "inlineLabel", "popupIsClosed", "mountNode", "tabIndex", "onMount", "closePopup", "openPopup", "animation", "duration", "pickerWidth", "pickerStyle", "iconPosition", "icon", "readOnly", "hideMobileKeyboard"]);
         var onBlur = function (e) {
             if (e.relatedTarget !== _this.popupNode && e.relatedTarget !== _this.inputNode && !checkIE_1.default()) {
                 closePopup();
@@ -75032,18 +75285,20 @@ var InputView = /** @class */ (function (_super) {
                 }
             }
         };
-        var inputElement = (react_1.default.createElement(FormInputWithRef, __assign({}, rest, { readOnly: readOnly, icon: icon, iconPosition: icon && iconPosition !== 'right' ? iconPosition : undefined, innerRef: function (e) { _this.inputNode = e; onMount(e); }, value: value, tabIndex: tabIndex, inline: inlineLabel, onClear: function (e) { return (onClear || onChange)(e, __assign({}, rest, { value: '' })); }, onFocus: function (e) {
+        var inputElement = (React.createElement(FormInputWithRef, __assign({}, rest, { 
+            // trying to use this hack https://stackoverflow.com/a/7610923 for hiding mobile keyboard
+            readOnly: (checkMobile_1.default() && hideMobileKeyboard) || readOnly, icon: icon, iconPosition: icon && iconPosition !== 'right' ? iconPosition : undefined, innerRef: function (e) { _this.inputNode = e; onMount(e); }, value: value, tabIndex: tabIndex, inline: inlineLabel, onClear: function (e) { return (onClear || onChange)(e, __assign({}, rest, { value: '' })); }, onFocus: function (e) {
                 invoke_1.default(_this.props, 'onFocus', e, _this.props);
                 openPopup();
             }, onBlur: onBlur, onMouseEnter: onMouseEnter, onChange: onChange })));
         if (inline) {
             return renderPicker();
         }
-        return (react_1.default.createElement(react_1.default.Fragment, null,
+        return (React.createElement(React.Fragment, null,
             inputElement,
             !readOnly
                 &&
-                    react_1.default.createElement(semantic_ui_react_1.Transition, { unmountOnHide: true, mountOnShow: true, visible: !popupIsClosed, animation: animation, duration: duration, onComplete: function () {
+                    React.createElement(semantic_ui_react_1.Transition, { unmountOnHide: true, mountOnShow: true, visible: !popupIsClosed, animation: animation, duration: duration, onComplete: function () {
                             if (popupIsClosed) {
                                 _this.unsetScrollListener();
                                 // TODO: for some reason sometimes transition component
@@ -75055,8 +75310,8 @@ var InputView = /** @class */ (function (_super) {
                                 _this.setScrollListener();
                             }
                         } },
-                        react_1.default.createElement(semantic_ui_react_1.Popup, { position: popupPosition, open: true, hoverable: closeOnMouseLeave, flowing: true, style: popupStyle, context: this.inputNode, on: 'hover', mountNode: mountNode },
-                            react_1.default.createElement("div", { onBlur: onBlur, onMouseLeave: onMouseLeave, onMouseEnter: onMouseEnter, style: { outline: 'none' }, tabIndex: 0, ref: function (ref) { return _this.popupNode = ref; } }, renderPicker())))));
+                        React.createElement(semantic_ui_react_1.Popup, { position: popupPosition, open: true, hoverable: closeOnMouseLeave, flowing: true, style: popupStyle, context: this.inputNode, on: 'hover', mountNode: mountNode },
+                            React.createElement("div", { onBlur: onBlur, onMouseLeave: onMouseLeave, onMouseEnter: onMouseEnter, style: { outline: 'none' }, tabIndex: 0, ref: function (ref) { return _this.popupNode = ref; } }, renderPicker())))));
     };
     InputView.prototype.setScrollListener = function () {
         window.addEventListener('scroll', this.scrollListener);
@@ -75075,7 +75330,7 @@ var InputView = /** @class */ (function (_super) {
         iconPosition: 'right',
     };
     return InputView;
-}(react_1.default.Component));
+}(React.Component));
 exports.default = InputView;
 
 
@@ -75123,11 +75378,18 @@ var __rest = (this && this.__rest) || function (s, e) {
             t[p[i]] = s[p[i]];
     return t;
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var BaseCalendarView_1 = __importDefault(__webpack_require__(/*! ./BaseCalendarView */ "./src/views/BaseCalendarView.ts"));
 var Calendar_1 = __importDefault(__webpack_require__(/*! ./Calendar */ "./src/views/Calendar.tsx"));
 var Body_1 = __importDefault(__webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.tsx"));
@@ -75143,6 +75405,7 @@ var MinuteView = /** @class */ (function (_super) {
         var _this = this;
         var _a = this.props, values = _a.values, hasHeader = _a.hasHeader, onValueClick = _a.onValueClick, onNextPageBtnClick = _a.onNextPageBtnClick, onPrevPageBtnClick = _a.onPrevPageBtnClick, hasNextPage = _a.hasNextPage, hasPrevPage = _a.hasPrevPage, onHeaderClick = _a.onHeaderClick, activeItemIndex = _a.activeItemIndex, currentHeadingValue = _a.currentHeadingValue, hoveredItemIndex = _a.hoveredItemIndex, disabledItemIndexes = _a.disabledItemIndexes, onCellHover = _a.onCellHover, onMount = _a.onMount, inline = _a.inline, localization = _a.localization, rest = __rest(_a, ["values", "hasHeader", "onValueClick", "onNextPageBtnClick", "onPrevPageBtnClick", "hasNextPage", "hasPrevPage", "onHeaderClick", "activeItemIndex", "currentHeadingValue", "hoveredItemIndex", "disabledItemIndexes", "onCellHover", "onMount", "inline", "localization"]);
         var headerProps = {
+            className: 'suicr-minute-view-header',
             onHeaderClick: onHeaderClick,
             onNextPageBtnClick: onNextPageBtnClick,
             onPrevPageBtnClick: onPrevPageBtnClick,
@@ -75153,9 +75416,9 @@ var MinuteView = /** @class */ (function (_super) {
             displayWeeks: false,
             localization: localization,
         };
-        return (react_1.default.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
-            hasHeader && react_1.default.createElement(Header_1.default, __assign({}, headerProps)),
-            react_1.default.createElement(Body_1.default, { width: MINUTE_CALENDAR_ROW_WIDTH, data: values, hovered: hoveredItemIndex, onCellHover: onCellHover, onCellClick: onValueClick, active: activeItemIndex, disabled: disabledItemIndexes })));
+        return (React.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
+            hasHeader && React.createElement(Header_1.default, __assign({}, headerProps)),
+            React.createElement(Body_1.default, { width: MINUTE_CALENDAR_ROW_WIDTH, data: values, hovered: hoveredItemIndex, onCellHover: onCellHover, onCellClick: onValueClick, active: activeItemIndex, disabled: disabledItemIndexes })));
     };
     return MinuteView;
 }(BaseCalendarView_1.default));
@@ -75209,10 +75472,17 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var range_1 = __importDefault(__webpack_require__(/*! lodash/range */ "./node_modules/lodash/range.js"));
 var isNil_1 = __importDefault(__webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
 var BaseCalendarView_1 = __importDefault(__webpack_require__(/*! ./BaseCalendarView */ "./src/views/BaseCalendarView.ts"));
 var Calendar_1 = __importDefault(__webpack_require__(/*! ./Calendar */ "./src/views/Calendar.tsx"));
@@ -75240,9 +75510,9 @@ var MonthRangeView = /** @class */ (function (_super) {
         var _this = this;
         var _a = this.props, values = _a.values, onNextPageBtnClick = _a.onNextPageBtnClick, onPrevPageBtnClick = _a.onPrevPageBtnClick, onValueClick = _a.onValueClick, hasPrevPage = _a.hasPrevPage, hasNextPage = _a.hasNextPage, currentHeadingValue = _a.currentHeadingValue, onHeaderClick = _a.onHeaderClick, activeRange = _a.activeRange, disabledItemIndexes = _a.disabledItemIndexes, currentRangeHeadingValue = _a.currentRangeHeadingValue, hoveredItemIndex = _a.hoveredItemIndex, onCellHover = _a.onCellHover, onMount = _a.onMount, inline = _a.inline, localization = _a.localization, rest = __rest(_a, ["values", "onNextPageBtnClick", "onPrevPageBtnClick", "onValueClick", "hasPrevPage", "hasNextPage", "currentHeadingValue", "onHeaderClick", "activeRange", "disabledItemIndexes", "currentRangeHeadingValue", "hoveredItemIndex", "onCellHover", "onMount", "inline", "localization"]);
         var start = activeRange.start, end = activeRange.end;
-        return (react_1.default.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
-            react_1.default.createElement(Header_1.default, { width: MonthView_1.MONTH_CALENDAR_ROW_WIDTH, displayWeeks: false, rangeRowContent: currentRangeHeadingValue, onNextPageBtnClick: onNextPageBtnClick, onPrevPageBtnClick: onPrevPageBtnClick, hasNextPage: hasNextPage, hasPrevPage: hasPrevPage, title: currentHeadingValue, onHeaderClick: onHeaderClick, localization: localization }),
-            react_1.default.createElement(Body_1.default, { width: MonthView_1.MONTH_CALENDAR_ROW_WIDTH, data: values, onCellClick: onValueClick, onCellHover: onCellHover, hovered: hoveredItemIndex, active: getActive(start, end), disabled: disabledItemIndexes })));
+        return (React.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
+            React.createElement(Header_1.default, { width: MonthView_1.MONTH_CALENDAR_ROW_WIDTH, className: 'suicr-month-range-view-header', displayWeeks: false, rangeRowContent: currentRangeHeadingValue, onNextPageBtnClick: onNextPageBtnClick, onPrevPageBtnClick: onPrevPageBtnClick, hasNextPage: hasNextPage, hasPrevPage: hasPrevPage, title: currentHeadingValue, onHeaderClick: onHeaderClick, localization: localization }),
+            React.createElement(Body_1.default, { width: MonthView_1.MONTH_CALENDAR_ROW_WIDTH, data: values, onCellClick: onValueClick, onCellHover: onCellHover, hovered: hoveredItemIndex, active: getActive(start, end), disabled: disabledItemIndexes })));
     };
     MonthRangeView.defaultProps = {
         active: {
@@ -75299,11 +75569,18 @@ var __rest = (this && this.__rest) || function (s, e) {
             t[p[i]] = s[p[i]];
     return t;
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var BaseCalendarView_1 = __importDefault(__webpack_require__(/*! ./BaseCalendarView */ "./src/views/BaseCalendarView.ts"));
 var Calendar_1 = __importDefault(__webpack_require__(/*! ./Calendar */ "./src/views/Calendar.tsx"));
 var Body_1 = __importDefault(__webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.tsx"));
@@ -75319,6 +75596,7 @@ var MonthView = /** @class */ (function (_super) {
         var _this = this;
         var _a = this.props, values = _a.values, hasHeader = _a.hasHeader, onValueClick = _a.onValueClick, onNextPageBtnClick = _a.onNextPageBtnClick, onPrevPageBtnClick = _a.onPrevPageBtnClick, hasPrevPage = _a.hasPrevPage, hasNextPage = _a.hasNextPage, onHeaderClick = _a.onHeaderClick, disabledItemIndexes = _a.disabledItemIndexes, activeItemIndex = _a.activeItemIndex, currentHeadingValue = _a.currentHeadingValue, onCellHover = _a.onCellHover, hoveredItemIndex = _a.hoveredItemIndex, onMount = _a.onMount, inline = _a.inline, localization = _a.localization, rest = __rest(_a, ["values", "hasHeader", "onValueClick", "onNextPageBtnClick", "onPrevPageBtnClick", "hasPrevPage", "hasNextPage", "onHeaderClick", "disabledItemIndexes", "activeItemIndex", "currentHeadingValue", "onCellHover", "hoveredItemIndex", "onMount", "inline", "localization"]);
         var headerProps = {
+            className: 'suicr-month-view-header',
             onNextPageBtnClick: onNextPageBtnClick,
             onPrevPageBtnClick: onPrevPageBtnClick,
             hasPrevPage: hasPrevPage,
@@ -75329,9 +75607,9 @@ var MonthView = /** @class */ (function (_super) {
             width: exports.MONTH_CALENDAR_ROW_WIDTH,
             localization: localization,
         };
-        return (react_1.default.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
-            hasHeader && react_1.default.createElement(Header_1.default, __assign({}, headerProps)),
-            react_1.default.createElement(Body_1.default, { width: exports.MONTH_CALENDAR_ROW_WIDTH, data: values, onCellClick: onValueClick, onCellHover: onCellHover, active: activeItemIndex, hovered: hoveredItemIndex, disabled: disabledItemIndexes })));
+        return (React.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
+            hasHeader && React.createElement(Header_1.default, __assign({}, headerProps)),
+            React.createElement(Body_1.default, { width: exports.MONTH_CALENDAR_ROW_WIDTH, data: values, onCellClick: onValueClick, onCellHover: onCellHover, active: activeItemIndex, hovered: hoveredItemIndex, disabled: disabledItemIndexes })));
     };
     return MonthView;
 }(BaseCalendarView_1.default));
@@ -75385,10 +75663,17 @@ var __rest = (this && this.__rest) || function (s, e) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var last_1 = __importDefault(__webpack_require__(/*! lodash/last */ "./node_modules/lodash/last.js"));
 var first_1 = __importDefault(__webpack_require__(/*! lodash/first */ "./node_modules/lodash/first.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var BaseCalendarView_1 = __importDefault(__webpack_require__(/*! ./BaseCalendarView */ "./src/views/BaseCalendarView.ts"));
 var Calendar_1 = __importDefault(__webpack_require__(/*! ./Calendar */ "./src/views/Calendar.tsx"));
 var Body_1 = __importDefault(__webpack_require__(/*! ./CalendarBody/Body */ "./src/views/CalendarBody/Body.tsx"));
@@ -75404,9 +75689,9 @@ var YearView = /** @class */ (function (_super) {
         var _this = this;
         var _a = this.props, values = _a.values, onNextPageBtnClick = _a.onNextPageBtnClick, onPrevPageBtnClick = _a.onPrevPageBtnClick, onValueClick = _a.onValueClick, hasNextPage = _a.hasNextPage, hasPrevPage = _a.hasPrevPage, onHeaderClick = _a.onHeaderClick, disabledItemIndexes = _a.disabledItemIndexes, activeItemIndex = _a.activeItemIndex, hoveredItemIndex = _a.hoveredItemIndex, onCellHover = _a.onCellHover, onMount = _a.onMount, inline = _a.inline, localization = _a.localization, rest = __rest(_a, ["values", "onNextPageBtnClick", "onPrevPageBtnClick", "onValueClick", "hasNextPage", "hasPrevPage", "onHeaderClick", "disabledItemIndexes", "activeItemIndex", "hoveredItemIndex", "onCellHover", "onMount", "inline", "localization"]);
         var headerTitle = first_1.default(values) + " - " + last_1.default(values);
-        return (react_1.default.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
-            react_1.default.createElement(Header_1.default, { title: headerTitle, onNextPageBtnClick: onNextPageBtnClick, onPrevPageBtnClick: onPrevPageBtnClick, hasNextPage: hasNextPage, hasPrevPage: hasPrevPage, onHeaderClick: onHeaderClick, width: YEAR_CALENDAR_ROW_WIDTH, displayWeeks: false, localization: localization }),
-            react_1.default.createElement(Body_1.default, { width: YEAR_CALENDAR_ROW_WIDTH, data: values, hovered: hoveredItemIndex, onCellHover: onCellHover, onCellClick: onValueClick, active: activeItemIndex, disabled: disabledItemIndexes })));
+        return (React.createElement(Calendar_1.default, __assign({ ref: function (e) { return _this.calendarNode = lib_1.findHTMLElement(e); }, outlineOnFocus: inline }, rest),
+            React.createElement(Header_1.default, { className: 'suicr-year-view-header', title: headerTitle, onNextPageBtnClick: onNextPageBtnClick, onPrevPageBtnClick: onPrevPageBtnClick, hasNextPage: hasNextPage, hasPrevPage: hasPrevPage, onHeaderClick: onHeaderClick, width: YEAR_CALENDAR_ROW_WIDTH, displayWeeks: false, localization: localization }),
+            React.createElement(Body_1.default, { width: YEAR_CALENDAR_ROW_WIDTH, data: values, hovered: hoveredItemIndex, onCellHover: onCellHover, onCellClick: onValueClick, active: activeItemIndex, disabled: disabledItemIndexes })));
     };
     return YearView;
 }(BaseCalendarView_1.default));
