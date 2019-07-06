@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "3d60834abff07bf235fd";
+/******/ 	var hotCurrentHash = "5023142873a6992fd3ae";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -70556,6 +70556,134 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
+var CustomPropTypes_1 = __importDefault(__webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts"));
+exports.BaseInputPropTypes = {
+    /** Currently selected value. */
+    value: PropTypes.string.isRequired,
+    /** Called on selected value change. */
+    onChange: PropTypes.func.isRequired,
+    /** If true, popup closes after selecting a value. */
+    closable: PropTypes.bool,
+    /** An input can be formatted to appear inline in other content. */
+    inline: PropTypes.bool,
+    /** Optional icon to display inside the Input. */
+    icon: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.bool,
+    ]),
+    /** Icon position inside Input. Default: 'right'. */
+    iconPosition: PropTypes.oneOf(['right', 'left']),
+    /**
+     * Called on clear.
+     *
+     * @param {SyntheticEvent} event - React's original SyntheticEvent.
+     * @param {object} data - All props and proposed value.
+     */
+    onClear: PropTypes.func,
+    /** Using the clearable setting will let users remove their selection from a calendar. */
+    clearable: PropTypes.bool,
+    /** Optional Icon to display inside the clearable Input. */
+    clearIcon: PropTypes.any,
+    /** Position for the popup. */
+    popupPosition: PropTypes.oneOf([
+        'top left',
+        'top right',
+        'bottom left',
+        'bottom right',
+        'right center',
+        'left center',
+        'top center',
+        'bottom center',
+    ]),
+    /** Should close when cursor leaves calendar popup. */
+    closeOnMouseLeave: PropTypes.bool,
+    /** The node where the picker should mount. */
+    mountNode: PropTypes.any,
+    /** A field can have its label next to instead of above it. */
+    inlineLabel: PropTypes.bool,
+    /** Picker width (any value that `style.width` can take). */
+    pickerWidth: PropTypes.string,
+    /** Style object for picker. */
+    pickerStyle: PropTypes.object,
+    /** Duration of the CSS transition animation in milliseconds. */
+    duration: PropTypes.number,
+    /** Named animation event to used. Must be defined in CSS. */
+    animation: PropTypes.string,
+    /** Moment date localization. */
+    localization: PropTypes.string,
+    /** Try to prevent mobile keyboard appearing. */
+    hideMobileKeyboard: PropTypes.bool,
+};
+exports.MarkedValuesPropTypes = {
+    /** Array of marked dates. */
+    marked: PropTypes.oneOfType([
+        PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+        PropTypes.arrayOf(CustomPropTypes_1.default.dateObject),
+    ]),
+    /** String specifying the mark color (Optional). */
+    markColor: PropTypes.string,
+};
+exports.DateRelatedPropTypes = {
+    /** Moment date formatting string. */
+    dateFormat: PropTypes.string,
+    /** Date to display initially when no date is selected. */
+    initialDate: PropTypes.oneOfType([
+        PropTypes.string,
+        CustomPropTypes_1.default.dateObject,
+        CustomPropTypes_1.default.momentObj,
+    ]),
+};
+exports.TimeRelatedPropTypes = {
+    /** Time format. */
+    timeFormat: PropTypes.oneOf(['ampm', 'AMPM', '24']),
+    /** If true, minutes picker won't be shown after picking the hour. */
+    disableMinute: PropTypes.bool,
+};
+exports.DisableValuesPropTypes = {
+    /** Date or list of dates that are displayed as disabled. */
+    disable: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.arrayOf(PropTypes.string),
+        CustomPropTypes_1.default.momentObj,
+        PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+        CustomPropTypes_1.default.dateObject,
+        PropTypes.arrayOf(CustomPropTypes_1.default.dateObject),
+    ]),
+};
+exports.EnableValuesPropTypes = {
+    /** Date or list of dates that are enabled (the rest are disabled). */
+    enable: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.arrayOf(PropTypes.string),
+        CustomPropTypes_1.default.momentObj,
+        PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
+        CustomPropTypes_1.default.dateObject,
+        PropTypes.arrayOf(CustomPropTypes_1.default.dateObject),
+    ]),
+};
+exports.MinMaxValuePropTypes = {
+    /** Maximum date that can be selected. */
+    maxDate: PropTypes.oneOfType([
+        PropTypes.string,
+        CustomPropTypes_1.default.momentObj,
+        CustomPropTypes_1.default.dateObject,
+    ]),
+    /** Minimum date that can be selected. */
+    minDate: PropTypes.oneOfType([
+        PropTypes.string,
+        CustomPropTypes_1.default.momentObj,
+        CustomPropTypes_1.default.dateObject,
+    ]),
+};
+exports.MultimodePropTypes = {
+    /** Preserve viewmode on focus? */
+    preserveViewMode: PropTypes.bool,
+};
+exports.RangeRelatedPropTypes = {
+    /** Allow end date to be the same as start date. */
+    allowSameEndDate: PropTypes.bool,
+};
 var BaseInput = /** @class */ (function (_super) {
     __extends(BaseInput, _super);
     function BaseInput() {
@@ -70662,12 +70790,11 @@ var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
 var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var CustomPropTypes_1 = __importDefault(__webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts"));
 var DayPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/dayPicker/DayPicker */ "./src/pickers/dayPicker/DayPicker.tsx"));
 var MonthPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/monthPicker/MonthPicker */ "./src/pickers/monthPicker/MonthPicker.tsx"));
 var YearPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/YearPicker */ "./src/pickers/YearPicker.tsx"));
 var InputView_1 = __importDefault(__webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx"));
-var BaseInput_1 = __importDefault(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
+var BaseInput_1 = __importStar(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
 var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
 var parse_1 = __webpack_require__(/*! ./parse */ "./src/inputs/parse.ts");
 var shared_1 = __webpack_require__(/*! ./shared */ "./src/inputs/shared.ts");
@@ -70824,83 +70951,10 @@ var DateInput = /** @class */ (function (_super) {
      *  - handle underlying picker change
      */
     DateInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { dateFormat: 'DD-MM-YYYY', startMode: 'day', preserveViewMode: true, icon: 'calendar' });
-    DateInput.propTypes = {
-        /** Currently selected value. */
-        value: PropTypes.string.isRequired,
-        /** Moment date formatting string. */
-        dateFormat: PropTypes.string,
-        /** Date to display initially when no date is selected. */
-        initialDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** Date or list of dates that are displayed as disabled. */
-        disable: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.arrayOf(PropTypes.string),
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
-            PropTypes.instanceOf(Date),
-            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
-        ]),
-        /** Date or list of dates that are enabled (the rest are disabled). */
-        enable: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.arrayOf(PropTypes.string),
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
-            PropTypes.instanceOf(Date),
-            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
-        ]),
-        /** Maximum date that can be selected. */
-        maxDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** Minimum date that can be selected. */
-        minDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** Preserve viewmode on focus? */
-        preserveViewMode: PropTypes.bool,
+    DateInput.propTypes = __assign({}, BaseInput_1.BaseInputPropTypes, BaseInput_1.DateRelatedPropTypes, BaseInput_1.MultimodePropTypes, BaseInput_1.DisableValuesPropTypes, BaseInput_1.EnableValuesPropTypes, BaseInput_1.MarkedValuesPropTypes, BaseInput_1.MinMaxValuePropTypes, {
         /** Display mode to start. */
-        startMode: PropTypes.oneOf([
-            'year', 'month', 'day',
-        ]),
-        /** If true, popup closes after selecting a date-time. */
-        closable: PropTypes.bool,
-        /**
-         * Called on clear.
-         *
-         * @param {SyntheticEvent} event - React's original SyntheticEvent.
-         * @param {object} data - All props and proposed value.
-         */
-        onClear: PropTypes.func,
-        /** Using the clearable setting will let users remove their selection from a calendar. */
-        clearable: PropTypes.bool,
-        /** Optional Icon to display inside the clearable Input. */
-        clearIcon: PropTypes.any,
-        /** Duration of the CSS transition animation in milliseconds. */
-        duration: PropTypes.number,
-        /** Named animation event to used. Must be defined in CSS. */
-        animation: PropTypes.string,
-        marked: PropTypes.oneOfType([
-            CustomPropTypes_1.default.momentObj,
-            CustomPropTypes_1.default.dateObject,
-            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
-            PropTypes.arrayOf(CustomPropTypes_1.default.dateObject),
-        ]),
-        markColor: PropTypes.string,
-        /** Moment date localization. */
-        localization: PropTypes.string,
-        icon: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-        iconPosition: PropTypes.oneOf(['left', 'right']),
-        hideMobileKeyboard: PropTypes.bool,
-    };
+        startMode: PropTypes.oneOf(['year', 'month', 'day']),
+    });
     return DateInput;
 }(BaseInput_1.default));
 exports.default = DateInput;
@@ -70966,14 +71020,13 @@ var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
 var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var CustomPropTypes_1 = __importDefault(__webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts"));
 var DayPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/dayPicker/DayPicker */ "./src/pickers/dayPicker/DayPicker.tsx"));
 var MonthPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/monthPicker/MonthPicker */ "./src/pickers/monthPicker/MonthPicker.tsx"));
 var HourPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/timePicker/HourPicker */ "./src/pickers/timePicker/HourPicker.tsx"));
 var MinutePicker_1 = __importDefault(__webpack_require__(/*! ../pickers/timePicker/MinutePicker */ "./src/pickers/timePicker/MinutePicker.tsx"));
 var YearPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/YearPicker */ "./src/pickers/YearPicker.tsx"));
 var InputView_1 = __importDefault(__webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx"));
-var BaseInput_1 = __importDefault(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
+var BaseInput_1 = __importStar(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
 var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
 var parse_1 = __webpack_require__(/*! ./parse */ "./src/inputs/parse.ts");
 var shared_1 = __webpack_require__(/*! ./shared */ "./src/inputs/shared.ts");
@@ -71045,12 +71098,16 @@ var DateTimeInput = /** @class */ (function (_super) {
         };
         _this.handleSelectUndelayed = function (e, _a) {
             var value = _a.value;
-            if (_this.props.closable && _this.state.mode === 'minute') {
+            var _b = _this.props, closable = _b.closable, disableMinute = _b.disableMinute;
+            var closeCondA = closable && _this.state.mode === 'minute';
+            var closeCondB = closable && disableMinute && _this.state.mode === 'hour';
+            if (closeCondA || closeCondB) {
                 _this.closePopup();
             }
+            var endAtMode = disableMinute ? 'hour' : 'minute';
             _this.setState(function (prevState) {
                 var mode = prevState.mode;
-                if (mode === 'minute') {
+                if (mode === endAtMode) {
                     var outValue = moment_1.default(value).format(_this.getDateTimeFormat());
                     invoke_1.default(_this.props, 'onChange', e, __assign({}, _this.props, { value: outValue }));
                 }
@@ -71061,7 +71118,7 @@ var DateTimeInput = /** @class */ (function (_super) {
                     hour: value.hour,
                     minute: value.minute,
                 };
-            }, function () { return _this.state.mode !== 'minute' && _this.switchToNextMode(); });
+            }, function () { return _this.state.mode !== endAtMode && _this.switchToNextMode(); });
         };
         /** Keeps internal state in sync with input field value. */
         _this.onInputValueChange = function (e, _a) {
@@ -71092,7 +71149,7 @@ var DateTimeInput = /** @class */ (function (_super) {
     }
     DateTimeInput.prototype.render = function () {
         var _this = this;
-        var _a = this.props, value = _a.value, dateTimeFormat = _a.dateTimeFormat, dateFormat = _a.dateFormat, timeFormat = _a.timeFormat, initialDate = _a.initialDate, disable = _a.disable, maxDate = _a.maxDate, minDate = _a.minDate, preserveViewMode = _a.preserveViewMode, startMode = _a.startMode, divider = _a.divider, closable = _a.closable, markColor = _a.markColor, marked = _a.marked, localization = _a.localization, onChange = _a.onChange, rest = __rest(_a, ["value", "dateTimeFormat", "dateFormat", "timeFormat", "initialDate", "disable", "maxDate", "minDate", "preserveViewMode", "startMode", "divider", "closable", "markColor", "marked", "localization", "onChange"]);
+        var _a = this.props, value = _a.value, dateTimeFormat = _a.dateTimeFormat, dateFormat = _a.dateFormat, timeFormat = _a.timeFormat, initialDate = _a.initialDate, disable = _a.disable, maxDate = _a.maxDate, minDate = _a.minDate, preserveViewMode = _a.preserveViewMode, startMode = _a.startMode, divider = _a.divider, closable = _a.closable, markColor = _a.markColor, marked = _a.marked, localization = _a.localization, onChange = _a.onChange, disableMinute = _a.disableMinute, rest = __rest(_a, ["value", "dateTimeFormat", "dateFormat", "timeFormat", "initialDate", "disable", "maxDate", "minDate", "preserveViewMode", "startMode", "divider", "closable", "markColor", "marked", "localization", "onChange", "disableMinute"]);
         return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, closePopup: this.closePopup, openPopup: this.openPopup, onFocus: this.onFocus, onMount: this.onInputViewMount, onChange: this.onInputValueChange }, rest, { value: parse_1.dateValueToString(value, dateFormat, localization), renderPicker: function () { return _this.getPicker(); } })));
     };
     DateTimeInput.prototype.parseInternalValue = function () {
@@ -71157,81 +71214,14 @@ var DateTimeInput = /** @class */ (function (_super) {
      *  - parse input value
      *  - handle underlying picker change
      */
-    DateTimeInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { dateFormat: 'DD-MM-YYYY', timeFormat: '24', startMode: 'day', divider: ' ', icon: 'calendar', preserveViewMode: true });
-    DateTimeInput.propTypes = {
-        /** Currently selected value. */
-        value: PropTypes.string,
-        /** Moment datetime formatting string */
-        dateTimeFormat: PropTypes.string,
-        /** Moment date formatting string. */
-        dateFormat: PropTypes.string,
-        /** Time format ["AMPM", "ampm", "24"] */
-        timeFormat: PropTypes.string,
-        /** Date to display initially when no date is selected. */
-        initialDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** Date or list of dates that are displayed as disabled. */
-        disable: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.arrayOf(PropTypes.string),
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
-            PropTypes.instanceOf(Date),
-            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
-        ]),
-        /** Maximum date that can be selected. */
-        maxDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** Minimum date that can be selected. */
-        minDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** Preserve viewmode on focus? */
-        preserveViewMode: PropTypes.bool,
-        /** Display mode to start. */
-        startMode: PropTypes.oneOf([
-            'year', 'month', 'day',
-        ]),
+    DateTimeInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { dateFormat: 'DD-MM-YYYY', timeFormat: '24', startMode: 'day', divider: ' ', icon: 'calendar', preserveViewMode: true, disableMinute: false });
+    DateTimeInput.propTypes = __assign({}, BaseInput_1.BaseInputPropTypes, BaseInput_1.DateRelatedPropTypes, BaseInput_1.TimeRelatedPropTypes, BaseInput_1.MultimodePropTypes, BaseInput_1.DisableValuesPropTypes, BaseInput_1.MarkedValuesPropTypes, BaseInput_1.MinMaxValuePropTypes, {
+        startMode: PropTypes.oneOf(['year', 'month', 'day']),
         /** Date and time divider. */
         divider: PropTypes.string,
-        /** If true, popup closes after selecting a date-time. */
-        closable: PropTypes.bool,
-        /**
-         * Called on clear.
-         *
-         * @param {SyntheticEvent} event - React's original SyntheticEvent.
-         * @param {object} data - All props and proposed value.
-         */
-        onClear: PropTypes.func,
-        /** Using the clearable setting will let users remove their selection from a calendar. */
-        clearable: PropTypes.bool,
-        /** Optional Icon to display inside the clearable Input. */
-        clearIcon: PropTypes.any,
-        /** Duration of the CSS transition animation in milliseconds. */
-        duration: PropTypes.number,
-        /** Named animation event to used. Must be defined in CSS. */
-        animation: PropTypes.string,
-        marked: PropTypes.oneOfType([
-            CustomPropTypes_1.default.momentObj,
-            CustomPropTypes_1.default.dateObject,
-            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
-            PropTypes.arrayOf(CustomPropTypes_1.default.dateObject),
-        ]),
-        markColor: PropTypes.string,
-        /** Moment date localization. */
-        localization: PropTypes.string,
-        icon: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-        iconPosition: PropTypes.oneOf(['left', 'right']),
-        hideMobileKeyboard: PropTypes.bool,
-    };
+        /** Datetime formatting string. */
+        dateTimeFormat: PropTypes.string,
+    });
     return DateTimeInput;
 }(BaseInput_1.default));
 exports.default = DateTimeInput;
@@ -71293,13 +71283,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
-var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var CustomPropTypes_1 = __importDefault(__webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts"));
 var InputView_1 = __importDefault(__webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx"));
 var parse_1 = __webpack_require__(/*! ./parse */ "./src/inputs/parse.ts");
 var DatesRangePicker_1 = __importDefault(__webpack_require__(/*! ../pickers/dayPicker/DatesRangePicker */ "./src/pickers/dayPicker/DatesRangePicker.tsx"));
-var BaseInput_1 = __importDefault(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
+var BaseInput_1 = __importStar(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
 var DATES_SEPARATOR = ' - ';
 var DatesRangeInput = /** @class */ (function (_super) {
     __extends(DatesRangeInput, _super);
@@ -71352,60 +71340,7 @@ var DatesRangeInput = /** @class */ (function (_super) {
      *    string 'start - end')
      */
     DatesRangeInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { dateFormat: 'DD-MM-YYYY', icon: 'calendar' });
-    DatesRangeInput.propTypes = {
-        /** Currently selected value. */
-        value: PropTypes.string,
-        /** Moment date formatting string. */
-        dateFormat: PropTypes.string,
-        /** Date to display initially when no date is selected. */
-        initialDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** Maximum date that can be selected. */
-        maxDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** Minimum date that can be selected. */
-        minDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** If true, popup closes after selecting a date-time. */
-        closable: PropTypes.bool,
-        /**
-         * Called on clear.
-         *
-         * @param {SyntheticEvent} event - React's original SyntheticEvent.
-         * @param {object} data - All props and proposed value.
-         */
-        onClear: PropTypes.func,
-        /** Using the clearable setting will let users remove their selection from a calendar. */
-        clearable: PropTypes.bool,
-        /** Optional Icon to display inside the clearable Input. */
-        clearIcon: PropTypes.any,
-        /** Duration of the CSS transition animation in milliseconds. */
-        duration: PropTypes.number,
-        /** Named animation event to used. Must be defined in CSS. */
-        animation: PropTypes.string,
-        marked: PropTypes.oneOfType([
-            CustomPropTypes_1.default.momentObj,
-            CustomPropTypes_1.default.dateObject,
-            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
-            PropTypes.arrayOf(CustomPropTypes_1.default.dateObject),
-        ]),
-        markColor: PropTypes.string,
-        /** Moment date localization. */
-        localization: PropTypes.string,
-        icon: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-        iconPosition: PropTypes.oneOf(['left', 'right']),
-        allowSameEndDate: PropTypes.bool,
-        hideMobileKeyboard: PropTypes.bool,
-    };
+    DatesRangeInput.propTypes = __assign({}, BaseInput_1.BaseInputPropTypes, BaseInput_1.DateRelatedPropTypes, BaseInput_1.MarkedValuesPropTypes, BaseInput_1.MinMaxValuePropTypes, BaseInput_1.RangeRelatedPropTypes);
     return DatesRangeInput;
 }(BaseInput_1.default));
 exports.default = DatesRangeInput;
@@ -71468,12 +71403,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
-var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var CustomPropTypes_1 = __importDefault(__webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts"));
 var MonthPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/monthPicker/MonthPicker */ "./src/pickers/monthPicker/MonthPicker.tsx"));
 var InputView_1 = __importDefault(__webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx"));
-var BaseInput_1 = __importDefault(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
+var BaseInput_1 = __importStar(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
 var parse_1 = __webpack_require__(/*! ./parse */ "./src/inputs/parse.ts");
 var MonthInput = /** @class */ (function (_super) {
     __extends(MonthInput, _super);
@@ -71506,63 +71439,7 @@ var MonthInput = /** @class */ (function (_super) {
         return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed }, rest, { value: parse_1.dateValueToString(value, dateFormat, localization), onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup, renderPicker: this.getPicker })));
     };
     MonthInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { dateFormat: 'MMM', icon: 'calendar' });
-    MonthInput.propTypes = {
-        /** Called on selected value change. */
-        onChange: PropTypes.func.isRequired,
-        /** Currently selected value. */
-        value: PropTypes.string,
-        /** Moment date formatting string. */
-        dateFormat: PropTypes.string,
-        /** Date to display initially when no date is selected. */
-        initialDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** Date or list of dates that are displayed as disabled. */
-        disable: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.arrayOf(PropTypes.string),
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
-            PropTypes.instanceOf(Date),
-            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
-        ]),
-        /** Maximum date that can be selected. */
-        maxDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** Minimum date that can be selected. */
-        minDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** If true, popup closes after selecting a date-time. */
-        closable: PropTypes.bool,
-        /**
-         * Called on clear.
-         *
-         * @param {SyntheticEvent} event - React's original SyntheticEvent.
-         * @param {object} data - All props and proposed value.
-         */
-        onClear: PropTypes.func,
-        /** Using the clearable setting will let users remove their selection from a calendar. */
-        clearable: PropTypes.bool,
-        /** Optional Icon to display inside the clearable Input. */
-        clearIcon: PropTypes.any,
-        /** Duration of the CSS transition animation in milliseconds. */
-        duration: PropTypes.number,
-        /** Named animation event to used. Must be defined in CSS. */
-        animation: PropTypes.string,
-        /** Moment date localization. */
-        localization: PropTypes.string,
-        icon: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-        iconPosition: PropTypes.oneOf(['left', 'right']),
-        hideMobileKeyboard: PropTypes.bool,
-    };
+    MonthInput.propTypes = __assign({}, BaseInput_1.BaseInputPropTypes, BaseInput_1.DateRelatedPropTypes, BaseInput_1.DisableValuesPropTypes, BaseInput_1.MinMaxValuePropTypes);
     return MonthInput;
 }(BaseInput_1.default));
 exports.default = MonthInput;
@@ -71624,10 +71501,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
-var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var BaseInput_1 = __importDefault(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
-var CustomPropTypes_1 = __importDefault(__webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts"));
+var BaseInput_1 = __importStar(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
 var MonthRangePicker_1 = __importDefault(__webpack_require__(/*! ../pickers/monthPicker/MonthRangePicker */ "./src/pickers/monthPicker/MonthRangePicker.tsx"));
 var InputView_1 = __importDefault(__webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx"));
 var parse_1 = __webpack_require__(/*! ./parse */ "./src/inputs/parse.ts");
@@ -71667,52 +71542,7 @@ var MonthRangeInput = /** @class */ (function (_super) {
         return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed }, rest, { value: value, onMount: this.onInputViewMount, closePopup: this.closePopup, openPopup: this.openPopup, renderPicker: this.getPicker })));
     };
     MonthRangeInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { dateFormat: 'MM-YYYY', icon: 'calendar' });
-    MonthRangeInput.propTypes = {
-        /** Currently selected value. */
-        value: PropTypes.string,
-        /** Moment date formatting string. */
-        dateFormat: PropTypes.string,
-        /** Date to display initially when no date is selected. */
-        initialDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** Maximum date that can be selected. */
-        maxDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** Minimum date that can be selected. */
-        minDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** If true, popup closes after selecting a date-time. */
-        closable: PropTypes.bool,
-        /**
-         * Called on clear.
-         *
-         * @param {SyntheticEvent} event - React's original SyntheticEvent.
-         * @param {object} data - All props and proposed value.
-         */
-        onClear: PropTypes.func,
-        /** Using the clearable setting will let users remove their selection from a calendar. */
-        clearable: PropTypes.bool,
-        /** Optional Icon to display inside the clearable Input. */
-        clearIcon: PropTypes.any,
-        /** Duration of the CSS transition animation in milliseconds. */
-        duration: PropTypes.number,
-        /** Named animation event to used. Must be defined in CSS. */
-        animation: PropTypes.string,
-        /** Moment date localization. */
-        localization: PropTypes.string,
-        icon: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-        iconPosition: PropTypes.oneOf(['left', 'right']),
-        hideMobileKeyboard: PropTypes.bool,
-    };
+    MonthRangeInput.propTypes = __assign({}, BaseInput_1.BaseInputPropTypes, BaseInput_1.DateRelatedPropTypes, BaseInput_1.MinMaxValuePropTypes);
     return MonthRangeInput;
 }(BaseInput_1.default));
 exports.default = MonthRangeInput;
@@ -71776,13 +71606,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var isNil_1 = __importDefault(__webpack_require__(/*! lodash/isNil */ "./node_modules/lodash/isNil.js"));
 var invoke_1 = __importDefault(__webpack_require__(/*! lodash/invoke */ "./node_modules/lodash/invoke.js"));
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
-var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var lib_1 = __webpack_require__(/*! ../lib */ "./src/lib/index.ts");
 var HourPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/timePicker/HourPicker */ "./src/pickers/timePicker/HourPicker.tsx"));
 var MinutePicker_1 = __importDefault(__webpack_require__(/*! ../pickers/timePicker/MinutePicker */ "./src/pickers/timePicker/MinutePicker.tsx"));
 var InputView_1 = __importDefault(__webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx"));
-var BaseInput_1 = __importDefault(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
+var BaseInput_1 = __importStar(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
 var parse_1 = __webpack_require__(/*! ./parse */ "./src/inputs/parse.ts");
 function getNextMode(currentMode) {
     if (currentMode === 'hour') {
@@ -71810,7 +71639,7 @@ var TimeInput = /** @class */ (function (_super) {
                 outputTimeString = moment_1.default({ hour: hour, minute: minute }).format(parse_1.TIME_FORMAT[timeFormat]);
             }
             invoke_1.default(_this.props, 'onChange', e, __assign({}, _this.props, { value: outputTimeString }));
-            if (_this.props.closable && _this.state.mode === 'minute') {
+            if (_this.props.closable && (_this.state.mode === 'minute' || _this.props.disableMinute)) {
                 _this.closePopup();
             }
             if (!disableMinute) {
@@ -71866,38 +71695,7 @@ var TimeInput = /** @class */ (function (_super) {
      *  - handle HourPicker/MinutePicker change (format { hour: number, minute: number } into output time string)
      */
     TimeInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { icon: 'time', timeFormat: '24', disableMinute: false });
-    TimeInput.propTypes = {
-        /** Currently selected value. */
-        value: PropTypes.string,
-        /** One of ["24", "AMPM", "ampm"] */
-        timeFormat: PropTypes.oneOf([
-            '24', 'AMPM', 'ampm',
-        ]),
-        /** If true, popup closes after selecting a date-time. */
-        closable: PropTypes.bool,
-        /** If true, minutes picker won't be shown after picking the hour. */
-        disableMinute: PropTypes.bool,
-        /**
-         * Called on clear.
-         *
-         * @param {SyntheticEvent} event - React's original SyntheticEvent.
-         * @param {object} data - All props and proposed value.
-         */
-        onClear: PropTypes.func,
-        /** Using the clearable setting will let users remove their selection from a calendar. */
-        clearable: PropTypes.bool,
-        /** Optional Icon to display inside the clearable Input. */
-        clearIcon: PropTypes.any,
-        /** Duration of the CSS transition animation in milliseconds. */
-        duration: PropTypes.number,
-        /** Named animation event to used. Must be defined in CSS. */
-        animation: PropTypes.string,
-        /** Moment date localization. */
-        localization: PropTypes.string,
-        icon: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-        iconPosition: PropTypes.oneOf(['left', 'right']),
-        hideMobileKeyboard: PropTypes.bool,
-    };
+    TimeInput.propTypes = __assign({}, BaseInput_1.BaseInputPropTypes, BaseInput_1.MultimodePropTypes, BaseInput_1.TimeRelatedPropTypes);
     return TimeInput;
 }(BaseInput_1.default));
 exports.default = TimeInput;
@@ -71959,12 +71757,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
-var PropTypes = __importStar(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var CustomPropTypes_1 = __importDefault(__webpack_require__(/*! ../lib/CustomPropTypes */ "./src/lib/CustomPropTypes.ts"));
 var YearPicker_1 = __importDefault(__webpack_require__(/*! ../pickers/YearPicker */ "./src/pickers/YearPicker.tsx"));
 var InputView_1 = __importDefault(__webpack_require__(/*! ../views/InputView */ "./src/views/InputView.tsx"));
-var BaseInput_1 = __importDefault(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
+var BaseInput_1 = __importStar(__webpack_require__(/*! ./BaseInput */ "./src/inputs/BaseInput.tsx"));
 var parse_1 = __webpack_require__(/*! ./parse */ "./src/inputs/parse.ts");
 var YearInput = /** @class */ (function (_super) {
     __extends(YearInput, _super);
@@ -71998,61 +71794,7 @@ var YearInput = /** @class */ (function (_super) {
         return (React.createElement(InputView_1.default, __assign({ popupIsClosed: this.state.popupIsClosed, closePopup: this.closePopup, openPopup: this.openPopup }, rest, { value: value, onMount: this.onInputViewMount, renderPicker: this.getPicker })));
     };
     YearInput.defaultProps = __assign({}, BaseInput_1.default.defaultProps, { dateFormat: 'YYYY', icon: 'calendar' });
-    YearInput.propTypes = {
-        /** Currently selected value. */
-        value: PropTypes.string,
-        /** Moment date formatting string. */
-        dateFormat: PropTypes.string,
-        /** Date to display initially when no date is selected. */
-        initialDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** Date or list of dates that are displayed as disabled. */
-        disable: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.arrayOf(PropTypes.string),
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.arrayOf(CustomPropTypes_1.default.momentObj),
-            PropTypes.instanceOf(Date),
-            PropTypes.arrayOf(PropTypes.instanceOf(Date)),
-        ]),
-        /** Maximum date that can be selected. */
-        maxDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** Minimum date that can be selected. */
-        minDate: PropTypes.oneOfType([
-            PropTypes.string,
-            CustomPropTypes_1.default.momentObj,
-            PropTypes.instanceOf(Date),
-        ]),
-        /** If true, popup closes after selecting a date-time. */
-        closable: PropTypes.bool,
-        /**
-         * Called on clear.
-         *
-         * @param {SyntheticEvent} event - React's original SyntheticEvent.
-         * @param {object} data - All props and proposed value.
-         */
-        onClear: PropTypes.func,
-        /** Using the clearable setting will let users remove their selection from a calendar. */
-        clearable: PropTypes.bool,
-        /** Optional Icon to display inside the clearable Input. */
-        clearIcon: PropTypes.any,
-        /** Duration of the CSS transition animation in milliseconds. */
-        duration: PropTypes.number,
-        /** Named animation event to used. Must be defined in CSS. */
-        animation: PropTypes.string,
-        /** Moment date localization. */
-        localization: PropTypes.string,
-        icon: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-        iconPosition: PropTypes.oneOf(['left', 'right']),
-        hideMobileKeyboard: PropTypes.bool,
-    };
+    YearInput.propTypes = __assign({}, BaseInput_1.BaseInputPropTypes, BaseInput_1.DateRelatedPropTypes, BaseInput_1.MinMaxValuePropTypes, BaseInput_1.DisableValuesPropTypes);
     return YearInput;
 }(BaseInput_1.default));
 exports.default = YearInput;
@@ -72382,6 +72124,13 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", { value: true });
 /** Return true if run on Internet Explorer. */
 var checkIE = function () {
+    if (typeof window === "undefined") {
+        return false;
+    }
+    var navigator = window.navigator;
+    if (!navigator) {
+        return false;
+    }
     if (navigator.appName === 'Microsoft Internet Explorer'
         || !!(navigator.userAgent.match(/Trident/)
             || navigator.userAgent.match(/rv:11/))) {
@@ -72406,6 +72155,13 @@ exports.default = checkIE;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** Return true if run on mobile browser. */
 var checkMobile = function () {
+    if (typeof window === "undefined") {
+        return false;
+    }
+    var navigator = window.navigator;
+    if (!navigator) {
+        return false;
+    }
     if (navigator.userAgent.match(/Android/i)
         || navigator.userAgent.match(/webOS/i)
         || navigator.userAgent.match(/iPhone/i)
