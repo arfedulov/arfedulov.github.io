@@ -16,10 +16,8 @@
           q[a[0]] = a[1];
         });
         if (q.p !== undefined) {
-          l.replace(
-            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-            l.pathname + (l.pathname[l.pathname.length - 1] !== '/' ? '/' : '') +
-            q.p[0] === '/' ? q.p.slice(1) : q.p
+          window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + (q.p || '')
           );
         }
       }
