@@ -13,7 +13,7 @@
         l.replace(
           l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
           l.pathname.split('/').slice(0, 1 + repoNameSpaseSegmentPosition).join('/') +
-          '?p=' + l.pathname.split('/').slice(1 + repoNameSpaseSegmentPosition)
+          '?p=' + l.pathname.split('/').slice(1 + repoNameSpaseSegmentPosition).join('/')
         );
       }
     </script>
