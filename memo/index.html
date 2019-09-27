@@ -6,6 +6,26 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="google" content="notranslate">
   <title>Flash Cards</title>
+  <!-- Handle redirect from 404 page START -->
+  <script type="text/javascript">
+    (function(l) {
+      if (l.search) {
+        var q = {};
+        l.search.slice(1).split('&').forEach(function(v) {
+          var a = v.split('=');
+          q[a[0]] = a[1];
+        });
+        if (q.p !== undefined) {
+          l.replace(
+            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+            l.pathname + (l.pathname[l.pathname.length - 1] !== '/' ? '/' : '') +
+            q.p[0] === '/' ? q.p.slice(1) : q.p
+          );
+        }
+      }
+    }(window.location))
+  </script>
+  <!-- Handle redirect from 404 page END -->
 </head>
 <body>
   <div id="root"></div>
