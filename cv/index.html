@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CV</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .icon {
+            width: 1em;
+        }
+        .main {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .main__element {
+            max-width: 1000px;
+            margin: 25px auto;
+        }
+        .heading-section {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+        }
+        .header {
+            font-family: 'Arial', sans-serif;
+        }
+        .subheader {
+            font-family: 'Arial', sans-serif;
+            font-weight: lighter;
+        }
+        .contacts__list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .contacts__element {
+            margin: 5px 0;
+        }
+
+        .summary {
+            background-color: lightgray;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .summary__header {
+            display: inline;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .details__details {
+            margin: 20px 0 0 10px;
+        }
+
+        .details__list {
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main main__element heading-section">
+        <header>
+            <h1 class="header main__element">Артем Федулов</h1>
+            <h2 class="subheader main__element">javascript full stack разработчик</h2>
+            <div class="contacts">
+                    <ul class="contacts__list">
+                        <li class="contacts__element">
+                            <a href="mailto:arfedulov@gmail.com">
+                                <img class="icon" src="icons/envelope-solid.svg" alt="email" />
+                                arfedulov@gmail.com
+                            </a>
+                        </li>
+                        <li class="contacts__element">
+                            <a href="https://github.com/arfedulov">
+                                <img class="icon" src="icons/github-brands.svg" alt="github" />
+                                arfedulov
+                            </a>
+                        </li>
+                        <li class="contacts__element">
+                            <a href="https://www.linkedin.com/in/artem-fedulov-80a0b8121">
+                                <img class="icon" src="icons/linkedin-brands.svg" alt="linkedin" />
+                                Artem Fedulov
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+        </header>
+    </div>
+    <main class="main">
+        <section class="section main__element">
+            <h3 class="summary__header">Обо мне</h3>
+            <p class="details__details">
+                В 2016 году начал интересоваться computer science и разработкой ПО в частности. 2016 год ушел большей частью
+                на изучение английского языка. Примерно с 2017-2018 года полностью посвятил свободное время тренировке практических
+                    навыков программирования на javascript/typescript ( писал код каждый день ).
+            </p>
+            <p class="details__details">
+                Я делал сайты, игры, мобильные приложения,
+                делал open source проекты. На данный момент подрабатываю на фрилансе в качестве full stack javascript разработчика,
+                продолжаю изучать профессиональные темы, пишу код каждый день. Занимаюсь я этим все выходные и пару часов каждый день
+                по будням. Но основная часть недели уходит на работу с IT никак не связанную.
+            </p>
+        </section>
+        <section class="section main__element">
+            <details class="details">
+                <summary class="summary">
+                    <h3 class="summary__header">Навыки/технологии</h3>
+                    javascript, typescript, React, webpack, git ...
+                </summary>
+                    <p class="details__details">
+                        В javascript стараюсь использовать последние фичи (стрелочные функции, классы, async/await). Предпочитаю
+                        использовать typescript вместо javascript везде, где возможно.
+                    </p>
+                    <p class="details__details">
+                        В typescript пробую работать с декораторами и reflect-metadata.
+                    </p>
+                    <p class="details__details">
+                        На клиенте использую react, redux, webpack, css in js. Серверную часть делаю на nodejs. Использую express или koa,
+                        typeorm + postgresql. Для api использую спецификацию jsonapi.
+                    </p>
+                    <p class="details__details">
+                        Тестирую код (клиентский и серверный) с помощью jest.
+                    </p>
+                    <p class="details__details">
+                        Использую github для коллаборации. Знаком с процессом open source разработки.
+                    </p>
+            </details>
+        </section>
+        <section class="section main__element">
+            <h3>Мои open source работы</h3>
+            <nav>
+                <ul>
+                    <li>
+                        <h4>
+                            <a href="https://github.com/arfedulov/semantic-ui-calendar-react">
+                                semantic-ui-calendar-react
+                            </a>
+                        </h4>
+                        <a href="https://arfedulov.github.io/semantic-ui-calendar-react/">demo</a>
+                    </li>
+                    <li>
+                        <h4>
+                            <a href="https://github.com/arfedulov/koa-jsonapi-errors">
+                                @arfedulov/koa-jsonapi-error
+                            </a>
+                        </h4>
+                    </li>
+                    <li>
+                        <h4>
+                            <a href="https://github.com/arfedulov/koa-jsonapi-controllers">
+                                @arfedulov/koa-jsonapi-controllers
+                            </a>
+                        </h4>
+                    </li>
+                    <li>
+                        <h4>
+                            <a href="https://github.com/arfedulov/typeorm-jsonapi-serializer">
+                                @arfedulov/typeorm-jsonapi-serializer
+                            </a>
+                        </h4>
+                    </li>
+                    <li>
+                        <h4>
+                            <a href="https://github.com/arfedulov/json-api-url-parser">
+                                @arfedulov/json-api-url-parser
+                            </a>
+                        </h4>
+                    </li>
+                </ul>
+            </nav>
+        </section>
+    </main>
+</body>
+</html>
