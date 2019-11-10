@@ -5,7 +5,7 @@
     <meta name="robots" content="noindex">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>CV</title>
+    <title>Резюме Full Stack Web Developer</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         .icon {
@@ -53,12 +53,27 @@
             text-decoration: none;
         }
 
+        .details {
+            margin: 20px 0;
+        }
+
         .details__details {
             margin: 20px 0 0 10px;
         }
 
         .details__list {
             padding: 15px;
+        }
+
+        .print {
+            font-size: .8em;
+            display: none;
+        }
+
+        @media print {
+            .print {
+                display: inline-block;
+            }
         }
     </style>
 </head>
@@ -107,9 +122,9 @@
             </p>
         </section>
         <section class="section main__element">
+            <h3 class="summary__header">Навыки/технологии</h3>
             <details class="details">
                 <summary class="summary">
-                    <h3 class="summary__header">Навыки/технологии</h3>
                     javascript, typescript, React, webpack, git ...
                 </summary>
                     <p class="details__details">
@@ -141,7 +156,14 @@
                                 semantic-ui-calendar-react
                             </a>
                         </h4>
-                        <a href="https://arfedulov.github.io/semantic-ui-calendar-react/">demo</a>
+                        <div class="project-list-item project-list-item__description">
+                            Datepicker react component based on semantic-ui-react components.
+                        </div>
+                        <span class="print">https://github.com/arfedulov/semantic-ui-calendar-react</span>
+                        <div>
+                            <a href="https://arfedulov.github.io/semantic-ui-calendar-react">demo</a>
+                            <span class="print">https://arfedulov.github.io/semantic-ui-calendar-react</span>
+                        </div>
                     </li>
                     <li>
                         <h4>
@@ -149,6 +171,10 @@
                                 @arfedulov/koa-jsonapi-error
                             </a>
                         </h4>
+                        <div class="project-list-item project-list-item__description">
+                            Jsonapi error constructors and error handling middleware for koa.
+                        </div>
+                        <span class="print">https://github.com/arfedulov/koa-jsonapi-errors</span>
                     </li>
                     <li>
                         <h4>
@@ -156,6 +182,10 @@
                                 @arfedulov/koa-jsonapi-controllers
                             </a>
                         </h4>
+                        <div class="project-list-item project-list-item__description">
+                            Jsonapi controllers for koa.
+                        </div>
+                        <span class="print">https://github.com/arfedulov/koa-jsonapi-controllers</span>
                     </li>
                     <li>
                         <h4>
@@ -163,6 +193,10 @@
                                 @arfedulov/typeorm-jsonapi-serializer
                             </a>
                         </h4>
+                        <div class="project-list-item project-list-item__description">
+                            Jsonapi (de)serialization for typeorm.
+                        </div>
+                        <span class="print">https://github.com/arfedulov/typeorm-jsonapi-serializer</span>
                     </li>
                     <li>
                         <h4>
@@ -170,10 +204,22 @@
                                 @arfedulov/json-api-url-parser
                             </a>
                         </h4>
+                        <div class="project-list-item project-list-item__description">
+                            Parse jsonapi complient urls.
+                        </div>
+                        <span class="print">https://github.com/arfedulov/json-api-url-parser</span>
                     </li>
                 </ul>
             </nav>
         </section>
     </main>
+    <script>
+        window.onbeforeprint = (event) => {
+            document.querySelectorAll('.details').forEach((el) => el.setAttribute('open', true));
+        };
+        window.onafterprint = () => {
+            document.querySelectorAll('.details').forEach((el) => el.removeAttribute('open'));
+        }
+    </script>
 </body>
 </html>
