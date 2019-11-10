@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CV Full Stack Web Developer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .icon {
+            width: 1em;
+        }
+        .main {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .main__element {
+            max-width: 1000px;
+            margin: 25px auto;
+        }
+        .heading-section {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+        }
+        .header {
+            font-family: 'Arial', sans-serif;
+        }
+        .subheader {
+            font-family: 'Arial', sans-serif;
+            font-weight: lighter;
+        }
+        .contacts__list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .contacts__element {
+            margin: 5px 0;
+        }
+
+        .summary {
+            background-color: lightgray;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .summary__header {
+            display: inline;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .details {
+            margin: 20px 0;
+        }
+
+        .details__details {
+            margin: 20px 0 0 10px;
+        }
+
+        .details__list {
+            padding: 15px;
+        }
+
+        .print {
+            font-size: .8em;
+            display: none;
+        }
+
+        @media print {
+            .print {
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main main__element heading-section">
+        <header>
+            <h1 class="header main__element">Artem Fedulov (Артем Федулов)</h1>
+            <h2 class="subheader main__element">javascript full stack developer</h2>
+            <div class="contacts">
+                    <ul class="contacts__list">
+                        <li class="contacts__element">
+                            <a href="mailto:arfedulov@gmail.com">
+                                <img class="icon" src="icons/envelope-solid.svg" alt="email" />
+                                arfedulov@gmail.com
+                            </a>
+                        </li>
+                        <li class="contacts__element">
+                            <a href="https://github.com/arfedulov">
+                                <img class="icon" src="icons/github-brands.svg" alt="github" />
+                                arfedulov
+                            </a>
+                        </li>
+                        <li class="contacts__element">
+                            <a href="https://www.linkedin.com/in/artem-fedulov-80a0b8121">
+                                <img class="icon" src="icons/linkedin-brands.svg" alt="linkedin" />
+                                Artem Fedulov
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+        </header>
+    </div>
+    <main class="main">
+        <section class="section main__element">
+            <h3 class="summary__header">About me</h3>
+            <p class="details__details">
+                I got into computer science and software development in 2016. Since 2017 I spend all my free time on javascript/typescript coding and studying relevant topics in software development and computer science.
+            </p>
+            <p class="details__details">
+                I was working on web sites, games, mobile apps, participating in open source projects. Currently I'm working part time as a freelance full stack web developer. I'm still studying topics in computer science which seem relevant to what I'm currently doing or going to do. I have coding practice every day. I spend full weekends on this and a couple of hours every day during a week. But my full time job currently is not in IT ( it never was ).
+            </p>
+        </section>
+        <section class="section main__element">
+            <h3 class="summary__header">Skills and technologies</h3>
+            <details class="details">
+                <summary class="summary">
+                    javascript, typescript, React, webpack, git ...
+                </summary>
+                    <p class="details__details">
+                        When programming in javascript I always use last features if possible ( arrow functions, classes, async/await ). If possible, I prefer typescript over javascript.
+                    </p>
+                    <p class="details__details">
+                        In typescript I experimenting with decorators and reflect-metadata.
+                    </p>
+                    <p class="details__details">
+                        On client side I use react, redux, webpack, css in js. I develop serverside on nodejs. I use express or koa, typeorm + postgresql. For api development I use jsonapi specification.
+                    </p>
+                    <p class="details__details">
+                        I test my code ( both clientside and serverside ) with jest.
+                    </p>
+                    <p class="details__details">
+                        I use github for collaboration. I know the basics of open source development process.
+                    </p>
+            </details>
+        </section>
+        <section class="section main__element">
+            <h3>My open source works</h3>
+            <nav>
+                <ul>
+                    <li>
+                        <h4>
+                            <a href="https://github.com/arfedulov/semantic-ui-calendar-react">
+                                semantic-ui-calendar-react
+                            </a>
+                        </h4>
+                        <div class="project-list-item project-list-item__description">
+                            Datepicker react component based on semantic-ui-react components.
+                        </div>
+                        <span class="print">https://github.com/arfedulov/semantic-ui-calendar-react</span>
+                        <div>
+                            <a href="https://arfedulov.github.io/semantic-ui-calendar-react">demo</a>
+                            <span class="print">https://arfedulov.github.io/semantic-ui-calendar-react</span>
+                        </div>
+                    </li>
+                    <li>
+                        <h4>
+                            <a href="https://github.com/arfedulov/koa-jsonapi-errors">
+                                @arfedulov/koa-jsonapi-error
+                            </a>
+                        </h4>
+                        <div class="project-list-item project-list-item__description">
+                            Jsonapi error constructors and error handling middleware for koa.
+                        </div>
+                        <span class="print">https://github.com/arfedulov/koa-jsonapi-errors</span>
+                    </li>
+                    <li>
+                        <h4>
+                            <a href="https://github.com/arfedulov/koa-jsonapi-controllers">
+                                @arfedulov/koa-jsonapi-controllers
+                            </a>
+                        </h4>
+                        <div class="project-list-item project-list-item__description">
+                            Jsonapi controllers for koa.
+                        </div>
+                        <span class="print">https://github.com/arfedulov/koa-jsonapi-controllers</span>
+                    </li>
+                    <li>
+                        <h4>
+                            <a href="https://github.com/arfedulov/typeorm-jsonapi-serializer">
+                                @arfedulov/typeorm-jsonapi-serializer
+                            </a>
+                        </h4>
+                        <div class="project-list-item project-list-item__description">
+                            Jsonapi (de)serialization for typeorm.
+                        </div>
+                        <span class="print">https://github.com/arfedulov/typeorm-jsonapi-serializer</span>
+                    </li>
+                    <li>
+                        <h4>
+                            <a href="https://github.com/arfedulov/json-api-url-parser">
+                                @arfedulov/json-api-url-parser
+                            </a>
+                        </h4>
+                        <div class="project-list-item project-list-item__description">
+                            Parse jsonapi complient urls.
+                        </div>
+                        <span class="print">https://github.com/arfedulov/json-api-url-parser</span>
+                    </li>
+                </ul>
+            </nav>
+        </section>
+    </main>
+    <script>
+        window.onbeforeprint = (event) => {
+            document.querySelectorAll('.details').forEach((el) => el.setAttribute('open', true));
+        };
+        window.onafterprint = () => {
+            document.querySelectorAll('.details').forEach((el) => el.removeAttribute('open'));
+        }
+    </script>
+</body>
+</html>
