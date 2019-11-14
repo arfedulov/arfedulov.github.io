@@ -103,18 +103,30 @@
                                 Artem Fedulov
                             </a>
                         </li>
+                        <li class="contacts__element">
+                            Russia, Saint Petersburg
+                        </li>
                     </ul>
                 </div>
         </header>
     </div>
     <main class="main">
         <section class="section main__element">
+            <h3 class="summary__header">Working experience</h3>
+            <ul>
+                <li class="job job-item">
+                    <h4>freelance <span>( full stack web developer )</span></h4>
+                    <span class="job-date job-date-start">2019-05-01</span> - <span class="job-date job-date-end"></span>
+                </li>
+            </ul>
+        </section>
+        <section class="section main__element">
             <h3 class="summary__header">About me</h3>
             <p class="details__details">
-                I became interested in computer science and software development in 2016. Since 2017 I spend all my free time on javascript/typescript coding and studying relevant topics in software development and computer science.
+                I became interested in computer science and software development in 2016. Since 2017 I spend all my spare time on javascript/typescript programming and studying relevant topics in software development and computer science.
             </p>
             <p class="details__details">
-                I was working on web sites, games, mobile apps, participating in open source projects. Currently I'm working part time as a freelance full stack web developer. I'm still studying topics in computer science which seem relevant to what I'm currently doing or going to do. I have coding practice every day. I spend full weekends on this and a couple of hours every day during a week. But my full time job currently is not in IT ( it never was ).
+                Currently I'm working part time as a freelance full stack web developer. I still study topics in computer science which seem relevant to what I'm currently doing or going to do. I have programming practice every day. I spend full weekends on this and a couple of hours every day during a week. But my full time job currently is not in IT ( it never was ).
             </p>
         </section>
         <section class="section main__element">
@@ -207,6 +219,7 @@
             </nav>
         </section>
     </main>
+    <!-- Pretty print -->
     <script>
         window.onbeforeprint = (event) => {
             document.querySelectorAll('.details').forEach((el) => el.setAttribute('open', true));
@@ -214,6 +227,32 @@
         window.onafterprint = () => {
             document.querySelectorAll('.details').forEach((el) => el.removeAttribute('open'));
         }
+    </script>
+    <!-- Job dates -->
+    <script>
+        !function() {
+            const padZero = (num) => {
+                if (num > 9) {
+                    return num;
+                }
+                return '0' + num;
+            };
+            const jobs = document.querySelectorAll('.job-item');
+            jobs.forEach((job) => {
+                const start = job.querySelector('.job-date-start');
+                const end = job.querySelector('.job-date-end');
+                if (start && end) {
+                    const startDate = new Date(start.textContent);
+                    const lang = document.documentElement.lang;
+                    const CURRENT = lang === 'ru' ? 'по настоящее время' : 'currently';
+                    const endDate = end.textContent === '' ? CURRENT : new Date(endDate.textContent);
+                    end.textContent = typeof endDate === 'string' ?
+                        endDate
+                        :
+                        `${ endDate.getFullYear() }-${ padZero(endDate.getMonth() + 1) }-${ padZero(endDate.getDate()) }`;
+                }
+            });
+        }()
     </script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152390603-1"></script>

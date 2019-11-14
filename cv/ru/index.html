@@ -103,18 +103,30 @@
                                 Artem Fedulov
                             </a>
                         </li>
+                        <li class="contacts__element">
+                            Россия, Санкт-Петербург
+                        </li>
                     </ul>
                 </div>
         </header>
     </div>
     <main class="main">
         <section class="section main__element">
+            <h3 class="summary__header">Опыт работы</h3>
+            <ul>
+                <li class="job job-item">
+                    <h4>freelance <span>( full stack web developer )</span></h4>
+                    <span class="job-date job-date-start">2019-05-01</span> - <span class="job-date job-date-end"></span>
+                </li>
+            </ul>
+        </section>
+        <section class="section main__element">
             <h3 class="summary__header">Обо мне</h3>
             <p class="details__details">
                 В 2016 году начал интересоваться информатикой и разработкой ПО. 2016 год ушел большей частью на изучение английского языка. Примерно  с 2017 года полностью посвятил свободное время тренировке практических навыков программирования на javascript/typescript ( писал код каждый день ).
             </p>
             <p class="details__details">
-                Я делал сайты, игры, мобильные приложения, делал open source проекты. На данный момент подрабатываю на фрилансе в качестве full stack javascript разработчика, продолжаю изучать профессиональные темы, пишу код каждый день. Занимаюсь я этим все выходные и пару часов каждый день по будням. Но основная часть недели уходит на работу с IT никак не связанную.
+                На данный момент подрабатываю на фрилансе в качестве full stack javascript разработчика, продолжаю изучать профессиональные темы, пишу код каждый день. Занимаюсь я этим все выходные и пару часов каждый день по будням. Но основная часть недели уходит на работу с IT никак не связанную.
             </p>
         </section>
         <section class="section main__element">
@@ -207,6 +219,7 @@
             </nav>
         </section>
     </main>
+    <!-- Pretty print -->
     <script>
         window.onbeforeprint = (event) => {
             document.querySelectorAll('.details').forEach((el) => el.setAttribute('open', true));
@@ -214,6 +227,32 @@
         window.onafterprint = () => {
             document.querySelectorAll('.details').forEach((el) => el.removeAttribute('open'));
         }
+    </script>
+    <!-- Job dates -->
+    <script>
+        !function() {
+            const padZero = (num) => {
+                if (num > 9) {
+                    return num;
+                }
+                return '0' + num;
+            };
+            const jobs = document.querySelectorAll('.job-item');
+            jobs.forEach((job) => {
+                const start = job.querySelector('.job-date-start');
+                const end = job.querySelector('.job-date-end');
+                if (start && end) {
+                    const startDate = new Date(start.textContent);
+                    const lang = document.documentElement.lang;
+                    const CURRENT = lang === 'ru' ? 'по настоящее время' : 'currently';
+                    const endDate = end.textContent === '' ? CURRENT : new Date(endDate.textContent);
+                    end.textContent = typeof endDate === 'string' ?
+                        endDate
+                        :
+                        `${ endDate.getFullYear() }-${ padZero(endDate.getMonth() + 1) }-${ padZero(endDate.getDate()) }`;
+                }
+            });
+        }()
     </script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152390603-1"></script>
