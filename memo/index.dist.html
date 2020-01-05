@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="google" content="notranslate">
+  <title>Flash Cards</title>
+  <!-- Handle redirect from 404 page START -->
+  <script type="text/javascript">
+    (function(l) {
+      if (l.search) {
+        var q = {};
+        l.search.slice(1).split('&').forEach(function(v) {
+          var a = v.split('=');
+          q[a[0]] = a[1];
+        });
+        if (q.p !== undefined) {
+          window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + ((q.p && (q.p[0] !== '/' ? '/' + q.p : q.p)) || '')
+          );
+        }
+      }
+    }(window.location))
+  </script>
+  <!-- Handle redirect from 404 page END -->
+</head>
+<body>
+  <div id="root"></div>
+  <script src="/memo/index.bundle.js"></script>
+</body>
+</html>
