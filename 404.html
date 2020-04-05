@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The page you were looking for doesn't exist (404)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- Redirect requests for spa apps START -->
+  <script type="text/javascript">
+    var repoNameSpaseSegmentPosition = 1;
+    var spaPrefixes = ['memo', 'todo-vue'];
+    var l = window.location;
+    var repoRootPage = l.pathname.split('/').slice(0, 1 + repoNameSpaseSegmentPosition).pop();
+    var rootPageMatchSpaPrefix = false;
+    for (var i = 0; i < spaPrefixes.length; i++) {
+        if (repoRootPage === spaPrefixes[i]) {
+            rootPageMatchSpaPrefix = true;
+            break;
+        }
+    }
+    if (rootPageMatchSpaPrefix) {
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + repoNameSpaseSegmentPosition).join('/') +
+        '?p=' + l.pathname.split('/').slice(1 + repoNameSpaseSegmentPosition).join('/')
+      );
+    }
+  </script>
+  <!-- Redirect requests for spa apps END -->
+  <style>
+  body {
+    background-color: #26292E;
+    color: #2E2F30;
+    font-family: sans-serif;
+    margin: 0;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 1%;
+    width: 100%;
+    text-align: center;
+    font-size: .6em;
+    color: #fff
+  }
+
+  a {
+    color: #fff;
+  }
+
+  a:hover {
+    color: #e74c3c;
+  }
+
+  .dialog {
+    float:right;
+    text-align: left;
+    width: 60%;
+    margin: 5% auto 0;
+  }
+
+  h1 { 
+    font-size: 4em;
+    color: #fff;
+    line-height: 1em;
+  }
+
+  p {
+    font-size: 1.4em;
+    color: #fff;
+    padding-right: 5%;
+  }
+  .image {
+    position: absolute;
+    float: left;
+    top: 0;
+    width:60%;
+  }
+  @media only screen and (max-width: 767px) {
+    .image {
+      width: 100%;
+      top: -50px;
+    }
+    .dialog {
+    float:none;
+    text-align: center;
+    width: 90%;
+    margin-top: 70%
+  }
+  }  
+  </style>
+</head>
+
+<body>
+  <!-- This file lives in public/404.html -->
+  <img src="light-bulb.png" class="image">
+  <div>
+    <div class="dialog">
+      <h1>Hey, who turned off the lights?</h1>
+      <p>We were unable to find the page you were looking for.</p>
+    </div>
+  </div> 
+</body>
+</html>
