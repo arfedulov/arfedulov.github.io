@@ -5,23 +5,28 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <!-- Redirect requests for spa apps START -->
   <script type="text/javascript">
-    var repoNameSpaseSegmentPosition = 1;
-    var spaPrefixes = ['memo', 'todo-vue', 'piano'];
-    var l = window.location;
-    var repoRootPage = l.pathname.split('/').slice(0, 1 + repoNameSpaseSegmentPosition).pop();
-    var rootPageMatchSpaPrefix = false;
-    for (var i = 0; i < spaPrefixes.length; i++) {
-        if (repoRootPage === spaPrefixes[i]) {
-            rootPageMatchSpaPrefix = true;
-            break;
-        }
+    const spaPrefixes = ['memo', 'todo-vue', 'piano'];
+    const spaName = location.pathname.split('/').slice(0, 2).pop();
+
+    const isSpaUrl = spaPrefixes.some(prefix => prefix === spaName)
+
+    const getRedirectUrl = () => {
+      const {
+        protocol,
+        hostname,
+        port,
+        pathname
+      } = location
+      const safePort = port ? `:${port}` : '';
+      const pathParts = pathname.split('/')
+      const path = pathParts.slice(0, 2).join('/')
+      const query = pathParts.slice(2).join('/')
+
+      return `${protocol}//${hostname}${safePort}/${path}?p=${query}`
     }
-    if (rootPageMatchSpaPrefix) {
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + repoNameSpaseSegmentPosition).join('/') +
-        '?p=' + l.pathname.split('/').slice(1 + repoNameSpaseSegmentPosition).join('/')
-      );
+
+    if (isSpaUrl) {
+      location.replace(getRedirectUrl())
     }
   </script>
   <!-- Redirect requests for spa apps END -->
