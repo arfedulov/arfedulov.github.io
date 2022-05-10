@@ -1272,23 +1272,7 @@
         "subtype": "noteOff"
       },
       {
-        "deltaTime": 49,
-        "channel": 0,
-        "type": "channel",
-        "noteNumber": 60,
-        "velocity": 80,
-        "subtype": "noteOn"
-      },
-      {
-        "deltaTime": 0,
-        "channel": 0,
-        "type": "channel",
-        "noteNumber": 60,
-        "velocity": 0,
-        "subtype": "noteOff"
-      },
-      {
-        "deltaTime": 960,
+        "deltaTime": 1009,
         "channel": 0,
         "type": "channel",
         "noteNumber": 67,
@@ -5962,7 +5946,7 @@
         "subtype": "noteOff"
       },
       {
-        "deltaTime": 108,
+        "deltaTime": 0,
         "channel": 0,
         "type": "channel",
         "noteNumber": 60,
@@ -5970,7 +5954,7 @@
         "subtype": "noteOff"
       },
       {
-        "deltaTime": 13,
+        "deltaTime": 121,
         "channel": 0,
         "type": "channel",
         "noteNumber": 46,
